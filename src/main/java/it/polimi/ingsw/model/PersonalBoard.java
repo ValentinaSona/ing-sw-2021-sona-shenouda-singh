@@ -8,9 +8,9 @@ public class PersonalBoard {
 
 	private Production production;
 
-	private Depot depot;
+	private Depot[] warehouse;
 
-	private Resource resource;
+	private Resource[] strongbox;
 
 	private DevelopmentCard developmentCard;
 
