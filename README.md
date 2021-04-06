@@ -1,2 +1,6 @@
-# ing-sw-2021
-Progetto di Ingegneria del Software Polimi 2021
+# Progetto di ingegneria del Software 2021
+Implementation of the game Maestri del rinascimento.
+
+Group composition: Antony Shenouda, Raul Singh, Valentina Sona.
+
+
