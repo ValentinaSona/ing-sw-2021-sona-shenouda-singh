@@ -24,15 +24,17 @@ public class PersonalBoard {
 		return null;
 	}
 
-	public void depositIntoWarehouse(Resource[] resource) {
+	public void depositIntoWarehouse(Resource resource) {
 
 	}
+
+
 
 	public void addDevelopment(DevelopmentCard card) {
 
 	}
 
-	public void activateProduction() {
+	public void activateProduction(Production production) {
 
 	}
 

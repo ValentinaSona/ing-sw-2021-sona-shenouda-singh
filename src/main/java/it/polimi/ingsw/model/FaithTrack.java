@@ -49,6 +49,7 @@ public class FaithTrack {
 			} else {
 				popeFavorTiles[1] = PopeFavorTiles.DISMISSED;
 			}
+
 		} else if (report == 3) {
 
 			if (faithMarker >= 19 && popeFavorTiles[2] != PopeFavorTiles.DISMISSED) {

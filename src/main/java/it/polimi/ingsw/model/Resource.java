@@ -8,17 +8,17 @@ public class Resource {
 
 	private final ResourceType resourceType;
 
+	public Resource(int quantity,ResourceType type) {
+		resourceType = type;
+		this.quantity = quantity;
+	}
+
 	public int getQuantity() {
 		return quantity;
 	}
 
 	public ResourceType getResourceType() {
 		return resourceType;
-	}
-
-	public Resource(int quantity,ResourceType type) {
-		resourceType = type;
-		this.quantity = quantity;
 	}
 
 	@Override
@@ -34,7 +34,6 @@ public class Resource {
 		return Objects.hash(quantity, resourceType);
 	}
 
-	// Adds another resource to this one.
 	public Resource add(Resource other) {
 		if (this.resourceType != other.getResourceType()) {
 			throw new RuntimeException("Cannot sum different resources together!");

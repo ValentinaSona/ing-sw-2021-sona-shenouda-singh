@@ -2,12 +2,24 @@ package it.polimi.ingsw.model;
 
 public class Production {
 
-	private Resource[] productionCost;
+	private final Resource[] productionCost;
 
-	private Resource[] productionOut;
+	private final Resource[] productionOut;
 
-	public void activateProduction() {
+	public Production(Resource[] productionCost, Resource[] productionOut) {
+
+		this.productionCost = productionCost;
+		this.productionOut = productionOut;
 
 	}
+
+	public Resource[] getProductionCost() {
+		return productionCost;
+	}
+
+	public Resource[] getProductionOut() {
+		return productionOut;
+	}
+
 
 }
