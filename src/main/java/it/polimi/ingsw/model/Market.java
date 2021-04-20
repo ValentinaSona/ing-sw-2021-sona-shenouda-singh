@@ -2,8 +2,12 @@ package it.polimi.ingsw.model;
 
 public interface Market {
 
-    public MarketMarble[] getResources (Player player, int rowCol);
+    MarketMarble[] getResources (Player player, int rowCol);
 
-    public void addAbility (MarketMarble marble, Player player);
+    Market addAbility (MarketMarble marble, Player player);
+
+    MarketMarble[][] getTray();
+
+    MarketMarble getExtra();
 
 }
