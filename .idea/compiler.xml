@@ -7,6 +7,7 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <module name="GC5" />
+        <module name="ing-sw-2021-sona-shenouda-singh" />
       </profile>
     </annotationProcessing>
   </component>
