@@ -4,7 +4,8 @@ import java.util.Objects;
 
 public class Resource {
 
-	private final int quantity;
+
+	private int quantity;
 
 	private final ResourceType resourceType;
 
@@ -16,6 +17,12 @@ public class Resource {
 	public int getQuantity() {
 		return quantity;
 	}
+
+	public void setQuantity(int quantity) {
+		this.quantity = quantity;
+	}
+
+
 
 	public ResourceType getResourceType() {
 		return resourceType;
@@ -34,11 +41,13 @@ public class Resource {
 		return Objects.hash(quantity, resourceType);
 	}
 
-	public Resource add(Resource other) {
+
+	// Adds the argument to the resource
+	public void add(Resource other) {
 		if (this.resourceType != other.getResourceType()) {
 			throw new RuntimeException("Cannot sum different resources together!");
 		} else {
-			return new Resource(this.quantity + other.getQuantity(), this.resourceType);
+			setQuantity(this.quantity + other.getQuantity());
 		}
 	}
 

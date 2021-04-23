@@ -25,10 +25,10 @@ public class ResourceTest {
         Resource resource1 = new Resource(2, ResourceType.SERVANT);
         Resource resource2 = new Resource(4, ResourceType.SERVANT);
 
-        Resource total = resource1.add(resource2);
+        resource1.add(resource2);
 
-        assertEquals(6, total.getQuantity());
-        assertEquals(ResourceType.SERVANT, total.getResourceType());
+        assertEquals(6, resource1.getQuantity());
+        assertEquals(ResourceType.SERVANT, resource1.getResourceType());
 
     }
 
