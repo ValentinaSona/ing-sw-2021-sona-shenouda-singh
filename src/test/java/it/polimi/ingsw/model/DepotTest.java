@@ -18,33 +18,33 @@ class DepotTest {
         Depot depot = new Depot(4);
 
         try {
-            depot.setResource(invalidRes);
+            depot.addResource(invalidRes);
             Assertions.fail();
         } catch (RuntimeException e) {
-            Assertions.assertTrue(true);
+            assertNull(depot);
         }
 
         try {
-            depot.setResource(tooMuch);
+            depot.addResource(tooMuch);
             Assertions.fail();
         } catch (RuntimeException e) {
-            Assertions.assertTrue(true);
+            assertNull(depot);
         }
 
-        depot.setResource(resource);
+        depot.addResource(resource);
         assertEquals(resource, depot.getResource());
 
         depot.setNullIfEmpty();
         assertEquals(resource, depot.getResource());
 
         try {
-            depot.setResource(differentResource);
+            depot.addResource(differentResource);
             Assertions.fail();
         } catch (RuntimeException e) {
             Assertions.assertTrue(true);
         }
 
-        depot.setResource(emptyResource);
+        depot.addResource(emptyResource);
         depot.setNullIfEmpty();
         assertNull(depot.getResource());
 

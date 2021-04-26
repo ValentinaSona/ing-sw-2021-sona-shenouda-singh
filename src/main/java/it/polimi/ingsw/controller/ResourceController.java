@@ -20,6 +20,7 @@ public class ResourceController {
 
     // }
 
+
     /* Public method called by this and other controllers when they need to add faith points to a player's faith track.
        Calls the faith track method with the same name and handles the VaticanReport exception by calling the vaticanReport method.
      */

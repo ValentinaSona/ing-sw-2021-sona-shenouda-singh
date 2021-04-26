@@ -1,9 +1,10 @@
 package it.polimi.ingsw.model;
 
+import static it.polimi.ingsw.model.ResourceType.*;
+
 public class Depot {
 
 	private final int capacity;
-
 
 	private Resource resource;
 
@@ -16,28 +17,29 @@ public class Depot {
 		return resource;
 	}
 
-	public void setResource(Resource newResource){
+	public void addResource(Resource other){
 
-		if (newResource.getQuantity() > capacity) {
+			if(	other.getResourceType() == JOLLY || other.getResourceType() == FAITH 	){
 
-			throw new RuntimeException("Resources exceed depot capacity");
+				throw new RuntimeException("Invalid resource type for depots");
 
-		} else if ( newResource.getQuantity() < 0 ){
+			} else if (	resource != null &&
+					other.getResourceType() != this.resource.getResourceType() ){
 
-			throw new RuntimeException("Depots may not contain negative resources");
+				throw new RuntimeException("Depot already contains a different type of resource");
 
-		} else if (	newResource.getResourceType() == ResourceType.JOLLY ||
-					newResource.getResourceType() == ResourceType.FAITH 	){
+			} else if ( resource.getQuantity() + other.getQuantity() < 0 ){
 
-			throw new RuntimeException("Invalid resource type for depots");
+				throw new RuntimeException("Depots may not contain negative resources");
 
-		} else if (	this.resource != null &&
-					newResource.getResourceType() != this.resource.getResourceType() ){
 
-			throw new RuntimeException("Depot already contains a different type of resource");
+			} else if (resource.getQuantity() + other.getQuantity() > capacity) {
+
+				throw new RuntimeException("Resources would exceed depot capacity");
+
 
 		} else {
-			resource = newResource;
+			resource.add(other);
 		}
 
 	}

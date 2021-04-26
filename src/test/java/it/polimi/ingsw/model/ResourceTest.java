@@ -46,4 +46,14 @@ public class ResourceTest {
 
 
     }
+
+    @Test
+    void testEquals() {
+        Resource resource1 = new Resource(4, ResourceType.SERVANT);
+        Resource resource2 = new Resource(4, ResourceType.COIN);
+        Resource resource3 = new Resource(2, ResourceType.COIN);
+        resource3.setQuantity(4);
+        assertEquals(resource2,resource3);
+        assertNotEquals(resource1,resource2);
+    }
 }

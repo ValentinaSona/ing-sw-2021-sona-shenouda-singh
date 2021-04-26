@@ -43,12 +43,13 @@ public class Resource {
 
 
 	// Adds the argument to the resource
-	public void add(Resource other) {
+	public Resource add(Resource other) {
 		if (this.resourceType != other.getResourceType()) {
 			throw new RuntimeException("Cannot sum different resources together!");
 		} else {
-			setQuantity(this.quantity + other.getQuantity());
+			this.setQuantity(this.quantity + other.getQuantity());
 		}
-	}
+        return this;
+    }
 
 }
