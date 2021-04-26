@@ -12,7 +12,7 @@ class DepotTest {
         Resource tooMuch = new Resource(6, ResourceType.STONE);
         Resource invalidRes = new Resource(6, ResourceType.FAITH);
         Resource resource = new Resource(2, ResourceType.SERVANT);
-        Resource emptyResource = new Resource(0, ResourceType.SERVANT);
+        Resource emptyResource = new Resource(-2, ResourceType.SERVANT);
         Resource differentResource = new Resource(2, ResourceType.STONE);
 
         Depot depot = new Depot(4);
@@ -21,21 +21,19 @@ class DepotTest {
             depot.addResource(invalidRes);
             Assertions.fail();
         } catch (RuntimeException e) {
-            assertNull(depot);
+            assertNull(depot.getResource());
         }
 
         try {
             depot.addResource(tooMuch);
             Assertions.fail();
         } catch (RuntimeException e) {
-            assertNull(depot);
+            assertNull(depot.getResource());
         }
 
         depot.addResource(resource);
         assertEquals(resource, depot.getResource());
 
-        depot.setNullIfEmpty();
-        assertEquals(resource, depot.getResource());
 
         try {
             depot.addResource(differentResource);
@@ -45,7 +43,6 @@ class DepotTest {
         }
 
         depot.addResource(emptyResource);
-        depot.setNullIfEmpty();
         assertNull(depot.getResource());
 
 

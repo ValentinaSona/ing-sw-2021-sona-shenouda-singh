@@ -5,11 +5,19 @@ import static it.polimi.ingsw.model.ResourceType.*;
 public class Depot {
 
 	private final int capacity;
+	private final boolean isSpecial;
 
 	private Resource resource;
 
 	public Depot(int capacity) {
 		resource = null;
+		isSpecial = false;
+		this.capacity = capacity;
+	}
+
+	public Depot (int capacity, boolean special, ResourceType resourceType){
+		resource = new Resource(0, resourceType);
+		isSpecial = special;
 		this.capacity = capacity;
 	}
 
@@ -28,26 +36,24 @@ public class Depot {
 
 				throw new RuntimeException("Depot already contains a different type of resource");
 
-			} else if ( resource.getQuantity() + other.getQuantity() < 0 ){
+			} else if ( (resource != null ? resource.getQuantity() : 0) + other.getQuantity() < 0 ){
 
 				throw new RuntimeException("Depots may not contain negative resources");
 
 
-			} else if (resource.getQuantity() + other.getQuantity() > capacity) {
+			} else if ((resource != null ? resource.getQuantity() : 0)  + other.getQuantity() > capacity) {
 
 				throw new RuntimeException("Resources would exceed depot capacity");
 
 
 		} else {
-			resource.add(other);
-		}
+				if (resource != null) resource.add(other);
+				else resource = other;
+
+				if (!isSpecial && resource!=null && resource.getQuantity() ==0){ resource = null;}
+			}
 
 	}
 
-	public void setNullIfEmpty(){
-		if (resource.getQuantity() == 0) {
-			resource = null;
-		}
-	}
 
 }
