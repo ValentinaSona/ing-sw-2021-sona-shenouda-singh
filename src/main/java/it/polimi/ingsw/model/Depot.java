@@ -5,6 +5,7 @@ import static it.polimi.ingsw.model.ResourceType.*;
 public class Depot {
 
 	private final int capacity;
+	//TODO: add to UML
 	private final boolean isSpecial;
 
 	private Resource resource;
@@ -21,6 +22,10 @@ public class Depot {
 		this.capacity = capacity;
 	}
 
+	/**
+	 * Getter for the depot's resources
+	 * @return resource of the depot, null if depot is empty and normal. Special depots return a resource with 0 quantity even if empty.
+	 */
 	public Resource getResource() {
 		return resource;
 	}

@@ -135,6 +135,7 @@ public class Player {
 	 * Getter for the development card slots.
 	 * @return all the development cards on the player's board.
 	 */
+	// TODO: Abstract class from Development card deck.
 	public DevelopmentCardDeck[] getDevelopmentCardSlots() {
 		return developmentCardSlots;
 	}

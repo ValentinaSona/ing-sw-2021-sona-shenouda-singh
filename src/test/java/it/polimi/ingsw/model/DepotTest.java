@@ -6,7 +6,7 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
 class DepotTest {
-
+    //TODO: special depot test
     @Test
     void setResource() {
         Resource tooMuch = new Resource(6, ResourceType.STONE);
