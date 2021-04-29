@@ -4,7 +4,7 @@ public class Player {
 
 	private boolean isDisconnected;
 
-	// TODO Asta typo + is it needed now with the user-player map?
+	// TODO Asta typo
 	// private String nickname;
 
 	private boolean isMyTurn;
@@ -33,7 +33,16 @@ public class Player {
 
 	// private LeaderCard[] tempLeaderCards
 
-	//	private Resource[] tempResources;
+
+	private Resource[] tempResources;
+
+	public Resource[] getTempResources() {
+		return tempResources;
+	}
+
+	public void setTempResources(Resource[] tempResources) {
+		this.tempResources = tempResources;
+	}
 
 	/** TODO: when is the player interaction for the initial resources made? May need to change type to resource
 	 ** TODO: likewise, when is the leaderCard interaction made? Doesn't the constructor need to have 2 or 4 as input?
@@ -97,7 +106,7 @@ public class Player {
 		this.mainAction = false;
 	}
 
-	/**  TODO: Unify setter use and reset are repetitive?
+	/**  TODO: Toggle method  union
 	 **  TODO: Add to asta if kept, it's in the txt but not in UML.
 	 * Gives back the player their action, setting it to true.
 	 */

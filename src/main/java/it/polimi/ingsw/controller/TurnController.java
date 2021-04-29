@@ -23,7 +23,7 @@ public class TurnController extends AbstractController{
         */
     private void endTurn(Player player) {
         if(player.equals(getCurrentPlayer())){
-            player.toogleTurn();
+            player.toggleTurn();
             ArrayList<Player> players = getPlayersList();
             int idx = players.indexOf((Player) player);
 
@@ -34,8 +34,8 @@ public class TurnController extends AbstractController{
                 setCurrentPlayer(players.get(idx+1));
             }
 
-            getCurrentPlayer().toogleTurn();
-            getCurrentPlayer().resetMainAction();
+            getCurrentPlayer().toggleTurn();
+            getCurrentPlayer().resetAction();
 
         }else {
             //notifico al player che non è il suo turno..

@@ -29,20 +29,20 @@ class FaithTrackTest {
         FaithTrack faithTrack = new FaithTrack();
 
         faithTrack.addFaithPoints(2);
-        faithTrack.validatePopeFavor(1);
+        faithTrack.validatePopeFavor("1");
         assertEquals(PopeFavorTiles.DISMISSED,faithTrack.getPopeFavorTiles(0));
         assertEquals(PopeFavorTiles.DOWNWARDS,faithTrack.getPopeFavorTiles(1));
         assertEquals(PopeFavorTiles.DOWNWARDS,faithTrack.getPopeFavorTiles(2));
 
 
         faithTrack.addFaithPoints(6);
-        faithTrack.validatePopeFavor(2);
+        faithTrack.validatePopeFavor("2");
         assertEquals(PopeFavorTiles.DISMISSED,faithTrack.getPopeFavorTiles(0));
         assertEquals(PopeFavorTiles.DISMISSED,faithTrack.getPopeFavorTiles(1));
         assertEquals(PopeFavorTiles.DOWNWARDS,faithTrack.getPopeFavorTiles(2));
 
         faithTrack.addFaithPoints(11);
-        faithTrack.validatePopeFavor(3);
+        faithTrack.validatePopeFavor("3");
         assertEquals(PopeFavorTiles.DISMISSED,faithTrack.getPopeFavorTiles(0));
         assertEquals(PopeFavorTiles.DISMISSED,faithTrack.getPopeFavorTiles(1));
         assertEquals(PopeFavorTiles.UPWARDS,faithTrack.getPopeFavorTiles(2));

@@ -8,7 +8,7 @@ import java.util.ArrayList;
 
 public class ResourceController extends AbstractController {
 
- ;
+
 
     /* Observer method, uncomment once the relevant classes are implemented
        Checks that it is the turn of the player issuing the action,
@@ -53,8 +53,9 @@ public class ResourceController extends AbstractController {
         Resource[] tempResources = getCurrentPlayer().getTempResources();
         Resource faithPoints = null;
 
+
         for(Resource resource : tempResources) {
-            count += resource.getQuantity();
+            thrown += resource.getQuantity();
         }
 
         faithPoints = new Resource(thrown, ResourceType.FAITH);
@@ -78,6 +79,6 @@ public class ResourceController extends AbstractController {
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
 
-        }
+
     }
 }

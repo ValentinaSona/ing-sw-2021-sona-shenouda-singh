@@ -26,15 +26,14 @@ public class MarketController extends AbstractController {
         //per non ripetere codice i controlli sul giocatore vengono fatti qui dentro prima di arrivare
         //allo switch
         switch(evt.getPropertyName()){
-            case BUY_MARBLES:
-                buyMarbles((int)evt.getNewValue());
+            case "BUY_MARBLES":
+                buyMarbles(getCurrentPlayer(),(int)evt.getNewValue());
                 break;
-            case CONVERT_WHITE_MARBLES:
+            case "CONVERT_WHITE_MARBLES":
                 convertMarbles((MarketMarble[]) evt.getNewValue());
                 break;
             default:
-                throw Exception("No such Event exceptio");
-                break;
+                throw new RuntimeException("No such Event exception");
         }
     }
 
@@ -67,7 +66,7 @@ public class MarketController extends AbstractController {
      */
 
     private void convertWhiteMarbles(MarketMarble[] choices) {
-        MarketMarble[] marbles = market.getChoosen(choices);
+        MarketMarble[] marbles = market.getChosen(choices);
         convertMarbles(marbles);
     }
 
@@ -82,7 +81,7 @@ public class MarketController extends AbstractController {
 
         for(ResourceType type : ResourceType.values()){
             int count = 0;
-            for(MarketMarble marble : choices){
+            for(MarketMarble marble : marbles){
                 if(marble.convertToResource() == type)
                     count++;
             }

@@ -33,16 +33,16 @@ public class FaithTrack {
 		faithMarker += faith;
 	}
 
-	public void validatePopeFavor(int report) {
+	public void validatePopeFavor(String report) {
 
-		if (report == 1) {
+		if (report == "1") {
 			if (faithMarker >= 5 && popeFavorTiles[0] != PopeFavorTiles.DISMISSED) {
 				popeFavorTiles[0] = PopeFavorTiles.UPWARDS;
 			} else {
 				popeFavorTiles[0] = PopeFavorTiles.DISMISSED;
 			}
 
-		} else if (report == 2) {
+		} else if (report == "2") {
 
 			if (faithMarker >= 12 && popeFavorTiles[1] != PopeFavorTiles.DISMISSED) {
 				popeFavorTiles[1] = PopeFavorTiles.UPWARDS;
@@ -50,7 +50,7 @@ public class FaithTrack {
 				popeFavorTiles[1] = PopeFavorTiles.DISMISSED;
 			}
 
-		} else if (report == 3) {
+		} else if (report == "3") {
 
 			if (faithMarker >= 19 && popeFavorTiles[2] != PopeFavorTiles.DISMISSED) {
 				popeFavorTiles[2] = PopeFavorTiles.UPWARDS;
