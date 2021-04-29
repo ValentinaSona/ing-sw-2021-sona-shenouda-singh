@@ -6,46 +6,43 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
 class DepotTest {
-
+    //TODO: special depot test
     @Test
     void setResource() {
         Resource tooMuch = new Resource(6, ResourceType.STONE);
         Resource invalidRes = new Resource(6, ResourceType.FAITH);
         Resource resource = new Resource(2, ResourceType.SERVANT);
-        Resource emptyResource = new Resource(0, ResourceType.SERVANT);
+        Resource emptyResource = new Resource(-2, ResourceType.SERVANT);
         Resource differentResource = new Resource(2, ResourceType.STONE);
 
         Depot depot = new Depot(4);
 
         try {
-            depot.setResource(invalidRes);
+            depot.addResource(invalidRes);
             Assertions.fail();
         } catch (RuntimeException e) {
-            Assertions.assertTrue(true);
+            assertNull(depot.getResource());
         }
 
         try {
-            depot.setResource(tooMuch);
+            depot.addResource(tooMuch);
             Assertions.fail();
         } catch (RuntimeException e) {
-            Assertions.assertTrue(true);
+            assertNull(depot.getResource());
         }
 
-        depot.setResource(resource);
+        depot.addResource(resource);
         assertEquals(resource, depot.getResource());
 
-        depot.setNullIfEmpty();
-        assertEquals(resource, depot.getResource());
 
         try {
-            depot.setResource(differentResource);
+            depot.addResource(differentResource);
             Assertions.fail();
         } catch (RuntimeException e) {
             Assertions.assertTrue(true);
         }
 
-        depot.setResource(emptyResource);
-        depot.setNullIfEmpty();
+        depot.addResource(emptyResource);
         assertNull(depot.getResource());
 
 

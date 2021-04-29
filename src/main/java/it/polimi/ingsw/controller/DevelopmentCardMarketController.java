@@ -24,7 +24,7 @@ public class DevelopmentCardMarketController {
 
     /*  Called when the player selects a development card.
         Checks that the player has not yet made his main action this turn and that they meet the prerequisites for buying that card.
-        If so, saves the card temporarily in player.tryToBuy and uses the player's action.
+        If so, saves the card temporarily in player.tryToBuy.
      */
     private void getDevelopmentCard(int rowcol) {
 

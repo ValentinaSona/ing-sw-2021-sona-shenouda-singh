@@ -20,7 +20,7 @@ public class FaithTrack {
 		return popeFavorTiles[index];
 	}
 
-
+	//TODO: add VaticanReport exceptions code
 	public void addFaithPoints(Resource faith) {
 		if (faith.getResourceType() != ResourceType.FAITH){
 			throw new RuntimeException("Can only add Faith to FaithTrack");
