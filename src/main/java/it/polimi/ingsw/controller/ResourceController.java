@@ -31,47 +31,19 @@ public class ResourceController extends AbstractController {
         }catch (VaticanReportException vaticanReportException){
             //devo creare tre metodi che gesticano i 3 casi delle pope favor tile
             //ossia prende la posizione di ogni giocatore e vede se gli deve girare la popeFavorTile
-            switch (vaticanReportException.getMessage()){
-                case "1":
-                    popeFavorTiles1();
-                    break;
-                case "2":
-                    popeFavorTiles2();
-                    break;
-                case "3":
-                    popeFavorTiles3();
-                    break;
-                default:
-                    break;
+            ArrayList<Player> players = getPlayersList();
+
+            for(Player p : players){
+                if(!p.equals(player)){
+                    FaithTrack faithTrack = p.getFaithTrack();
+                    faithTrack.validatePopeFavor(vaticanReportException.getMessage());
+                    //vedo la posizione e se è tra 8 e 16 la capovolgo altrimenti
+                    //balza e cosi via
+                }
             }
         }
     }
 
-    private void popeFavorTiles1(){
-        ArrayList<Player> players = getPlayersList();
-
-        for(Player player : players){
-            if(!player.equals(getCurrentPlayer())){
-                FaithTrack faithTrack = player.getFaithTrack();
-                //vedo la posizione e se è tra 8 e 16 la capovolgo altrimenti
-                //balza e cosi via
-            }
-        }
-    }
-
-    private void popeFavorTiles2(){
-
-    }
-
-    private void popeFavorTiles3(){
-
-    }
-    /* Called when someone crosses a pope space in their faith track.
-       Checks each player's position and modifies the popeFavorTiles accordingly.
-     */
-    private void vaticanReport(int popeSpace) {
-
-    }
 
     /*  Called when the player ends processing the resources gained from the market.
         Counts the wasted resources, sets tempResources to null and adds faith points to other players if needed.
