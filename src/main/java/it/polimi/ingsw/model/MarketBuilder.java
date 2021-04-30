@@ -7,7 +7,7 @@ import java.util.Random;
 public class MarketBuilder {
 
     // Builds the standard market, should be used at the beginning of a new game
-    public static Market buildMarket () {
+    public static Market build () {
 
         // Construction of MarketTray with the standard array of marbles
         // key: type of marble, value: number of those marbles
@@ -27,7 +27,7 @@ public class MarketBuilder {
     }
 
     // This method is called when a saved game loaded and initialized
-    public static Market buildMarket ( MarketMarble[][] importedTray, MarketMarble importedExtra, HashMap<Player, List<MarketMarble>> playerAbilities) {
+    public static Market build ( MarketMarble[][] importedTray, MarketMarble importedExtra, HashMap<Player, List<MarketMarble>> playerAbilities) {
 
         if (playerAbilities.isEmpty()) { // If there are no active abilities in the market
             return new MarketTray(importedTray, importedExtra);
@@ -38,7 +38,7 @@ public class MarketBuilder {
         }
     }
 
-    public static MarketMarble[][] randomize (HashMap<MarketMarble, Integer> marbleSet) {
+    private static MarketMarble[][] randomize (HashMap<MarketMarble, Integer> marbleSet) {
 
         Random random = new Random(); // Initialising random
         MarketMarble[][] marbleTray = new MarketMarble[3][4];
@@ -75,7 +75,7 @@ public class MarketBuilder {
 
     }
 
-    public static MarketMarble getLast (HashMap<MarketMarble, Integer> marbleSet) {
+    private static MarketMarble getLast (HashMap<MarketMarble, Integer> marbleSet) {
 
         // The loop finds the remaining marble and assigns it to extra
         for(MarketMarble temp : MarketMarble.values()) {

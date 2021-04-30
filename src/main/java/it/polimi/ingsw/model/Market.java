@@ -1,5 +1,5 @@
 package it.polimi.ingsw.model;
-
+// TODO add getVisible method
 public interface Market {
 
     MarketMarble[] getResources (Player player, int rowCol);

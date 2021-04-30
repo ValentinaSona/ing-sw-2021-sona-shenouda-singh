@@ -1,7 +1,8 @@
 package it.polimi.ingsw.model;
 
 import java.util.*;
-
+// TODO define getResources
+// TODO make better comments
 public class MarketTrayAbility implements Market {
 
     HashMap<Player, List<MarketMarble>> abilityMap;
@@ -22,7 +23,8 @@ public class MarketTrayAbility implements Market {
 
     }
 
-    // Da definire
+    // METODO DA DEFINIRE
+    // È opportuno definire come il metodo chiede al player di selezionare l'abilità nel caso ne abbia 2 attive
     public MarketMarble[] getResources (Player player, int rowCol) { return null; }
 
     public Market addAbility (MarketMarble marble, Player player) {
