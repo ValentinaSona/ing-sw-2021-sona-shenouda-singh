@@ -1,5 +1,7 @@
 package it.polimi.ingsw.model;
 
+import it.polimi.ingsw.exception.TwoLeaderCardsException;
+
 import java.util.*;
 // TODO define getResources
 // TODO make better comments
@@ -25,7 +27,7 @@ public class MarketTrayAbility implements Market {
 
     // METODO DA DEFINIRE
     // È opportuno definire come il metodo chiede al player di selezionare l'abilità nel caso ne abbia 2 attive
-    public MarketMarble[] getResources (Player player, int rowCol) { return null; }
+    public MarketMarble[] getResources (Player player, int rowCol) throws TwoLeaderCardsException { return null; }
 
     public Market addAbility (MarketMarble marble, Player player) {
 
@@ -44,4 +46,6 @@ public class MarketTrayAbility implements Market {
     public MarketMarble[][] getTray() { return marketTray.getTray(); }
 
     public MarketMarble getExtra() { return marketTray.getExtra(); }
+
+    public MarketMarble[] getChosen(MarketMarble[] choice){ return null; }
 }

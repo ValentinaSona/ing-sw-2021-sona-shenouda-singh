@@ -112,4 +112,6 @@ public class MarketTray implements Market {
 
 	public MarketMarble getExtra() {return extra;}
 
+	public MarketMarble[] getChosen(MarketMarble[] choice){ return null; }
+
 }
