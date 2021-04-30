@@ -7,6 +7,8 @@ public interface Market {
 
     MarketMarble[] getResources (Player player, int rowCol) throws TwoLeaderCardsException;
 
+    void insertIntoMatrix (int rowCol);
+
     Market addAbility (MarketMarble marble, Player player);
 
     MarketMarble[][] getTray();

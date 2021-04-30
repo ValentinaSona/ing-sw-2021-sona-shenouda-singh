@@ -19,7 +19,7 @@ public class MarketTray implements Market {
 	 * This method inserts the extra marble into the selected row-column, pushing the other marbles and creating a new extra marble
 	 * @param rowCol is the number corresponding to the row or column where to insert the marble: 0-2 -> rows, 3-6 -> columns
 	 */
-	private void insertIntoMatrix (int rowCol) {
+	public void insertIntoMatrix (int rowCol) {
 
 		MarketMarble temp;
 
