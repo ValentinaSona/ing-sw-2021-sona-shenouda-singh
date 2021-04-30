@@ -15,9 +15,11 @@ public class MarketTray implements Market {
 
 	}
 
-	// rowCol = 0 - 2 -> rows
-	// rowCol = 3 - 6 -> columns
-	public void insertIntoMatrix (int rowCol) {
+	/**
+	 * This method inserts the extra marble into the selected row-column, pushing the other marbles and creating a new extra marble
+	 * @param rowCol is the number corresponding to the row or column where to insert the marble: 0-2 -> rows, 3-6 -> columns
+	 */
+	private void insertIntoMatrix (int rowCol) {
 
 		MarketMarble temp;
 
@@ -43,8 +45,12 @@ public class MarketTray implements Market {
 		extra = temp;
 	}
 
-	// rowCol = 0 - 2 -> rows
-	// rowCol = 3 - 6 -> columns
+	/**
+	 * This method copies the selected line in the market tray and modifies it by calling insertIntoMatrix, then returns the line to the caller
+	 * @param player the player who's doing the action
+	 * @param rowCol is the number corresponding to the row or column where to insert the marble: 0-2 -> rows, 3-6 -> columns
+	 * @return the line of marbles selected by the player
+	 */
 	public MarketMarble[] getResources (Player player, int rowCol) {
 
 		MarketMarble[] resources;
@@ -62,8 +68,13 @@ public class MarketTray implements Market {
 
 	}
 
-	// Creates an array of a column of a matrix
-	public MarketMarble[] colCopy (MarketMarble[][] matrix, int col) {
+	/**
+	 * Utility function for copying a column of a matrix
+	 * @param matrix the source matrix from where to copy
+	 * @param col the index of the column to copy
+	 * @return an array with the elements of the column
+	 */
+	private MarketMarble[] colCopy (MarketMarble[][] matrix, int col) {
 
 		MarketMarble[] array = new MarketMarble[matrix.length];
 
@@ -74,9 +85,15 @@ public class MarketTray implements Market {
 		return array;
 	}
 
-	// This method returns a decorated marketTray that supports white marble abilities
+	/**
+	 * Creates a decorated version of the actual market, MarketTrayAbility, to enable white marble abilities
+	 * @param marble the white marble ability activated by the player
+	 * @param player the player who activates the ability
+	 * @return the decorated market containing this
+	 */
 	public Market addAbility (MarketMarble marble, Player player) {
 
+		// Creates a map that will be used to keep track of player's abilities in the market
 		HashMap<Player, List<MarketMarble>> abilityMap = new HashMap<>();
 		List<MarketMarble> playerAbilities = new ArrayList<>();
 
@@ -86,6 +103,7 @@ public class MarketTray implements Market {
 		return new MarketTrayAbility(this, abilityMap);
 	}
 
+	
 	public MarketMarble[][] getTray() {
 		MarketMarble[][] tray = new MarketMarble[3][4];
 		System.arraycopy(marketMarbles, 0, tray, 0, marketMarbles.length);
@@ -93,5 +111,7 @@ public class MarketTray implements Market {
 	}
 
 	public MarketMarble getExtra() {return extra;}
+
+	public MarketMarble[] getChosen(MarketMarble[] choice){ return null; }
 
 }
