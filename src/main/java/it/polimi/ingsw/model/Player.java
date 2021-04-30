@@ -1,5 +1,7 @@
 package it.polimi.ingsw.model;
 
+import it.polimi.ingsw.exception.VaticanReportException;
+
 public class Player {
 
 	private boolean isDisconnected;
@@ -65,7 +67,13 @@ public class Player {
 
 		// Instantiation of the faithTrack with the initial faith points.
 		faithTrack = new FaithTrack();
-		faithTrack.addFaithPoints(initialFaithPoints);
+
+		try {
+			faithTrack.addFaithPoints(initialFaithPoints);
+		} catch (VaticanReportException e) {
+			e.printStackTrace();
+		}
+
 
 		this.leaderCards = leaderCards;
 
