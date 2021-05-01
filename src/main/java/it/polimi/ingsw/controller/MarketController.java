@@ -1,53 +1,39 @@
 package it.polimi.ingsw.controller;
 
+import it.polimi.ingsw.exception.AlreadyUsedActionException;
+import it.polimi.ingsw.exception.IsNotYourTurnException;
 import it.polimi.ingsw.exception.TwoLeaderCardsException;
-import it.polimi.ingsw.exception.VaticanReportException;
 import it.polimi.ingsw.model.*;
 
-import java.beans.PropertyChangeEvent;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 public class MarketController extends AbstractController {
+    private static MarketController singleton;
+    private final Market market;
+    private final ResourceController resourceController;
 
-    private Market market;
-    private ResourceController resourceController;
-
-
-    /*
-       Checks that it is the turn of the player issuing the action,
-       Then calls the appropriate method for the action called.
-     */
-
-    @Override
-    public void propertyChange(PropertyChangeEvent evt) {
-        //mi preocuppo di implemetare questo metodo per tutti i controller
-        //una volta visto il funzionamento della view.
-        //per non ripetere codice i controlli sul giocatore vengono fatti qui dentro prima di arrivare
-        //allo switch
-        switch(evt.getPropertyName()){
-            case "BUY_MARBLES":
-                buyMarbles(getCurrentPlayer(),(int)evt.getNewValue());
-                break;
-            case "CONVERT_WHITE_MARBLES":
-                convertMarbles((MarketMarble[]) evt.getNewValue());
-                break;
-            default:
-                throw new RuntimeException("No such Event exception");
-        }
+    private MarketController(){
+        this.market = MarketBuilder.build();
+        this.resourceController = ResourceController.getInstance();
     }
 
-    /*  Called when the player selects a row or column of marbles to buy from the market.
-        Checks that the player has not yet made his main action this turn and uses the action if not so.
-        Calls the market function that returns the gained marbles and handles the twoLeaderCardsException if it arises.
-        If it arises, the market has to save internally the temporary array of marbles.
-        If it hasn't arisen it calls convertMarbles to turn the gained marbles into resources and saves them in player.tempResources.
-     */
+    public static MarketController getInstance(){
+        if(singleton == null){
+            singleton = new MarketController();
+        }
 
-    private void buyMarbles(Player player, int rowcol) {
+        return  singleton;
 
-        //getCurrentPlayer().useMainAction();
+    }
+
+    public void buyMarbles(Player player, int rowcol) {
         try{
+            if( !(player.getTurn()) ){
+                throw new IsNotYourTurnException();
+            }
+            if( !(player.getMainAction()) ){
+                throw new AlreadyUsedActionException();
+            }
             MarketMarble[] marbles = market.getResources(player,rowcol);
 
             convertMarbles(marbles);
@@ -56,6 +42,16 @@ public class MarketController extends AbstractController {
             //returned without throwing any exception otherwise an exception is thrown
             //and the currentPlayer is notified that he has to choose how to convert the white
             //marbles using his two leaderCards
+        }catch (IsNotYourTurnException isNotYourTurnException){
+            //I should not enter here if we do enter here we have a problem in the gui code
+            //that shouldn't enable any button if is not you turn or i can alert that player
+            //by throwing an update player.throwError(IS_NOT_YOUR_TURN);
+            isNotYourTurnException.printStackTrace();
+        } catch (AlreadyUsedActionException e) {
+            //I should not enter here if we do enter here we have a problem in the gui code
+            //that shouldn't enable any button if is not you turn or i can alert that player
+            //by throwing an update player.throwError(ALREADY_USED_ACTION);
+            e.printStackTrace();
         }
 
     }
@@ -65,9 +61,18 @@ public class MarketController extends AbstractController {
         Passes the new array to convertMarbles, returning to the normal control flow.
      */
 
-    private void convertWhiteMarbles(MarketMarble[] choices) {
-        MarketMarble[] marbles = market.getChosen(choices);
-        convertMarbles(marbles);
+    public void convertWhiteMarbles(Player player, MarketMarble[] choices) {
+        try{
+            if( !(player.getTurn()) ){
+                throw new IsNotYourTurnException();
+            }
+            MarketMarble[] marbles = market.getChosen(choices);
+            convertMarbles(marbles);
+        }catch (IsNotYourTurnException isNotYourTurnException){
+            //I should not enter here if we do enter here we have a problem in the gui code
+            //that shouldn't enable any button if is not you turn
+            isNotYourTurnException.printStackTrace();
+        }
     }
 
     /*  Called on the definitive array of gained market marbles.
@@ -104,6 +109,6 @@ public class MarketController extends AbstractController {
 
         Resource[] tempResources =(Resource[]) temp.toArray();
         getCurrentPlayer().setTempResources(tempResources);
-    }
 
+    }
 }

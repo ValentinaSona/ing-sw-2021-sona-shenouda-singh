@@ -1,20 +1,16 @@
 package it.polimi.ingsw.controller;
 
 import it.polimi.ingsw.model.Player;
-
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
 
 
-public abstract class AbstractController implements PropertyChangeListener {
-    private Player currentPlayer;
-    private ArrayList<Player> playersList;
-    public static String BUY_MARBLES = "Buy_Marbles";
-    public static String CONVERT_WHITE_MARBLES = "Convert_White_Marbles";
+public abstract class AbstractController {
+    private static Player currentPlayer;
+    private static ArrayList<Player> playersList;
+
 
     public ArrayList<Player> getPlayersList() {
-        return playersList;
+        return new ArrayList<>(playersList);
     }
 
     public Player getCurrentPlayer() {
@@ -22,10 +18,10 @@ public abstract class AbstractController implements PropertyChangeListener {
     }
 
     public void setCurrentPlayer(Player currentPlayer) {
-        this.currentPlayer = currentPlayer;
+        AbstractController.currentPlayer = currentPlayer;
     }
 
     public void setPlayersList(ArrayList<Player> playersList) {
-        this.playersList = playersList;
+        AbstractController.playersList = playersList;
     }
 }

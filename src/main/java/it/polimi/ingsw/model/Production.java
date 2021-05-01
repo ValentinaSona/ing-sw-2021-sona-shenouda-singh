@@ -14,7 +14,7 @@ public class Production {
 	}
 
 	public Resource[] getProductionCost() {
-		return productionCost;
+		return  productionCost;
 	}
 
 	public Resource[] getProductionOut() {

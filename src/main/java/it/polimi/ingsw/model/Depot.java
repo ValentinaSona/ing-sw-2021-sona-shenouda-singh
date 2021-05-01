@@ -1,64 +1,70 @@
 package it.polimi.ingsw.model;
 
+import it.polimi.ingsw.exception.InvalidDepotException;
+
 import static it.polimi.ingsw.model.ResourceType.*;
 
 public class Depot {
 
 	private final int capacity;
-	//TODO: add to UML
-	private final boolean isSpecial;
 
-	private Resource resource;
+	protected Resource resource;
 
 	public Depot(int capacity) {
 		resource = null;
-		isSpecial = false;
 		this.capacity = capacity;
 	}
 
-	public Depot (int capacity, boolean special, ResourceType resourceType){
+	public Depot (int capacity, ResourceType resourceType){
 		resource = new Resource(0, resourceType);
-		isSpecial = special;
 		this.capacity = capacity;
+	}
+
+	/**
+	 * Withdraw the resource from the depot
+	 * @return resource of the depot, null if depot is empty and normal. Special depots return a resource with 0 quantity even if empty.
+	 */
+	public Resource withdrawResource() {
+		Resource oldResource = resource;
+		resource = null;
+		return oldResource;
 	}
 
 	/**
 	 * Getter for the depot's resources
 	 * @return resource of the depot, null if depot is empty and normal. Special depots return a resource with 0 quantity even if empty.
 	 */
-	public Resource getResource() {
-		return resource;
+	public Resource getResource(){
+		return new Resource(resource.getQuantity(), resource.getResourceType());
 	}
 
-	public void addResource(Resource other){
+	public void addResource(Resource other) throws InvalidDepotException {
 
-			if(	other.getResourceType() == JOLLY || other.getResourceType() == FAITH 	){
+		if(	other.getResourceType() == JOLLY || other.getResourceType() == FAITH 	){
 
-				throw new RuntimeException("Invalid resource type for depots");
+			throw new RuntimeException("Invalid resource type for depots");
 
-			} else if (	resource != null &&
-					other.getResourceType() != this.resource.getResourceType() ){
+		} else if (	resource != null && other.getResourceType() != resource.getResourceType() ){
 
-				throw new RuntimeException("Depot already contains a different type of resource");
+			throw new InvalidDepotException("DIFFERENT_RESOURCES");
 
-			} else if ( (resource != null ? resource.getQuantity() : 0) + other.getQuantity() < 0 ){
+		} else if ( (resource != null ? resource.getQuantity() : 0) + other.getQuantity() < 0 ){
 
-				throw new RuntimeException("Depots may not contain negative resources");
+			throw new RuntimeException("Depots may not contain negative resources");
 
 
-			} else if ((resource != null ? resource.getQuantity() : 0)  + other.getQuantity() > capacity) {
+		} else if ((resource != null ? resource.getQuantity() : 0)  + other.getQuantity() > capacity) {
 
-				throw new RuntimeException("Resources would exceed depot capacity");
-
+			throw new InvalidDepotException("CAPACITY");
 
 		} else {
-				if (resource != null) resource.add(other);
-				else resource = other;
-
-				if (!isSpecial && resource!=null && resource.getQuantity() ==0){ resource = null;}
+				if (resource != null){
+					resource.add(other);
+					if(resource.getQuantity() == 0){
+						resource = null;
+					}
+				} else
+					resource = other;
 			}
-
 	}
-
-
 }
