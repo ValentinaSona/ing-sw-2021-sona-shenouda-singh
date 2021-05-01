@@ -6,7 +6,10 @@ import java.util.Random;
 
 public class MarketBuilder {
 
-    // Builds the standard market, should be used at the beginning of a new game
+    /**
+     * Builds the standard market, should be called at the start of a new fresh game
+     * @return the market with the standard set of marbles in random positions
+     */
     public static Market build () {
 
         // Construction of MarketTray with the standard array of marbles
@@ -26,7 +29,13 @@ public class MarketBuilder {
 
     }
 
-    // This method is called when a saved game loaded and initialized
+    /**
+     * This method is called when a saved game is loaded and initialized
+     * @param importedTray saved market tray
+     * @param importedExtra saved extra marble
+     * @param playerAbilities saved map of player WhiteMarbleAbilities, in case of no abilities a empty map should be provided
+     * @return the constructed market, which could be a marketTray or a MarketTrayAbility depending of the state of the saved game
+     */
     public static Market build ( MarketMarble[][] importedTray, MarketMarble importedExtra, HashMap<Player, List<MarketMarble>> playerAbilities) {
 
         if (playerAbilities.isEmpty()) { // If there are no active abilities in the market
@@ -38,6 +47,11 @@ public class MarketBuilder {
         }
     }
 
+    /**
+     * This methods places a set of marbles randomly into a 3x4 array
+     * @param marbleSet the map of the set of marbles, mapping color to quantity
+     * @return the randomized array
+     */
     private static MarketMarble[][] randomize (HashMap<MarketMarble, Integer> marbleSet) {
 
         Random random = new Random(); // Initialising random
@@ -75,6 +89,11 @@ public class MarketBuilder {
 
     }
 
+    /**
+     * This method should be called after randomize. It takes out the last marble from the marble map. Its purpose is for determining the extra marble in the market
+     * @param marbleSet the map of marbles
+     * @return the last marble remaining
+     */
     private static MarketMarble getLast (HashMap<MarketMarble, Integer> marbleSet) {
 
         // The loop finds the remaining marble and assigns it to extra
