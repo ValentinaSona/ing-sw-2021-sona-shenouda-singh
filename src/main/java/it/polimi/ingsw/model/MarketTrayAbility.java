@@ -3,15 +3,18 @@ package it.polimi.ingsw.model;
 import it.polimi.ingsw.exception.TwoLeaderCardsException;
 
 import java.util.*;
-// TODO define getResources
 // TODO make better comments
-public class MarketTrayAbility implements Market {
+public class MarketTrayAbility extends AbstractModel implements Market {
 
     HashMap<Player, List<MarketMarble>> abilityMap;
 
     Market marketTray;
 
-    // This constructor is called when the first white marble ability is added
+    /**
+     * Constructor called by MarketTray when a player activates a WhiteMarbleAbility
+     * @param marketTray the existing MarketTray
+     * @param abilityMap the map containing players as key and a list of the corresponding WhiteMarbleAbility as value
+     */
     public MarketTrayAbility (Market marketTray, HashMap<Player, List<MarketMarble>> abilityMap) {
         this.abilityMap = abilityMap;
         this.marketTray = marketTray;
@@ -24,10 +27,30 @@ public class MarketTrayAbility implements Market {
         this.abilityMap = abilityMap;
 
     }
+    // TODO fix exception
+    public MarketMarble[] getResources (Player player, int rowCol) throws TwoLeaderCardsException {
 
-    // METODO DA DEFINIRE
-    // È opportuno definire come il metodo chiede al player di selezionare l'abilità nel caso ne abbia 2 attive
-    public MarketMarble[] getResources (Player player, int rowCol) throws TwoLeaderCardsException { return null; }
+        if (abilityMap.containsKey(player)) {
+
+            if (abilityMap.get(player).size() == 1) {
+                MarketMarble[] resources = marketTray.getResources(player, rowCol);
+
+                for (MarketMarble marble : resources) {
+                    if (marble == MarketMarble.WHITE) marble = abilityMap.get(player).get(0);
+                }
+
+                return resources;
+            }
+
+            else {
+                update("CHOOSE_MARKET_ABILITY", null, abilityMap.get(player).toArray(new MarketMarble[0]));
+                throw new TwoLeaderCardsException("H E L P");
+            }
+        }
+
+        else return marketTray.getResources(player, rowCol);
+
+    }
 
     public Market addAbility (MarketMarble marble, Player player) {
 

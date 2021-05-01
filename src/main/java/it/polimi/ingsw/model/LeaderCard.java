@@ -7,16 +7,13 @@ public class LeaderCard extends SpecialAbility {
 
 	private final int victoryPoints;
 
-	// TODO: error in reading the specifics, this is not a resource but refers to devel card. Ask pepe about representation.
-	// private Resource resource;
+	// private requirements
 
-
-	// TODO: check with market.
 	private final SpecialAbility specialAbility;
 
 	public LeaderCard (int victoryPoints, SpecialAbility specialAbility){
 		this.isActive = false;
-		// TODO: requirements when specified also getters.
+		// requirements when specified also getters.
 		this.victoryPoints = victoryPoints;
 		this.specialAbility = specialAbility;
 	}

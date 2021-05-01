@@ -1,10 +1,12 @@
 package it.polimi.ingsw.model;
 
+import it.polimi.ingsw.exception.VaticanReportException;
+
 public class Player {
 
 	private boolean isDisconnected;
 
-	// TODO Asta typo
+
 	// private String nickname;
 
 	private boolean isMyTurn;
@@ -23,13 +25,12 @@ public class Player {
 
 	private Depot[] warehouse;
 
-	// TODO: is this the right class? Or do we use a matrix?
 	private DevelopmentCardDeck[] developmentCardSlots;
 
 
 
 
-	//TODO: is this needed? see constructor.
+
 
 	// private LeaderCard[] tempLeaderCards
 
@@ -65,7 +66,13 @@ public class Player {
 
 		// Instantiation of the faithTrack with the initial faith points.
 		faithTrack = new FaithTrack();
-		faithTrack.addFaithPoints(initialFaithPoints);
+
+		try {
+			faithTrack.addFaithPoints(initialFaithPoints);
+		} catch (VaticanReportException e) {
+			e.printStackTrace();
+		}
+
 
 		this.leaderCards = leaderCards;
 
@@ -102,16 +109,8 @@ public class Player {
 	/**
 	 * Expends a player's action, invoked by the respective controllers.
 	 */
-	public void useMainAction() {
-		this.mainAction = false;
-	}
-
-	/**  TODO: Toggle method  union
-	 **  TODO: Add to asta if kept, it's in the txt but not in UML.
-	 * Gives back the player their action, setting it to true.
-	 */
-	public void resetAction() {
-		this.mainAction = true;
+	public void toggleMainAction() {
+		this.mainAction = !this.mainAction;
 	}
 
 
@@ -139,12 +138,12 @@ public class Player {
 		return strongbox;
 	}
 
-	/** TODO: this is marked as a getter that returns a single card in UMl, fix
-	 ** TODO: maybe a getVisibleCards method?
+	/**
+	 ** TODO: getVisibleCards method?
 	 * Getter for the development card slots.
 	 * @return all the development cards on the player's board.
 	 */
-	// TODO: Abstract class from Development card deck.
+	// TODO: Abstract superclass from Development card deck.
 	public DevelopmentCardDeck[] getDevelopmentCardSlots() {
 		return developmentCardSlots;
 	}
@@ -158,7 +157,7 @@ public class Player {
 		return boardProduction;
 	}
 
-	/** TODO: marked as a single depot getter on UML, fix.
+	/**
 	 * Getter for the warehouse.
 	 * @return the player's warehouse.
 	 */
@@ -166,8 +165,5 @@ public class Player {
 		return warehouse;
 	}
 
-	/* TODO: Can you buy may take multiple levels/color how to manage that?
-	 *	TODO: see also how to store that info on leader cards.
-	 */
 
 }
