@@ -71,4 +71,8 @@ public class MarketTrayAbility extends AbstractModel implements Market {
     public MarketMarble getExtra() { return marketTray.getExtra(); }
 
     public MarketMarble[] getChosen(MarketMarble[] choice){ return null; }
+
+    public HashMap<Player, List<MarketMarble>> getAbilityMap() {
+        return abilityMap;
+    }
 }

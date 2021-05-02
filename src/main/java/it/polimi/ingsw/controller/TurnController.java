@@ -35,7 +35,7 @@ public class TurnController extends AbstractController{
             }
 
             getCurrentPlayer().toggleTurn();
-            getCurrentPlayer().resetAction();
+            getCurrentPlayer().toggleMainAction();
 
         }else {
             //notifico al player che non è il suo turno..
