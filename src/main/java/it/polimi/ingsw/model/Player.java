@@ -2,7 +2,9 @@ package it.polimi.ingsw.model;
 
 import it.polimi.ingsw.exception.VaticanReportException;
 
-public class Player {
+import java.util.ArrayList;
+
+public class Player extends AbstractModel {
 
 	private boolean isDisconnected;
 
@@ -21,12 +23,9 @@ public class Player {
 
 	private final Production boardProduction;
 
+	private final DevelopmentCardSlot[] developmentCardSlots;
 
-
-	private Depot[] warehouse;
-
-	private DevelopmentCardDeck[] developmentCardSlots;
-
+	private ArrayList<Depot> warehouse;
 
 
 
@@ -35,15 +34,7 @@ public class Player {
 	// private LeaderCard[] tempLeaderCards
 
 
-	private Resource[] tempResources;
-
-	public Resource[] getTempResources() {
-		return tempResources;
-	}
-
-	public void setTempResources(Resource[] tempResources) {
-		this.tempResources = tempResources;
-	}
+	private ArrayList<Resource> tempResources;
 
 	/** TODO: when is the player interaction for the initial resources made? May need to change type to resource
 	 ** TODO: likewise, when is the leaderCard interaction made? Doesn't the constructor need to have 2 or 4 as input?
@@ -62,8 +53,12 @@ public class Player {
 		mainAction = false;
 
 		boardProduction = new Production(new Resource[]{new Resource(2,ResourceType.JOLLY)}, new Resource[]{new Resource(1, ResourceType.JOLLY)});
-		warehouse = new Depot[]{new Depot(1), new Depot(2), new Depot(3)};
+		warehouse = new ArrayList<>();
+		warehouse.add(new Depot(1, Origin.DEPOT_1));
+		warehouse.add(new Depot(2, Origin.DEPOT_2));
+		warehouse.add(new Depot(3, Origin.DEPOT_3));
 
+		developmentCardSlots = new DevelopmentCardSlot[]{new DevelopmentCardSlot(1),new DevelopmentCardSlot(2), new DevelopmentCardSlot(3)};
 		// Instantiation of the faithTrack with the initial faith points.
 		faithTrack = new FaithTrack();
 
@@ -77,8 +72,6 @@ public class Player {
 		this.leaderCards = leaderCards;
 
 		this.strongbox = new Strongbox();
-
-		this.developmentCardSlots = new DevelopmentCardDeck[] {null, null, null};
 		}
 
 	/**
@@ -140,11 +133,11 @@ public class Player {
 
 	/**
 	 ** TODO: getVisibleCards method?
-	 * Getter for the development card slots.
+	 * Getter for the development card developmentCardSlots.
 	 * @return all the development cards on the player's board.
 	 */
 	// TODO: Abstract superclass from Development card deck.
-	public DevelopmentCardDeck[] getDevelopmentCardSlots() {
+	public DevelopmentCardSlot[] getDevelopmentCardSlots() {
 		return developmentCardSlots;
 	}
 
@@ -161,9 +154,50 @@ public class Player {
 	 * Getter for the warehouse.
 	 * @return the player's warehouse.
 	 */
-	public Depot[] getWarehouse() {
+	public ArrayList<Depot> getWarehouse() {
 		return warehouse;
 	}
 
+	public void addSpecialDepot(int capacity, ResourceType type, Origin origin){
+		warehouse.add(new SpecialDepot(capacity, origin,  type));
+	}
+
+	public void throwError(String message){
+		update(message, null, null);
+	}
+
+	/**
+	 * This method is called when we succed in storing a resource taken from tempResource in a depot
+	 * @param resource
+	 */
+	public void subFromTempResources(Resource resource){
+		ArrayList<Resource> tempResources = getTempResources();
+
+		for(Resource res : tempResources){
+			if(res.getResourceType() == resource.getResourceType()){
+				if(res.getQuantity() == resource.getQuantity()){
+					tempResources.remove((Resource) res);
+				}else{
+					res.sub(resource);
+				}
+				break;
+			}
+		}
+		update(TEMP_RESOURCES_UPDATE, null, tempResources);
+	}
+
+	public void addToTempResources(ArrayList<Resource> resources){
+		this.tempResources = resources;
+		update(TEMP_RESOURCES_UPDATE, null, tempResources);
+	}
+
+	public void dumpTempResources(){
+		tempResources.clear();
+		update(TEMP_RESOURCES_EMPTY, null, null);
+	}
+
+	public ArrayList<Resource> getTempResources() {
+		return tempResources;
+	}
 
 }

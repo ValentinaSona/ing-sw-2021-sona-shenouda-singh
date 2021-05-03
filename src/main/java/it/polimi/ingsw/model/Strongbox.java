@@ -116,5 +116,40 @@ public class Strongbox {
     }
 
 
+    public void subResources(Resource resource){
+        switch (resource.getResourceType()){
+            case SERVANT:
+                this.servant.sub(resource);
+            case COIN:
+                this.coin.sub(resource);
+            case SHIELD:
+                this.shield.sub(resource);
+            case STONE:
+                this.stone.sub(resource);
+            default:
+                throw new RuntimeException("This type of resource is not available in the strongbox");
+        }
+    }
 
+
+    public void subResources(Resource[] resources){
+        for (Resource resource : resources) {
+            switch (resource.getResourceType()) {
+                case SHIELD:
+                    this.shield.sub(resource);
+                    break;
+                case COIN:
+                    this.coin.sub(resource);
+                    break;
+                case STONE:
+                    this.stone.sub(resource);
+                    break;
+                case SERVANT:
+                    this.servant.sub(resource);
+                    break;
+                default:
+                    throw new RuntimeException("This type of resource is not available in the strongbox");
+            }
+        }
+    }
 }

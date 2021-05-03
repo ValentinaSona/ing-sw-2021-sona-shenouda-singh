@@ -1,6 +1,6 @@
 package it.polimi.ingsw.exception;
 
-import it.polimi.ingsw.controller.Origin;
+import it.polimi.ingsw.model.Origin;
 import it.polimi.ingsw.model.Resource;
 
 import java.util.HashMap;

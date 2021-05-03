@@ -4,6 +4,14 @@ import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 
 public abstract class AbstractModel {
+    public static String IS_NOT_YOUR_TURN ="is_not_your_turn";
+    public static String DEPOT_UPDATE = "depot_update";
+    public static String DEPOT_TYPE_ERROR = "depot_type_error";
+    public static String DEPOT_QUANTITY_ERROR = "depot_quantity_error";
+    public static String ILLEGAL_ACTION = "illegal_action";
+    public static String TEMP_RESOURCES_EMPTY = "temp_resources_empty";
+    public static String ACTION_USED = "action_used";
+    public static String TEMP_RESOURCES_UPDATE = "temp_resources_update";
     protected PropertyChangeSupport propertyChangeSupport;
 
 

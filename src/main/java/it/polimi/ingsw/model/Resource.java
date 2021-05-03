@@ -22,8 +22,6 @@ public class Resource {
 		this.quantity = quantity;
 	}
 
-
-
 	public ResourceType getResourceType() {
 		return resourceType;
 	}
@@ -43,13 +41,25 @@ public class Resource {
 
 
 	// Adds the argument to the resource
-	public Resource add(Resource other) {
+	public void add(Resource other) {
 		if (this.resourceType != other.getResourceType()) {
 			throw new RuntimeException("Cannot sum different resources together!");
 		} else {
 			this.setQuantity(this.quantity + other.getQuantity());
 		}
-        return this;
     }
+
+    public void sub(Resource other){
+		if(this.getResourceType() != other.getResourceType()){
+			throw new RuntimeException("Can not subtract different resources together!");
+		}else{
+			int newValue = this.getQuantity()- other.getQuantity();
+			if(newValue >= 0){
+				this.setQuantity(newValue);
+			}else{
+				throw new RuntimeException("Can not have a quantity under 0");
+			}
+		}
+	}
 
 }

@@ -43,15 +43,9 @@ public class MarketController extends AbstractController {
             //and the currentPlayer is notified that he has to choose how to convert the white
             //marbles using his two leaderCards
         }catch (IsNotYourTurnException isNotYourTurnException){
-            //I should not enter here if we do enter here we have a problem in the gui code
-            //that shouldn't enable any button if is not you turn or i can alert that player
-            //by throwing an update player.throwError(IS_NOT_YOUR_TURN);
-            isNotYourTurnException.printStackTrace();
+            player.throwError(AbstractModel.IS_NOT_YOUR_TURN);
         } catch (AlreadyUsedActionException e) {
-            //I should not enter here if we do enter here we have a problem in the gui code
-            //that shouldn't enable any button if is not you turn or i can alert that player
-            //by throwing an update player.throwError(ALREADY_USED_ACTION);
-            e.printStackTrace();
+            player.throwError(AbstractModel.ACTION_USED);
         }
 
     }
@@ -69,9 +63,7 @@ public class MarketController extends AbstractController {
             MarketMarble[] marbles = market.getChosen(choices);
             convertMarbles(marbles);
         }catch (IsNotYourTurnException isNotYourTurnException){
-            //I should not enter here if we do enter here we have a problem in the gui code
-            //that shouldn't enable any button if is not you turn
-            isNotYourTurnException.printStackTrace();
+            player.throwError(AbstractModel.IS_NOT_YOUR_TURN);
         }
     }
 
@@ -93,7 +85,7 @@ public class MarketController extends AbstractController {
             if(count != 0)
                 temp.add(new Resource(count, type));
         }
-        //controlling if there is a faith resource
+        //control if there is a faith resource
         for(Resource res : temp){
             if(res.getResourceType() == ResourceType.FAITH){
                 faithPoints = res;
@@ -107,8 +99,7 @@ public class MarketController extends AbstractController {
             resourceController.addFaithPoints(getCurrentPlayer(), faithPoints);
         }
 
-        Resource[] tempResources =(Resource[]) temp.toArray();
-        getCurrentPlayer().setTempResources(tempResources);
+        getCurrentPlayer().addToTempResources(temp);
 
     }
 }
