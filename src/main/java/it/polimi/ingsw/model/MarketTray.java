@@ -19,7 +19,7 @@ public class MarketTray implements Market {
 	 * This method inserts the extra marble into the selected row-column, pushing the other marbles and creating a new extra marble
 	 * @param rowCol is the number corresponding to the row or column where to insert the marble: 0-2 -> rows, 3-6 -> columns
 	 */
-	public void insertIntoMatrix (int rowCol) {
+	private void insertIntoMatrix (int rowCol) {
 
 		MarketMarble temp;
 
@@ -110,8 +110,16 @@ public class MarketTray implements Market {
 		return tray;
 	}
 
-	public MarketMarble getExtra() {return extra;}
+	public MarketMarble getExtra() {
+		return extra;
+	}
 
-	public MarketMarble[] getChosen(MarketMarble[] choice){ return null; }
+	public MarketMarble[] getChosen(MarketMarble[] choice){
+		throw new RuntimeException("No player has still activated a white marble ability, invalid method");
+	}
+
+	public HashMap <Player, List<MarketMarble>> getAbilityMap() {
+		throw new RuntimeException("No player has still activated a white marble ability, invalid method");
+	}
 
 }

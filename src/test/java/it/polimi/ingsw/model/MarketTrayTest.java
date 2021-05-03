@@ -4,6 +4,8 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -12,27 +14,60 @@ class MarketTrayTest {
     @Test
     void getResources() {
 
-        Market market = MarketBuilder.build();
-        MarketMarble[] resourceCheck = new MarketMarble[4];
-        MarketMarble[][] array = market.getTray();
-        System.arraycopy(array[0], 0, resourceCheck, 0, 4);
-        assertArrayEquals(resourceCheck, market.getResources(null, 0));
-        System.out.println(Arrays.deepToString(market.getTray()) + " Extra: " + market.getExtra());
-        market.getResources(null, 6);
-        System.out.println(Arrays.deepToString(market.getTray()) + " Extra: " + market.getExtra());
+        MarketMarble[][] exampleTray = {{MarketMarble.WHITE, MarketMarble.YELLOW, MarketMarble.GREY, MarketMarble.BLUE},
+                {MarketMarble.BLUE, MarketMarble.PURPLE, MarketMarble.PURPLE, MarketMarble.WHITE},
+                {MarketMarble.GREY, MarketMarble.YELLOW, MarketMarble.WHITE, MarketMarble.RED}};
+
+        MarketMarble exampleExtra = MarketMarble.WHITE;
+
+        MarketTray market = new MarketTray(exampleTray, exampleExtra);
+
+        MarketMarble[] resources = market.getResources(null, 0);
+        assertArrayEquals(resources, new MarketMarble[]{MarketMarble.WHITE, MarketMarble.YELLOW, MarketMarble.GREY, MarketMarble.BLUE});
+        assertEquals(market.getExtra(), MarketMarble.WHITE);
+
+        resources = market.getResources(null, 0);
+        assertArrayEquals(resources, new MarketMarble[]{MarketMarble.YELLOW, MarketMarble.GREY, MarketMarble.BLUE, MarketMarble.WHITE});
+        assertEquals(market.getExtra(), MarketMarble.YELLOW);
+
+        resources = market.getResources(null, 6);
+        assertArrayEquals(resources, new MarketMarble[]{MarketMarble.WHITE, MarketMarble.WHITE, MarketMarble.RED});
+        assertEquals(market.getExtra(), MarketMarble.WHITE);
+
+        resources = market.getResources(null, 6);
+        assertArrayEquals(resources, new MarketMarble[]{MarketMarble.WHITE, MarketMarble.RED, MarketMarble.YELLOW});
+        assertEquals(market.getExtra(), MarketMarble.WHITE);
 
     }
 
-    // TODO rewrite test with new player constructor
-    /*
     @Test
     void addAbility() {
-        Player jimmy = new Player();
+        Player jimmy = new Player(0, 0, null);
 
         Market market = MarketBuilder.build();
         market = market.addAbility(MarketMarble.BLUE, jimmy);
 
         Assertions.assertTrue(market instanceof MarketTrayAbility);
 
-    } */
+        HashMap<Player, List<MarketMarble>> map = market.getAbilityMap();
+
+        Assertions.assertTrue(map.containsKey(jimmy));
+        assertEquals(map.get(jimmy), Arrays.asList(MarketMarble.BLUE));
+
+    }
+
+    @Test
+    void getTray() {
+        MarketMarble[][] exampleTray = {{MarketMarble.WHITE, MarketMarble.YELLOW, MarketMarble.GREY, MarketMarble.BLUE},
+                {MarketMarble.BLUE, MarketMarble.PURPLE, MarketMarble.PURPLE, MarketMarble.WHITE},
+                {MarketMarble.GREY, MarketMarble.YELLOW, MarketMarble.WHITE, MarketMarble.RED}};
+
+        MarketMarble exampleExtra = MarketMarble.WHITE;
+
+        MarketTray market = new MarketTray(exampleTray, exampleExtra);
+
+        assertArrayEquals(market.getTray(), new MarketMarble[][]{{MarketMarble.WHITE, MarketMarble.YELLOW, MarketMarble.GREY, MarketMarble.BLUE},
+                {MarketMarble.BLUE, MarketMarble.PURPLE, MarketMarble.PURPLE, MarketMarble.WHITE},
+                {MarketMarble.GREY, MarketMarble.YELLOW, MarketMarble.WHITE, MarketMarble.RED}});
+    }
 }

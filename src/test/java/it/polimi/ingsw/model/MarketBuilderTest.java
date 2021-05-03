@@ -1,30 +1,54 @@
 package it.polimi.ingsw.model;
 
-import it.polimi.ingsw.exception.TwoLeaderCardsException;
 import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
 
 class MarketBuilderTest {
 
     @Test
     void build() {
         Market tray = MarketBuilder.build();
-        System.out.println(Arrays.deepToString(tray.getTray()));
-        System.out.println(tray.getExtra());
-        try {
-            MarketMarble[] choice = tray.getResources(null, 2);
-        } catch (TwoLeaderCardsException e) {
-            e.printStackTrace();
+
+        HashMap<MarketMarble, Integer> marbleSet = new HashMap<>();
+        marbleSet.put(MarketMarble.WHITE, 4);
+        marbleSet.put(MarketMarble.BLUE, 2);
+        marbleSet.put(MarketMarble.GREY, 2);
+        marbleSet.put(MarketMarble.YELLOW, 2);
+        marbleSet.put(MarketMarble.PURPLE, 2);
+        marbleSet.put(MarketMarble.RED, 1);
+
+        for (int i = 0; i < 3; i++) {
+            for (int j = 0; j < 4; j++) {
+
+                if (marbleSet.get(tray.getTray()[i][j]) > 1)
+                    marbleSet.replace(tray.getTray()[i][j], marbleSet.get(tray.getTray()[i][j]) - 1);
+                else marbleSet.remove(tray.getTray()[i][j]);
+
+            }
         }
-        System.out.println(Arrays.deepToString(tray.getTray()));
-        System.out.println(tray.getExtra());
+
+        assertEquals(marbleSet.get(tray.getExtra()), 1);
+        marbleSet.remove(tray.getExtra());
+        assertTrue(marbleSet.isEmpty());
+        Market tray2 = MarketBuilder.build();
+        assertNotEquals(Arrays.deepToString(tray2.getTray()), Arrays.deepToString(tray.getTray()));
+
+        Market imported1 = MarketBuilder.build(tray.getTray(), tray.getExtra(), new HashMap<Player, List<MarketMarble>>());
+
+        assertTrue(imported1 instanceof MarketTray);
+
+        HashMap<Player, List<MarketMarble>> abilities = new HashMap<Player, List<MarketMarble>>() {{
+            put(new Player(0, 0, null), Arrays.asList(MarketMarble.BLUE));
+        }};
+        Market imported2 = MarketBuilder.build(tray2.getTray(), tray2.getExtra(), abilities);
+
+        assertTrue(imported2 instanceof MarketTrayAbility);
+
     }
 
-    @Test
-    void getLast() {
-    }
 }

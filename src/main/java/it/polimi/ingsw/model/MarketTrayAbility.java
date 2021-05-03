@@ -44,7 +44,7 @@ public class MarketTrayAbility extends AbstractModel implements Market {
 
             else {
                 update("CHOOSE_MARKET_ABILITY", null, abilityMap.get(player).toArray(new MarketMarble[0]));
-                throw new TwoLeaderCardsException("H E L P");
+                throw new TwoLeaderCardsException();
             }
         }
 
@@ -71,4 +71,8 @@ public class MarketTrayAbility extends AbstractModel implements Market {
     public MarketMarble getExtra() { return marketTray.getExtra(); }
 
     public MarketMarble[] getChosen(MarketMarble[] choice){ return null; }
+
+    public HashMap<Player, List<MarketMarble>> getAbilityMap() {
+        return abilityMap;
+    }
 }
