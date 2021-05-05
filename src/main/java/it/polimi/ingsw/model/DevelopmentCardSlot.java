@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.Stack;
 
 public class DevelopmentCardSlot {
+
     private final Stack<DevelopmentCard> slot = new Stack<>();
     private final int id;
     private static final int MAX_LENGTH = 3;
@@ -31,7 +32,7 @@ public class DevelopmentCardSlot {
         if(slot.size() < MAX_LENGTH && newLevel == oldLevel+1)
             slot.push(developmentCard);
         else
-            throw new RuntimeException("I can't put more thant 3 DevelopmentCards or level incoerence");
+            throw new RuntimeException("I can't put more thant 3 DevelopmentCards or level incoherence");
     }
 
     public DevelopmentCard pop(){
@@ -139,4 +140,6 @@ public class DevelopmentCardSlot {
 
         throw new RuntimeException("You should  not call this method if activateProduction is not true");
     }
+
+    public Stack<DevelopmentCard> getSlot() { return slot; }
 }

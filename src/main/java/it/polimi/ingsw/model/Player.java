@@ -53,6 +53,7 @@ public class Player extends AbstractModel {
 		mainAction = false;
 
 		boardProduction = new Production(new Resource[]{new Resource(2,ResourceType.JOLLY)}, new Resource[]{new Resource(1, ResourceType.JOLLY)});
+
 		warehouse = new ArrayList<>();
 		warehouse.add(new Depot(1, Origin.DEPOT_1));
 		warehouse.add(new Depot(2, Origin.DEPOT_2));
@@ -142,6 +143,7 @@ public class Player extends AbstractModel {
 	}
 
 
+
 	/**
 	 * Getter for player's board production.
 	 * @return the board production.
@@ -167,8 +169,8 @@ public class Player extends AbstractModel {
 	}
 
 	/**
-	 * This method is called when we succed in storing a resource taken from tempResource in a depot
-	 * @param resource
+	 * This method is called when we succeed in storing a resource taken from tempResource in a depot
+	 * @param resource removes the stored resource from tempResources
 	 */
 	public void subFromTempResources(Resource resource){
 		ArrayList<Resource> tempResources = getTempResources();
@@ -176,7 +178,7 @@ public class Player extends AbstractModel {
 		for(Resource res : tempResources){
 			if(res.getResourceType() == resource.getResourceType()){
 				if(res.getQuantity() == resource.getQuantity()){
-					tempResources.remove((Resource) res);
+					tempResources.remove(res);
 				}else{
 					res.sub(resource);
 				}
@@ -198,6 +200,38 @@ public class Player extends AbstractModel {
 
 	public ArrayList<Resource> getTempResources() {
 		return tempResources;
+	}
+
+	public boolean canYouActivate(LeaderCard card){
+
+		for (Requirement req : card.getRequirements()){
+
+			int required;
+			int possessed = 0;
+
+			if (!req.isResource()) {
+				required = req.getNumber();
+				for (DevelopmentCardSlot slot : developmentCardSlots) {
+					 possessed = (int) slot.getSlot().stream().filter(c -> c.getType() == req.getType() && (req.getLevel() == c.getLevel() || req.getLevel() == 0)).count();
+
+				}
+
+			} else {
+
+				required = req.getResource().getQuantity();
+
+				for (Depot depot: warehouse){
+					if (depot.getResource().getResourceType()==req.getResource().getResourceType()){
+						possessed += depot.getResource().getQuantity();
+					}
+				}
+
+				possessed += strongbox.getAvailableResources(req.getResource().getResourceType()).getQuantity();
+
+			}
+			if (required > possessed) {return false;}
+		}
+		return true;
 	}
 
 }
