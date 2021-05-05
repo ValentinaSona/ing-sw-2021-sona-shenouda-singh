@@ -45,4 +45,6 @@ class PlayerTest {
         player.getDevelopmentCardSlots()[0].push(green);
         assertTrue(player.canYouActivate(player.getLeaderCards()[0]));
     }
+
+
 }

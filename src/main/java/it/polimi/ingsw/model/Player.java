@@ -3,24 +3,45 @@ package it.polimi.ingsw.model;
 import it.polimi.ingsw.exception.VaticanReportException;
 
 import java.util.ArrayList;
+import java.util.EmptyStackException;
 
 public class Player extends AbstractModel {
 
+	/**
+	 * Set to true if the connection with the player fails and their turn is to be skipped.
+	 */
 	private boolean isDisconnected;
 
+	/**
+	 * The player's nickname, used to identify them in case of reconnection.
+	 */
+	private String nickname;
 
-	// private String nickname;
-
+	/**
+	 * True if it's the player's turn, false otherwise.
+	 */
 	private boolean isMyTurn;
 
+	/**
+	 * True if the player can still perform their action for this turn, false if it has already been used.
+	 */
 	private boolean mainAction;
 
+	/**
+	 * Player's personal Faith Track, handles faith points and pope favor tiles.
+	 */
 	private final FaithTrack faithTrack;
 
 	private final LeaderCard[] leaderCards;
 
+	/**
+	 * Infinite depot where the production outputs are stored.
+	 */
 	private final Strongbox strongbox;
 
+	/**
+	 * Special production that turns 2 resources of any kind into one resource of any kind.
+	 */
 	private final Production boardProduction;
 
 	private final DevelopmentCardSlot[] developmentCardSlots;
@@ -31,7 +52,7 @@ public class Player extends AbstractModel {
 
 
 
-	// private LeaderCard[] tempLeaderCards
+	private LeaderCard[] tempLeaderCards;
 
 
 	private ArrayList<Resource> tempResources;
@@ -47,12 +68,12 @@ public class Player extends AbstractModel {
 
 	public Player(int initialResources, int initialFaithPoints, LeaderCard[] leaderCards /*, view View*/){
 
-		// all the parameters are set to false until a method specifically activates them.
+		// All the parameters are set to false until a method specifically activates them.
 		isMyTurn = false;
 		isDisconnected = false;
 		mainAction = false;
 
-		boardProduction = new Production(new Resource[]{new Resource(2,ResourceType.JOLLY)}, new Resource[]{new Resource(1, ResourceType.JOLLY)});
+		boardProduction = new Production(new Resource[]{new Resource(1,ResourceType.JOLLY), new Resource(1,ResourceType.JOLLY)}, new Resource[]{new Resource(1, ResourceType.JOLLY)});
 
 		warehouse = new ArrayList<>();
 		warehouse.add(new Depot(1, Origin.DEPOT_1));
@@ -60,6 +81,7 @@ public class Player extends AbstractModel {
 		warehouse.add(new Depot(3, Origin.DEPOT_3));
 
 		developmentCardSlots = new DevelopmentCardSlot[]{new DevelopmentCardSlot(1),new DevelopmentCardSlot(2), new DevelopmentCardSlot(3)};
+		
 		// Instantiation of the faithTrack with the initial faith points.
 		faithTrack = new FaithTrack();
 
@@ -69,7 +91,7 @@ public class Player extends AbstractModel {
 			e.printStackTrace();
 		}
 
-
+		// Need to decide whether it's the first four or the permanent two
 		this.leaderCards = leaderCards;
 
 		this.strongbox = new Strongbox();
@@ -89,8 +111,7 @@ public class Player extends AbstractModel {
 	public void toggleTurn() {
 		isMyTurn = !isMyTurn;
 	}
-
-
+	
 
 	/**
 	 * Getter for boolean mainAction
@@ -104,7 +125,7 @@ public class Player extends AbstractModel {
 	 * Expends a player's action, invoked by the respective controllers.
 	 */
 	public void toggleMainAction() {
-		this.mainAction = !this.mainAction;
+		mainAction = !mainAction;
 	}
 
 
@@ -116,7 +137,7 @@ public class Player extends AbstractModel {
 		return faithTrack;
 	}
 
-	/** TODO: ask if return array or single element.
+	/** 
 	 * Getter for the leaderCards.
 	 * @return the player's leaderCards.
 	 */
@@ -133,13 +154,37 @@ public class Player extends AbstractModel {
 	}
 
 	/**
-	 ** TODO: getVisibleCards method?
 	 * Getter for the development card developmentCardSlots.
 	 * @return all the development cards on the player's board.
 	 */
-	// TODO: Abstract superclass from Development card deck.
 	public DevelopmentCardSlot[] getDevelopmentCardSlots() {
 		return developmentCardSlots;
+	}
+
+	/**
+	 * Getter for the visible development cards.
+	 * @return array of the top three development cards, with null value if the stack is empty.
+	 */
+	public DevelopmentCard[] getVisibleCards(){
+		DevelopmentCard[] cards = {null,null,null};
+
+		try {
+			cards[0] = developmentCardSlots[0].peek();
+		} catch (EmptyStackException e) {
+			cards[0] = null;
+		}
+		try {
+			cards[1] = developmentCardSlots[1].peek();
+		} catch (EmptyStackException e) {
+			cards[1] = null;
+		}
+		try {
+			cards[2] = developmentCardSlots[2].peek();
+		} catch (EmptyStackException e) {
+			cards[2] = null;
+		}
+
+		return cards;
 	}
 
 
@@ -160,8 +205,17 @@ public class Player extends AbstractModel {
 		return warehouse;
 	}
 
-	public void addSpecialDepot(int capacity, ResourceType type, Origin origin){
-		warehouse.add(new SpecialDepot(capacity, origin,  type));
+	public void addSpecialDepot(int capacity, ResourceType type){
+		Origin origin;
+		if (warehouse.size()==3) {
+
+			origin = Origin.S_DEPOT_1;
+		} else  if (warehouse.size()==4) {
+			origin = Origin.S_DEPOT_2;
+		} else {
+			throw new RuntimeException("Having more than two special depots should be impossible");
+		}
+		warehouse.add(new SpecialDepot(capacity, origin, type));
 	}
 
 	public void throwError(String message){

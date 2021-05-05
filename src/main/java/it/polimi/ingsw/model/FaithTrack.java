@@ -24,7 +24,6 @@ public class FaithTrack {
 		return popeFavorTiles[index];
 	}
 
-	//TODO: add VaticanReport exceptions code
 	public void addFaithPoints(Resource faith) throws VaticanReportException {
 		if (faith.getResourceType() != ResourceType.FAITH) {
 			throw new RuntimeException("Can only add Faith to FaithTrack");
@@ -59,28 +58,32 @@ public class FaithTrack {
 
 	public void validatePopeFavor(String report) {
 
-		if (report.equals("1")) {
-			if (faithMarker >= 5 && popeFavorTiles[0] != DISMISSED) {
-				popeFavorTiles[0] = PopeFavorTiles.UPWARDS;
-			} else {
-				popeFavorTiles[0] = DISMISSED;
-			}
+		switch (report) {
+			case "1":
+				if (faithMarker >= 5 && popeFavorTiles[0] != DISMISSED) {
+					popeFavorTiles[0] = PopeFavorTiles.UPWARDS;
+				} else {
+					popeFavorTiles[0] = DISMISSED;
+				}
 
-		} else if (report.equals("2")) {
+				break;
+			case "2":
 
-			if (faithMarker >= 12 && popeFavorTiles[1] != DISMISSED) {
-				popeFavorTiles[1] = PopeFavorTiles.UPWARDS;
-			} else {
-				popeFavorTiles[1] = DISMISSED;
-			}
+				if (faithMarker >= 12 && popeFavorTiles[1] != DISMISSED) {
+					popeFavorTiles[1] = PopeFavorTiles.UPWARDS;
+				} else {
+					popeFavorTiles[1] = DISMISSED;
+				}
 
-		} else if (report.equals("3")) {
+				break;
+			case "3":
 
-			if (faithMarker >= 19 && popeFavorTiles[2] != DISMISSED) {
-				popeFavorTiles[2] = PopeFavorTiles.UPWARDS;
-			} else {
-				popeFavorTiles[2] = DISMISSED;
-			}
+				if (faithMarker >= 19 && popeFavorTiles[2] != DISMISSED) {
+					popeFavorTiles[2] = PopeFavorTiles.UPWARDS;
+				} else {
+					popeFavorTiles[2] = DISMISSED;
+				}
+				break;
 		}
 	}
 

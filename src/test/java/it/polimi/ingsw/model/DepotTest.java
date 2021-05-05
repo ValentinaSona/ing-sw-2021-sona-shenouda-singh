@@ -1,12 +1,12 @@
 package it.polimi.ingsw.model;
 
+import it.polimi.ingsw.exception.InvalidDepotException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 class DepotTest {
-    //TODO: special depot test
     @Test
     void setResource() {
         Resource tooMuch = new Resource(6, ResourceType.STONE);
@@ -15,34 +15,42 @@ class DepotTest {
         Resource emptyResource = new Resource(-2, ResourceType.SERVANT);
         Resource differentResource = new Resource(2, ResourceType.STONE);
 
-        Depot depot = new Depot(4);
+        Depot depot = new Depot(4,Origin.DEPOT_1);
 
         try {
             depot.addResource(invalidRes);
             Assertions.fail();
-        } catch (RuntimeException e) {
+        } catch (InvalidDepotException e) {
             assertNull(depot.getResource());
         }
 
         try {
             depot.addResource(tooMuch);
             Assertions.fail();
-        } catch (RuntimeException e) {
+        } catch (InvalidDepotException e) {
             assertNull(depot.getResource());
         }
 
-        depot.addResource(resource);
+        try {
+            depot.addResource(resource);
+        } catch (InvalidDepotException e) {
+            e.printStackTrace();
+        }
         assertEquals(resource, depot.getResource());
 
 
         try {
             depot.addResource(differentResource);
             Assertions.fail();
-        } catch (RuntimeException e) {
+        } catch (InvalidDepotException e) {
             Assertions.assertTrue(true);
         }
 
-        depot.addResource(emptyResource);
+        try {
+            depot.addResource(emptyResource);
+        } catch (InvalidDepotException e) {
+            e.printStackTrace();
+        }
         assertNull(depot.getResource());
 
 
