@@ -11,6 +11,10 @@ public class Depot extends AbstractModel {
 	protected Resource resource;
 
 
+	public Origin getOrigin(){
+		return id;
+	}
+
 	public Depot(int capacity, Origin id) {
 		resource = null;
 		this.id = id;

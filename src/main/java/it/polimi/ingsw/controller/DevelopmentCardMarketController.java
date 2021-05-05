@@ -137,6 +137,4 @@ public class DevelopmentCardMarketController extends AbstractController{
     private void placeDevelopmentCard(int position) {
 
     }
-
-
 }

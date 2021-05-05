@@ -6,7 +6,11 @@ public enum Origin {
     DEPOT_3(2),
     S_DEPOT_1(3),
     S_DEPOT_2(4),
-    STRONGBOX(0);
+    STRONGBOX(-1),
+    BOARD_PRODUCTION(-1),
+    SLOT_1(0),
+    SLOT_2(1),
+    SLOT_3(2);
 
     private final int value;
 

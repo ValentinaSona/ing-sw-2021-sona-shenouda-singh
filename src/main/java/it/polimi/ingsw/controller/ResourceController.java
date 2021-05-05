@@ -119,7 +119,7 @@ public class ResourceController extends AbstractController {
             player.throwError(AbstractModel.IS_NOT_YOUR_TURN);
         }catch (InvalidDepotException invalidDepotException){
             //if i enter here it means that the action on the warehouse is failed
-            //and the player has been already infromed
+            //and the player has been already infrormed
         }
     }
 
@@ -128,107 +128,111 @@ public class ResourceController extends AbstractController {
      * @param player
      * @param resource quantity that we want to remove from tempResouces
      */
-    public void depositIntoWarehouse(Player player, Origin depot, Resource resource){
+    public void depositIntoWarehouse(Player player, Origin target, Resource resource){
         try{
             if( !(player.getTurn()) ){
                 throw new IsNotYourTurnException();
             }
 
-            Depot to = player.getWarehouse().get(depot.getValue());
-
-
-            ArrayList<Resource> tempResources = player.getTempResources();
+            Depot targetDepot = player.getWarehouse().get(target.getValue());
 
             ArrayList<Depot> warehouse = player.getWarehouse();
-            Resource depot1 = player.getWarehouse().get(0).getResource();
-            Resource depot2 = player.getWarehouse().get(1).getResource();
-            Resource depot3 = player.getWarehouse().get(2).getResource();
-/** DEVO FINIRE DI SCRIVERE LA LOGICA SUI CONTROLLI
- * una volta che ho la certezza di poter rimuovere le risorse da tempResources chiamerò
- * il metodo subFromTempResources(resource)
-            if (depot == Origin.DEPOT_1 || depot == Origin.DEPOT_2 || depot == Origin.DEPOT_3) {
-                if(depot == Origin.DEPOT_1) {
-                    if(depot1.getResourceType() != null){
-                        if(depot1.get)
-                    }
-                }else if(depot == Origin.DEPOT_2) {
-                }else if(depot == Origin.DEPOT_3) {
-                }else{
-                    throw new RuntimeException("Ho fornito un Origin sbagliato");
-            }else {
-                //trying to deposit resource in a special depot
+
+            Resource depot1Resource = player.getWarehouse().get(Origin.DEPOT_1.getValue()).getResource();
+            Resource depot2Resource = player.getWarehouse().get(Origin.DEPOT_2.getValue()).getResource();
+            Resource depot3Resource = player.getWarehouse().get(Origin.DEPOT_3.getValue()).getResource();
+
+            if(target == Origin.DEPOT_1){
+                checkDepotType(targetDepot,depot2Resource,depot3Resource, resource);
+            }else if(target == Origin.DEPOT_2){
+                checkDepotType(targetDepot,depot1Resource,depot3Resource, resource);
+            }else if(target == Origin.DEPOT_3){
+                checkDepotType(targetDepot,depot1Resource,depot2Resource, resource);
+            }else{
+                //the target depot is a special depot we don't have to do any check
+                targetDepot.addResource(resource);
+                //if the operation succed succesfuly we will remove the resource from tempResources
+                player.subFromTempResources(resource);
             }
-**/
         }catch (IsNotYourTurnException isNotYourTurnException){
             player.throwError(AbstractModel.IS_NOT_YOUR_TURN);
+        }catch (InvalidDepotException invalidDepotException){
+            //the depot model has already notified the player of the error
+            //we just end the method
         }
     }
 
-    /** DEVO FINIRE DI RIVEDERE QUESTI METODI PERO DOVEVO FARE IL COMMIT IN MODO CHE LE MODIFICHE
- * APPORTATE SIANO VISIBILI A TUTTI IN MODO DA NON IMPLEMENTARE CODICE NON NECESSARIO O GIA IMPLEMENTATO
-    private void selectResources(Player player , Resource resource, Origin origin) throws AlreadyUsedActionException, IsNotYourTurnException, InvalidDepotException {
-        if( !(player.getTurn()) ){
-            throw new IsNotYourTurnException();
-        }
-        if( !(player.getMainAction()) ){
-            throw new AlreadyUsedActionException();
-        }
+    private void checkDepotType(Depot targetDepot, Resource depotA, Resource depotB, Resource resource) throws InvalidDepotException{
+        if( depotA != null && depotB != null){
+            if(resource.getResourceType() != depotA.getResourceType() &&
+                    resource.getResourceType() != depotB.getResourceType()){
+                //i can try to add this resourceType to the target depot
+                targetDepot.addResource(resource);
+                //if the action fails the InvalidDepotExceptin is thrown and the next statement is
+                //never executed
+                getCurrentPlayer().subFromTempResources(resource);
+            }else{
+                getCurrentPlayer().throwError(AbstractModel.WAREHOUSE_TYPE_ERROR);
+            }
+        }else if(depotA == null && depotB != null){
+            if(depotB.getResourceType() != resource.getResourceType()){
+                //i can try to add this resourceType to the target depot
+                targetDepot.addResource(resource);
+                //if the action fails the InvalidDepotExceptin is thrown and the next statement is
+                //never executed
+                getCurrentPlayer().subFromTempResources(resource);
+            }else{
+                getCurrentPlayer().throwError(AbstractModel.WAREHOUSE_TYPE_ERROR);
+            }
+        }else if(depotB == null && depotA != null){
+            if(depotA.getResourceType() != resource.getResourceType()){
+                //i can try to add this resourceType to the target depot
+                targetDepot.addResource(resource);
+                //if the action fails the InvalidDepotExceptin is thrown and the next statement is
+                //never executed
+                getCurrentPlayer().subFromTempResources(resource);
+            }else{
+                getCurrentPlayer().throwError(AbstractModel.WAREHOUSE_TYPE_ERROR);
+            }
 
-        if(origin != Origin.STRONGBOX){
-            player.getWarehouse().get(origin.getValue()).subtractResource(resource);
-        }else if(origin == Origin.STRONGBOX){
+        }else{
+            //both the depots are null no problem
+            targetDepot.addResource(resource);
+            //if the action fails the InvalidDepotExceptin is thrown and the next statement is
+            //never executed
+            getCurrentPlayer().subFromTempResources(resource);
+        }
+    }
+
+    private void selectResources(Player player , Resource resource, Origin resourceOrigin) throws InvalidDepotException {
+
+        if(resourceOrigin != Origin.STRONGBOX){
+            player.getWarehouse().get(resourceOrigin.getValue()).subtractResource(resource);
+        }else if(resourceOrigin == Origin.STRONGBOX){
             player.getStrongbox().subResources(resource);
         }else {
-            throw new RuntimeException("Ho fornito un origin scorretto")
+            throw new RuntimeException("Ho fornito un origin scorretto");
         }
 
     }
 
     private void resetResources(Player player, HashMap<Origin, Resource> resourceHashMap) throws InvalidDepotException {
-        Depot[] warehouse = player.getWarehouse();
-        ArrayList<SpecialDepot> specialDepots = player.getSpecialDepots();
+        ArrayList<Depot> warehouse = player.getWarehouse();
 
-        for(Origin origin : resourceHashMap.keySet()) {
-            switch (origin) {
-                case DEPOT_1:
-                    warehouse[0].addResource(resourceHashMap.get(origin));
-                    break;
-                case DEPOT_2:
-                    warehouse[1].addResource(resourceHashMap.get(origin));
-                    break;
-                case DEPOT_3:
-                    warehouse[2].addResource(resourceHashMap.get(origin));
-                    break;
-                case S_DEPOT_1:
-                    specialDepots.get(0).addResource(resourceHashMap.get(origin));
-                    break;
-                case S_DEPOT_2:
-                    specialDepots.get(1).addResource(resourceHashMap.get(origin));
-                    break;
-                case STRONGBOX:
-                    player.getStrongbox().addResources(resourceHashMap.get(origin));
-                default:
-                    throw new RuntimeException("Problem while selecting production");
-
+        for(Origin origin : resourceHashMap.keySet()){
+            if(origin != Origin.STRONGBOX){
+                warehouse.get(origin.getValue()).addResource(resourceHashMap.get(origin));
+                resourceHashMap.remove(origin);
+            }else if(origin == Origin.STRONGBOX){
+                player.getStrongbox().addResources(resourceHashMap.get(origin));
+                resourceHashMap.remove(origin);
+            }else {
+                throw new RuntimeException("Ho fornito un origin scorretto");
             }
         }
     }
 
-    public void selectProduction(Player player, int slotId, Resource resource, Origin origin){
-        try{
-            selectResources(player, resource, origin);
-            DevelopmentCardSlot slot = player.getDevelopmentCardSlots()[slotId];
-            slot.setTempResourcesProduction(resource, origin);
-            //cosi facendo sposto le risorse sulla carta sviluppo o la boardProduction per confermare di avere posizionato
-            //le risorse per quella carte bisognerà chiamare confirmProduction(player, slotid)
-        }catch (IsNotYourTurnException isNotYourTurnException){
-            player.throwError(AbstractModel.IS_NOT_YOUR_TURN);
-        } catch (AlreadyUsedActionException e) {
-            player.throwError(AbstractModel.ACTION_USED);
-        }
-    }
-
-    public void confirmProduction(Player player, int slotId){
+    public void selectProduction(Player player, Origin slotId, Resource resource, Origin resourceOrigin){
         try{
             if( !(player.getTurn()) ){
                 throw new IsNotYourTurnException();
@@ -237,22 +241,40 @@ public class ResourceController extends AbstractController {
                 throw new AlreadyUsedActionException();
             }
 
-            player.getDevelopmentCardSlots()[slotId].check();
+            selectResources(player, resource, resourceOrigin);
+            DevelopmentCardSlot slot = player.getDevelopmentCardSlots()[slotId.getValue()];
+            slot.setResourceCloset(resource, resourceOrigin);
+        }catch (IsNotYourTurnException isNotYourTurnException){
+            player.throwError(AbstractModel.IS_NOT_YOUR_TURN);
+        }catch (AlreadyUsedActionException e) {
+            player.throwError(AbstractModel.ACTION_USED);
+        }catch (InvalidDepotException ex){
+
+        }
+    }
+
+    public void confirmProduction(Player player, Origin slotId){
+        try{
+            if( !(player.getTurn()) ){
+                throw new IsNotYourTurnException();
+            }
+            if( !(player.getMainAction()) ){
+                throw new AlreadyUsedActionException();
+            }
+
+            //called if the player has deposit all the resources he need activate the production
+            //and in this way he give a confirm that he wants to activate this production
+            player.getDevelopmentCardSlots()[slotId.getValue()].check();
 
         }catch (IsNotYourTurnException isNotYourTurnException){
-            //I should not enter here if we do enter here we have a problem in the gui code
-            //that shouldn't enable any button if is not you turn or i can alert that player
-            //by throwing an update player.throwError(IS_NOT_YOUR_TURN);
-            isNotYourTurnException.printStackTrace();
-        } catch (AlreadyUsedActionException e) {
-            //I should not enter here if we do enter here we have a problem in the gui code
-            //that shouldn't enable any button if is not you turn or i can alert that player
-            //by throwing an update player.throwError(ALREADY_USED_ACTION);
-            e.printStackTrace();
-        }catch (NotSufficientResourceException notSufficientResourceException){
+            player.throwError(AbstractModel.IS_NOT_YOUR_TURN);
+        }catch (AlreadyUsedActionException e) {
+            player.throwError(AbstractModel.ACTION_USED);
+        }catch (NotSufficientResourceException ex){
             try{
-                resetResources(player, notSufficientResourceException.getTempResources());
+                resetResources(player, ex.getTempResources());
             }catch(InvalidDepotException invalidDepotException){
+                //if i enter this catch there is a problem in the way i am restoring the resources
                 invalidDepotException.printStackTrace();
             }
         }
@@ -270,21 +292,16 @@ public class ResourceController extends AbstractController {
             DevelopmentCardSlot[] slots = player.getDevelopmentCardSlots();
 
             for(DevelopmentCardSlot dev : slots){
-                if(dev.isActivateProduction()){
+                if(dev.isConfirmed()){
                     player.getStrongbox().addResources(dev.activateProduction());
                 }
             }
         }catch (IsNotYourTurnException isNotYourTurnException){
-            //I should not enter here if we do enter here we have a problem in the gui code
-            //that shouldn't enable any button if is not you turn or i can alert that player
-            //by throwing an update player.throwError(IS_NOT_YOUR_TURN);
-            isNotYourTurnException.printStackTrace();
-        } catch (AlreadyUsedActionException e) {
-            //I should not enter here if we do enter here we have a problem in the gui code
-            //that shouldn't enable any button if is not you turn or i can alert that player
-            //by throwing an update player.throwError(ALREADY_USED_ACTION);
-            e.printStackTrace();
+            player.throwError(AbstractModel.IS_NOT_YOUR_TURN);
+        }catch (AlreadyUsedActionException e) {
+            player.throwError(AbstractModel.ACTION_USED);
         }
     }
-**/
+
 }
+
