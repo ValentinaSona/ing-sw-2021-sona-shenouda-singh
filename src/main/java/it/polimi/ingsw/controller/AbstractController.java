@@ -1,27 +1,28 @@
 package it.polimi.ingsw.controller;
 
+import it.polimi.ingsw.model.Model;
 import it.polimi.ingsw.model.Player;
+
+import javax.swing.*;
 import java.util.ArrayList;
 
 
 public abstract class AbstractController {
-    private static Player currentPlayer;
-    private static ArrayList<Player> playersList;
+    private Model model;
 
-
+    public AbstractController(Model model){
+        this.model = model;
+    }
     public ArrayList<Player> getPlayersList() {
+        ArrayList<Player> playersList = model.getPlayers();
         return new ArrayList<>(playersList);
     }
 
     public Player getCurrentPlayer() {
-        return currentPlayer;
+        return model.getCurrentPlayer();
     }
 
-    public void setCurrentPlayer(Player currentPlayer) {
-        AbstractController.currentPlayer = currentPlayer;
-    }
-
-    public void setPlayersList(ArrayList<Player> playersList) {
-        AbstractController.playersList = playersList;
+    public void setCurrentPlayer(Player player){
+        model.setCurrentPlayer(player);
     }
 }

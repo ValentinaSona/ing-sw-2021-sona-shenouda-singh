@@ -5,7 +5,7 @@ import it.polimi.ingsw.modelview.DepotView;
 
 public class SpecialDepot extends Depot{
 
-    public SpecialDepot(int capacity, Origin id, ResourceType resourceType){
+    public SpecialDepot(int capacity, Id id, ResourceType resourceType){
         super(capacity, id, resourceType);
     }
 

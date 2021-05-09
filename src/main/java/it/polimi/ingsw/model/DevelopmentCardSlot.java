@@ -2,23 +2,19 @@ package it.polimi.ingsw.model;
 
 import it.polimi.ingsw.exception.DevelopmentCardException;
 import it.polimi.ingsw.exception.NotSufficientResourceException;
-
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Stack;
 
-public class DevelopmentCardSlot extends AbstractModel{
+public class DevelopmentCardSlot extends Slot{
 
     private final Stack<DevelopmentCard> slot = new Stack<>();
-    private final Origin id;
     private static final int MAX_LENGTH = 3;
     private DevelopmentCard targetCard;
-    private final HashMap<Origin, Resource> originResourceHashMap = new HashMap<>();
-    private final ArrayList<Resource> resourceCloset = new ArrayList<>();
-    private boolean confirmed;
+    private int row;
+    private int col;
 
-    public DevelopmentCardSlot(Origin id){
-        this.id = id;
+    public DevelopmentCardSlot(Id id){
+        super(id);
     }
 
     public DevelopmentCard peek(){
@@ -39,60 +35,60 @@ public class DevelopmentCardSlot extends AbstractModel{
         return slot.pop();
     }
 
-    public void setResourceCloset(Resource resource, Origin origin){
-        //the map make it possible to understand from where we are taking the resource
-        //for buying or activating a developmentCard
-        this.originResourceHashMap.put(origin, resource);
-
-        for(Resource res : resourceCloset){
-            if(res.getResourceType() == resource.getResourceType()){
-                res.add(resource);
-                return;
-            }
-        }
-        resourceCloset.add(resource);
-    }
-
-    public void setTargetCard(DevelopmentCard targetCard) throws DevelopmentCardException {
+    public void setTargetCard(DevelopmentCard targetCard, int row, int col) throws DevelopmentCardException {
         DevelopmentCard lastInsertion = peek();
 
         if((lastInsertion.getLevel() == targetCard.getLevel() -1) && slot.size() <= MAX_LENGTH){
-            //we can position the card in this slot
+            //we can put the card in this slot
             this.targetCard = targetCard;
+            this.row = row;
+            this.col = col;
+            update(TARGET_CARD, null, targetCard);
         }else{
-            //we can't position the card in this slot
+            //we can't put the card in this slot
             update(DEVEL_CARD_LEVEL_ERROR, null, null);
             throw new DevelopmentCardException();
         }
     }
 
-    public void check() throws NotSufficientResourceException {
-        Resource[] productionCost = slot.peek().getProduction().getProductionCost();
+    public int getRow(){
+        return row;
+    }
 
-        if( productionCost.length == resourceCloset.size()){
-            for(Resource res : productionCost){
+    public int getCol(){
+        return col;
+    }
+
+    @Override
+    public void check(boolean card) throws NotSufficientResourceException {
+        Resource[] cost;
+        if(card){
+            cost = targetCard.getCost();
+            //faccio il check su sconti sul costo della carta
+        }else {
+            cost = slot.peek().getProduction().getProductionCost();
+        }
+
+        if( cost.length == resourceCloset.size()){
+            for(Resource res : cost){
                 if(!resourceCloset.contains((Resource) res)){
                     //if the resourceCloset doesn't contains the required resource
                     //the action is denied
                     resourceCloset.clear();
                     //returning a map to the controller that will deposit the  resources in the right places
-                    HashMap<Origin, Resource> copy = (HashMap<Origin, Resource>) originResourceHashMap.clone();
+                    HashMap<Id, Resource> copy = (HashMap<Id, Resource>) originResourceHashMap.clone();
                     originResourceHashMap.clear();
                     throw new NotSufficientResourceException(copy);
                 }
             }
         }else{
             resourceCloset.clear();
-            HashMap<Origin, Resource> copy = (HashMap<Origin, Resource>) originResourceHashMap.clone();
+            HashMap<Id, Resource> copy = (HashMap<Id, Resource>) originResourceHashMap.clone();
             originResourceHashMap.clear();
             throw new NotSufficientResourceException(copy);
         }
         confirmed = true;
 
-    }
-
-    public boolean isConfirmed(){
-        return confirmed;
     }
 
     public void buyDevelopmentCard(){
@@ -103,11 +99,13 @@ public class DevelopmentCardSlot extends AbstractModel{
             resourceCloset.clear();
             originResourceHashMap.clear();
             push(targetCard);
+
             targetCard = null;
         }
 
     }
 
+    @Override
     public Resource[] activateProduction(){
         if(confirmed){
             DevelopmentCard activateDev = slot.peek();

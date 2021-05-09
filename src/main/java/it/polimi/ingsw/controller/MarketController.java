@@ -12,14 +12,15 @@ public class MarketController extends AbstractController {
     private final Market market;
     private final ResourceController resourceController;
 
-    private MarketController(){
+    private MarketController(Model model){
+        super(model);
         this.market = MarketBuilder.build();
         this.resourceController = ResourceController.getInstance();
     }
 
-    public static MarketController getInstance(){
+    public static MarketController getInstance(Model model){
         if(singleton == null){
-            singleton = new MarketController();
+            singleton = new MarketController(model);
         }
 
         return  singleton;
@@ -34,6 +35,8 @@ public class MarketController extends AbstractController {
             if( !(player.getMainAction()) ){
                 throw new AlreadyUsedActionException();
             }
+
+            player.toggleMainAction();
             MarketMarble[] marbles = market.getResources(player,rowcol);
 
             convertMarbles(marbles);
@@ -101,5 +104,15 @@ public class MarketController extends AbstractController {
 
         getCurrentPlayer().addToTempResources(temp);
 
+    }
+
+    /**
+     * This method is called by the LeaderCardsController when the condition to activate
+     * a leaderCard are verified
+     * @param player
+     * @param marble
+     */
+    public void addMarketAbility(Player player, MarketMarble marble){
+        market.addAbility(marble, player);
     }
 }

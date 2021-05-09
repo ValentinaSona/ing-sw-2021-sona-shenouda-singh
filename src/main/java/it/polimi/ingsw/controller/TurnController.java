@@ -1,13 +1,27 @@
 package it.polimi.ingsw.controller;
 
+import it.polimi.ingsw.model.AbstractModel;
+import it.polimi.ingsw.model.Model;
 import it.polimi.ingsw.model.Player;
 import java.util.ArrayList;
 
 public class TurnController extends AbstractController{
+    private static TurnController singleton;
 
     /*  Called when a player ends their turn.
             Modifies currentPlayer and playerList for all controller and resets players' actions as needed.
         */
+    private TurnController(Model model){
+        super(model);
+    }
+    public static TurnController getInstance(Model model){
+        if(singleton == null){
+            singleton = new TurnController(model);
+        }
+
+        return singleton;
+    }
+
     public void endTurn(Player player) {
         if(player.equals(getCurrentPlayer())){
             player.toggleTurn();
@@ -24,7 +38,7 @@ public class TurnController extends AbstractController{
             getCurrentPlayer().toggleTurn();
             getCurrentPlayer().toggleMainAction();
         }else {
-            //notifico al player che non è il suo turno..
+            player.throwError(AbstractModel.IS_NOT_YOUR_TURN);
         }
     }
 

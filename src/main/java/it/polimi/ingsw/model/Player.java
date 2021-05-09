@@ -32,7 +32,7 @@ public class Player extends AbstractModel {
 	 */
 	private final FaithTrack faithTrack;
 
-	private final LeaderCard[] leaderCards;
+	private final ArrayList<LeaderCard> leaderCards = new ArrayList<>();
 
 	/**
 	 * Infinite depot where the production outputs are stored.
@@ -42,18 +42,9 @@ public class Player extends AbstractModel {
 	/**
 	 * Special production that turns 2 resources of any kind into one resource of any kind.
 	 */
-	private final Production boardProduction;
+	private final ArrayList<Slot> slots =  new ArrayList<>();
 
-	private final DevelopmentCardSlot[] developmentCardSlots;
-
-	private ArrayList<Depot> warehouse;
-
-
-
-
-
-	private LeaderCard[] tempLeaderCards;
-
+	private ArrayList<Depot> warehouse = new ArrayList<>();
 
 	private ArrayList<Resource> tempResources;
 
@@ -61,40 +52,28 @@ public class Player extends AbstractModel {
 	 ** TODO: likewise, when is the leaderCard interaction made? Doesn't the constructor need to have 2 or 4 as input?
 	 ** TODO: does it really need the views? Or are they added manually? Should be an array anyway no?
 	 * Constructor
-	 *
-	 * @param initialResources initial resources distributed to the player.
-	 * @param initialFaithPoints initial faith points attributed to the player.
 	 */
 
-	public Player(int initialResources, int initialFaithPoints, LeaderCard[] leaderCards /*, view View*/){
+	public Player(String nickname){
 
 		// All the parameters are set to false until a method specifically activates them.
+		this.nickname = nickname;
 		isMyTurn = false;
 		isDisconnected = false;
 		mainAction = false;
+		strongbox = new Strongbox();
 
-		boardProduction = new Production(new Resource[]{new Resource(1,ResourceType.JOLLY), new Resource(1,ResourceType.JOLLY)}, new Resource[]{new Resource(1, ResourceType.JOLLY)});
+		warehouse.add(new Depot(1, Id.DEPOT_1));
+		warehouse.add(new Depot(2, Id.DEPOT_2));
+		warehouse.add(new Depot(3, Id.DEPOT_3));
 
-		warehouse = new ArrayList<>();
-		warehouse.add(new Depot(1, Origin.DEPOT_1));
-		warehouse.add(new Depot(2, Origin.DEPOT_2));
-		warehouse.add(new Depot(3, Origin.DEPOT_3));
+		slots.add(new BoardProduction(Id.BOARD_PRODUCTION));
+		slots.add(new DevelopmentCardSlot(Id.SLOT_1));
+		slots.add(new DevelopmentCardSlot(Id.SLOT_2));
+		slots.add(new DevelopmentCardSlot(Id.SLOT_3));
 
-		developmentCardSlots = new DevelopmentCardSlot[]{new DevelopmentCardSlot(1),new DevelopmentCardSlot(2), new DevelopmentCardSlot(3)};
-		
-		// Instantiation of the faithTrack with the initial faith points.
+
 		faithTrack = new FaithTrack();
-
-		try {
-			faithTrack.addFaithPoints(initialFaithPoints);
-		} catch (VaticanReportException e) {
-			e.printStackTrace();
-		}
-
-		// Need to decide whether it's the first four or the permanent two
-		this.leaderCards = leaderCards;
-
-		this.strongbox = new Strongbox();
 		}
 
 	/**
@@ -141,7 +120,7 @@ public class Player extends AbstractModel {
 	 * Getter for the leaderCards.
 	 * @return the player's leaderCards.
 	 */
-	public LeaderCard[] getLeaderCards() {
+	public ArrayList<LeaderCard> getLeaderCards() {
 		return leaderCards;
 	}
 
@@ -158,6 +137,13 @@ public class Player extends AbstractModel {
 	 * @return all the development cards on the player's board.
 	 */
 	public DevelopmentCardSlot[] getDevelopmentCardSlots() {
+
+		DevelopmentCardSlot slot1 = (DevelopmentCardSlot) slots.get(Id.SLOT_1.getValue());
+		DevelopmentCardSlot slot2 = (DevelopmentCardSlot) slots.get(Id.SLOT_2.getValue());
+		DevelopmentCardSlot slot3 = (DevelopmentCardSlot) slots.get(Id.SLOT_3.getValue());
+
+		DevelopmentCardSlot[] developmentCardSlots = new DevelopmentCardSlot[]{slot1, slot2, slot3};
+
 		return developmentCardSlots;
 	}
 
@@ -167,19 +153,22 @@ public class Player extends AbstractModel {
 	 */
 	public DevelopmentCard[] getVisibleCards(){
 		DevelopmentCard[] cards = {null,null,null};
+		DevelopmentCardSlot slot1 = (DevelopmentCardSlot) slots.get(Id.SLOT_1.getValue());
+		DevelopmentCardSlot slot2 = (DevelopmentCardSlot) slots.get(Id.SLOT_2.getValue());
+		DevelopmentCardSlot slot3 = (DevelopmentCardSlot) slots.get(Id.SLOT_3.getValue());
 
 		try {
-			cards[0] = developmentCardSlots[0].peek();
+			cards[0] = slot1.peek();
 		} catch (EmptyStackException e) {
 			cards[0] = null;
 		}
 		try {
-			cards[1] = developmentCardSlots[1].peek();
+			cards[1] = slot2.peek();
 		} catch (EmptyStackException e) {
 			cards[1] = null;
 		}
 		try {
-			cards[2] = developmentCardSlots[2].peek();
+			cards[2] = slot3.peek();
 		} catch (EmptyStackException e) {
 			cards[2] = null;
 		}
@@ -187,14 +176,12 @@ public class Player extends AbstractModel {
 		return cards;
 	}
 
-
-
 	/**
 	 * Getter for player's board production.
 	 * @return the board production.
 	 */
-	public Production getBoardProduction() {
-		return boardProduction;
+	public BoardProduction getBoardProduction() {
+		return (BoardProduction) slots.get(Id.BOARD_PRODUCTION.getValue());
 	}
 
 	/**
@@ -206,16 +193,15 @@ public class Player extends AbstractModel {
 	}
 
 	public void addSpecialDepot(int capacity, ResourceType type){
-		Origin origin;
+		Id id;
 		if (warehouse.size()==3) {
-
-			origin = Origin.S_DEPOT_1;
+			id = Id.S_DEPOT_1;
 		} else  if (warehouse.size()==4) {
-			origin = Origin.S_DEPOT_2;
+			id = Id.S_DEPOT_2;
 		} else {
 			throw new RuntimeException("Having more than two special depots should be impossible");
 		}
-		warehouse.add(new SpecialDepot(capacity, origin, type));
+		warehouse.add(new SpecialDepot(capacity, id, type));
 	}
 
 	public void throwError(String message){
@@ -255,37 +241,4 @@ public class Player extends AbstractModel {
 	public ArrayList<Resource> getTempResources() {
 		return tempResources;
 	}
-
-	public boolean canYouActivate(LeaderCard card){
-
-		for (Requirement req : card.getRequirements()){
-
-			int required;
-			int possessed = 0;
-
-			if (!req.isResource()) {
-				required = req.getNumber();
-				for (DevelopmentCardSlot slot : developmentCardSlots) {
-					 possessed = (int) slot.getSlot().stream().filter(c -> c.getType() == req.getType() && (req.getLevel() == c.getLevel() || req.getLevel() == 0)).count();
-
-				}
-
-			} else {
-
-				required = req.getResource().getQuantity();
-
-				for (Depot depot: warehouse){
-					if (depot.getResource().getResourceType()==req.getResource().getResourceType()){
-						possessed += depot.getResource().getQuantity();
-					}
-				}
-
-				possessed += strongbox.getAvailableResources(req.getResource().getResourceType()).getQuantity();
-
-			}
-			if (required > possessed) {return false;}
-		}
-		return true;
-	}
-
 }

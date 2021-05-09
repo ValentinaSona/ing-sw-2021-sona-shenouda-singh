@@ -1,18 +1,18 @@
 package it.polimi.ingsw.exception;
 
-import it.polimi.ingsw.model.Origin;
+import it.polimi.ingsw.model.Id;
 import it.polimi.ingsw.model.Resource;
 
 import java.util.HashMap;
 
 public class NotSufficientResourceException extends Exception {
-    private final HashMap<Origin, Resource> tempResources;
-    public NotSufficientResourceException(HashMap<Origin, Resource> tempResources) {
+    private final HashMap<Id, Resource> tempResources;
+    public NotSufficientResourceException(HashMap<Id, Resource> tempResources) {
         super();
         this.tempResources =tempResources;
     }
 
-    public HashMap<Origin, Resource> getTempResources(){
+    public HashMap<Id, Resource> getTempResources(){
         return tempResources;
     }
 }

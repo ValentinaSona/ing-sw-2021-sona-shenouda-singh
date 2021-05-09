@@ -15,7 +15,7 @@ class DepotTest {
         Resource emptyResource = new Resource(-2, ResourceType.SERVANT);
         Resource differentResource = new Resource(2, ResourceType.STONE);
 
-        Depot depot = new Depot(4,Origin.DEPOT_1);
+        Depot depot = new Depot(4, Id.DEPOT_1);
 
         try {
             depot.addResource(invalidRes);

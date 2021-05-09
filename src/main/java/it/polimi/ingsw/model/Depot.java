@@ -7,21 +7,21 @@ import static it.polimi.ingsw.model.ResourceType.*;
 
 public class Depot extends AbstractModel {
 	protected final int capacity;
-	protected final Origin id;
+	protected final Id id;
 	protected Resource resource;
 
 
-	public Origin getOrigin(){
+	public Id getOrigin(){
 		return id;
 	}
 
-	public Depot(int capacity, Origin id) {
+	public Depot(int capacity, Id id) {
 		resource = null;
 		this.id = id;
 		this.capacity = capacity;
 	}
 
-	public Depot (int capacity, Origin id, ResourceType resourceType){
+	public Depot (int capacity, Id id, ResourceType resourceType){
 		this(capacity,id);
 		resource = new Resource(0, resourceType);
 	}

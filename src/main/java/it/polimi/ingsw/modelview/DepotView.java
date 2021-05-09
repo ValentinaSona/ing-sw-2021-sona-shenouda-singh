@@ -1,20 +1,20 @@
 package it.polimi.ingsw.modelview;
 
-import it.polimi.ingsw.model.Origin;
+import it.polimi.ingsw.model.Id;
 import it.polimi.ingsw.model.Resource;
 
 public class DepotView {
-    final private Origin id;
+    final private Id id;
     final private Resource resource;
     final private int capacity;
 
-    public DepotView(Origin id, Resource resource, int capacity){
+    public DepotView(Id id, Resource resource, int capacity){
         this.id = id;
         this.resource = resource;
         this.capacity = capacity;
     }
 
-    public Origin getId(){
+    public Id getId(){
         return id;
     }
     public Resource getResource() {

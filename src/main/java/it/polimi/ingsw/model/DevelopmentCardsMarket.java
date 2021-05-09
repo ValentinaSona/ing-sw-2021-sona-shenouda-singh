@@ -22,6 +22,15 @@ public class DevelopmentCardsMarket {
 	}
 
 	/**
+	 * Get the first card from the selected deck without removing it and returns it to the player
+	 * @param row row of the selected deck
+	 * @param col column of the selected deck
+	 * @return the card on top of the selected deck
+	 */
+	public DevelopmentCard getDevelopmentCards(int row, int col){
+		return decks[row][col].firstCard();
+	}
+	/**
 	 * Shuffles all the decks
 	 */
 	public void shuffle() {

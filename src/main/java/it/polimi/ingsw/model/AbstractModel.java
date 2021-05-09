@@ -14,6 +14,9 @@ public abstract class AbstractModel {
     public static final String TEMP_RESOURCES_UPDATE = "temp_resources_update";
     public static final String WAREHOUSE_TYPE_ERROR = "warehouse_type_error";
     public static final String DEVEL_CARD_LEVEL_ERROR = "development_card_level_error";
+    public static final String TARGET_CARD = "target_card";
+    public static final String LEADERCARD_REQUIREMENTS = "leadercard_requirements";
+    public static final String JOLLY_RESOURCE = "jolly_resource";
     protected PropertyChangeSupport propertyChangeSupport;
 
 
