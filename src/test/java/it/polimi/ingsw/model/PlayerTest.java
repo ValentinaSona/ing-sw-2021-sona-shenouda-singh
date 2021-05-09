@@ -1,9 +1,8 @@
 package it.polimi.ingsw.model;
 
-import it.polimi.ingsw.exception.InvalidDepotException;
+import it.polimi.ingsw.server.exception.InvalidDepotException;
+import it.polimi.ingsw.server.model.*;
 import org.junit.jupiter.api.Test;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 class PlayerTest {
 
@@ -11,11 +10,11 @@ class PlayerTest {
     void canYouActivate() {
         LeaderCard[] cards= new LeaderCard[]{
                 new LeaderCard(new Requirement[]{
-                        new Requirement(1,2,DevelopmentType.GREEN),
+                        new Requirement(1,2, DevelopmentType.GREEN),
                         new Requirement(2,0,DevelopmentType.BLUE)
                 },1,new SpecialAbility()),
                 new LeaderCard(new Requirement[]{
-                        new Requirement(new Resource(5,ResourceType.STONE))
+                        new Requirement(new Resource(5, ResourceType.STONE))
                 }, 1, new SpecialAbility())
         };
 
