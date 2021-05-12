@@ -31,6 +31,7 @@ public class Model {
         developmentCardsMarket = DevelopmentBuilder.build();
     }
 
+
     public void subscribeUser(User user){
         if(subscribedUsers.size() == numOfPlayers){
             new RuntimeException("Sto inserendo più player di quelli consentiti");
