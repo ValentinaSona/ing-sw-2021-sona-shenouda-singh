@@ -14,34 +14,39 @@ import java.util.concurrent.Executors;
 public class Server {
     private int serverPort;
     private final ServerSocket serverSocket;
+    //this map contains the connection and the corresponding handler that will interpret the setup messages of the client
+    private final Map<Connection, ConnectionSetupHandler> handlerMap;
     private final ExecutorService executorService;
     private Match match;
-    private final Map<Connection, ServerConnectionSetupHandler> handlerMap;
+    private Lobby lobby;
 
 
-    public Server(int port){
+
+    public Server(int port) throws IOException {
         this.serverPort = port;
         this.serverSocket = new ServerSocket(serverPort);
+        this.lobby = Lobby.getInstance(serverSocket);
         this.executorService = Executors.newCachedThreadPool();
         this.handlerMap = new ConcurrentHashMap<>();
-
+        new Thread(()->lobby.start());
     }
-    public void start() throws IOException {
-        try {
-            serverSocket = new ServerSocket(port);
-        } catch (IOException e) {
-            e.printStackTrace();//this port is not available
-        }
 
-        System.out.println("Server ready");
-        while (true){
+    public void start() throws IOException {
+        while (!serverSocket.isClosed()){
             try{
-                Socket clientConnection = serverSocket.accept();
-                //adesso devo gestire questa connessione in entrata
-                //ossia vado a verificare se è il primo altrimenti lo aggiungo alla coda
-                //di gente per iniziare la partita
+                Socket inboundSocket = serverSocket.accept();
+                Connection currentConnection = new Connection(inboundSocket);;
+                ConnectionSetupHandler setupHandler = new ConnectionSetupHandler(lobby, currentConnection);
+
+                synchronized (handlerMap){
+                    handlerMap.put(currentConnection, setupHandler);
+                }
+
+                currentConnection.addObserver(setupHandler, (observer, transmittable) ->
+                        ( (ConnectionSetupHandler) observer).update(transmittable) );
+                executorService.submit(currentConnection);
             }catch(IOException e){
-                break; //In case the serverSocket gets closed
+                e.printStackTrace();
             }
         }
 

@@ -2,8 +2,7 @@ package it.polimi.ingsw.utils.networking;
 
 import it.polimi.ingsw.server.controller.Controller;
 import it.polimi.ingsw.server.controller.User;
-
-import javax.swing.text.View;
+import it.polimi.ingsw.server.view.RemoteViewHandler;
 
 /**
  * All messages that implements this interface are processed by the
@@ -18,5 +17,5 @@ public interface ControllerHandleable {
      * @param user
      * @return true if there where no errors while processing this message
      */
-    boolean handleMessage(Controller handler, View view, User user);
+    boolean handleMessage(Controller handler, RemoteViewHandler view, User user);
 }

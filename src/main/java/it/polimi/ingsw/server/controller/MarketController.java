@@ -1,11 +1,12 @@
 package it.polimi.ingsw.server.controller;
 
-import it.polimi.ingsw.server.exception.AlreadyUsedActionException;
+
 import it.polimi.ingsw.server.exception.IsNotYourTurnException;
 import it.polimi.ingsw.server.exception.TwoLeaderCardsException;
-import it.polimi.ingsw.model.*;
 import it.polimi.ingsw.server.model.*;
-
+import it.polimi.ingsw.server.view.RemoteViewHandler;
+import it.polimi.ingsw.utils.networking.transmittables.StatusMessage;
+import it.polimi.ingsw.utils.networking.transmittables.clientmessages.game.ClientBuyMarblesMessage;
 import java.util.ArrayList;
 
 public class MarketController extends AbstractController {
@@ -28,30 +29,24 @@ public class MarketController extends AbstractController {
 
     }
 
-    public void buyMarbles(Player player, int rowcol) {
-        try{
-            if( !(player.getTurn()) ){
-                throw new IsNotYourTurnException();
-            }
-            if( !(player.getMainAction()) ){
-                throw new AlreadyUsedActionException();
-            }
+    public void buyMarbles(ClientBuyMarblesMessage action, RemoteViewHandler view, User user) {
 
-            player.toggleMainAction();
-            MarketMarble[] marbles = market.getResources(player,rowcol);
+        Player player = getModel().getPlayerFromUser(user);
 
-            convertMarbles(marbles);
-        }catch(TwoLeaderCardsException twoLeaderCardsException){
-            //if the currentPlayer does not posses 2 LeaderCards the marbles are
-            //returned without throwing any exception otherwise an exception is thrown
-            //and the currentPlayer is notified that he has to choose how to convert the white
-            //marbles using his two leaderCards
-        }catch (IsNotYourTurnException isNotYourTurnException){
-            player.throwError(AbstractModel.IS_NOT_YOUR_TURN);
-        } catch (AlreadyUsedActionException e) {
-            player.throwError(AbstractModel.ACTION_USED);
+        if( !(player.getTurn()) || !(player.getMainAction()) ){
+            view.handleStatusMessage(StatusMessage.CLIENT_ERROR);
+        }else{
+
+            try {
+                player.toggleMainAction();
+                MarketMarble[] marbles = market.getResources(player, action.getRowCol());
+                convertMarbles(marbles);
+            } catch (TwoLeaderCardsException e) {
+                //the client knows that if he receive this type of message while doing
+                //this action he has to choose between his leaderCards
+                view.handleStatusMessage(StatusMessage.CONTINUE);
+            }
         }
-
     }
 
     /*  Called when the player has been prompted to choose which resources he wishes to convert his white marbles in as result of twoLeaderCardsException.
@@ -67,7 +62,7 @@ public class MarketController extends AbstractController {
             MarketMarble[] marbles = market.getChosen(choices);
             convertMarbles(marbles);
         }catch (IsNotYourTurnException isNotYourTurnException){
-            player.throwError(AbstractModel.IS_NOT_YOUR_TURN);
+
         }
     }
 

@@ -12,6 +12,7 @@ public abstract class AbstractController {
     public AbstractController(Model model){
         this.model = model;
     }
+
     public ArrayList<Player> getPlayersList() {
         ArrayList<Player> playersList = model.getPlayers();
         return new ArrayList<>(playersList);
@@ -23,5 +24,9 @@ public abstract class AbstractController {
 
     public void setCurrentPlayer(Player player){
         model.setCurrentPlayer(player);
+    }
+
+    public Model getModel() {
+        return model;
     }
 }

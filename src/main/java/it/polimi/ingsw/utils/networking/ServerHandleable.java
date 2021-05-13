@@ -1,17 +1,18 @@
 package it.polimi.ingsw.utils.networking;
 
-import it.polimi.ingsw.server.Server;
+import it.polimi.ingsw.server.ConnectionSetupHandler;
+
 
 /**
  * All messages that implements this interface are processed by the
- * server method dispatchClientMessages
+ * conncetionSetupHandler when the player is trying to join the lobby
  */
 public interface ServerHandleable {
     /**
      *
-     * @param server
+     * @param handler
      * @return
      */
-    boolean handleMessage(Server server);
+    boolean handleMessage(ConnectionSetupHandler handler);
 
 }
