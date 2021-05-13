@@ -25,7 +25,7 @@ public class Server {
     public Server(int port) throws IOException {
         this.serverPort = port;
         this.serverSocket = new ServerSocket(serverPort);
-        this.lobby = Lobby.getInstance(serverSocket);
+        this.lobby = Lobby.getInstance(this);
         this.executorService = Executors.newCachedThreadPool();
         this.handlerMap = new ConcurrentHashMap<>();
         new Thread(()->lobby.start());

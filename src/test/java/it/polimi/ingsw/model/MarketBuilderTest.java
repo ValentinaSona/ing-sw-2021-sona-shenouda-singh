@@ -44,7 +44,7 @@ class MarketBuilderTest {
         assertTrue(imported1 instanceof MarketTray);
 
         HashMap<Player, List<MarketMarble>> abilities = new HashMap<Player, List<MarketMarble>>() {{
-            put(new Player(0, 0, null), Arrays.asList(MarketMarble.BLUE));
+            put(new Player("Nickname"), Arrays.asList(MarketMarble.BLUE));
         }};
         Market imported2 = MarketBuilder.build(tray2.getTray(), tray2.getExtra(), abilities);
 

@@ -35,6 +35,13 @@ public class DevelopmentCardSlot extends Slot{
         return slot.pop();
     }
 
+    /** TODO: Remove updates for new methods.
+     * Checks that the card selected can be placed into the slot. If yes, its coordinates are saved, otherwise throws an exception.
+     * @param targetCard Card to be placed into the slot.
+     * @param row Market row coordinate of the card.
+     * @param col Market column coordinate of the card.
+     * @throws DevelopmentCardException The card cannot be placed on top of this slot.
+     */
     public void setTargetCard(DevelopmentCard targetCard, int row, int col) throws DevelopmentCardException {
         DevelopmentCard lastInsertion = peek();
 
@@ -43,25 +50,24 @@ public class DevelopmentCardSlot extends Slot{
             this.targetCard = targetCard;
             this.row = row;
             this.col = col;
-            update(TARGET_CARD, null, targetCard);
+            //update(TARGET_CARD, null, targetCard);
         }else{
             //we can't put the card in this slot
-            update(DEVEL_CARD_LEVEL_ERROR, null, null);
+            //update(DEVEL_CARD_LEVEL_ERROR, null, null);
             throw new DevelopmentCardException();
         }
     }
 
-    public int getRow(){
-        return row;
-    }
-
-    public int getCol(){
-        return col;
-    }
-
+    /**
+     * Can handle both the cost of the card that is being placed into the slot and of the slot's top production.
+     * Called when resources have been placed in the resourceCloset to pay for either one, and checks whether the player has supplied enough resources.
+     * @param card true if the cost is to buy the card, false if it's to activate a production.
+     * @throws NotSufficientResourceException the player has not placed enough resources into the closet.
+     */
     @Override
     public void check(boolean card) throws NotSufficientResourceException {
         Resource[] cost;
+
         if(card){
             cost = targetCard.getCost();
             //faccio il check su sconti sul costo della carta
@@ -90,6 +96,7 @@ public class DevelopmentCardSlot extends Slot{
         confirmed = true;
 
     }
+
 
     public void buyDevelopmentCard(){
 
@@ -120,5 +127,24 @@ public class DevelopmentCardSlot extends Slot{
 
     }
 
+    /**
+     * Getter for the Target card's market row.
+     * @return int representing the row.
+     */
+    public int getRow(){
+        return row;
+    }
+    /**
+     * Getter for the Target card's market column.
+     * @return int representing the column.
+     */
+    public int getCol(){
+        return col;
+    }
+
+    /**
+     * Getter for the card stack, needed for iterating through it without deleting cards.
+     * @return the slot's stack of development cards.
+     */
     public Stack<DevelopmentCard> getSlot() { return slot; }
 }

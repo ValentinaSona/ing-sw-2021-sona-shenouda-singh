@@ -44,7 +44,7 @@ public class Resource {
 	public void add(Resource other) {
 		if (this.resourceType != other.getResourceType()) {
 			throw new RuntimeException("Cannot sum different resources together!");
-		} else {
+		} else if (other != null){
 			this.setQuantity(this.quantity + other.getQuantity());
 		}
     }

@@ -70,5 +70,7 @@ public class Connection extends LambdaObservable<Transmittable> implements Runna
             }
         }
     }
-
+    //TODO: added to remove error, needs to be implemented.
+    public void close() {
+    }
 }

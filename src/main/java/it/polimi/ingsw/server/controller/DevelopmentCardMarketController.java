@@ -2,6 +2,11 @@ package it.polimi.ingsw.server.controller;
 
 import it.polimi.ingsw.server.exception.*;
 import it.polimi.ingsw.server.model.*;
+import it.polimi.ingsw.server.view.RemoteViewHandler;
+import it.polimi.ingsw.utils.networking.transmittables.StatusMessage;
+import it.polimi.ingsw.utils.networking.transmittables.clientmessages.game.ClientBuyTargetCardMessage;
+import it.polimi.ingsw.utils.networking.transmittables.clientmessages.game.ClientSelectDevelopmentCardMessage;
+
 
 public class DevelopmentCardMarketController extends AbstractController{
 
@@ -27,54 +32,69 @@ public class DevelopmentCardMarketController extends AbstractController{
 
     }
 
-    public void selectDevelopmentCard(Player player, int row, int col, Id targetSlot){
-        try{
-            if( !(player.getTurn()) ){
-                throw new IsNotYourTurnException();
-            }
-            if( !(player.getMainAction()) ){
-                throw new AlreadyUsedActionException();
-            }
-            DevelopmentCard targetCard = developmentCardsMarket.getDevelopmentCards(row,col);
-            DevelopmentCardSlot target = player.getDevelopmentCardSlots()[targetSlot.getValue()-1];
-            target.setTargetCard(targetCard, row, col);
+    /** TODO: added preliminary check that the player does have resources to buy the card. Check that it fits with discountAbility implementation.
+     * Called when te player selects a card they wish to buy. Checks whether the card and the slot selected are valid before proceeding to the payment.
+     * @param action the ClientMessage containing information about the player's action.
+     * @param view the player's corresponding RemoteViewHandler that will handle status messages to be sent back to the view.
+     * @param user the User corresponding to the player making the action.
+     */
+    public void selectDevelopmentCard(ClientSelectDevelopmentCardMessage action, RemoteViewHandler view, User user){
 
-        }catch (IsNotYourTurnException isNotYourTurnException){
-            player.throwError(AbstractModel.IS_NOT_YOUR_TURN);
-        }catch (AlreadyUsedActionException alreadyUsedActionException) {
-            player.throwError(AbstractModel.ACTION_USED);
-        }catch (DevelopmentCardException developmentCardException) {
-            //the model will inform the player of the invalid action
+        Player player = getModel().getPlayerFromUser(user);
+
+        if( !(player.getTurn()) || !(player.getMainAction()) ){
+            view.handleStatusMessage(StatusMessage.CLIENT_ERROR);
+        } else {
+
+            DevelopmentCard targetCard = developmentCardsMarket.getDevelopmentCards(action.getRow(),action.getCol());
+            DevelopmentCardSlot target = player.getDevelopmentCardSlots()[action.getTargetSlot().getValue()-1];
+
+
+            try {
+                // Check if player has enough resources at ALL. Assumes the card is presented with it's cost lowered if discounted.
+                if (!player.canPay(targetCard.getCost())){throw new NotSufficientResourceException();}
+
+                target.setTargetCard(targetCard, action.getRow(), action.getCol());
+                view.handleStatusMessage(StatusMessage.CONTINUE);
+
+            } catch (DevelopmentCardException | NotSufficientResourceException e) {
+                view.handleStatusMessage(StatusMessage.REQUIREMENTS_ERROR);
+            }
         }
     }
 
-    public void buyTargetCard(Player player, Id slotId){
-        try{
-            if( !(player.getTurn()) ){
-                throw new IsNotYourTurnException();
-            }
-            if( !(player.getMainAction()) ){
-                throw new AlreadyUsedActionException();
-            }
+    /** TODO: this needs some serious refactoring. Why are we having slot.check() set a boolean? It should not get to calling buy slot.buyDevelopmentCard() anyway if it throws?
+     * Called to actually buy the card and
+     * @param action the ClientMessage containing information about the player's action.
+     * @param view the player's corresponding RemoteViewHandler that will handle status messages to be sent back to the view.
+     * @param user the User corresponding to the player making the action.
+     */
+    public void buyTargetCard(ClientBuyTargetCardMessage action, RemoteViewHandler view, User user){
 
-            DevelopmentCardSlot slot = player.getDevelopmentCardSlots()[slotId.getValue()-1];
-            slot.check(true);
-            //if check doesn't throw any exception i can procede and buy the card
-            //in this case i don't have to separate the two action as opposed to the production process of validation because i can buy only one card every turn
-            player.toggleMainAction();
-            slot.buyDevelopmentCard();
-            //now i can remove the card from the market
-            developmentCardsMarket.buyDevelopmentCards(slot.getRow(), slot.getCol());
-        }catch (IsNotYourTurnException isNotYourTurnException){
-            player.throwError(AbstractModel.IS_NOT_YOUR_TURN);
-        }catch (AlreadyUsedActionException e) {
-            player.throwError(AbstractModel.ACTION_USED);
-        }catch (NotSufficientResourceException ex){
-            try{
-                resourceController.resetResources(player, ex.getTempResources());
-            }catch(InvalidDepotException invalidDepotException){
-                //if i enter this catch there is a problem in the way i am restoring the resources
-                invalidDepotException.printStackTrace();
+        Player player = getModel().getPlayerFromUser(user);
+
+        if( !(player.getTurn()) || !(player.getMainAction()) ){
+            view.handleStatusMessage(StatusMessage.CLIENT_ERROR);
+        } else {
+
+            try {
+
+                DevelopmentCardSlot slot = player.getDevelopmentCardSlots()[action.getSlotId().getValue() - 1];
+                slot.check(true);
+                //if check doesn't throw any exception i can proceed to buy the card
+                //in this case i don't have to separate the two action as opposed to the production process of validation because i can buy only one card every turn
+                player.toggleMainAction();
+                slot.buyDevelopmentCard();
+                //now i can remove the card from the market
+                //TODO: is the return value actually ever used? Also why plural?
+                developmentCardsMarket.buyDevelopmentCards(slot.getRow(), slot.getCol());
+            } catch (NotSufficientResourceException e) {
+                try {
+                    resourceController.resetResources(player, e.getTempResources());
+                } catch (InvalidDepotException invalidDepotException) {
+                    //if i enter this catch there is a problem in the way i am restoring the resources
+                    invalidDepotException.printStackTrace();
+                }
             }
         }
     }

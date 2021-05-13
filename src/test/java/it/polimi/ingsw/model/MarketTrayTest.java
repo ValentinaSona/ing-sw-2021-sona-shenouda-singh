@@ -43,7 +43,7 @@ class MarketTrayTest {
 
     @Test
     void addAbility() {
-        Player jimmy = new Player(0, 0, null);
+        Player jimmy = new Player("0, 0, null");
 
         Market market = MarketBuilder.build();
         market = market.addAbility(MarketMarble.BLUE, jimmy);

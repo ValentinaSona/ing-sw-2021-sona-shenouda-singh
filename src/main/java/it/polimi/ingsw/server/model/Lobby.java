@@ -2,11 +2,11 @@ package it.polimi.ingsw.server.model;
 
 public class Lobby {
 
-	private Game[] activeGames;
+	//private Game[] activeGames;
 
-	private Game waitingForPlayers;
+//	private Game waitingForPlayers;
 
-	private MultiplayerGame multiplayerGame;
+	// private MultiplayerGame multiplayerGame;
 
 	public void addPlayerToExistingGame(Player player) {
 

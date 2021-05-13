@@ -3,6 +3,10 @@ package it.polimi.ingsw.server.controller;
 
 import it.polimi.ingsw.server.exception.*;
 import it.polimi.ingsw.server.model.*;
+import it.polimi.ingsw.server.view.RemoteViewHandler;
+import it.polimi.ingsw.utils.networking.transmittables.StatusMessage;
+import it.polimi.ingsw.utils.networking.transmittables.clientmessages.game.ClientConvertMarblesMessage;
+import it.polimi.ingsw.utils.networking.transmittables.clientmessages.game.ClientDepositIntoWarehouseMessage;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -25,9 +29,12 @@ public class ResourceController extends AbstractController {
     }
 
 
-    /* Public method called by this and other controllers when they need to add faith points to a player's faith track.
-       Calls the faith track method with the same name and handles the VaticanReport exception by calling the vaticanReport method.
-       This method doesn't do any control on the caller because it is only called by other methods of the controllers that have already done this type of checks.
+    /**
+     *  Public method called all controllers when they need to add faith points to a player's faith track.
+     *  Calls the faithTrack's method by the same name and handles the VaticanReport exception by calling the validatePopeFavor method on every player.
+     *  This method doesn't perform any check on the caller since it's called only by other controllers' methods that have already performed their own checks.
+     * @param player Player who is gaining the additional faith points.
+     * @param faithPoints Resource to be added to the faith track.
      */
     public void addFaithPoints(Player player, Resource faithPoints){
         try{
@@ -49,6 +56,8 @@ public class ResourceController extends AbstractController {
     /*  Called when the player ends processing the resources gained from the market.
         Counts the wasted resources, sets tempResources to null and adds faith points to other players if needed.
      */
+
+
     public void throwResources(Player player) {
 
         try{
@@ -83,7 +92,7 @@ public class ResourceController extends AbstractController {
     /**
      * Called when a player want to withdraw Resources from a depot in order
      * to put them in an other depot or if he want to throw them
-     * @param player
+     * @param player Player performing the action.
      */
 
     public void tidyWarehouse(Player player, Id from, Id to){
@@ -127,25 +136,57 @@ public class ResourceController extends AbstractController {
     }
 
     /**
-     * Called when a player wants to deposit Resources from the tempResources in one of his depot
-     * @param player
-     * @param resource quantity that we want to remove from tempResouces
+     * Called when a player is depositing Resources from the tempResources acquired from the market in one of his depots.
+     * Removes the selected resource from tempResources.
+     * @param action the ClientMessage containing information about the player's action.
+     * @param view the player's corresponding RemoteViewHandler that will handle status messages to be sent back to the view.
+     * @param user the User corresponding to the player making the action.
      */
-    public void depositIntoWarehouse(Player player, Id target, Resource resource){
+    public void depositIntoWarehouse(ClientDepositIntoWarehouseMessage action, RemoteViewHandler view, User user){
+
+
+        Player player = getModel().getPlayerFromUser(user);
+
+        if( !(player.getTurn()) ){
+            view.handleStatusMessage(StatusMessage.CLIENT_ERROR);
+        } else {
+
+        }
+
+
         try{
-            if( !(player.getTurn()) ){
-                throw new IsNotYourTurnException();
+            ArrayList<Depot> warehouse = player.getWarehouse();
+            Depot targetDepot = warehouse.get(action.getSlotId().getValue());
+
+            Id[] standardDepots = {Id.DEPOT_1, Id.DEPOT_2,Id.DEPOT_3};
+
+            // If the deposit is not empty and it contains a resource of a different type than the one we are trying to deposit the action is illegal. Redundant check.
+            if (targetDepot.getResource() != null && targetDepot.getResource().getResourceType() != action.getResource().getResourceType()){throw new InvalidDepotException();}
+
+            for (Id depotId : standardDepots){
+                if (depotId != action.getSlotId()){
+                    if ( warehouse.get(depotId.getValue()).getResource() != null && warehouse.get(depotId.getValue()).getResource().getResourceType() == action.getResource().getResourceType()){
+
+                        // If one of the other standard depots isn't empty and contains a resource of the same type as the one we're trying to deposit the action is illegal.
+                        throw new InvalidDepotException();
+                    }
+                }
             }
 
-            Depot targetDepot = player.getWarehouse().get(target.getValue());
+            // If the targetDepot is a special depot the addResources already performs all the checks needed.
 
-            ArrayList<Depot> warehouse = player.getWarehouse();
+            // If it is not illegal to deposit, i can add to the resource to the target deposit.
+            targetDepot.addResource(action.getResource());
 
-            Resource depot1Resource = player.getWarehouse().get(Id.DEPOT_1.getValue()).getResource();
+            // If the deposit fails the InvalidDepotException is thrown by addResources and the next statement is never executed, leaving the resources still to be deposited.
+            getCurrentPlayer().subFromTempResources(action.getResource());
+
+
+          /*  Resource depot1Resource = player.getWarehouse().get(Id.DEPOT_1.getValue()).getResource();
             Resource depot2Resource = player.getWarehouse().get(Id.DEPOT_2.getValue()).getResource();
             Resource depot3Resource = player.getWarehouse().get(Id.DEPOT_3.getValue()).getResource();
 
-            if(target == Id.DEPOT_1){
+            if(action.getSlotId() == Id.DEPOT_1){
                 checkDepotType(targetDepot,depot2Resource,depot3Resource, resource);
             }else if(target == Id.DEPOT_2){
                 checkDepotType(targetDepot,depot1Resource,depot3Resource, resource);
@@ -154,24 +195,23 @@ public class ResourceController extends AbstractController {
             }else{
                 //the target depot is a special depot we don't have to do any check
                 targetDepot.addResource(resource);
-                //if the operation succed succesfuly we will remove the resource from tempResources
+                //if the operation succeeded we will remove the resource from tempResources
                 player.subFromTempResources(resource);
-            }
-        }catch (IsNotYourTurnException isNotYourTurnException){
-            player.throwError(AbstractModel.IS_NOT_YOUR_TURN);
+            } */
+
         }catch (InvalidDepotException invalidDepotException){
             //the depot model has already notified the player of the error
             //we just end the method
         }
     }
 
-    private void checkDepotType(Depot targetDepot, Resource depotA, Resource depotB, Resource resource) throws InvalidDepotException{
+ /*   private void checkDepotType(Depot targetDepot, Resource depotA, Resource depotB, Resource resource) throws InvalidDepotException{
         if( depotA != null && depotB != null){
             if(resource.getResourceType() != depotA.getResourceType() &&
                     resource.getResourceType() != depotB.getResourceType()){
                 //i can try to add this resourceType to the target depot
                 targetDepot.addResource(resource);
-                //if the action fails the InvalidDepotExceptin is thrown and the next statement is
+                //if the action fails the InvalidDepotException is thrown and the next statement is
                 //never executed
                 getCurrentPlayer().subFromTempResources(resource);
             }else{
@@ -205,7 +245,7 @@ public class ResourceController extends AbstractController {
             //never executed
             getCurrentPlayer().subFromTempResources(resource);
         }
-    }
+    } */
 
     private void selectResources(Player player , Resource resource, Id resourceId) throws InvalidDepotException {
 

@@ -12,6 +12,11 @@ public class NotSufficientResourceException extends Exception {
         this.tempResources =tempResources;
     }
 
+    public NotSufficientResourceException(){
+        super();
+        tempResources = null;
+    }
+
     public HashMap<Id, Resource> getTempResources(){
         return tempResources;
     }

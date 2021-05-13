@@ -1,6 +1,6 @@
 package it.polimi.ingsw.server.model;
 
-public class MultiplayerGame extends Game {
+/*public class MultiplayerGame extends Game {
 
 	private int playerNum;
 
@@ -12,4 +12,4 @@ public class MultiplayerGame extends Game {
 
 	}
 
-}
+}*/

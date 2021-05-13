@@ -36,8 +36,10 @@ public class Depot extends AbstractModel {
 	}
 
 	public void addResource(Resource other) throws InvalidDepotException {
-		if(resource == null){
-			if(other.getResourceType() != ResourceType.JOLLY && other.getResourceType() != ResourceType.FAITH && other.getQuantity()<= capacity){
+
+			if(resource == null){
+			// if the deposit is empty and the resource being
+			if( other.getResourceType() != ResourceType.JOLLY && other.getResourceType() != ResourceType.FAITH && other.getQuantity()<= capacity ){
 				resource.add(other);
 				update(DEPOT_UPDATE, null, new DepotView(id, getResource(), capacity) );
 			}else{
@@ -64,8 +66,11 @@ public class Depot extends AbstractModel {
 	public void subtractResource(Resource other) throws InvalidDepotException{
 
 		if(resource != null){
+
 			if(other.getResourceType() == resource.getResourceType()){
+
 				if(resource.getQuantity() > other.getQuantity()){
+
 					resource.sub(other);
 					update(DEPOT_UPDATE, null, new DepotView(id, getResource(), capacity) );
 				}else if(other.getQuantity() == resource.getQuantity()){
