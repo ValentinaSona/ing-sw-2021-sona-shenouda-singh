@@ -1,11 +1,16 @@
-package it.polimi.ingsw.server.model;
+package it.polimi.ingsw.server.model.observable;
 
 import it.polimi.ingsw.server.exception.DevelopmentCardException;
 import it.polimi.ingsw.server.exception.NotSufficientResourceException;
+import it.polimi.ingsw.server.model.DevelopmentCard;
+import it.polimi.ingsw.server.model.Id;
+import it.polimi.ingsw.server.model.Resource;
+
+
 import java.util.HashMap;
 import java.util.Stack;
 
-public class DevelopmentCardSlot extends Slot{
+public class DevelopmentCardSlot extends Slot {
 
     private final Stack<DevelopmentCard> slot = new Stack<>();
     private static final int MAX_LENGTH = 3;

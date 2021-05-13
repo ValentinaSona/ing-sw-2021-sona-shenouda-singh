@@ -66,7 +66,7 @@ public class RemoteViewHandler extends LambdaObservable<ViewClientMessage> imple
      * @param message a message coming from the client
      */
     public void updateFromClient(DisconnectionMessage message) {
-        connection.close();
+        connection.closeConnection();
         this.updateFromClient((Transmittable) message);
     }
 
@@ -83,7 +83,7 @@ public class RemoteViewHandler extends LambdaObservable<ViewClientMessage> imple
      * Handler of a disconnect message coming from the game.
      */
     public void requestDisconnection() {
-        connection.close();
+        connection.closeConnection();
     }
 
     /**

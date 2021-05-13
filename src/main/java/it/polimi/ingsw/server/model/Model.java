@@ -1,8 +1,9 @@
 package it.polimi.ingsw.server.model;
 
 import it.polimi.ingsw.server.controller.User;
+import it.polimi.ingsw.server.model.observable.Player;
+import it.polimi.ingsw.server.view.RemoteViewHandler;
 
-import java.nio.file.attribute.UserPrincipal;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -42,6 +43,13 @@ public class Model {
         userPlayerHashMap.put(user, player);
         playerUserHashMap.put(player, user);
         players.add(player);
+    }
+
+    //TODO DEVO ANDDARE A FARE IN MODO CHE TUTTE LE CLASSI DEL MODEL CHE IMPLEMENTANO LAMBDA OBSERVABLE VADANO AD AGGIUNGERE LA VIEW COME OBSERVER
+    public void addObserver(RemoteViewHandler view){
+        //TODO devo andare a chiamare su tutte le classi nel package observable addObserver(view, lambdaFunction)
+        //TODO inolre vedo se forse conviene che il player gestisca tutte le sue cose del model
+        //TODO in modo tale che sia solo lei la classe che estende lambdaObservable??
     }
 
     public Player getPlayerFromUser(User user){

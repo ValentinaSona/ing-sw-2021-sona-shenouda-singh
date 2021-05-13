@@ -6,8 +6,8 @@ import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
- * Controll flow the client when a connection with the server is established does the following setps:
- * try to register his nickname in order to join the LobbyRegisteredNickanmesMap calling
+ * Control flow the client when a connection with the server is established does the following steps:
+ * try to register his nickname in order to join the LobbyRegisteredNicknamesMap calling
  * handleNicknameRegistration(nickname, connection)-->if everything is ok now the player can call the
  * handleLobbyJoiningRequest(nickname, connection)-->if everything is ok if the player is not the first one
  * he has to wait until all player join the lobby
@@ -15,19 +15,24 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public class Lobby {
     private final static int MIN_PLAYER_PER_GAME = 1;
+
     private final static int MAX_PLAYER_PER_GAME = 4;
 
-
     private static Lobby singleton;
-    //server socket created by the server and passed to the lobby
-    private final LinkedList<Connection> lobbyRequestingConnections;
-    //connection that have been registered
+
+    //connection that have been registered with a valid nickname
     private final Map<Connection, String> registeredNicknamesMap;
+
+    //connection that are in the registeredNicknamesMap but in order of arrive
+    private final LinkedList<Connection> lobbyRequestingConnections;
+
     //the first connection to arrive that has the control on the player count
     private Connection firstConnection;
-    //maximum number of player
+
+
     private final Server server;
 
+    //maximum number of player
     private int currentLobbyPlayerCount;
 
     private final Object playerCountLock;
@@ -105,6 +110,8 @@ public class Lobby {
      * @return true if there were no errors
      */
     public boolean handleLobbyJoiningRequest(String nickname, Connection connection){
+        //if the player has already registered itself in the Map he can proceed to be registered in
+        //the lobbyRequestingConnection
         synchronized (registeredNicknamesMap){
             if(!registeredNicknamesMap.containsValue(nickname) || !registeredNicknamesMap.containsKey(connection)){
                 return false;
@@ -113,6 +120,29 @@ public class Lobby {
         synchronized (lobbyRequestingConnections){
             lobbyRequestingConnections.add(connection);
             lobbyRequestingConnections.notifyAll();
+        }
+
+        return true;
+    }
+
+    public boolean handleLobbyDisconnection(Connection connection){
+        synchronized (lobbyRequestingConnections){
+            //erase itself from records in the server, if it is not the firstConnection
+            lobbyRequestingConnections.removeIf( c-> c.equals(connection));
+            registeredNicknamesMap.remove(connection);
+            server.removeHandler(connection);
+
+            synchronized (playerCountLock){
+                if(firstConnection != null && firstConnection.equals(connection)
+                && currentLobbyPlayerCount == 0){
+                    //we set to -1 only if the firstConnection was the
+                    //connection in the lobby otherwise we continue to wait for the number of player that were
+                    //decided by the firstConnection
+                    currentLobbyPlayerCount = -1;
+                    playerCountLock.notifyAll();
+                }
+            }
+            connection.closeConnection();
         }
 
         return true;
@@ -132,8 +162,11 @@ public class Lobby {
                 for(Connection c : participants.keySet()){
                     match.addParticipant(participants.get(c), c);
                 }
-                //server.submit(match);
-            }//TODO come comportarsi nel caso in cui si disconnetta il primo player
+                this.stop();
+                server.submitMatch(match);
+            }
+            //if the first player disconnected while no one was in the lobby what will happen is
+            //that we will do another time the while
         }
     }
 
@@ -158,7 +191,7 @@ public class Lobby {
             firstConnection.send(StatusMessage.CONTINUE);
             while(currentLobbyPlayerCount == 0){
                 try {
-                    //waiting for the first player to call setPlayercount
+                    //waiting for the first player to call setLobbyMaxPlayerCount
                     this.wait();
                 } catch (InterruptedException e) {
                     Thread.currentThread().interrupt();
@@ -174,7 +207,7 @@ public class Lobby {
             //when this method return i have all the requested connection
             this.waitForParticipants();
             //check if in the mean time the firstConnection has disconnected
-            boolean firstPlayerDisconnected =
+            boolean firstPlayerDisconnected =/*the first player disconnected while no one was in the lobby --> playerCount == -1 */
                     currentLobbyPlayerCount == -1 || !firstConnection.equals(lobbyRequestingConnections.get(0));
 
             if(!firstPlayerDisconnected){
@@ -195,7 +228,7 @@ public class Lobby {
      * This method wait for connection until we reach the currentLobbyPlayerCount
      */
     private void waitForParticipants(){
-        //DOPPIO LOCK NNON MI TORNA
+        //thread can acquire a lock that it already owns.
         synchronized (lobbyRequestingConnections){
             //until i reach the total number of player or the firstPlayer disconnect
             while (lobbyRequestingConnections.size() < currentLobbyPlayerCount &&
@@ -210,5 +243,11 @@ public class Lobby {
         }
     }
 
+    /**
+     * This method stops the main ServerLobbyBuilder thread
+     */
+    public void stop() {
+        active = false;
+    }
 }
 

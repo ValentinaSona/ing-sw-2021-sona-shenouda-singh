@@ -1,8 +1,13 @@
-package it.polimi.ingsw.server.model;
+package it.polimi.ingsw.server.model.observable;
 
 import it.polimi.ingsw.server.exception.VaticanReportException;
+import it.polimi.ingsw.server.model.PopeFavorTiles;
+import it.polimi.ingsw.server.model.Resource;
+import it.polimi.ingsw.server.model.ResourceType;
+import it.polimi.ingsw.utils.networking.Transmittable;
+import it.polimi.ingsw.utils.observer.LambdaObservable;
 
-public class FaithTrack {
+public class FaithTrack extends LambdaObservable<Transmittable> {
 
 
 	private int faithMarker;

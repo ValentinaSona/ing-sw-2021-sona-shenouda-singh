@@ -1,6 +1,7 @@
 package it.polimi.ingsw.server.model;
 
 import it.polimi.ingsw.server.exception.TwoLeaderCardsException;
+import it.polimi.ingsw.server.model.observable.Player;
 
 import java.util.HashMap;
 import java.util.List;

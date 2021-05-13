@@ -2,6 +2,10 @@ package it.polimi.ingsw.server.controller;
 
 import it.polimi.ingsw.server.exception.IsNotYourTurnException;
 import it.polimi.ingsw.server.model.*;
+import it.polimi.ingsw.server.model.observable.Depot;
+import it.polimi.ingsw.server.model.observable.DevelopmentCardSlot;
+import it.polimi.ingsw.server.model.observable.Player;
+import it.polimi.ingsw.server.model.observable.Strongbox;
 
 import java.util.ArrayList;
 

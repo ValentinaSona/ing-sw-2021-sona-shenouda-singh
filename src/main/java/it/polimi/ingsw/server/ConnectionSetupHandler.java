@@ -46,7 +46,7 @@ public class ConnectionSetupHandler implements LambdaObserver {
      * This method is called by the connection in the setup process
      * when the connection receive message from the client that implement ServerHandleable
      *
-     * @param message the message to be received
+     * @param message the message to be received by the client while in the lobby
      */
     public void update(Transmittable message) {
         ((ServerHandleable) message).handleMessage(this);

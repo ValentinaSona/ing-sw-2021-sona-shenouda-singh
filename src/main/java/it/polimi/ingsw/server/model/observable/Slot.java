@@ -1,11 +1,15 @@
-package it.polimi.ingsw.server.model;
+package it.polimi.ingsw.server.model.observable;
 
 import it.polimi.ingsw.server.exception.NotSufficientResourceException;
+import it.polimi.ingsw.server.model.Id;
+import it.polimi.ingsw.server.model.Resource;
+import it.polimi.ingsw.utils.networking.Transmittable;
+import it.polimi.ingsw.utils.observer.LambdaObservable;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public abstract class Slot extends AbstractModel {
+public abstract class Slot extends LambdaObservable<Transmittable> {
     protected final Id id;
     protected final HashMap<Id, Resource> originResourceHashMap = new HashMap<>();
     protected final ArrayList<Resource> resourceCloset = new ArrayList<>();

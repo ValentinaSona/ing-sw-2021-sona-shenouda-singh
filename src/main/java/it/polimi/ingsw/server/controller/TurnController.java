@@ -1,8 +1,7 @@
 package it.polimi.ingsw.server.controller;
 
-import it.polimi.ingsw.server.model.AbstractModel;
 import it.polimi.ingsw.server.model.Model;
-import it.polimi.ingsw.server.model.Player;
+import it.polimi.ingsw.server.model.observable.Player;
 import java.util.ArrayList;
 
 public class TurnController extends AbstractController{

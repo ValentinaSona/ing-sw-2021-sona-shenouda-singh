@@ -1,18 +1,23 @@
-package it.polimi.ingsw.server.model;
+package it.polimi.ingsw.server.model.observable;
 
 import it.polimi.ingsw.server.exception.NotSufficientResourceException;
+import it.polimi.ingsw.server.model.Id;
+import it.polimi.ingsw.server.model.Production;
+import it.polimi.ingsw.server.model.Resource;
+import it.polimi.ingsw.server.model.ResourceType;
+
 
 import java.util.HashMap;
 
-public class SpecialProduction extends Slot{
-    private Production specialProduction;
+public class BoardProduction extends Slot {
+    private Production boardProduction;
     private ResourceType chosenType;
 
-    public SpecialProduction(Id id, Resource productionCost){
+    public BoardProduction(Id id){
         super(id);
-        Resource[] cost = new Resource[]{productionCost};
-        Resource[] out = new Resource[]{new Resource(1, ResourceType.JOLLY), new Resource(1, ResourceType.FAITH)};
-        this.specialProduction = new Production(cost, out);
+        Resource[] cost = new Resource[]{new Resource(2, ResourceType.JOLLY)};
+        Resource[] out = new Resource[]{new Resource(1, ResourceType.JOLLY)};
+        this.boardProduction = new Production(cost, out);
     }
 
     @Override
@@ -22,7 +27,7 @@ public class SpecialProduction extends Slot{
             new RuntimeException("Super error");
         }
 
-        Resource cost = specialProduction.getProductionCost()[0];
+        Resource cost = boardProduction.getProductionCost()[0];
 
         //to activate the board production we can use resource of different types
         int tot = 0;
@@ -40,7 +45,7 @@ public class SpecialProduction extends Slot{
         //if the player can activate the production but the output
         //resourcetype is a jolly before activating the power we have to ask
         //how the player wants to convert the jolly type
-        update(JOLLY_RESOURCE, null, new Resource(1, ResourceType.JOLLY));
+       // update(JOLLY_RESOURCE, null, new Resource(1, ResourceType.JOLLY));
     }
 
     /**
@@ -59,7 +64,7 @@ public class SpecialProduction extends Slot{
             chosenType = null;
             resourceCloset.clear();
             originResourceHashMap.clear();
-            return new Resource[]{new Resource(1, chosenType), new Resource(1, ResourceType.FAITH)};
+            return new Resource[]{new Resource(1, chosenType)};
         }else {
             return null;
         }

@@ -1,9 +1,14 @@
-package it.polimi.ingsw.server.model;
+package it.polimi.ingsw.server.model.observable;
+
+import it.polimi.ingsw.server.model.*;
+import it.polimi.ingsw.utils.networking.Transmittable;
+import it.polimi.ingsw.utils.observer.LambdaObservable;
 
 import java.util.ArrayList;
 import java.util.EmptyStackException;
 
-public class Player extends AbstractModel {
+//TODO does player realy needs to be observable??
+public class Player extends LambdaObservable<Transmittable> {
 
 	/**
 	 * Set to true if the connection with the player fails and their turn is to be skipped.
@@ -241,7 +246,7 @@ public class Player extends AbstractModel {
 	}
 
 	public void throwError(String message){
-		update(message, null, null);
+
 	}
 
 	/**

@@ -1,9 +1,12 @@
-package it.polimi.ingsw.server.model;
+package it.polimi.ingsw.server.model.observable;
 
 import it.polimi.ingsw.server.exception.TwoLeaderCardsException;
+import it.polimi.ingsw.server.model.*;
 
 import java.util.*;
 // TODO make better comments
+// TODO replace AbstractModel with LambdaObservable<Transmittable> and update() calls with notify()
+// TODO understanding if both marketTrayAbility and marketTray needs to extend LambdaObservable
 public class MarketTrayAbility extends AbstractModel implements Market {
 
     HashMap<Player, List<MarketMarble>> abilityMap;

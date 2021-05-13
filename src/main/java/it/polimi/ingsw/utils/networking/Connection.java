@@ -17,7 +17,7 @@ public class Connection extends LambdaObservable<Transmittable> implements Runna
         this.socket = socket;
         this.inputStream = new ObjectInputStream(socket.getInputStream());
         this.outputStream = new ObjectOutputStream(socket.getOutputStream());
-        this.outputStream.flush();  //required otherwise the folowing instantiation of ObjectInptStream will block forever
+        this.outputStream.flush();  //required otherwise the following instantiation of ObjectInputStream will block forever
 
     }
 
@@ -29,25 +29,40 @@ public class Connection extends LambdaObservable<Transmittable> implements Runna
      * if the connection is not closed
      * we try to close this socket
      */
-    public void closeConnection(){
-        if(active){
+    public synchronized void closeConnection(){
+        if(!isActive()){
+            //if the connection is already close
             return;
         }
+        active = false;
         try{
             outputStream.close();
             inputStream.close();
             socket.close();
         }catch(IOException e){
+            //we encountered a problem while closing
             e.printStackTrace();
         }
     }
 
+    //TODO need to understand hot to implement the message because it will be handled -->se also the lobby methods and remoteView
+    //in 2 different ways depending if the observer of the connection is the ConnectionSetupHandler
+    //or the observers are the RemoteViewHandler and the controller
+/*    private synchronized void notifyDisconnection(){
+        if(active){
+            active = false;
+            notify(new DisconnectionMessage());
+        }
+    }
+
+ */
     /**
      * Send a message to the remote client
-     * @param message
+     * @param message this message will be handled by the client and so it has to implement the ClientHandleable interface
      */
     public void send(Transmittable message){
         try{
+            //more observers can call the method send from different threads
             synchronized (outputStream){
                 if(!active){
                     return;
@@ -59,8 +74,9 @@ public class Connection extends LambdaObservable<Transmittable> implements Runna
         }
     }
 
+    //TODO probably this method is yet to finish
     @Override
-    public void run(){
+    public synchronized void run(){
         while (isActive()){
             try{
                 Transmittable inputObject = (Transmittable) inputStream.readObject();
@@ -70,7 +86,5 @@ public class Connection extends LambdaObservable<Transmittable> implements Runna
             }
         }
     }
-    //TODO: added to remove error, needs to be implemented.
-    public void close() {
-    }
+
 }

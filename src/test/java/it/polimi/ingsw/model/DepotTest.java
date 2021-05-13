@@ -1,7 +1,7 @@
 package it.polimi.ingsw.model;
 
 import it.polimi.ingsw.server.exception.InvalidDepotException;
-import it.polimi.ingsw.server.model.Depot;
+import it.polimi.ingsw.server.model.observable.Depot;
 import it.polimi.ingsw.server.model.Id;
 import it.polimi.ingsw.server.model.Resource;
 import it.polimi.ingsw.server.model.ResourceType;

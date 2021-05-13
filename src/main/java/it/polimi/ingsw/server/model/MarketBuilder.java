@@ -1,5 +1,9 @@
 package it.polimi.ingsw.server.model;
 
+import it.polimi.ingsw.server.model.observable.MarketTray;
+import it.polimi.ingsw.server.model.observable.MarketTrayAbility;
+import it.polimi.ingsw.server.model.observable.Player;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Random;

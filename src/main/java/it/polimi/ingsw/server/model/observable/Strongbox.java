@@ -1,8 +1,13 @@
-package it.polimi.ingsw.server.model;
+package it.polimi.ingsw.server.model.observable;
+
+import it.polimi.ingsw.server.model.Resource;
+import it.polimi.ingsw.server.model.ResourceType;
+import it.polimi.ingsw.utils.networking.Transmittable;
+import it.polimi.ingsw.utils.observer.LambdaObservable;
 
 import static it.polimi.ingsw.server.model.ResourceType.*;
-
-public class Strongbox {
+//TODO replace  update() calls with notify() of the lambdaObservable class
+public class Strongbox extends LambdaObservable<Transmittable> {
 
     private final Resource shield;
     private final Resource coin;

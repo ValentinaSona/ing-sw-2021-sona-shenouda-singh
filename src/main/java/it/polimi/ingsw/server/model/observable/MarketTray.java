@@ -1,4 +1,7 @@
-package it.polimi.ingsw.server.model;
+package it.polimi.ingsw.server.model.observable;
+
+import it.polimi.ingsw.server.model.Market;
+import it.polimi.ingsw.server.model.MarketMarble;
 
 import java.util.*;
 
