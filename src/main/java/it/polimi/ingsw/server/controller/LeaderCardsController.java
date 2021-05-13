@@ -35,11 +35,11 @@ public class LeaderCardsController extends AbstractController{
             if(activate){
                 useAbility(player, targetCard);
             }else{
-                player.throwError(AbstractModel.LEADERCARD_REQUIREMENTS);
+              //  player.throwError(AbstractModel.LEADERCARD_REQUIREMENTS);
             }
 
         }catch (IsNotYourTurnException isNotYourTurnException){
-            player.throwError(AbstractModel.IS_NOT_YOUR_TURN);
+           // player.throwError(AbstractModel.IS_NOT_YOUR_TURN);
         }
     }
 

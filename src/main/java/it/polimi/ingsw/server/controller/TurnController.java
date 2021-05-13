@@ -38,7 +38,7 @@ public class TurnController extends AbstractController{
             getCurrentPlayer().toggleTurn();
             getCurrentPlayer().toggleMainAction();
         }else {
-            player.throwError(AbstractModel.IS_NOT_YOUR_TURN);
+          //  player.throwError(AbstractModel.IS_NOT_YOUR_TURN);
         }
     }
 

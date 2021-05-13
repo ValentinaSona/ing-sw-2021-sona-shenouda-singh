@@ -40,7 +40,7 @@ public class BoardProduction extends Slot{
         //if the player can activate the production but the output
         //resourcetype is a jolly before activating the power we have to ask
         //how the player wants to convert the jolly type
-        update(JOLLY_RESOURCE, null, new Resource(1, ResourceType.JOLLY));
+       // update(JOLLY_RESOURCE, null, new Resource(1, ResourceType.JOLLY));
     }
 
     /**

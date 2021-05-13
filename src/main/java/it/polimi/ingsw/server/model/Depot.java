@@ -2,16 +2,11 @@ package it.polimi.ingsw.server.model;
 
 import it.polimi.ingsw.server.exception.InvalidDepotException;
 import it.polimi.ingsw.client.modelview.DepotView;
-
+//TODO: turn old updates into messages.
 public class Depot extends AbstractModel {
 	protected final int capacity;
 	protected final Id id;
 	protected Resource resource;
-
-
-	public Id getOrigin(){
-		return id;
-	}
 
 	public Depot(int capacity, Id id) {
 		resource = null;
@@ -36,14 +31,12 @@ public class Depot extends AbstractModel {
 	}
 
 	public void addResource(Resource other) throws InvalidDepotException {
-
-			if(resource == null){
-			// if the deposit is empty and the resource being
-			if( other.getResourceType() != ResourceType.JOLLY && other.getResourceType() != ResourceType.FAITH && other.getQuantity()<= capacity ){
+		if(resource == null){
+			if(other.getResourceType() != ResourceType.JOLLY && other.getResourceType() != ResourceType.FAITH && other.getQuantity()<= capacity){
 				resource.add(other);
-				update(DEPOT_UPDATE, null, new DepotView(id, getResource(), capacity) );
+				//update(DEPOT_UPDATE, null, new DepotView(id, getResource(), capacity) );
 			}else{
-				update(DEPOT_QUANTITY_ERROR, null, null);
+				//update(DEPOT_QUANTITY_ERROR, null, null);
 				throw  new InvalidDepotException();
 			}
 		}else{
@@ -51,13 +44,13 @@ public class Depot extends AbstractModel {
 				int newValue = resource.getQuantity()+other.getQuantity();
 				if(newValue <= capacity){
 					resource.add(other);
-					update(DEPOT_UPDATE, null, new DepotView(id, getResource(), capacity) );
+					//update(DEPOT_UPDATE, null, new DepotView(id, getResource(), capacity) );
 				}else {
-					update(DEPOT_QUANTITY_ERROR, null, null);
+					//update(DEPOT_QUANTITY_ERROR, null, null);
 					throw new InvalidDepotException();
 				}
 			}else{
-				update(DEPOT_TYPE_ERROR, null, null);
+				//update(DEPOT_TYPE_ERROR, null, null);
 				throw  new InvalidDepotException();
 			}
 		}
@@ -66,25 +59,22 @@ public class Depot extends AbstractModel {
 	public void subtractResource(Resource other) throws InvalidDepotException{
 
 		if(resource != null){
-
 			if(other.getResourceType() == resource.getResourceType()){
-
 				if(resource.getQuantity() > other.getQuantity()){
-
 					resource.sub(other);
-					update(DEPOT_UPDATE, null, new DepotView(id, getResource(), capacity) );
+					//update(DEPOT_UPDATE, null, new DepotView(id, getResource(), capacity) );
 				}else if(other.getQuantity() == resource.getQuantity()){
 					resource = null;
 				}else{
-					update(DEPOT_QUANTITY_ERROR, null, null);
+					//update(DEPOT_QUANTITY_ERROR, null, null);
 					throw  new InvalidDepotException();
 				}
 			}else{
-				update(DEPOT_TYPE_ERROR, null, null);
+				//update(DEPOT_TYPE_ERROR, null, null);
 				throw new InvalidDepotException();
 			}
 		}else{
-			update(DEPOT_QUANTITY_ERROR, null, null);
+			//update(DEPOT_QUANTITY_ERROR, null, null);
 			throw new InvalidDepotException();
 		}
 	}
@@ -92,4 +82,10 @@ public class Depot extends AbstractModel {
 	public int getCapacity() {
 		return capacity;
 	}
+
+	public Id getId(){
+		return id;
+	}
+
+
 }

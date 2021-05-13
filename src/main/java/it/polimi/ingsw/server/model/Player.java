@@ -261,17 +261,17 @@ public class Player extends AbstractModel {
 				break;
 			}
 		}
-		update(TEMP_RESOURCES_UPDATE, null, tempResources);
+	//	update(TEMP_RESOURCES_UPDATE, null, tempResources);
 	}
 
 	public void addToTempResources(ArrayList<Resource> resources){
 		this.tempResources = resources;
-		update(TEMP_RESOURCES_UPDATE, null, tempResources);
+		//update(TEMP_RESOURCES_UPDATE, null, tempResources);
 	}
 
 	public void dumpTempResources(){
 		tempResources.clear();
-		update(TEMP_RESOURCES_EMPTY, null, null);
+		//update(TEMP_RESOURCES_EMPTY, null, null);
 	}
 
 	public ArrayList<Resource> getTempResources() {

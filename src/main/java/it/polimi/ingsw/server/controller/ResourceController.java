@@ -7,6 +7,8 @@ import it.polimi.ingsw.server.view.RemoteViewHandler;
 import it.polimi.ingsw.utils.networking.transmittables.StatusMessage;
 import it.polimi.ingsw.utils.networking.transmittables.clientmessages.game.ClientConvertMarblesMessage;
 import it.polimi.ingsw.utils.networking.transmittables.clientmessages.game.ClientDepositIntoWarehouseMessage;
+import it.polimi.ingsw.utils.networking.transmittables.clientmessages.game.ClientThrowResourcesMessage;
+import it.polimi.ingsw.utils.networking.transmittables.clientmessages.game.ClientTidyWarehouseMessage;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -53,17 +55,21 @@ public class ResourceController extends AbstractController {
     }
 
 
-    /*  Called when the player ends processing the resources gained from the market.
-        Counts the wasted resources, sets tempResources to null and adds faith points to other players if needed.
+    /*
      */
 
+    /**
+     *  Called when the player ends processing the resources gained from the market.
+     *  Counts the wasted resources, sets tempResources to null and adds faith points to other players if needed.
+     * @param view the player's corresponding RemoteViewHandler that will handle status messages to be sent back to the view.
+     * @param user the User corresponding to the player making the action.
+     */
+    public void throwResources( RemoteViewHandler view, User user) {
+        Player player = getModel().getPlayerFromUser(user);
 
-    public void throwResources(Player player) {
-
-        try{
-            if( !(player.getTurn()) ){
-                throw new IsNotYourTurnException();
-            }
+        if( !(player.getTurn()) ){
+            view.handleStatusMessage(StatusMessage.CLIENT_ERROR);
+        } else {
 
             int thrown = 0;
             ArrayList<Resource> tempResources = player.getTempResources();
@@ -83,55 +89,61 @@ public class ResourceController extends AbstractController {
             for(Player p :  players) {
                 addFaithPoints(p, faithPoints);
             }
-        }catch (IsNotYourTurnException isNotYourTurnException){
-            //notify the player
-            player.throwError(AbstractModel.IS_NOT_YOUR_TURN);
+            view.handleStatusMessage(StatusMessage.OK);
         }
     }
 
     /**
      * Called when a player want to withdraw Resources from a depot in order
      * to put them in an other depot or if he want to throw them
-     * @param player Player performing the action.
+     * @param action the ClientMessage containing information about the player's action.
+     * @param view the player's corresponding RemoteViewHandler that will handle status messages to be sent back to the view.
+     * @param user the User corresponding to the player making the action.
      */
+    public void tidyWarehouse(ClientTidyWarehouseMessage action, RemoteViewHandler view, User user){
+        Player player = getModel().getPlayerFromUser(user);
 
-    public void tidyWarehouse(Player player, Id from, Id to){
-        try{
-            if( !(player.getTurn()) ){
-                throw new IsNotYourTurnException();
-            }
-
-            Depot fromDepot = player.getWarehouse().get(from.getValue());
-            Depot toDepot = player.getWarehouse().get(to.getValue());
+        if( !(player.getTurn()) ){
+            view.handleStatusMessage(StatusMessage.CLIENT_ERROR);
+        } else {
 
 
-            Resource fromResource = fromDepot.getResource();
-            Resource toResource = toDepot.getResource();
+            try {
 
 
-            if(toDepot.getResource() == null || toDepot.getResource().getQuantity() == 0){
-                //if i am trying to move resources to an empty specialDepot or a empty normal depot
-                toDepot.addResource(fromResource);
-                //if no exception is thrown
-                fromDepot.subtractResource(toResource);
-            }else{
-                if(fromResource.getQuantity() <= toDepot.getCapacity() && toResource.getQuantity() <= fromDepot.getCapacity()) {
-                    //i can switch the content of the depot
-                    toDepot.subtractResource(toResource);
-                    fromDepot.subtractResource(fromResource);
+                Depot fromDepot = player.getWarehouse().get(action.getFrom().getValue());
+                Depot toDepot = player.getWarehouse().get(action.getTo().getValue());
 
+
+                Resource fromResource = fromDepot.getResource();
+                Resource toResource = toDepot.getResource();
+
+
+                if (toDepot.getResource() == null || toDepot.getResource().getQuantity() == 0) {
+                    //if i am trying to move resources to an empty specialDepot or a empty normal depot
                     toDepot.addResource(fromResource);
-                    fromDepot.addResource(toResource);
-                }else {
-                    player.throwError(AbstractModel.ILLEGAL_ACTION);
-                }
-            }
+                    //if no exception is thrown
+                    fromDepot.subtractResource(toResource);
+                    view.handleStatusMessage(StatusMessage.OK);
+                } else {
+                    if (fromResource.getQuantity() <= toDepot.getCapacity() && toResource.getQuantity() <= fromDepot.getCapacity()) {
+                        //i can switch the content of the depot
+                        toDepot.subtractResource(toResource);
+                        fromDepot.subtractResource(fromResource);
 
-        }catch (IsNotYourTurnException isNotYourTurnException){
-            player.throwError(AbstractModel.IS_NOT_YOUR_TURN);
-        }catch (InvalidDepotException invalidDepotException){
-            //if i enter here it means that the action on the warehouse is failed
-            //and the player has been already infrormed
+                        toDepot.addResource(fromResource);
+                        fromDepot.addResource(toResource);
+                        view.handleStatusMessage(StatusMessage.OK);
+                    } else {
+                        view.handleStatusMessage(StatusMessage.CLIENT_ERROR);
+                    }
+                }
+
+
+            } catch (InvalidDepotException invalidDepotException) {
+                //if i enter here it means that the action on the warehouse is failed
+                //and the player has been already informed
+            }
         }
     }
 
@@ -180,6 +192,7 @@ public class ResourceController extends AbstractController {
 
             // If the deposit fails the InvalidDepotException is thrown by addResources and the next statement is never executed, leaving the resources still to be deposited.
             getCurrentPlayer().subFromTempResources(action.getResource());
+            view.handleStatusMessage(StatusMessage.CONTINUE);
 
 
           /*  Resource depot1Resource = player.getWarehouse().get(Id.DEPOT_1.getValue()).getResource();
@@ -288,9 +301,9 @@ public class ResourceController extends AbstractController {
             DevelopmentCardSlot slot = player.getDevelopmentCardSlots()[slotId.getValue()];
             slot.setResourceCloset(resource, resourceId);
         }catch (IsNotYourTurnException isNotYourTurnException){
-            player.throwError(AbstractModel.IS_NOT_YOUR_TURN);
+           // player.throwError(AbstractModel.IS_NOT_YOUR_TURN);
         }catch (AlreadyUsedActionException e) {
-            player.throwError(AbstractModel.ACTION_USED);
+          //  player.throwError(AbstractModel.ACTION_USED);
         }catch (InvalidDepotException invalidDepotException){
             //if i am trying to subtract more resources than the ones in a depot
 
@@ -311,9 +324,9 @@ public class ResourceController extends AbstractController {
             player.getDevelopmentCardSlots()[slotId.getValue()].check(false);
             //after this action is done the player can not undo his moves
         }catch (IsNotYourTurnException isNotYourTurnException){
-            player.throwError(AbstractModel.IS_NOT_YOUR_TURN);
+          //  player.throwError(AbstractModel.IS_NOT_YOUR_TURN);
         }catch (AlreadyUsedActionException e) {
-            player.throwError(AbstractModel.ACTION_USED);
+         //   player.throwError(AbstractModel.ACTION_USED);
         }catch (NotSufficientResourceException ex){
             try{
                 resetResources(player, ex.getTempResources());
@@ -343,9 +356,9 @@ public class ResourceController extends AbstractController {
                 }
             }
         }catch (IsNotYourTurnException isNotYourTurnException){
-            player.throwError(AbstractModel.IS_NOT_YOUR_TURN);
+          //  player.throwError(AbstractModel.IS_NOT_YOUR_TURN);
         }catch (AlreadyUsedActionException e) {
-            player.throwError(AbstractModel.ACTION_USED);
+          //  player.throwError(AbstractModel.ACTION_USED);
         }
     }
 
