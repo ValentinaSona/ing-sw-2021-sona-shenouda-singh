@@ -23,6 +23,20 @@ public class DevelopmentCard {
 		this.production = production;
 	}
 
+	/**
+	 * Create a card with a modified cost
+	 * @param cost the now cost
+	 * @param card the old card
+	 */
+	public DevelopmentCard(Resource[] cost, DevelopmentCard card) {
+		this.id = card.getId();
+		this.cost = cost;
+		this.type = card.getType();
+		this.level = card.getLevel();
+		this.victoryPoints = card.getVictoryPoints();
+		this.production = card.getProduction();
+	}
+
 	public int getId() {
 		return id;
 	}

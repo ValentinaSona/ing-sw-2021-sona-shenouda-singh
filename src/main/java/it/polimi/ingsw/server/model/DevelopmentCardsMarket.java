@@ -1,6 +1,12 @@
 package it.polimi.ingsw.server.model;
 
-public class DevelopmentCardsMarket {
+import it.polimi.ingsw.server.model.observable.Player;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+
+public class DevelopmentCardsMarket implements  DevMarket {
 
 	private DevelopmentCardDeck[][] decks;
 
@@ -24,7 +30,7 @@ public class DevelopmentCardsMarket {
 	 * @param col column of the selected deck
 	 * @return the card on top of the selected deck
 	 */
-	public DevelopmentCard getDevelopmentCards(int row, int col){
+	public DevelopmentCard getDevelopmentCards(Player player, int row, int col){
 		return decks[row][col].firstCard();
 	}
 	/**
@@ -69,5 +75,25 @@ public class DevelopmentCardsMarket {
 		}
 
 		return view;
+	}
+
+	/**
+	 * Method called when a player activates a DiscountAbility
+	 * The method builds a decorated DevelopmentCardsMarket and adds the new ability (with the respective player) to it
+	 * @param discount the resource associated with the activated ability
+	 * @param player the player who activated the ability
+	 * @return the decorated market which will take into account the DiscountAbility
+	 */
+	public DevMarket addAbility(Resource discount, Player player) {
+		HashMap<Player, List<Resource>> map = new HashMap<>();
+		List<Resource> resourceList = new ArrayList<>();
+		resourceList.add(discount);
+		map.put(player, resourceList);
+
+		return new DevelopmentCardsMarketAbility(this, map);
+	}
+
+	public HashMap<Player, List<Resource>> getMap() {
+		throw new RuntimeException("No player has still activated a discount ability, invalid method");
 	}
 }

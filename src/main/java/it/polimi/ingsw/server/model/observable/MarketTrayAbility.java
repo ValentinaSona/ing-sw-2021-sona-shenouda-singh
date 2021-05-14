@@ -4,7 +4,8 @@ import it.polimi.ingsw.server.exception.TwoLeaderCardsException;
 import it.polimi.ingsw.server.model.*;
 
 import java.util.*;
-// TODO make better comments
+import java.util.stream.Stream;
+
 // TODO replace AbstractModel with LambdaObservable<Transmittable> and update() calls with notify()
 // TODO understanding if both marketTrayAbility and marketTray needs to extend LambdaObservable
 public class MarketTrayAbility extends AbstractModel implements Market {
@@ -23,26 +24,38 @@ public class MarketTrayAbility extends AbstractModel implements Market {
         this.marketTray = marketTray;
     }
 
-    // This constructor is called when a pre-existing game is loaded
+    /**
+     * Constructor called when a saved game is loaded and at least one WhiteMarbleAbility was active before saving the game
+     * @param tray the saved market tray
+     * @param extra the saved extra marble
+     * @param abilityMap the map with players and their respective WhiteMarbleAbility (if any)
+     */
     public MarketTrayAbility (MarketMarble[][] tray, MarketMarble extra, HashMap<Player, List<MarketMarble>> abilityMap) {
 
         this.marketTray = new MarketTray(tray, extra);
         this.abilityMap = abilityMap;
 
     }
-    // TODO fix exception
+
+    /**
+     * Method called when a players wants to get resources from the market
+     * @param player the player requesting the resources
+     * @param rowCol the row/column where to take the resources
+     * @return the array of the chosen resources, if the player has ONE WhiteMarbleAbility activated it gets the array already modified by the ability
+     * @throws TwoLeaderCardsException if the player has two WhiteMarbleAbility active at the same time, updating the view
+     */
     public MarketMarble[] getResources (Player player, int rowCol) throws TwoLeaderCardsException {
 
-        if (abilityMap.containsKey(player)) {
+        MarketMarble[] resources = marketTray.getResources(player, rowCol);
+
+        if (abilityMap.containsKey(player) && Stream.of(resources).anyMatch(m -> m == MarketMarble.WHITE)) {
 
             if (abilityMap.get(player).size() == 1) {
-                MarketMarble[] resources = marketTray.getResources(player, rowCol);
+                MarketMarble ability = abilityMap.get(player).get(0);
 
-                for (MarketMarble marble : resources) {
-                    if (marble == MarketMarble.WHITE) marble = abilityMap.get(player).get(0);
-                }
-
-                return resources;
+                return Stream.of(resources)
+                        .map(marble -> marble==MarketMarble.WHITE? ability : marble)
+                        .toArray(MarketMarble[]::new);
             }
 
             else {
@@ -51,10 +64,16 @@ public class MarketTrayAbility extends AbstractModel implements Market {
             }
         }
 
-        else return marketTray.getResources(player, rowCol);
+        else return resources;
 
     }
 
+    /**
+     * Called when a player activates a new WhiteMarbleAbility. Adds the player and the ability to the map
+     * @param marble the activated ability
+     * @param player the player who activated the ability
+     * @return the market itself
+     */
     public Market addAbility (MarketMarble marble, Player player) {
 
         if (abilityMap.containsKey(player)) abilityMap.get(player).add(marble);

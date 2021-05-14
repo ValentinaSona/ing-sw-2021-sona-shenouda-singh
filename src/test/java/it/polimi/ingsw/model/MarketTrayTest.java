@@ -8,6 +8,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 
@@ -56,7 +57,7 @@ class MarketTrayTest {
         HashMap<Player, List<MarketMarble>> map = market.getAbilityMap();
 
         Assertions.assertTrue(map.containsKey(jimmy));
-        assertEquals(map.get(jimmy), Arrays.asList(MarketMarble.BLUE));
+        assertEquals(map.get(jimmy), Collections.singletonList(MarketMarble.BLUE));
 
     }
 

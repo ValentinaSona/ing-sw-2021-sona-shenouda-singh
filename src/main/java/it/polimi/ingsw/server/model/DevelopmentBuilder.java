@@ -32,6 +32,25 @@ public class DevelopmentBuilder {
         return market;
     }
 
-    // TODO: build method overload
+    /**
+     * Builds the DevelopmentCardsMarket from a saved game
+     * @param savedPath the path where the development cards were saved
+     * @return the DevelopmentCardsMarket
+     */
+    public static DevelopmentCardsMarket build(String savedPath) {
+
+        DevelopmentCardDeck[][] decks = new DevelopmentCardDeck[3][4];
+
+        Gson gson = new Gson();
+        try {
+
+            decks =  gson.fromJson(new FileReader(savedPath), DevelopmentCardDeck[][].class);
+
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+
+        return new DevelopmentCardsMarket(decks);
+    }
     
 }

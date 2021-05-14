@@ -48,7 +48,7 @@ public class DevelopmentCardMarketController extends AbstractController{
             view.handleStatusMessage(StatusMessage.CLIENT_ERROR);
         } else {
 
-            DevelopmentCard targetCard = developmentCardsMarket.getDevelopmentCards(action.getRow(),action.getCol());
+            DevelopmentCard targetCard = developmentCardsMarket.getDevelopmentCards(player, action.getRow(),action.getCol());
             DevelopmentCardSlot target = player.getDevelopmentCardSlots()[action.getTargetSlot().getValue()-1];
 
 
