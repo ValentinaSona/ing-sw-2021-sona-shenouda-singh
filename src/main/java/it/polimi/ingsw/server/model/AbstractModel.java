@@ -5,7 +5,7 @@ import it.polimi.ingsw.utils.observer.LambdaObservable;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 
-public abstract class AbstractModel implements LambdaObservable<T> {
+public abstract class AbstractModel /*implements LambdaObservable<T>*/ {
 
 
 
@@ -14,11 +14,11 @@ public abstract class AbstractModel implements LambdaObservable<T> {
     }
 
     public void addListener(PropertyChangeListener listener){
-        propertyChangeSupport.addPropertyChangeListener(listener);
+      //  propertyChangeSupport.addPropertyChangeListener(listener);
     }
 
     public void removeListener(PropertyChangeListener listener){
-        propertyChangeSupport.removePropertyChangeListener(listener);
+    //    propertyChangeSupport.removePropertyChangeListener(listener);
     }
 
     /**
@@ -28,6 +28,6 @@ public abstract class AbstractModel implements LambdaObservable<T> {
      * @param newValue the newValue of the model class that is passed to the view
      */
     protected void update(String propertyName, Object oldValue, Object newValue){
-        propertyChangeSupport.firePropertyChange(propertyName, oldValue, newValue);
+     //   propertyChangeSupport.firePropertyChange(propertyName, oldValue, newValue);
     }
 }

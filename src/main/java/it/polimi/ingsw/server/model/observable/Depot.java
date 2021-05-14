@@ -5,7 +5,11 @@ import it.polimi.ingsw.server.model.Id;
 import it.polimi.ingsw.server.model.Resource;
 import it.polimi.ingsw.server.model.ResourceType;
 import it.polimi.ingsw.utils.networking.Transmittable;
+import it.polimi.ingsw.utils.networking.transmittables.StatusMessage;
 import it.polimi.ingsw.utils.observer.LambdaObservable;
+
+import static it.polimi.ingsw.server.model.ResourceType.FAITH;
+import static it.polimi.ingsw.server.model.ResourceType.JOLLY;
 
 //TODO: turn old updates into messages.
 public class Depot extends LambdaObservable<Transmittable> {
@@ -36,52 +40,60 @@ public class Depot extends LambdaObservable<Transmittable> {
 	}
 
 	public void addResource(Resource other) throws InvalidDepotException {
-		if(resource == null){
-			if(other.getResourceType() != ResourceType.JOLLY && other.getResourceType() != ResourceType.FAITH && other.getQuantity()<= capacity){
-				resource.add(other);
-				//update(DEPOT_UPDATE, null, new DepotView(id, getResource(), capacity) );
-			}else{
-				//update(DEPOT_QUANTITY_ERROR, null, null);
-				throw  new InvalidDepotException();
-			}
-		}else{
-			if(resource.getResourceType() == other.getResourceType()){
-				int newValue = resource.getQuantity()+other.getQuantity();
-				if(newValue <= capacity){
-					resource.add(other);
-					//update(DEPOT_UPDATE, null, new DepotView(id, getResource(), capacity) );
-				}else {
-					//update(DEPOT_QUANTITY_ERROR, null, null);
-					throw new InvalidDepotException();
-				}
-			}else{
-				//update(DEPOT_TYPE_ERROR, null, null);
-				throw  new InvalidDepotException();
-			}
+
+
+		if(	other.getResourceType() == JOLLY || other.getResourceType() == FAITH 	){
+
+			//throw new RuntimeException("Invalid resource type for depots");
+			throw  new InvalidDepotException();
+
+		} else if (	resource != null &&
+				other.getResourceType() != this.resource.getResourceType() ){
+
+			//throw new RuntimeException("Depot already contains a different type of resource");
+			throw  new InvalidDepotException();
+		} else if ( (resource != null ? resource.getQuantity() : 0) + other.getQuantity() < 0 ){
+
+			//throw new RuntimeException("Depots may not contain negative resources");
+			throw  new InvalidDepotException();
+
+		} else if ((resource != null ? resource.getQuantity() : 0)  + other.getQuantity() > capacity) {
+
+			//throw new RuntimeException("Resources would exceed depot capacity");
+			throw  new InvalidDepotException();
+
+		} else {
+			if (resource != null) resource.add(other);
+			else resource = other;
+
+			if (resource!=null && resource.getQuantity() ==0){ resource = null;}
 		}
+
 	}
 
 	public void subtractResource(Resource other) throws InvalidDepotException{
 
-		if(resource != null){
-			if(other.getResourceType() == resource.getResourceType()){
-				if(resource.getQuantity() > other.getQuantity()){
-					resource.sub(other);
-					//update(DEPOT_UPDATE, null, new DepotView(id, getResource(), capacity) );
-				}else if(other.getQuantity() == resource.getQuantity()){
-					resource = null;
-				}else{
-					//update(DEPOT_QUANTITY_ERROR, null, null);
-					throw  new InvalidDepotException();
-				}
-			}else{
-				//update(DEPOT_TYPE_ERROR, null, null);
-				throw new InvalidDepotException();
-			}
-		}else{
-			//update(DEPOT_QUANTITY_ERROR, null, null);
-			throw new InvalidDepotException();
+
+		if(	other.getResourceType() == JOLLY || other.getResourceType() == FAITH 	){
+
+			//throw new RuntimeException("Invalid resource type for depots");
+			throw  new InvalidDepotException();
+
+		} else if (	resource != null &&
+				other.getResourceType() != this.resource.getResourceType() ){
+
+			//throw new RuntimeException("Depot already contains a different type of resource");
+			throw  new InvalidDepotException();
+		} else if ( (resource != null ? resource.getQuantity() : 0) - other.getQuantity() < 0 ){
+
+			//throw new RuntimeException("Depots may not contain negative resources");
+			throw  new InvalidDepotException();
+
+		} else {
+			if (resource != null) resource.sub(other);
+			if (resource!=null && resource.getQuantity() ==0){ resource = null;}
 		}
+
 	}
 
 	public int getCapacity() {
