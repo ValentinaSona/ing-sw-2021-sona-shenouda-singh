@@ -7,7 +7,7 @@ import it.polimi.ingsw.utils.observer.LambdaObservable;
 import java.util.ArrayList;
 import java.util.EmptyStackException;
 
-//TODO does player realy needs to be observable??
+//TODO does player really need to be observable??
 public class Player extends LambdaObservable<Transmittable> {
 
 	/**

@@ -34,7 +34,7 @@ public class DevelopmentCardMarketController extends AbstractController{
 
     }
 
-    /** TODO: added preliminary check that the player does have resources to buy the card. Check that it fits with discountAbility implementation.
+    /**
      * Called when te player selects a card they wish to buy. Checks whether the card and the slot selected are valid before proceeding to the payment.
      * @param action the ClientMessage containing information about the player's action.
      * @param view the player's corresponding RemoteViewHandler that will handle status messages to be sent back to the view.

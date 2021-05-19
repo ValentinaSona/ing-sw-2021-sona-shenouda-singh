@@ -6,6 +6,9 @@ import it.polimi.ingsw.server.model.observable.Depot;
 import it.polimi.ingsw.server.model.observable.DevelopmentCardSlot;
 import it.polimi.ingsw.server.model.observable.Player;
 import it.polimi.ingsw.server.model.observable.Strongbox;
+import it.polimi.ingsw.server.view.RemoteViewHandler;
+import it.polimi.ingsw.utils.networking.transmittables.StatusMessage;
+import it.polimi.ingsw.utils.networking.transmittables.clientmessages.game.ClientActivateSpecialAbilityMessage;
 
 import java.util.ArrayList;
 
@@ -27,23 +30,28 @@ public class LeaderCardsController extends AbstractController{
         return singleton;
     }
 
-    private void activateSpecialAbility(Player player, Id leaderCardId){
-        try{
-            if( !(player.getTurn()) ){
-                throw new IsNotYourTurnException();
-            }
+    /**
+     * Called when the player is attempting to activate a Leader Card special ability.
+     * @param action the ClientMessage containing information about the player's action.
+     * @param view the player's corresponding RemoteViewHandler that will handle status messages to be sent back to the view.
+     * @param user the User corresponding to the player making the action.
+     */
+    public void activateSpecialAbility(ClientActivateSpecialAbilityMessage action, RemoteViewHandler view, User user){
 
-            LeaderCard targetCard = player.getLeaderCards().get(leaderCardId.getValue());
+        Player player = getModel().getPlayerFromUser(user);
+
+        if( !(player.getTurn()) || !(player.getMainAction()) ){
+            view.handleStatusMessage(StatusMessage.CLIENT_ERROR);
+        } else {
+
+            LeaderCard targetCard = player.getLeaderCards().get(action.getLeaderId().getValue());
             boolean activate = checkRequirements(player, targetCard);
 
-            if(activate){
+            if (activate) {
                 useAbility(player, targetCard);
-            }else{
-              //  player.throwError(AbstractModel.LEADERCARD_REQUIREMENTS);
+            } else {
+                view.handleStatusMessage(StatusMessage.REQUIREMENTS_ERROR);
             }
-
-        }catch (IsNotYourTurnException isNotYourTurnException){
-           // player.throwError(AbstractModel.IS_NOT_YOUR_TURN);
         }
     }
 
@@ -55,6 +63,7 @@ public class LeaderCardsController extends AbstractController{
      * @return
      */
     private boolean checkRequirements(Player player, LeaderCard targetCard){
+
         Requirement[] requirements = targetCard.getRequirements();
         DevelopmentCardSlot[] developmentCardSlots = player.getDevelopmentCardSlots();
         ArrayList<Depot> warehouse = player.getWarehouse();
@@ -66,6 +75,7 @@ public class LeaderCardsController extends AbstractController{
             int possessed = 0;
 
             if (!req.isResource()) {
+                // Requirement is checking the development card level.
                 required = req.getNumber();
                 for (DevelopmentCardSlot slot : developmentCardSlots) {
                     possessed = (int) slot.getSlot().stream().filter(c -> c.getType() == req.getType() && (req.getLevel() == c.getLevel() || req.getLevel() == 0)).count();

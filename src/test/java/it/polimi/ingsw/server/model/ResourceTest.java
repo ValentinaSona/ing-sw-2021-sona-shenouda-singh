@@ -1,4 +1,4 @@
-package it.polimi.ingsw.model;
+package it.polimi.ingsw.server.model;
 
 import it.polimi.ingsw.server.model.Resource;
 import it.polimi.ingsw.server.model.ResourceType;

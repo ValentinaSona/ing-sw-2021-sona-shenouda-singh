@@ -10,6 +10,7 @@ import it.polimi.ingsw.server.model.observable.Player;
 import it.polimi.ingsw.server.view.RemoteViewHandler;
 import it.polimi.ingsw.utils.networking.transmittables.StatusMessage;
 import it.polimi.ingsw.utils.networking.transmittables.clientmessages.game.ClientDepositIntoWarehouseMessage;
+import it.polimi.ingsw.utils.networking.transmittables.clientmessages.game.ClientDepositResourceIntoSlotMessage;
 import it.polimi.ingsw.utils.networking.transmittables.clientmessages.game.ClientTidyWarehouseMessage;
 
 import java.util.ArrayList;
@@ -32,6 +33,10 @@ public class ResourceController extends AbstractController {
 
     }
 
+
+    /* ****************************************************
+     * Utility methods invoked by controllers themselves. *
+     ******************************************************/
 
     /**
      *  Public method called all controllers when they need to add faith points to a player's faith track.
@@ -57,8 +62,52 @@ public class ResourceController extends AbstractController {
     }
 
 
-    /*
+    /** TODO: check exception source
+     * Subtracts resources from the strongbox or the warehouse as part of the process in which the user selects how to pay for a production/development card.
+     * If the attempt to buy does not succeed, the resetResources method is invoked to place them back.
+     * @param player Player whose resources are being managed.
+     * @param resource Resource being paid.
+     * @param resourceId Source from where the resources are being taken.
+     * @throws InvalidDepotException
      */
+    private void selectResources(Player player , Resource resource, Id resourceId) throws InvalidDepotException {
+
+        if(resourceId != Id.STRONGBOX){
+            player.getWarehouse().get(resourceId.getValue()).subtractResource(resource);
+        }else if(resourceId == Id.STRONGBOX){
+            player.getStrongbox().subResources(resource);
+        }else {
+            throw new RuntimeException("Ho fornito un origin scorretto");
+        }
+
+    }
+
+    /**
+     * Puts back the resources into strongbox/warehouse in case an attempt to buy something as failed.
+     * @param player Player whose resources are being managed.
+     * @param resourceHashMap Resources and the origin at which they must be returned.
+     * @throws InvalidDepotException The supplied origin is invalid.
+     */
+    public void resetResources(Player player, HashMap<Id, Resource> resourceHashMap) throws InvalidDepotException {
+        ArrayList<Depot> warehouse = player.getWarehouse();
+
+        for(Id id : resourceHashMap.keySet()){
+            if(id != Id.STRONGBOX){
+                warehouse.get(id.getValue()).addResource(resourceHashMap.get(id));
+                resourceHashMap.remove(id);
+            }else if(id == Id.STRONGBOX){
+                player.getStrongbox().addResources(resourceHashMap.get(id));
+                resourceHashMap.remove(id);
+            }else {
+                throw new RuntimeException("Ho fornito un id scorretto");
+            }
+        }
+    }
+
+
+    /* ******************************************
+     * Handler methods invoked by user actions. *
+     ********************************************/
 
     /**
      *  Called when the player ends processing the resources gained from the market.
@@ -165,153 +214,83 @@ public class ResourceController extends AbstractController {
             view.handleStatusMessage(StatusMessage.CLIENT_ERROR);
         } else {
 
-        }
 
+            try {
+                ArrayList<Depot> warehouse = player.getWarehouse();
+                Depot targetDepot = warehouse.get(action.getSlotId().getValue());
 
-        try{
-            ArrayList<Depot> warehouse = player.getWarehouse();
-            Depot targetDepot = warehouse.get(action.getSlotId().getValue());
+                Id[] standardDepots = {Id.DEPOT_1, Id.DEPOT_2, Id.DEPOT_3};
 
-            Id[] standardDepots = {Id.DEPOT_1, Id.DEPOT_2,Id.DEPOT_3};
+                // If the deposit is not empty and it contains a resource of a different type than the one we are trying to deposit the action is illegal. Redundant check.
+                if (targetDepot.getResource() != null && targetDepot.getResource().getResourceType() != action.getResource().getResourceType()) {
+                    throw new InvalidDepotException();
+                }
 
-            // If the deposit is not empty and it contains a resource of a different type than the one we are trying to deposit the action is illegal. Redundant check.
-            if (targetDepot.getResource() != null && targetDepot.getResource().getResourceType() != action.getResource().getResourceType()){throw new InvalidDepotException();}
+                for (Id depotId : standardDepots) {
+                    if (depotId != action.getSlotId()) {
+                        if (warehouse.get(depotId.getValue()).getResource() != null && warehouse.get(depotId.getValue()).getResource().getResourceType() == action.getResource().getResourceType()) {
 
-            for (Id depotId : standardDepots){
-                if (depotId != action.getSlotId()){
-                    if ( warehouse.get(depotId.getValue()).getResource() != null && warehouse.get(depotId.getValue()).getResource().getResourceType() == action.getResource().getResourceType()){
-
-                        // If one of the other standard depots isn't empty and contains a resource of the same type as the one we're trying to deposit the action is illegal.
-                        throw new InvalidDepotException();
+                            // If one of the other standard depots isn't empty and contains a resource of the same type as the one we're trying to deposit the action is illegal.
+                            throw new InvalidDepotException();
+                        }
                     }
                 }
-            }
 
-            // If the targetDepot is a special depot the addResources already performs all the checks needed.
+                // If the targetDepot is a special depot the addResources already performs all the checks needed.
 
-            // If it is not illegal to deposit, i can add to the resource to the target deposit.
-            targetDepot.addResource(action.getResource());
+                // If it is not illegal to deposit, i can add to the resource to the target deposit.
+                targetDepot.addResource(action.getResource());
 
-            // If the deposit fails the InvalidDepotException is thrown by addResources and the next statement is never executed, leaving the resources still to be deposited.
-            getCurrentPlayer().subFromTempResources(action.getResource());
-            view.handleStatusMessage(StatusMessage.CONTINUE);
+                // If the deposit fails the InvalidDepotException is thrown by addResources and the next statement is never executed, leaving the resources still to be deposited.
+                getCurrentPlayer().subFromTempResources(action.getResource());
+                view.handleStatusMessage(StatusMessage.CONTINUE);
 
 
-          /*  Resource depot1Resource = player.getWarehouse().get(Id.DEPOT_1.getValue()).getResource();
-            Resource depot2Resource = player.getWarehouse().get(Id.DEPOT_2.getValue()).getResource();
-            Resource depot3Resource = player.getWarehouse().get(Id.DEPOT_3.getValue()).getResource();
-
-            if(action.getSlotId() == Id.DEPOT_1){
-                checkDepotType(targetDepot,depot2Resource,depot3Resource, resource);
-            }else if(target == Id.DEPOT_2){
-                checkDepotType(targetDepot,depot1Resource,depot3Resource, resource);
-            }else if(target == Id.DEPOT_3){
-                checkDepotType(targetDepot,depot1Resource,depot2Resource, resource);
-            }else{
-                //the target depot is a special depot we don't have to do any check
-                targetDepot.addResource(resource);
-                //if the operation succeeded we will remove the resource from tempResources
-                player.subFromTempResources(resource);
-            } */
-
-        }catch (InvalidDepotException invalidDepotException){
-            //the depot model has already notified the player of the error
-            //we just end the method
-        }
-    }
-
- /*   private void checkDepotType(Depot targetDepot, Resource depotA, Resource depotB, Resource resource) throws InvalidDepotException{
-        if( depotA != null && depotB != null){
-            if(resource.getResourceType() != depotA.getResourceType() &&
-                    resource.getResourceType() != depotB.getResourceType()){
-                //i can try to add this resourceType to the target depot
-                targetDepot.addResource(resource);
-                //if the action fails the InvalidDepotException is thrown and the next statement is
-                //never executed
-                getCurrentPlayer().subFromTempResources(resource);
-            }else{
-                getCurrentPlayer().throwError(AbstractModel.WAREHOUSE_TYPE_ERROR);
-            }
-        }else if(depotA == null && depotB != null){
-            if(depotB.getResourceType() != resource.getResourceType()){
-                //i can try to add this resourceType to the target depot
-                targetDepot.addResource(resource);
-                //if the action fails the InvalidDepotExceptin is thrown and the next statement is
-                //never executed
-                getCurrentPlayer().subFromTempResources(resource);
-            }else{
-                getCurrentPlayer().throwError(AbstractModel.WAREHOUSE_TYPE_ERROR);
-            }
-        }else if(depotB == null && depotA != null){
-            if(depotA.getResourceType() != resource.getResourceType()){
-                //i can try to add this resourceType to the target depot
-                targetDepot.addResource(resource);
-                //if the action fails the InvalidDepotExceptin is thrown and the next statement is
-                //never executed
-                getCurrentPlayer().subFromTempResources(resource);
-            }else{
-                getCurrentPlayer().throwError(AbstractModel.WAREHOUSE_TYPE_ERROR);
-            }
-
-        }else{
-            //both the depots are null no problem
-            targetDepot.addResource(resource);
-            //if the action fails the InvalidDepotExceptin is thrown and the next statement is
-            //never executed
-            getCurrentPlayer().subFromTempResources(resource);
-        }
-    } */
-
-    private void selectResources(Player player , Resource resource, Id resourceId) throws InvalidDepotException {
-
-        if(resourceId != Id.STRONGBOX){
-            player.getWarehouse().get(resourceId.getValue()).subtractResource(resource);
-        }else if(resourceId == Id.STRONGBOX){
-            player.getStrongbox().subResources(resource);
-        }else {
-            throw new RuntimeException("Ho fornito un origin scorretto");
-        }
-
-    }
-
-    public void resetResources(Player player, HashMap<Id, Resource> resourceHashMap) throws InvalidDepotException {
-        ArrayList<Depot> warehouse = player.getWarehouse();
-
-        for(Id id : resourceHashMap.keySet()){
-            if(id != Id.STRONGBOX){
-                warehouse.get(id.getValue()).addResource(resourceHashMap.get(id));
-                resourceHashMap.remove(id);
-            }else if(id == Id.STRONGBOX){
-                player.getStrongbox().addResources(resourceHashMap.get(id));
-                resourceHashMap.remove(id);
-            }else {
-                throw new RuntimeException("Ho fornito un id scorretto");
+            } catch (InvalidDepotException invalidDepotException) {
+                //the depot model has already notified the player of the error
+                //we just end the method
             }
         }
     }
 
-    public void depositResourceIntoSlot(Player player, Id slotId, Resource resource, Id resourceId){
-        try{
-            if( !(player.getTurn()) ){
-                throw new IsNotYourTurnException();
-            }
-            if( !(player.getMainAction()) ){
-                throw new AlreadyUsedActionException();
-            }
 
-            selectResources(player, resource, resourceId);
-            DevelopmentCardSlot slot = player.getDevelopmentCardSlots()[slotId.getValue()];
-            slot.setResourceCloset(resource, resourceId);
-        }catch (IsNotYourTurnException isNotYourTurnException){
-           // player.throwError(AbstractModel.IS_NOT_YOUR_TURN);
-        }catch (AlreadyUsedActionException e) {
-          //  player.throwError(AbstractModel.ACTION_USED);
-        }catch (InvalidDepotException invalidDepotException){
-            //if i am trying to subtract more resources than the ones in a depot
 
+
+    /**
+     * Called when a player is selecting how to pay for either a production or a development card.
+     * Leverages the slot and resource closet methods.
+     * @param action the ClientMessage containing information about the player's action.
+     * @param view the player's corresponding RemoteViewHandler that will handle status messages to be sent back to the view.
+     * @param user the User corresponding to the player making the action.
+     */
+    public void depositResourceIntoSlot(ClientDepositResourceIntoSlotMessage action, RemoteViewHandler view, User user){
+
+
+        Player player = getModel().getPlayerFromUser(user);
+
+        if( !(player.getTurn()) ){
+            view.handleStatusMessage(StatusMessage.CLIENT_ERROR);
+        } else {
+
+            try{
+
+            // Remove the specified resources from the specified source.
+            selectResources(player, action.getResource(), action.getResourceId());
+            // Select the slot relative to the action ( its production is being activated / a card is being placed in it)
+            DevelopmentCardSlot slot = player.getDevelopmentCardSlots()[action.getResourceId().getValue()];
+            // Move the resources in the slot's resource closet to keep track of what is being paid.
+            slot.setResourceCloset(action.getResource(), action.getResourceId());
+
+
+            } catch (InvalidDepotException invalidDepotException) {
+                //if i am trying to subtract more resources than the ones in a depot
+                view.handleStatusMessage(StatusMessage.CLIENT_ERROR);
+            }
         }
     }
 
+    //TODO: So this is called when one finishes putting together a single production? This parts looks a bit messy on the UX side? ALSO UI side might simplify checks.
+    //TODO: might a single resource closet be more functional?
     public void confirmProduction(Player player, Id slotId){
         try{
             if( !(player.getTurn()) ){

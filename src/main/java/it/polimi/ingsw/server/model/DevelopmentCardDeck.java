@@ -1,7 +1,7 @@
 package it.polimi.ingsw.server.model;
 
 import java.util.*;
-// TODO abstract class deck
+
 public class DevelopmentCardDeck {
 
 	private List<DevelopmentCard> deck;

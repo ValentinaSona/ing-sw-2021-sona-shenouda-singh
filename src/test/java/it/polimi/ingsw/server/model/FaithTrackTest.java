@@ -1,4 +1,4 @@
-package it.polimi.ingsw.model;
+package it.polimi.ingsw.server.model;
 
 import it.polimi.ingsw.server.exception.VaticanReportException;
 import it.polimi.ingsw.server.model.observable.FaithTrack;
