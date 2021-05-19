@@ -1,6 +1,7 @@
 package it.polimi.ingsw;
 
-import it.polimi.ingsw.client.modelview.GUI;
+
+import it.polimi.ingsw.client.ui.gui.GUI;
 import javafx.application.Application;
 
 /**
