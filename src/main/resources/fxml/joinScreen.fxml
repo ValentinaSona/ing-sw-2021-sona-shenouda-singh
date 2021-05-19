@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.shape.Rectangle?>
+<?import javafx.scene.shape.SVGPath?>
+<?import javafx.scene.text.Font?>
+
+<Pane fx:id="mainPane" prefHeight="600.0" prefWidth="850.0" style="-fx-background-color: #e6cf91;" xmlns="http://javafx.com/javafx/15.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.client.ui.gui.GUIControllers.MainMenuController">
+   <children>
+       <AnchorPane fx:id="blueBack" layoutY="-100.0" prefHeight="100.0" prefWidth="200.0">
+           <children>
+               <ImageView fitHeight="266.0" fitWidth="850.0" pickOnBounds="true" preserveRatio="true">
+                   <image>
+                       <Image url="@../assets/main_menu/blue_background.png" />
+                   </image>
+               </ImageView>
+               <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#c0ad62" height="20.0" layoutX="-10.0" layoutY="254.0" stroke="TRANSPARENT" strokeType="INSIDE" width="860.0" />
+            <SVGPath content="M10,20 30,0 30,10 60,10,60,30,30,30,30,40" layoutX="30.0" layoutY="160.0" onMouseReleased="#backToMulti" styleClass="backArrow" />
+            <AnchorPane layoutX="253.0" layoutY="143.0" prefHeight="75.0" prefWidth="327.0">
+               <children>
+                  <Label layoutX="14.0" layoutY="21.0" text="Nickname" textFill="#c0ad62">
+                     <font>
+                        <Font size="23.0" />
+                     </font>
+                  </Label>
+                  <TextField fx:id="nicknameField" layoutX="153.0" layoutY="18.0" prefHeight="39.0" prefWidth="191.0" style="-fx-background-color: #c0ad62; -fx-text-fill: #ffffff;">
+                     <font>
+                        <Font size="17.0" />
+                     </font>
+                  </TextField>
+               </children>
+            </AnchorPane>
+           </children>
+       </AnchorPane>
+      <Label fx:id="emptyNickname" layoutX="309.0" layoutY="184.0" opacity="0.0" text="You must choose a nickname" textFill="RED">
+         <font>
+            <Font size="17.0" />
+         </font>
+      </Label>
+      <Label fx:id="emptyPlayers" layoutX="276.0" layoutY="210.0" opacity="0.0" text="You must choose the number of players" textFill="RED">
+         <font>
+            <Font size="17.0" />
+         </font>
+      </Label>
+      <AnchorPane layoutX="318.0" layoutY="274.0" prefHeight="200.0" prefWidth="200.0">
+         <children>
+            <Button fx:id="createButton" layoutY="63.0" mnemonicParsing="false" onMouseReleased="#goToJoin" prefHeight="75.0" prefWidth="225.0" styleClass="basicButton" text="Join game" textFill="#e6cf91">
+               <font>
+                  <Font size="35.0" />
+               </font>
+            </Button>
+         </children>
+      </AnchorPane>
+   </children>
+</Pane>

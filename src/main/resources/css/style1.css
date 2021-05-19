@@ -1,0 +1,47 @@
+.basicButton:hover {
+    -fx-background-color: #027da3;
+    -fx-text-fill: #e6cf91;
+}
+
+.basicButton {
+    -fx-background-color: #025c78;
+    -fx-text-fill: #e6cf91;
+}
+
+.title:hover {
+    -fx-text-fill: #FFF000;
+}
+
+.title {
+    -fx-text-fill: #423324;
+}
+
+.selectionButton:hover {
+    -fx-background-color: #594f28;
+    -fx-text-fill: #ffffff;
+}
+
+.selectionButton {
+    -fx-background-color: #c0ad62;
+    -fx-text-fill: #ffffff;
+}
+
+.backArrow:hover {
+    -fx-fill: #594f28;
+}
+
+.backArrow {
+    -fx-fill: #c0ad62;
+}
+
+.list-cell {
+    -fx-font-size: 30px;
+}
+.list-view .list-cell:even {
+    -fx-background-color: #c0ad62;
+    -fx-text-fill: white;
+}
+.list-view .list-cell:odd {
+    -fx-background-color: #e6cf91;
+    -fx-text-fill: white;
+}

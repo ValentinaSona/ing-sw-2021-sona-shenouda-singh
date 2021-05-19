@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.shape.Rectangle?>
+<?import javafx.scene.shape.SVGPath?>
+<?import javafx.scene.text.Font?>
+
+<Pane fx:id="mainPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="850.0" style="-fx-background-color: #e6cf91;" xmlns="http://javafx.com/javafx/15.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.client.ui.gui.GUIControllers.MainMenuController">
+    <children>
+        <Label layoutX="390.0" layoutY="286.0" onMouseReleased="#joinGame" styleClass="title" text="Play" textAlignment="CENTER">
+            <font>
+                <Font size="39.0" />
+            </font>
+        </Label>
+        <Label fx:id="option" layoutX="357.0" layoutY="365.0" onMouseReleased="#joinGame" styleClass="title" text="Resume" textAlignment="CENTER">
+            <font>
+                <Font size="39.0" />
+            </font>
+        </Label>
+        <AnchorPane fx:id="blueBack" layoutY="-100.0" prefHeight="100.0" prefWidth="200.0">
+            <children>
+                <ImageView fitHeight="266.0" fitWidth="850.0" pickOnBounds="true" preserveRatio="true">
+                    <image>
+                        <Image url="@../assets/main_menu/blue_background.png" />
+                    </image>
+                </ImageView>
+                <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#c0ad62" height="20.0" layoutX="-10.0" layoutY="254.0" stroke="TRANSPARENT" strokeType="INSIDE" width="860.0" />
+                <Label fx:id="multi" layoutX="289.0" layoutY="143.0" text="Multiplayer" textAlignment="CENTER" textFill="#c0ad62">
+                    <font>
+                        <Font name="System Bold" size="50.0" />
+                    </font>
+                </Label>
+                <SVGPath content="M10,20 30,0 30,10 60,10,60,30,30,30,30,40" layoutX="30.0" layoutY="160.0" onMouseReleased="#backToMain" styleClass="backArrow" />
+            </children>
+        </AnchorPane>
+    </children>
+</Pane>

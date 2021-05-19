@@ -14,10 +14,12 @@ public class GUI extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception{
-        URL url = new File("src/main/resources/fxml/mainscreen.fxml").toURI().toURL();
+        URL url = new File("src/main/resources/fxml/mainScreen.fxml").toURI().toURL();
         Parent root = FXMLLoader.load(url);
         primaryStage.setTitle("Client");
         Scene scene = new Scene(root);
+        //scene.getStylesheets().add(getClass().getResource("src/main/resources/css/style1.css").toExternalForm());
+        scene.getStylesheets().add("css/style1.css");
         primaryStage.setScene(scene);
         primaryStage.setResizable(false);
         primaryStage.show();
