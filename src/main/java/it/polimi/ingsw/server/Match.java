@@ -18,12 +18,14 @@ public class Match implements Runnable{
     private final Map<String, Connection> participantMap;
     private final List<RemoteViewHandler> remoteViewList;
     private final Server server;
+    private boolean active;
 
 
     public Match(Server server){
         this.server = server;
         this.participantMap = new ConcurrentHashMap<>();
         this.remoteViewList = new LinkedList<>();
+        this.active = true;
     }
 
     public void addParticipant(String nickname, Connection connection) {
@@ -61,9 +63,16 @@ public class Match implements Runnable{
                     ((Controller) observer).update(viewClientMessage) );
         }
 
-        //TODO setup of the game before the while{} that simply listen for message from the clients
+        model.setup();
+        //now just make the controller work on this thread
+        while (active) {
+            try {
+                this.controller.dispatchViewClientMessages();
+            } catch (Exception e) {
+               //devo capire come gestire questo caso
+            }
+            //TODO check if the game is active and then set active of controller to false if the game is not active
 
-
-
+        }
     }
 }

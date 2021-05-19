@@ -19,6 +19,7 @@ public class Lobby {
     private final static int MAX_PLAYER_PER_GAME = 4;
 
     private static Lobby singleton;
+    private volatile boolean active;
 
     //connection that have been registered with a valid nickname
     private final Map<Connection, String> registeredNicknamesMap;
@@ -37,7 +38,6 @@ public class Lobby {
 
     private final Object playerCountLock;
 
-    private volatile boolean active;
 
     public static Lobby getInstance(Server server) {
         if (singleton == null) {
@@ -151,6 +151,7 @@ public class Lobby {
     public void start(){
         while(active){
             this.waitForFirstConnection();
+
             //after the first player is arrived he has to choose the numOfPlayer for the game
             this.waitForCurrentPlayerCount();
 
@@ -158,16 +159,19 @@ public class Lobby {
 
             //if the first player is still connected
             if(!participants.isEmpty()){
+
                 Match match= new Match(server);
                 for(Connection c : participants.keySet()){
                     match.addParticipant(participants.get(c), c);
                 }
-                this.stop();
                 server.submitMatch(match);
+                stop();
             }
             //if the first player disconnected while no one was in the lobby what will happen is
             //that we will do another time the while
+            ;
         }
+
     }
 
     private void waitForFirstConnection(){
@@ -192,7 +196,7 @@ public class Lobby {
             while(currentLobbyPlayerCount == 0){
                 try {
                     //waiting for the first player to call setLobbyMaxPlayerCount
-                    this.wait();
+                    playerCountLock.wait();
                 } catch (InterruptedException e) {
                     Thread.currentThread().interrupt();
                 }
@@ -248,6 +252,11 @@ public class Lobby {
      */
     public void stop() {
         active = false;
+        singleton = null;
+    }
+
+    public boolean isActive() {
+        return active;
     }
 }
 

@@ -33,7 +33,7 @@ public class Server {
         this.lobby = Lobby.getInstance(this);
         this.executorService = Executors.newCachedThreadPool();
         this.handlerMap = new ConcurrentHashMap<>();
-        new Thread(()->lobby.start());
+        executorService.submit(()->lobby.start());
     }
 
     /**
@@ -94,5 +94,9 @@ public class Server {
             //do nothing
             e.printStackTrace();
         }
+    }
+
+    public Map<Connection, ConnectionSetupHandler> getHandlerMap() {
+        return handlerMap;
     }
 }

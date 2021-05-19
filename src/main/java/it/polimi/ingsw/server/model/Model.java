@@ -69,4 +69,7 @@ public class Model {
     }
 
 
+    //TODO fase di setup in cui vengono mandati ai player la richiesta della scelta delle carte e
+    //delle risorse iniziali
+    public void setup(){}
 }

@@ -23,3 +23,4 @@ public class ClientBuyMarblesMessage implements ClientMessage, ControllerHandlea
         return rowCol;
     }
 }
+
