@@ -50,7 +50,7 @@ public class DevelopmentCardSlot extends Slot {
     public void setTargetCard(DevelopmentCard targetCard, int row, int col) throws DevelopmentCardException {
         DevelopmentCard lastInsertion = peek();
 
-        if((lastInsertion.getLevel() == targetCard.getLevel() -1) && slot.size() <= MAX_LENGTH){
+        if((lastInsertion.getLevel() == targetCard.getLevel() -1) && slot.size() <= MAX_LENGTH && id != Id.S_SLOT_1 && id != Id.S_SLOT_2){
             //we can put the card in this slot
             this.targetCard = targetCard;
             this.row = row;

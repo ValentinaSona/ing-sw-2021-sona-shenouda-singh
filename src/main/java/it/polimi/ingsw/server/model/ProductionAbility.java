@@ -2,6 +2,9 @@ package it.polimi.ingsw.server.model;
 
 public class ProductionAbility extends SpecialAbility {
 
-	private Production production;
+	private Resource cost;
 
+	public Resource getCost() {
+		return cost;
+	}
 }

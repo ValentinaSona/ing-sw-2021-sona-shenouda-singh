@@ -11,6 +11,8 @@ public enum Id {
     SLOT_1(1),
     SLOT_2(2),
     SLOT_3(3),
+    S_SLOT_1(4),
+    S_SLOT_2(5),
     LEADER_CARD_1(0),
     LEADER_CARD_2(1);
 

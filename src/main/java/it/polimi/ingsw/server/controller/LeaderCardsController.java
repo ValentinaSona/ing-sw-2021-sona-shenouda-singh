@@ -1,6 +1,5 @@
 package it.polimi.ingsw.server.controller;
 
-import it.polimi.ingsw.server.exception.IsNotYourTurnException;
 import it.polimi.ingsw.server.model.*;
 import it.polimi.ingsw.server.model.observable.Depot;
 import it.polimi.ingsw.server.model.observable.DevelopmentCardSlot;
@@ -9,17 +8,22 @@ import it.polimi.ingsw.server.model.observable.Strongbox;
 import it.polimi.ingsw.server.view.RemoteViewHandler;
 import it.polimi.ingsw.utils.networking.transmittables.StatusMessage;
 import it.polimi.ingsw.utils.networking.transmittables.clientmessages.game.ClientActivateSpecialAbilityMessage;
+import it.polimi.ingsw.utils.networking.transmittables.clientmessages.game.ClientThrowLeaderCardMessage;
 
 import java.util.ArrayList;
 
 public class LeaderCardsController extends AbstractController{
     private final MarketController marketController;
+    private final DevelopmentCardMarketController devController;
+    private final ResourceController resourceController;
     private static LeaderCardsController singleton;
 
 
     private LeaderCardsController(Model model){
         super(model);
         this.marketController = MarketController.getInstance(model);
+        this.devController = DevelopmentCardMarketController.getInstance(model);
+        this.resourceController = ResourceController.getInstance(model);
     }
 
     public static LeaderCardsController getInstance(Model model){
@@ -40,7 +44,7 @@ public class LeaderCardsController extends AbstractController{
 
         Player player = getModel().getPlayerFromUser(user);
 
-        if( !(player.getTurn()) || !(player.getMainAction()) ){
+        if( !(player.getTurn())  ){
             view.handleStatusMessage(StatusMessage.CLIENT_ERROR);
         } else {
 
@@ -55,12 +59,32 @@ public class LeaderCardsController extends AbstractController{
         }
     }
 
+    /**
+     * Called when the player is discarding a leader card from their hand.
+     * @param action the ClientMessage containing information about the player's action.
+     * @param view the player's corresponding RemoteViewHandler that will handle status messages to be sent back to the view.
+     * @param user the User corresponding to the player making the action.
+     */
+    public void throwLeaderCard(ClientThrowLeaderCardMessage action, RemoteViewHandler view, User user){
+
+        Player player = getModel().getPlayerFromUser(user);
+
+        if( !(player.getTurn())  ){
+            view.handleStatusMessage(StatusMessage.CLIENT_ERROR);
+        } else {
+
+            LeaderCard targetCard = player.getLeaderCards().get(action.getLeaderId().getValue());
+            player.getLeaderCards().remove(targetCard);
+            resourceController.addFaithPoints(player,new Resource(1, ResourceType.FAITH));
+        }
+    }
+
 
     /**
      * This method is called whenever a player tries to activate a leaderCard
-     * @param player
-     * @param targetCard
-     * @return
+     * @param player Player whose leader card is being played.
+     * @param targetCard LeaderCard being played.
+     * @return true if card can be played, false otherwise.
      */
     private boolean checkRequirements(Player player, LeaderCard targetCard){
 
@@ -100,26 +124,42 @@ public class LeaderCardsController extends AbstractController{
         return true;
     }
 
+    /**
+     * Called when the activation of a leader card is confirmed so that its special ability is implemented.
+     * @param player player activating the card.
+     * @param targetCard card being activated.
+     */
     private void useAbility(Player player, LeaderCard targetCard){
         SpecialAbility ability = targetCard.getSpecialAbility();
 
         if( ability instanceof WhiteMarbleAbility){
+
             WhiteMarbleAbility marbleAbility =(WhiteMarbleAbility) ability;
             marketController.addMarketAbility(player, marbleAbility.getMarble());
+
         }else if( ability instanceof ProductionAbility){
+
             ProductionAbility productionAbility = (ProductionAbility) ability;
-            //devo aggiungere la production alla board
+            player.addSpecialSlot(productionAbility.getCost());
+
         }else if( ability instanceof ExtraDepotAbility){
+
             ExtraDepotAbility depotAbility = (ExtraDepotAbility) ability;
             player.addSpecialDepot(depotAbility.getCapacity(),depotAbility.getType());
+
         }else if( ability instanceof DiscountAbility){
-            //devo aggiungere lo sconto alla board
+
+            DiscountAbility discountAbility = (DiscountAbility) ability;
+            devController.addMarketAbility(player, discountAbility.getDiscount());
+
         }else{
-            new RuntimeException("We have some problem with the special ability");
+            throw new RuntimeException("Unrecognized special ability type.");
         }
 
         targetCard.setActive(true);
 
     }
+
+
 
 }

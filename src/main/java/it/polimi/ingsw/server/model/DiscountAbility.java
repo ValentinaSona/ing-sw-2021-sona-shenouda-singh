@@ -4,4 +4,7 @@ public class DiscountAbility extends SpecialAbility {
 
 	private Resource discount;
 
+	public Resource getDiscount() {
+		return discount;
+	}
 }

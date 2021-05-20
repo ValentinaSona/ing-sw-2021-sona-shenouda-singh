@@ -245,6 +245,22 @@ public class Player extends LambdaObservable<Transmittable> {
 		warehouse.add(new SpecialDepot(capacity, id, type));
 	}
 
+	/** TODO: tests id doesn't break
+	 * Called to add special slots to the slot array. they only contain productions.
+	 * @param cost
+	 */
+	public void addSpecialSlot(Resource cost){
+		Id id;
+		if (slots.size()==3) {
+			id = Id.S_SLOT_1;
+		} else  if (slots.size()==4) {
+			id = Id.S_SLOT_2;
+		} else {
+			throw new RuntimeException("Having more than two special productions should be impossible");
+		}
+		slots.add(new SpecialProduction(id, cost));
+	}
+
 	public void throwError(String message){
 
 	}

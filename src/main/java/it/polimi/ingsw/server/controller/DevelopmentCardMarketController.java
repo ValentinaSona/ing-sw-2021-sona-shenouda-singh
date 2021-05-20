@@ -12,7 +12,7 @@ import it.polimi.ingsw.utils.networking.transmittables.clientmessages.game.Clien
 
 public class DevelopmentCardMarketController extends AbstractController{
 
-    private final DevelopmentCardsMarket developmentCardsMarket;
+    private final DevMarket developmentCardsMarket;
 
     private final ResourceController resourceController;
 
@@ -99,5 +99,16 @@ public class DevelopmentCardMarketController extends AbstractController{
                 }
             }
         }
+    }
+
+
+    /**
+     * This method is called by the LeaderCardsController when the conditions to activate
+     * a leaderCard are verified.
+     * @param player the Player activating the ability.
+     * @param discount the resource discount granted by the ability.
+     */
+    public void addMarketAbility(Player player, Resource discount){
+        developmentCardsMarket.addAbility(discount,player);
     }
 }
