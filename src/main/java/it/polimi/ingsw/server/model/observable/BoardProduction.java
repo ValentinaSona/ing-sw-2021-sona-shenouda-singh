@@ -24,7 +24,7 @@ public class BoardProduction extends Slot {
     public void check(boolean card) throws NotSufficientResourceException {
         if(card){
             //this method should never be called with card = true
-            throw new RuntimeException("Super error");
+            //throw new RuntimeException("Super error");
         }
 
         Resource cost = boardProduction.getProductionCost()[0];
