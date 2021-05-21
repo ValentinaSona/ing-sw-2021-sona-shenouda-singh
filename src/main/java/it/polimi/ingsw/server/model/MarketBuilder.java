@@ -4,11 +4,15 @@ import it.polimi.ingsw.server.model.observable.MarketTray;
 import it.polimi.ingsw.server.model.observable.MarketTrayAbility;
 import it.polimi.ingsw.server.model.observable.Player;
 
+import java.security.NoSuchAlgorithmException;
+import java.security.SecureRandom;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
 
 public class MarketBuilder {
+
+    private static Random random = new Random(); // Initialising random
 
     /**
      * Builds the standard market, should be called at the start of a new fresh game
@@ -57,8 +61,6 @@ public class MarketBuilder {
      * @return the randomized array
      */
     private static MarketMarble[][] randomize (HashMap<MarketMarble, Integer> marbleSet) {
-
-        Random random = new Random(); // Initialising random
         MarketMarble[][] marbleTray = new MarketMarble[3][4];
 
         // First an array with all the marbles values is created
