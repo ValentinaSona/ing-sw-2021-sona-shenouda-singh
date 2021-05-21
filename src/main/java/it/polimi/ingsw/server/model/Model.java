@@ -37,7 +37,7 @@ public class Model {
 
     public void subscribeUser(User user){
         if(userPlayerHashMap.size() == numOfPlayers){
-            throw new RuntimeException("Sto inserendo più player di quelli consentiti");
+            new RuntimeException("Sto inserendo più player di quelli consentiti");
         }
         Player player = new Player(user.nickName);
         userPlayerHashMap.put(user, player);
