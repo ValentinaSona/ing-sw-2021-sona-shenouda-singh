@@ -21,7 +21,7 @@ import java.util.concurrent.LinkedBlockingDeque;
 
 import static org.mockito.Mockito.*;
 
-public class LobbyTest {
+class LobbyTest {
     private Lobby lobby;
     private Connection[] mockConnections;
     private ConnectionSetupHandler[] connectionHandlers;
@@ -98,7 +98,7 @@ public class LobbyTest {
 
     @Test
     @DisplayName("Set the nickname for a single player")
-    public void setValidNicknameForRegistration() throws InterruptedException {
+    void setValidNicknameForRegistration() throws InterruptedException {
         mockConnections(1);
         //this is the first client to set the nickname so it should be available and
         //so the message back to the client should be an ok message
@@ -107,7 +107,7 @@ public class LobbyTest {
 
     @Test
     @DisplayName("Four players trying to set the same nickname from different threads")
-    public void setInvalidNicknamesForRegistration() throws InterruptedException {
+    void setInvalidNicknamesForRegistration() throws InterruptedException {
         mockConnections(4);
 
         setNickname(0, "luca");
@@ -118,7 +118,7 @@ public class LobbyTest {
 
     @Test
     @DisplayName("Four players set four different nicknames")
-    public void setDifferentNicknames() throws InterruptedException {
+    void setDifferentNicknames() throws InterruptedException {
         mockConnections(4);
 
         setNickname(0,"Gianni");
@@ -129,7 +129,7 @@ public class LobbyTest {
 
     @Test
     @DisplayName("Player set his name and player count")
-    public void joinLobbyAndSetPlayerCount() throws InterruptedException {
+    void joinLobbyAndSetPlayerCount() throws InterruptedException {
         mockConnections(3);
 
         setNickname(0, "Gianni");
@@ -146,7 +146,7 @@ public class LobbyTest {
 
     @Test
     @DisplayName("All requested players join the lobby and a match is created")
-    public void createMatch() throws InterruptedException {
+    void createMatch() throws InterruptedException {
         mockConnections(4);
 
 

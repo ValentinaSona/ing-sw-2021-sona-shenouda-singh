@@ -8,10 +8,10 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
 
-public class ResourceTest {
+class ResourceTest {
 
     @Test
-    public void getQuantity() {
+    void getQuantity() {
         Resource resource = new Resource(2, ResourceType.STONE);
         assertEquals(2, resource.getQuantity());
     }

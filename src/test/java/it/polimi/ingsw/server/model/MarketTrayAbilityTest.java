@@ -31,7 +31,7 @@ class MarketTrayAbilityTest {
         MarketMarble[] resources;
         resources = market.getResources(jimmy, 4);
         assertArrayEquals(new MarketMarble[]{MarketMarble.YELLOW, MarketMarble.PURPLE, MarketMarble.YELLOW}, resources);
-        assertEquals(market.getExtra(), MarketMarble.YELLOW);
+        assertEquals( MarketMarble.YELLOW, market.getExtra());
 
         resources = market.getResources(jimmy, 0);
         assertArrayEquals(new MarketMarble[]{MarketMarble.BLUE, MarketMarble.PURPLE, MarketMarble.GREY, MarketMarble.BLUE}, resources);
@@ -42,12 +42,5 @@ class MarketTrayAbilityTest {
         assertThrows(TwoLeaderCardsException.class, () -> finalMarket.getResources(jimmy, 4));
     }
 
-    @Test
-    void addAbility() {
-    }
-
-    @Test
-    void getChosen() {
-    }
 
 }

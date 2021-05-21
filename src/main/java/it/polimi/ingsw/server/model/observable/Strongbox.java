@@ -84,12 +84,16 @@ public class Strongbox extends LambdaObservable<Transmittable> {
         switch (resource.getResourceType()){
             case SERVANT:
                 this.servant.add(resource);
+                break;
             case COIN:
                 this.coin.add(resource);
+                break;
             case SHIELD:
                 this.shield.add(resource);
+                break;
             case STONE:
                 this.stone.add(resource);
+                break;
             default:
                 throw new RuntimeException("This type of resource is not available in the strongbox");
         }
@@ -125,12 +129,16 @@ public class Strongbox extends LambdaObservable<Transmittable> {
         switch (resource.getResourceType()){
             case SERVANT:
                 this.servant.sub(resource);
+                break;
             case COIN:
                 this.coin.sub(resource);
+                break;
             case SHIELD:
                 this.shield.sub(resource);
+                break;
             case STONE:
                 this.stone.sub(resource);
+                break;
             default:
                 throw new RuntimeException("This type of resource is not available in the strongbox");
         }

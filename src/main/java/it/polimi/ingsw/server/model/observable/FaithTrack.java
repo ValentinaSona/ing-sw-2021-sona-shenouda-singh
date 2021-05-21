@@ -87,6 +87,8 @@ public class FaithTrack extends LambdaObservable<Transmittable> {
 					popeFavorTiles[2] = PopeFavorTiles.DISMISSED;
 				}
 				break;
+			default:
+				throw new RuntimeException("Invalid number, reports range from 1 to 3.");
 		}
 	}
 

@@ -28,19 +28,19 @@ class MarketTrayTest {
         MarketTray market = new MarketTray(exampleTray, exampleExtra);
 
         MarketMarble[] resources = market.getResources(null, 0);
-        assertArrayEquals(resources, new MarketMarble[]{MarketMarble.WHITE, MarketMarble.YELLOW, MarketMarble.GREY, MarketMarble.BLUE});
+        assertArrayEquals( new MarketMarble[]{MarketMarble.WHITE, MarketMarble.YELLOW, MarketMarble.GREY, MarketMarble.BLUE}, resources);
         assertEquals(market.getExtra(), MarketMarble.WHITE);
 
         resources = market.getResources(null, 0);
-        assertArrayEquals(resources, new MarketMarble[]{MarketMarble.YELLOW, MarketMarble.GREY, MarketMarble.BLUE, MarketMarble.WHITE});
+        assertArrayEquals( new MarketMarble[]{MarketMarble.YELLOW, MarketMarble.GREY, MarketMarble.BLUE, MarketMarble.WHITE}, resources);
         assertEquals(market.getExtra(), MarketMarble.YELLOW);
 
         resources = market.getResources(null, 6);
-        assertArrayEquals(resources, new MarketMarble[]{MarketMarble.WHITE, MarketMarble.WHITE, MarketMarble.RED});
+        assertArrayEquals( new MarketMarble[]{MarketMarble.WHITE, MarketMarble.WHITE, MarketMarble.RED}, resources);
         assertEquals(market.getExtra(), MarketMarble.WHITE);
 
         resources = market.getResources(null, 6);
-        assertArrayEquals(resources, new MarketMarble[]{MarketMarble.WHITE, MarketMarble.RED, MarketMarble.YELLOW});
+        assertArrayEquals(new MarketMarble[]{MarketMarble.WHITE, MarketMarble.RED, MarketMarble.YELLOW}, resources);
         assertEquals(market.getExtra(), MarketMarble.WHITE);
 
     }
@@ -57,7 +57,7 @@ class MarketTrayTest {
         HashMap<Player, List<MarketMarble>> map = market.getAbilityMap();
 
         Assertions.assertTrue(map.containsKey(jimmy));
-        assertEquals(map.get(jimmy), Collections.singletonList(MarketMarble.BLUE));
+        assertEquals(Collections.singletonList(MarketMarble.BLUE), map.get(jimmy) );
 
     }
 

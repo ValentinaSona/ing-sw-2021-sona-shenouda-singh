@@ -6,8 +6,8 @@ public class DevelopmentCardDeck {
 
 	private List<DevelopmentCard> deck;
 
-	final private int level;
-	final private DevelopmentType color;
+	private final int level;
+	private final DevelopmentType color;
 
 	public DevelopmentCardDeck( List<DevelopmentCard> deck, int level, DevelopmentType color ) {
 		this.deck = deck;

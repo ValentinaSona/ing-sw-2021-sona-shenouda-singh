@@ -44,6 +44,7 @@ class FaithTrackTest {
             faithTrack.addFaithPoints(2);
         } catch (VaticanReportException e) {
 
+        //Player has two faith, someone else triggers vatican.
         }
         faithTrack.validatePopeFavor("1");
         assertEquals(PopeFavorTiles.DISMISSED,faithTrack.getPopeFavorTiles(0));
