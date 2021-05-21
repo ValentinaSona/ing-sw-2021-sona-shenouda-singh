@@ -14,6 +14,7 @@ public class DepotView {
         this.capacity = capacity;
     }
 
+
     public Id getId(){
         return id;
     }
