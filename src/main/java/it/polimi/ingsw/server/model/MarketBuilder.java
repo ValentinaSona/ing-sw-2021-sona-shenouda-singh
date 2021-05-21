@@ -4,15 +4,13 @@ import it.polimi.ingsw.server.model.observable.MarketTray;
 import it.polimi.ingsw.server.model.observable.MarketTrayAbility;
 import it.polimi.ingsw.server.model.observable.Player;
 
-import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Random;
 
 public class MarketBuilder {
 
-    private static Random random = new Random(); // Initialising random
+    private static SecureRandom random = new SecureRandom(); // Initialising random
 
     /**
      * Builds the standard market, should be called at the start of a new fresh game
