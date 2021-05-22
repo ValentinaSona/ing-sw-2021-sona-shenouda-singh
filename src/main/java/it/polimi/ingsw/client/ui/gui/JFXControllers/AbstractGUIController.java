@@ -1,4 +1,4 @@
-package it.polimi.ingsw.client.ui.gui.GUIControllers;
+package it.polimi.ingsw.client.ui.gui.JFXControllers;
 
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -9,7 +9,6 @@ import javafx.stage.Stage;
 
 import java.io.File;
 import java.io.IOException;
-import java.net.MalformedURLException;
 import java.net.URL;
 
 public abstract class AbstractGUIController {
@@ -17,11 +16,11 @@ public abstract class AbstractGUIController {
     @FXML
     private Pane mainPane;
 
-    public void change(String sceneName, String css) {
+    public void change(ScreenName screen) {
 
         Parent loaded = null;
         try {
-            URL url = new File("src/main/resources/fxml/" + sceneName).toURI().toURL();
+            URL url = new File("src/main/resources/fxml/" + screen.fxml()).toURI().toURL();
             loaded = FXMLLoader.load(url);
         } catch (IOException e) {
             e.printStackTrace();
@@ -31,7 +30,7 @@ public abstract class AbstractGUIController {
 
         Scene scene = new Scene(loaded);
 
-        scene.getStylesheets().add("css/" + css);
+        scene.getStylesheets().add("css/" + screen.css());
 
         Stage stage = (Stage) mainPane.getScene().getWindow();
 

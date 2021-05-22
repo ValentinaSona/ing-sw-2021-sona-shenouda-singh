@@ -9,7 +9,7 @@
 <?import javafx.scene.shape.SVGPath?>
 <?import javafx.scene.text.Font?>
 
-<Pane fx:id="mainPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="850.0" style="-fx-background-color: #e6cf91;" xmlns="http://javafx.com/javafx/15.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.client.ui.gui.GUIControllers.MainMenuController">
+<Pane fx:id="mainPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="850.0" style="-fx-background-color: #e6cf91;" xmlns="http://javafx.com/javafx/15.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.client.ui.gui.JFXControllers.MainMenuGUIController">
     <children>
         <Label layoutX="390.0" layoutY="286.0" onMouseReleased="#joinGame" styleClass="title" text="Play" textAlignment="CENTER">
             <font>
@@ -28,7 +28,7 @@
                         <Image url="@../assets/main_menu/blue_background.png" />
                     </image>
                 </ImageView>
-                <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#c0ad62" height="20.0" layoutX="-10.0" layoutY="254.0" stroke="TRANSPARENT" strokeType="INSIDE" width="860.0" />
+                <Rectangle arcHeight="5.0" fill="#c0ad62" height="20.0" layoutX="-10.0" layoutY="254.0" stroke="TRANSPARENT" strokeType="INSIDE" width="860.0" />
                 <Label fx:id="multi" layoutX="289.0" layoutY="143.0" text="Multiplayer" textAlignment="CENTER" textFill="#c0ad62">
                     <font>
                         <Font name="System Bold" size="50.0" />

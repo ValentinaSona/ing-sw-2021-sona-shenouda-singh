@@ -8,14 +8,14 @@
 <?import javafx.scene.shape.Rectangle?>
 <?import javafx.scene.text.Font?>
 
-<Pane fx:id="mainPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="850.0" style="-fx-background-color: #e6cf91;" xmlns="http://javafx.com/javafx/15.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.client.ui.gui.GUIControllers.MainMenuController">
+<Pane fx:id="mainPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="850.0" style="-fx-background-color: #e6cf91;" xmlns="http://javafx.com/javafx/15.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.client.ui.gui.JFXControllers.MainMenuGUIController">
    <children>
       <Label layoutX="320.0" layoutY="300.0" styleClass="title" text="Singleplayer">
          <font>
             <Font size="39.0" />
          </font>
       </Label>
-      <Label fx:id="option" layoutX="328.0" layoutY="370.0" onMouseReleased="#goToMulti" styleClass="title" text="Multiplayer">
+      <Label fx:id="option" layoutX="328.0" layoutY="370.0" onMouseReleased="#goToMulti" styleClass="title" text="Multiplayer" textFill="#402821">
          <font>
             <Font size="39.0" />   
          </font>
@@ -32,7 +32,7 @@
                   <Image url="@../assets/main_menu/blue_background.png" />
                </image>
             </ImageView>
-            <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#c0ad62" height="20.0" layoutX="-10.0" layoutY="254.0" stroke="TRANSPARENT" strokeType="INSIDE" width="863.0" />
+            <Rectangle arcHeight="5.0" fill="#c0ad62" height="20.0" layoutX="-10.0" layoutY="254.0" stroke="TRANSPARENT" strokeType="INSIDE" width="860.0" />
          </children>
       </AnchorPane>
       <AnchorPane fx:id="masters" prefHeight="200.0" prefWidth="200.0">
