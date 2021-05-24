@@ -1,3 +1,13 @@
+@font-face {
+    font-family: 'Crimson Pro Medium';
+    src: url('../assets/font/CrimsonPro-Medium.ttf');
+}
+
+.root{
+    -fx-background-image: url("../assets/main_menu/Masters_of_Reinassance.png");
+    -fx-background-size: cover;
+}
+
 .basicButton:hover {
     -fx-background-color: #027da3;
     -fx-text-fill: #e6cf91;
@@ -9,11 +19,15 @@
 }
 
 .title:hover {
-    -fx-text-fill: #FFF000;
+    -fx-font-family: 'Crimson Pro Medium';
+    -fx-font-size: 40px;
+    -fx-text-fill: #5a9cf2;
 }
 
 .title {
-    -fx-text-fill: #423324;
+    -fx-font-family: 'Crimson Pro Medium';
+    -fx-font-size: 40px;
+    -fx-text-fill: white;
 }
 
 .selectionButton:hover {

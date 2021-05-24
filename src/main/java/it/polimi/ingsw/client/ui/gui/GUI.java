@@ -20,7 +20,7 @@ public class GUI extends Application {
         Scene scene = new Scene(root);
         scene.getStylesheets().add("css/style1.css");
         primaryStage.setScene(scene);
-        primaryStage.setResizable(false);
+        //primaryStage.setResizable(false);
         primaryStage.show();
     }
 

@@ -29,13 +29,18 @@
                         <Font size="23.0" />
                      </font>
                   </Label>
-                  <TextField fx:id="nicknameField" layoutX="139.0" layoutY="18.0" prefHeight="39.0" prefWidth="191.0" style="-fx-background-color: #c0ad62; -fx-text-fill: #ffffff;">
+                  <TextField fx:id="nicknameField" layoutX="139.0" layoutY="18.0" onAction="#goToJoinEnter" prefHeight="39.0" prefWidth="191.0" style="-fx-background-color: #c0ad62; -fx-text-fill: #ffffff;">
                      <font>
                         <Font size="17.0" />
                      </font>
                   </TextField>
                </children>
             </AnchorPane>
+            <Label fx:id="party" layoutX="304.0" layoutY="211.0" opacity="0.0" text="You're the funny one, right?" textFill="WHITE">
+               <font>
+                  <Font size="19.0" />
+               </font>
+            </Label>
            </children>
        </AnchorPane>
       <Label fx:id="emptyNickname" layoutX="321.0" layoutY="186.0" opacity="0.0" text="You must choose a nickname" textFill="RED">

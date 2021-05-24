@@ -1,6 +1,7 @@
 package it.polimi.ingsw.client.ui.gui.JFXControllers;
 
 import it.polimi.ingsw.client.ui.UIController;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -31,6 +32,8 @@ public class MainMenuGUIController extends AbstractGUIController {
     private Button threePlayers;
     @FXML
     private Button fourPlayers;
+    @FXML
+    private Label party;
 
     public void goToMulti(MouseEvent mouseEvent) {
         change(ScreenName.MULTIPLAYER);
@@ -48,7 +51,7 @@ public class MainMenuGUIController extends AbstractGUIController {
         change(ScreenName.MULTIPLAYER);
     }
 
-    public void goToJoin(MouseEvent mouseEvent) {
+    public void goToJoin() {
         if (nicknameField.getText().isEmpty()) emptyNickname.setOpacity(1);
         else {
             emptyNickname.setOpacity(0);
@@ -68,6 +71,9 @@ public class MainMenuGUIController extends AbstractGUIController {
                 joinButton.setDisable(false);
             }
             else {
+                if(nicknameField.getText().equals("a nickname") || nicknameField.getText().equals("a Nickname") ||
+                        nicknameField.getText().equals("Nickname") || nicknameField.getText().equals("nickname"))
+                    party.setOpacity(1);
                 boolean isFirst = UIController.getInstance().joinLobby();
                 if (isFirst) setGameCreation();
                 else setJoiningGame();
@@ -111,5 +117,11 @@ public class MainMenuGUIController extends AbstractGUIController {
     }
 
     public void createGame(MouseEvent mouseEvent) {
+        LobbyGUIController.startCreation(numberOfPlayers);
+        change(ScreenName.LOBBY);
+    }
+
+    public void goToJoinEnter(ActionEvent actionEvent) {
+        goToJoin();
     }
 }
