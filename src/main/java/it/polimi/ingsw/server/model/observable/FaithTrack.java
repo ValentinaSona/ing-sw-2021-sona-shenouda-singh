@@ -32,12 +32,12 @@ public class FaithTrack extends LambdaObservable<Transmittable> {
 			throw new RuntimeException("Can only add Faith to FaithTrack");
 		} else {
 			faithMarker += faith.getQuantity();
-			if (faithMarker >= 8 && (getPopeFavorTiles(0) != PopeFavorTiles.DISMISSED || getPopeFavorTiles(0) != PopeFavorTiles.UPWARDS) ){
+			if (faithMarker >= 8 && getPopeFavorTiles(0) == PopeFavorTiles.DOWNWARDS ){
 				throw new VaticanReportException("1");
-			} else if(faithMarker >= 16 && (getPopeFavorTiles(1) != PopeFavorTiles.DISMISSED || getPopeFavorTiles(1) != PopeFavorTiles.UPWARDS)){
+			} else if(faithMarker >= 16 && getPopeFavorTiles(1) == PopeFavorTiles.DOWNWARDS){
 				throw new VaticanReportException("2");
 
-			} else if(faithMarker >= 4 && (getPopeFavorTiles(2) != PopeFavorTiles.DISMISSED || getPopeFavorTiles(2) != PopeFavorTiles.UPWARDS)){
+			} else if(faithMarker >= 24 && getPopeFavorTiles(2) == PopeFavorTiles.DOWNWARDS){
 				throw new VaticanReportException("3");
 			}
 		}
@@ -47,16 +47,7 @@ public class FaithTrack extends LambdaObservable<Transmittable> {
 	}
 
 	public void addFaithPoints(int faith) throws VaticanReportException {
-		faithMarker += faith;
-		if (faithMarker >= 8 && (getPopeFavorTiles(0) != PopeFavorTiles.DISMISSED || getPopeFavorTiles(0) != PopeFavorTiles.UPWARDS) ){
-			throw new VaticanReportException("1");
-		} else if(faithMarker >= 16 && (getPopeFavorTiles(1) != PopeFavorTiles.DISMISSED || getPopeFavorTiles(1) != PopeFavorTiles.UPWARDS)){
-			throw new VaticanReportException("2");
-
-		} else if(faithMarker >= 4 && (getPopeFavorTiles(2) != PopeFavorTiles.DISMISSED || getPopeFavorTiles(2) != PopeFavorTiles.UPWARDS)){
-			throw new VaticanReportException("3");
-		}
-
+		this.addFaithPoints(new Resource(faith, ResourceType.FAITH));
 	}
 
 	public void validatePopeFavor(String report) {

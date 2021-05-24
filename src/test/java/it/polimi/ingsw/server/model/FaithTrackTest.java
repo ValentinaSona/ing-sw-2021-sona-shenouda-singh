@@ -37,13 +37,12 @@ class FaithTrackTest {
     }
 
     @Test
-    void validatePopeFavor() {
+    void validatePopeFavor1() {
         FaithTrack faithTrack = new FaithTrack();
 
         try {
             faithTrack.addFaithPoints(2);
         } catch (VaticanReportException e) {
-
         //Player has two faith, someone else triggers vatican.
         }
         faithTrack.validatePopeFavor("1");
@@ -51,11 +50,17 @@ class FaithTrackTest {
         assertEquals(PopeFavorTiles.DOWNWARDS,faithTrack.getPopeFavorTiles(1));
         assertEquals(PopeFavorTiles.DOWNWARDS,faithTrack.getPopeFavorTiles(2));
 
+        //check that a second call does not modify.
+        faithTrack.validatePopeFavor("1");
+        assertEquals(PopeFavorTiles.DISMISSED,faithTrack.getPopeFavorTiles(0));
+        assertEquals(PopeFavorTiles.DOWNWARDS,faithTrack.getPopeFavorTiles(1));
+        assertEquals(PopeFavorTiles.DOWNWARDS,faithTrack.getPopeFavorTiles(2));
 
         try {
             faithTrack.addFaithPoints(6);
         } catch (VaticanReportException e) {
         }
+        //player has eight faith,
         faithTrack.validatePopeFavor("2");
         assertEquals(PopeFavorTiles.DISMISSED,faithTrack.getPopeFavorTiles(0));
         assertEquals(PopeFavorTiles.DISMISSED,faithTrack.getPopeFavorTiles(1));
@@ -70,5 +75,100 @@ class FaithTrackTest {
         assertEquals(PopeFavorTiles.DISMISSED,faithTrack.getPopeFavorTiles(0));
         assertEquals(PopeFavorTiles.DISMISSED,faithTrack.getPopeFavorTiles(1));
         assertEquals(PopeFavorTiles.UPWARDS,faithTrack.getPopeFavorTiles(2));
+
+        try {
+            faithTrack.addFaithPoints(11);
+        } catch (VaticanReportException e) {
+            Assertions.fail();
+        }
+
+    }
+
+    @Test
+    void validatePopeFavor2() {
+        FaithTrack faithTrack = new FaithTrack();
+
+        try {
+            faithTrack.validatePopeFavor("0");
+            Assertions.fail();
+        } catch (RuntimeException e) {
+
+        }
+
+        try {
+            faithTrack.addFaithPoints(8);
+        } catch (VaticanReportException e) {
+
+            faithTrack.validatePopeFavor("1");
+        }
+
+        assertEquals(PopeFavorTiles.UPWARDS,faithTrack.getPopeFavorTiles(0));
+        assertEquals(PopeFavorTiles.DOWNWARDS,faithTrack.getPopeFavorTiles(1));
+        assertEquals(PopeFavorTiles.DOWNWARDS,faithTrack.getPopeFavorTiles(2));
+
+
+        try {
+            faithTrack.addFaithPoints(6);
+        } catch (VaticanReportException e) {
+        }
+        //player has eight faith,
+        faithTrack.validatePopeFavor("2");
+        assertEquals(PopeFavorTiles.UPWARDS,faithTrack.getPopeFavorTiles(0));
+        assertEquals(PopeFavorTiles.UPWARDS,faithTrack.getPopeFavorTiles(1));
+        assertEquals(PopeFavorTiles.DOWNWARDS,faithTrack.getPopeFavorTiles(2));
+
+        try {
+            faithTrack.addFaithPoints(1);
+        } catch (VaticanReportException e) {
+
+        }
+        faithTrack.validatePopeFavor("3");
+        assertEquals(PopeFavorTiles.UPWARDS,faithTrack.getPopeFavorTiles(0));
+        assertEquals(PopeFavorTiles.UPWARDS,faithTrack.getPopeFavorTiles(1));
+        assertEquals(PopeFavorTiles.DISMISSED,faithTrack.getPopeFavorTiles(2));
+
+        try {
+            faithTrack.addFaithPoints(11);
+        } catch (VaticanReportException e) {
+            Assertions.fail();
+        }
+    }
+
+    @Test
+    void validatePopeFavor3() {
+        FaithTrack faithTrack = new FaithTrack();
+
+        try {
+            faithTrack.addFaithPoints(8);
+        } catch (VaticanReportException e) {
+
+            faithTrack.validatePopeFavor("1");
+        }
+
+        assertEquals(PopeFavorTiles.UPWARDS,faithTrack.getPopeFavorTiles(0));
+        assertEquals(PopeFavorTiles.DOWNWARDS,faithTrack.getPopeFavorTiles(1));
+        assertEquals(PopeFavorTiles.DOWNWARDS,faithTrack.getPopeFavorTiles(2));
+
+
+        try {
+            faithTrack.addFaithPoints(8);
+        } catch (VaticanReportException e) {
+        }
+        //player has eight faith,
+        faithTrack.validatePopeFavor("2");
+        assertEquals(PopeFavorTiles.UPWARDS,faithTrack.getPopeFavorTiles(0));
+        assertEquals(PopeFavorTiles.UPWARDS,faithTrack.getPopeFavorTiles(1));
+        assertEquals(PopeFavorTiles.DOWNWARDS,faithTrack.getPopeFavorTiles(2));
+
+        try {
+            faithTrack.addFaithPoints(16);
+        } catch (VaticanReportException e) {
+
+        }
+        faithTrack.validatePopeFavor("3");
+        assertEquals(PopeFavorTiles.UPWARDS,faithTrack.getPopeFavorTiles(0));
+        assertEquals(PopeFavorTiles.UPWARDS,faithTrack.getPopeFavorTiles(1));
+        assertEquals(PopeFavorTiles.UPWARDS,faithTrack.getPopeFavorTiles(2));
+
     }
 }
