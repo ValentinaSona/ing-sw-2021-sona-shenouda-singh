@@ -1,41 +1,53 @@
 package it.polimi.ingsw.client.ui.gui.JFXControllers;
 
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.layout.Pane;
+import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
-
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 
 public abstract class AbstractGUIController {
 
+    private Parent root;
+
     @FXML
-    private Pane mainPane;
+    private StackPane mainPane;
 
-    public void change(ScreenName screen) {
+    public void change (ScreenName screen, MouseEvent event) {
 
-        Parent loaded = null;
+        Scene scene1 = ((Node) event.getSource()).getScene();
+
+        changeScene(scene1, screen);
+    }
+
+    public void change (ScreenName screen, ActionEvent event) {
+
+        Scene scene1 = ((Node) event.getSource()).getScene();
+
+        changeScene(scene1, screen);
+    }
+
+    private void changeScene (Scene scene, ScreenName screen) {
         try {
             URL url = new File("src/main/resources/fxml/" + screen.fxml()).toURI().toURL();
-            loaded = FXMLLoader.load(url);
+            root = FXMLLoader.load(url);
+            scene.setRoot(root);
         } catch (IOException e) {
             e.printStackTrace();
         }
 
-        if (loaded == null) throw new RuntimeException("Something went wrong with FXML loading");
+        String[] stylesheets = screen.css();
 
-        Scene scene = new Scene(loaded);
-
-        scene.getStylesheets().add("css/" + screen.css());
-
-        Stage stage = (Stage) mainPane.getScene().getWindow();
-
-        stage.setScene(scene);
-        stage.show();
+        for (String css : stylesheets) {
+            scene.getStylesheets().add("css/" + css);
+        }
     }
 
 }

@@ -1,0 +1,47 @@
+.basicButton:hover {
+    -fx-background-color: #5a9cf2;
+    -fx-text-fill: white;
+    -fx-font-family: 'Crimson Pro Medium';
+    -fx-font-size: 40px;
+    -fx-background-insets: 0 0 -1 0, 0, 1, 2;
+}
+
+.basicButton {
+    -fx-background-color: rgba(255,255,255,0.5);
+    -fx-text-fill: white;
+    -fx-font-family: 'Crimson Pro Medium';
+    -fx-font-size: 40px;
+    -fx-background-insets: 0 0 -1 0, 0, 1, 2;
+}
+
+.numButton:focused {
+    -fx-background-color: #5a9cf2;
+    -fx-text-fill: white;
+    -fx-font-family: 'Crimson Pro Medium';
+    -fx-font-size: 40px;
+    -fx-background-insets: 0 0 -1 0, 0, 1, 2;
+}
+
+.numButton:hover {
+    -fx-background-color: #5a9cf2;
+    -fx-text-fill: white;
+    -fx-font-family: 'Crimson Pro Medium';
+    -fx-font-size: 40px;
+    -fx-background-insets: 0 0 -1 0, 0, 1, 2;
+}
+
+.numButton {
+    -fx-background-color: rgba(255,255,255,0.5);
+    -fx-text-fill: white;
+    -fx-font-family: 'Crimson Pro Medium';
+    -fx-font-size: 40px;
+    -fx-background-insets: 0 0 -1 0, 0, 1, 2;
+}
+
+.svgObj {
+    -fx-fill: white;
+}
+
+.svgObj:hover {
+    -fx-fill: #5a9cf2;
+}

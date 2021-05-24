@@ -18,9 +18,9 @@ public class GUI extends Application {
         Parent root = FXMLLoader.load(url);
         primaryStage.setTitle("Client");
         Scene scene = new Scene(root);
-        scene.getStylesheets().add("css/style1.css");
+        scene.getStylesheets().add("css/mainText.css");
+        scene.getStylesheets().add("css/standardBackground.css");
         primaryStage.setScene(scene);
-        //primaryStage.setResizable(false);
         primaryStage.show();
     }
 

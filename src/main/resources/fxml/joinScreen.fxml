@@ -1,104 +1,75 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.layout.Pane?>
-<?import javafx.scene.shape.Rectangle?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.shape.SVGPath?>
-<?import javafx.scene.text.Font?>
 
-<Pane fx:id="mainPane" prefHeight="600.0" prefWidth="850.0" style="-fx-background-color: #e6cf91;" xmlns="http://javafx.com/javafx/15.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.client.ui.gui.JFXControllers.MainMenuGUIController">
+<StackPane fx:id="mainPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="720.0" prefWidth="1280.0" xmlns="http://javafx.com/javafx/15.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.client.ui.gui.JFXControllers.MainMenuGUIController">
    <children>
-       <AnchorPane fx:id="blueBack" layoutY="-100.0" prefHeight="100.0" prefWidth="200.0">
-           <children>
-               <ImageView fitHeight="266.0" fitWidth="850.0" pickOnBounds="true" preserveRatio="true">
-                   <image>
-                       <Image url="@../assets/main_menu/blue_background.png" />
-                   </image>
-               </ImageView>
-               <Rectangle arcHeight="5.0" fill="#c0ad62" height="20.0" layoutX="-10.0" layoutY="254.0" stroke="TRANSPARENT" strokeType="INSIDE" width="860.0" />
-            <SVGPath fx:id="backArrow" content="M10,20 30,0 30,10 60,10,60,30,30,30,30,40" layoutX="30.0" layoutY="160.0" onMouseReleased="#backToMulti" styleClass="backArrow" />
-            <AnchorPane layoutX="260.0" layoutY="143.0" prefHeight="75.0" prefWidth="327.0">
+      <AnchorPane prefHeight="200.0" prefWidth="200.0" StackPane.alignment="CENTER" />
+      <BorderPane minHeight="-Infinity" minWidth="-Infinity" prefHeight="200.0" prefWidth="200.0">
+         <center>
+            <StackPane prefHeight="150.0" prefWidth="200.0" BorderPane.alignment="CENTER">
                <children>
-                  <Label layoutX="14.0" layoutY="21.0" text="Nickname" textFill="#c0ad62">
-                     <font>
-                        <Font size="23.0" />
-                     </font>
+                  <Label fx:id="joining" opacity="0.0" styleClass="normalLabel" text="Joining game...">
+                     <StackPane.margin>
+                        <Insets top="240.0" />
+                     </StackPane.margin>
                   </Label>
-                  <TextField fx:id="nicknameField" layoutX="139.0" layoutY="18.0" onAction="#goToJoinEnter" prefHeight="39.0" prefWidth="191.0" style="-fx-background-color: #c0ad62; -fx-text-fill: #ffffff;">
-                     <font>
-                        <Font size="17.0" />
-                     </font>
+                  <TextField fx:id="nicknameField" maxWidth="400.0" onAction="#goToJoinEnter" prefHeight="39.0" prefWidth="400.0" styleClass="text-field">
+                     <StackPane.margin>
+                        <Insets bottom="100.0" left="200.0" right="200.0" />
+                     </StackPane.margin>
                   </TextField>
+                  <Label fx:id="chooseNick" styleClass="normalLabel" text="Choose a nickname: " textFill="WHITE">
+                     <StackPane.margin>
+                        <Insets bottom="300.0" />
+                     </StackPane.margin>
+                  </Label>
+                  <Label fx:id="party" opacity="0.0" text="You are the funny one, right?">
+                     <StackPane.margin>
+                        <Insets top="80.0" />
+                     </StackPane.margin>
+                  </Label>
+                  <Label fx:id="emptyNickname" opacity="0.0" styleClass="normalLabel" text="You must choose a nickname!">
+                     <StackPane.margin>
+                        <Insets top="80.0" />
+                     </StackPane.margin>
+                  </Label>
+                  <Button fx:id="joinButton" mnemonicParsing="false" onAction="#goToJoin" styleClass="basicButton" text="JOIN">
+                     <StackPane.margin>
+                        <Insets top="240.0" />
+                     </StackPane.margin>
+                  </Button>
                </children>
-            </AnchorPane>
-            <Label fx:id="party" layoutX="304.0" layoutY="211.0" opacity="0.0" text="You're the funny one, right?" textFill="WHITE">
-               <font>
-                  <Font size="19.0" />
-               </font>
-            </Label>
-           </children>
-       </AnchorPane>
-      <Label fx:id="emptyNickname" layoutX="321.0" layoutY="186.0" opacity="0.0" text="You must choose a nickname" textFill="RED">
-         <font>
-            <Font size="17.0" />
-         </font>
-      </Label>
-      <AnchorPane layoutX="301.0" layoutY="276.0" prefHeight="200.0" prefWidth="259.0">
-         <children>
-            <Label fx:id="joining" layoutX="-1.0" layoutY="71.0" opacity="0.0" text="Joining game..." textFill="#423324">
-               <font>
-                  <Font size="41.0" />
-               </font>
-            </Label>
-            <Button fx:id="joinButton" layoutX="20.0" layoutY="63.0" mnemonicParsing="false" onMouseReleased="#goToJoin" prefHeight="75.0" prefWidth="225.0" styleClass="basicButton" text="Join game" textFill="#e6cf91">
-               <font>
-                  <Font size="35.0" />
-               </font>
-            </Button>
-         </children>
-      </AnchorPane>
-      <AnchorPane fx:id="creationPane" disable="true" layoutX="209.0" layoutY="244.0" opacity="0.0" prefHeight="264.0" prefWidth="452.0">
-         <children>
-            <Label layoutX="101.0" layoutY="38.0" text="Select number of players" textFill="#025c78">
-               <font>
-                  <Font size="23.0" />
-               </font>
-            </Label>
-            <AnchorPane layoutX="141.0" layoutY="86.0" prefHeight="46.0" prefWidth="163.0">
+            </StackPane>
+         </center>
+         <top>
+            <StackPane prefHeight="150.0" prefWidth="200.0" BorderPane.alignment="CENTER">
                <children>
-                  <Button fx:id="threePlayers" layoutX="65.0" mnemonicParsing="false" onMouseReleased="#playersSelected" styleClass="basicButton" text="3">
-                     <font>
-                        <Font size="22.0" />
-                     </font>
-                  </Button>
-                  <Button fx:id="fourPlayers" layoutX="130.0" mnemonicParsing="false" onMouseReleased="#playersSelected" styleClass="basicButton" text="4">
-                     <font>
-                        <Font size="22.0" />
-                     </font>
-                  </Button>
-                  <Button fx:id="twoPlayers" mnemonicParsing="false" onMouseReleased="#playersSelected" styleClass="basicButton" text="2">
-                     <font>
-                        <Font size="22.0" />
-                     </font>
-                  </Button>
+                  <ImageView fitHeight="194.0" fitWidth="986.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../assets/main_menu/Title_main.png" />
+                     </image>
+                     <StackPane.margin>
+                        <Insets top="20.0" />
+                     </StackPane.margin>
+                  </ImageView>
+                  <SVGPath fx:id="backArrow" content="M10,20 30,0 30,10 60,10,60,30,30,30,30,40" onMouseReleased="#backToMulti" styleClass="svgObj" StackPane.alignment="CENTER_LEFT">
+                     <StackPane.margin>
+                        <Insets left="60.0" />
+                     </StackPane.margin>
+                  </SVGPath>
                </children>
-            </AnchorPane>
-            <Label layoutX="13.0" layoutY="4.0" text="You are the first player joining this game..." textFill="#025c78">
-               <font>
-                  <Font size="23.0" />
-               </font>
-            </Label>
-            <Button fx:id="joinButton1" layoutX="96.0" layoutY="175.0" mnemonicParsing="false" onMouseReleased="#createGame" prefHeight="75.0" prefWidth="261.0" styleClass="basicButton" text="Create game" textFill="#e6cf91">
-               <font>
-                  <Font size="35.0" />
-               </font>
-            </Button>
-         </children>
-      </AnchorPane>
+            </StackPane>
+         </top>
+      </BorderPane>
    </children>
-</Pane>
+</StackPane>

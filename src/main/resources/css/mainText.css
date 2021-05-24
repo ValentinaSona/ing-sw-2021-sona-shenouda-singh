@@ -1,0 +1,43 @@
+@font-face {
+    font-family: 'Crimson Pro Medium';
+    src: url('../assets/font/CrimsonPro-Medium.ttf');
+}
+
+.title:hover {
+    -fx-font-family: 'Crimson Pro Medium';
+    -fx-font-size: 40px;
+    -fx-text-fill: #5a9cf2;
+}
+
+.title {
+    -fx-font-family: 'Crimson Pro Medium';
+    -fx-font-size: 40px;
+    -fx-text-fill: white;
+}
+
+.normalLabel {
+    -fx-font-family: 'Crimson Pro Medium';
+    -fx-font-size: 40px;
+    -fx-text-fill: white;
+}
+
+#party {
+    -fx-font-family: 'Crimson Pro Medium';
+    -fx-font-size: 30px;
+    -fx-text-fill: white;
+}
+
+.text-field {
+    -fx-border-color: white;
+    -fx-border-width: 0 0 3 0;
+    -fx-background-color: transparent;
+    -fx-text-fill: white;
+    -fx-font-family: "Crimson Pro Medium";
+    -fx-font-size: 3em;
+    -fx-alignment: center;
+    -fx-accent: transparent
+}
+
+#nicknameLabel {
+    -fx-text-fill: #5a9cf2;
+}
