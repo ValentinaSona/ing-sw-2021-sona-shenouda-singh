@@ -5,7 +5,7 @@ public enum ScreenName {
     MULTIPLAYER("multiplayerScreen.fxml", new String[]{"mainText.css", "standardBackground.css", "buttons.css"}),
     JOIN_GAME("joinScreen.fxml", new String[]{"mainText.css", "standardBackground.css", "buttons.css"}),
     CREATION("gameCreation.fxml", new String[]{"mainText.css", "standardBackground.css", "buttons.css"}),
-    LOBBY("lobby.fxml", new String[]{"mainText.css", "standardBackground.css", "buttons.css"});
+    LOBBY("lobby.fxml", new String[]{"mainText.css", "standardBackground.css", "buttons.css", "list.css"});
 
     private String fxml;
     private String[] css;

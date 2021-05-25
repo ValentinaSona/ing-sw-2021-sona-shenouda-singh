@@ -22,4 +22,6 @@ public class UIController {
     public boolean joinLobby() {
         return true;
     }
+
+    public void setCreation(int playersNum) {}
 }

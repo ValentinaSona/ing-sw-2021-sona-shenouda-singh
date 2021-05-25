@@ -9,7 +9,7 @@
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.StackPane?>
 
-<StackPane fx:id="mainPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="720.0" prefWidth="1280.0" xmlns="http://javafx.com/javafx/15.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.client.ui.gui.JFXControllers.GameCreationGUIController">
+<StackPane fx:id="mainPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="720.0" prefWidth="1280.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.client.ui.gui.JFXControllers.GameCreationGUIController">
     <children>
         <AnchorPane prefHeight="200.0" prefWidth="200.0" StackPane.alignment="CENTER" />
         <BorderPane minHeight="-Infinity" minWidth="-Infinity" prefHeight="200.0" prefWidth="200.0">
@@ -18,12 +18,12 @@
                     <children>
                   <StackPane fx:id="creationPanel" opacity="0.0" prefHeight="150.0" prefWidth="200.0">
                      <children>
-                              <Label styleClass="normalLabel" text="Select number of players:" textFill="WHITE">
+                              <Label fx:id="selectNumLabel" styleClass="normalLabel" text="Select number of players:" textFill="WHITE">
                                   <StackPane.margin>
                                       <Insets bottom="200.0" />
                                   </StackPane.margin>
                               </Label>
-                              <Button mnemonicParsing="false" styleClass="basicButton" text="CREATE GAME">
+                              <Button mnemonicParsing="false" onAction="#create" styleClass="basicButton" text="CREATE GAME">
                                   <StackPane.margin>
                                       <Insets top="240.0" />
                                   </StackPane.margin>
@@ -39,6 +39,11 @@
                               <Insets left="200.0" />
                            </StackPane.margin>
                         </Button>
+                        <Label fx:id="noNumSelected" layoutX="583.0" layoutY="157.0" opacity="0.0" styleClass="normalLabel" text="You must select the number of players before creating a game!" textFill="WHITE">
+                           <StackPane.margin>
+                              <Insets bottom="200.0" />
+                           </StackPane.margin>
+                        </Label>
                      </children>
                   </StackPane>
                   <Label fx:id="nicknameLabel" styleClass="normalLabel" text="I'm a label" textFill="WHITE">
