@@ -1,7 +1,5 @@
 package it.polimi.ingsw.client.ui;
 
-import it.polimi.ingsw.utils.networking.transmittables.StatusMessage;
-
 /**
  * This should be a universal controller called by the ui
  */
@@ -15,7 +13,10 @@ public class UIController {
         return singleton;
     }
 
+    private UIController() {};
+
     public boolean sendNickname(String nickname) {
+        MatchSettings.getInstance().setClientNickname(nickname);
         return true;
     }
 
@@ -23,5 +24,21 @@ public class UIController {
         return true;
     }
 
-    public void setCreation(int playersNum) {}
+    public boolean setCreation(int playersNum) {
+        MatchSettings.getInstance().setPlayersNum(playersNum);
+        MatchSettings.getInstance().addPlayer(MatchSettings.getInstance().getClientNickname());
+        return true;
+    }
+
+    public String getClientNickname() {
+        return  MatchSettings.getInstance().getClientNickname();
+    }
+
+    public int currentPlayerNum() {
+        return MatchSettings.getInstance().getJoiningPlayers().size();
+    }
+
+    public int totalPlayerNum() {
+        return MatchSettings.getInstance().getPlayersNum();
+    }
 }

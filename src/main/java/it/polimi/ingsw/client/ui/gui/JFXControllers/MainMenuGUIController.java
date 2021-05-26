@@ -11,7 +11,9 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.StackPane;
 import javafx.scene.shape.SVGPath;
+import javafx.stage.Stage;
 import javafx.util.Duration;
 
 import javax.swing.*;
@@ -35,6 +37,8 @@ public class MainMenuGUIController extends AbstractGUIController {
     private Label chooseNick;
     @FXML
     private Label party;
+    @FXML
+    private StackPane mainPane;
 
     public void goToMulti(MouseEvent mouseEvent) {
         change(ScreenName.MULTIPLAYER, mouseEvent);
@@ -108,12 +112,16 @@ public class MainMenuGUIController extends AbstractGUIController {
 
     public void setJoiningGame() {}
 
-    public void createGame(MouseEvent mouseEvent) {
-        LobbyGUIController.startCreation(numberOfPlayers);
-        //change(ScreenName.LOBBY);
-    }
-
     public void goToJoinEnter(ActionEvent actionEvent) {
         goToJoin(actionEvent);
+    }
+
+    public void fullscreenSelected(ActionEvent actionEvent) {
+        Stage stage = (Stage) mainPane.getScene().getWindow();
+        stage.setFullScreen(!stage.isFullScreen());
+    }
+
+    public void goToOptions(MouseEvent mouseEvent) {
+        change(ScreenName.OPTIONS, mouseEvent);
     }
 }

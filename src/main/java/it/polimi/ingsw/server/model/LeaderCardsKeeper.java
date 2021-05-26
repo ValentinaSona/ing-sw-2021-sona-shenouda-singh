@@ -7,6 +7,8 @@ import java.io.FileReader;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class LeaderCardsKeeper {
 
@@ -15,17 +17,17 @@ public class LeaderCardsKeeper {
     List<LeaderCard> leaderCards;
 
     public LeaderCardsKeeper() {
-//TODO Uncomment when the file has been created - throws nullpointer exception because the .json is empty.
 
-/*        Gson gson = new Gson();
+       Gson gson = new Gson();
         try {
 
-            leaderCards =  Arrays.asList(gson.fromJson(new FileReader(path), LeaderCard[].class));
+            leaderCards =  Stream.of(gson.fromJson(new FileReader(path), LeaderCard[].class)).collect(Collectors.toList());
+            // Json file added, still has to be tested
 
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
-        Collections.shuffle(leaderCards); */
+        Collections.shuffle(leaderCards);
     }
 
     /**

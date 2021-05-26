@@ -6,8 +6,6 @@ public class Requirement {
     final private int level;
     final private DevelopmentType type;
 
-
-
     final private Resource resource;
     final private boolean isResource;
 

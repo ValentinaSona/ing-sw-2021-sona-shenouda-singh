@@ -2,6 +2,8 @@ package it.polimi.ingsw.server.model;
 
 public class LeaderCard extends SpecialAbility {
 
+	private final int id;
+
 	private Boolean isActive;
 
 	private final Requirement[] requirements;
@@ -10,7 +12,8 @@ public class LeaderCard extends SpecialAbility {
 
 	private final SpecialAbility specialAbility;
 
-	public LeaderCard(Requirement[] requirements, int victoryPoints, SpecialAbility specialAbility){
+	public LeaderCard(int id, Requirement[] requirements, int victoryPoints, SpecialAbility specialAbility){
+		this.id = id;
 		this.requirements = requirements;
 		this.isActive = false;
 		this.victoryPoints = victoryPoints;
@@ -32,5 +35,9 @@ public class LeaderCard extends SpecialAbility {
 
 	public SpecialAbility getSpecialAbility() {
 		return specialAbility;
+	}
+
+	public int getId() {
+		return id;
 	}
 }

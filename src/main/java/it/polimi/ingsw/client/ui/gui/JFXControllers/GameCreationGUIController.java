@@ -11,8 +11,8 @@ import javafx.scene.layout.StackPane;
 import javafx.util.Duration;
 
 public class GameCreationGUIController extends AbstractGUIController {
-    private static String nickname;
 
+    private static String nickname;
     private int numberOfPlayers;
 
     @FXML
@@ -23,8 +23,6 @@ public class GameCreationGUIController extends AbstractGUIController {
     private Label selectNumLabel;
     @FXML
     private Label noNumSelected;
-    @FXML
-    private ListView<String> players;
 
     @FXML
     private void initialize() {
@@ -52,9 +50,7 @@ public class GameCreationGUIController extends AbstractGUIController {
         }
 
         else{
-            UIController.getInstance().setCreation(numberOfPlayers);
-            change(ScreenName.LOBBY, actionEvent);
-            //players.getItems().add(nickname);
+            if (UIController.getInstance().setCreation(numberOfPlayers)) change(ScreenName.LOBBY, actionEvent);
         }
 
     }

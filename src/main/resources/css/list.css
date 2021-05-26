@@ -10,6 +10,9 @@
     -fx-text-fill: white;
 }
 .list-view .list-cell:odd {
-    -fx-background-color: transparent;
+    -fx-background-color: rgba(255,255,255,0.2);
     -fx-text-fill: white;
+}
+.list-cell:empty {
+    -fx-opacity: 0;
 }

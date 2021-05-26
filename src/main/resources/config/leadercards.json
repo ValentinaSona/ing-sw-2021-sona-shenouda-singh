@@ -1,0 +1,346 @@
+[
+  {
+    "isActive": false,
+    "id": 0,
+    "requirements": [
+      {
+        "number": 1,
+        "level": 0,
+        "type": "YELLOW",
+        "isResource": false
+      },
+      {
+        "number": 1,
+        "level": 0,
+        "type": "GREEN",
+        "isResource": false
+      }
+    ],
+    "victoryPoints": 2,
+    "specialAbility": {
+      "discount": {
+        "quantity": 1,
+        "resourceType": "SERVANT"
+      }
+    }
+  },
+  {
+    "isActive": false,
+    "id": 1,
+    "requirements": [
+      {
+        "number": 1,
+        "level": 0,
+        "type": "BLUE",
+        "isResource": false
+      },
+      {
+        "number": 1,
+        "level": 0,
+        "type": "PURPLE",
+        "isResource": false
+      }
+    ],
+    "victoryPoints": 2,
+    "specialAbility": {
+      "discount": {
+        "quantity": 1,
+        "resourceType": "SHIELD"
+      }
+    }
+  },
+  {
+    "isActive": false,
+    "id": 2,
+    "requirements": [
+      {
+        "number": 1,
+        "level": 0,
+        "type": "GREEN",
+        "isResource": false
+      },
+      {
+        "number": 1,
+        "level": 0,
+        "type": "BLUE",
+        "isResource": false
+      }
+    ],
+    "victoryPoints": 2,
+    "specialAbility": {
+      "discount": {
+        "quantity": 1,
+        "resourceType": "STONE"
+      }
+    }
+  },
+  {
+    "isActive": false,
+    "id": 3,
+    "requirements": [
+      {
+        "number": 1,
+        "level": 0,
+        "type": "YELLOW",
+        "isResource": false
+      },
+      {
+        "number": 1,
+        "level": 0,
+        "type": "PURPLE",
+        "isResource": false
+      }
+    ],
+    "victoryPoints": 2,
+    "specialAbility": {
+      "discount": {
+        "quantity": 1,
+        "resourceType": "COIN"
+      }
+    }
+  },
+  {
+    "isActive": false,
+    "id": 4,
+    "requirements": [
+      {
+        "number": 0,
+        "level": 0,
+        "resource": {
+          "quantity": 5,
+          "resourceType": "COIN"
+        },
+        "isResource": true
+      }
+    ],
+    "victoryPoints": 3,
+    "specialAbility": {
+      "capacity": 2,
+      "type": "STONE"
+    }
+  },
+  {
+    "isActive": false,
+    "id": 5,
+    "requirements": [
+      {
+        "number": 0,
+        "level": 0,
+        "resource": {
+          "quantity": 5,
+          "resourceType": "STONE"
+        },
+        "isResource": true
+      }
+    ],
+    "victoryPoints": 3,
+    "specialAbility": {
+      "capacity": 2,
+      "type": "SERVANT"
+    }
+  },
+  {
+    "isActive": false,
+    "id": 6,
+    "requirements": [
+      {
+        "number": 0,
+        "level": 0,
+        "resource": {
+          "quantity": 5,
+          "resourceType": "SERVANT"
+        },
+        "isResource": true
+      }
+    ],
+    "victoryPoints": 3,
+    "specialAbility": {
+      "capacity": 2,
+      "type": "SHIELD"
+    }
+  },
+  {
+    "isActive": false,
+    "id": 7,
+    "requirements": [
+      {
+        "number": 0,
+        "level": 0,
+        "resource": {
+          "quantity": 5,
+          "resourceType": "SHIELD"
+        },
+        "isResource": true
+      }
+    ],
+    "victoryPoints": 3,
+    "specialAbility": {
+      "capacity": 2,
+      "type": "COIN"
+    }
+  },
+  {
+    "isActive": false,
+    "id": 8,
+    "requirements": [
+      {
+        "number": 2,
+        "level": 0,
+        "type": "YELLOW",
+        "isResource": false
+      },
+      {
+        "number": 1,
+        "level": 0,
+        "type": "BLUE",
+        "isResource": false
+      }
+    ],
+    "victoryPoints": 5,
+    "specialAbility": {
+      "marble": "PURPLE"
+    }
+  },
+  {
+    "isActive": false,
+    "id": 9,
+    "requirements": [
+      {
+        "number": 2,
+        "level": 0,
+        "type": "GREEN",
+        "isResource": false
+      },
+      {
+        "number": 1,
+        "level": 0,
+        "type": "PURPLE",
+        "isResource": false
+      }
+    ],
+    "victoryPoints": 5,
+    "specialAbility": {
+      "marble": "BLUE"
+    }
+  },
+  {
+    "isActive": false,
+    "id": 10,
+    "requirements": [
+      {
+        "number": 2,
+        "level": 0,
+        "type": "BLUE",
+        "isResource": false
+      },
+      {
+        "number": 1,
+        "level": 0,
+        "type": "YELLOW",
+        "isResource": false
+      }
+    ],
+    "victoryPoints": 5,
+    "specialAbility": {
+      "marble": "GREY"
+    }
+  },
+  {
+    "isActive": false,
+    "id": 11,
+    "requirements": [
+      {
+        "number": 2,
+        "level": 0,
+        "type": "PURPLE",
+        "isResource": false
+      },
+      {
+        "number": 1,
+        "level": 0,
+        "type": "GREEN",
+        "isResource": false
+      }
+    ],
+    "victoryPoints": 5,
+    "specialAbility": {
+      "marble": "YELLOW"
+    }
+  },
+  {
+    "isActive": false,
+    "id": 12,
+    "requirements": [
+      {
+        "number": 1,
+        "level": 2,
+        "type": "YELLOW",
+        "isResource": false
+      }
+    ],
+    "victoryPoints": 4,
+    "specialAbility": {
+      "cost": {
+        "quantity": 1,
+        "resourceType": "SHIELD"
+      }
+    }
+  },
+  {
+    "isActive": false,
+    "id": 13,
+    "requirements": [
+      {
+        "number": 1,
+        "level": 2,
+        "type": "BLUE",
+        "isResource": false
+      }
+    ],
+    "victoryPoints": 4,
+    "specialAbility": {
+      "cost": {
+        "quantity": 1,
+        "resourceType": "SERVANT"
+      }
+    }
+  },
+  {
+    "isActive": false,
+    "id": 14,
+    "requirements": [
+      {
+        "number": 1,
+        "level": 2,
+        "type": "PURPLE",
+        "isResource": false
+      }
+    ],
+    "victoryPoints": 4,
+    "specialAbility": {
+      "cost": {
+        "quantity": 1,
+        "resourceType": "STONE"
+      }
+    }
+  },
+  {
+    "isActive": false,
+    "id": 15,
+    "requirements": [
+      {
+        "number": 1,
+        "level": 2,
+        "type": "GREEN",
+        "isResource": false
+      }
+    ],
+    "victoryPoints": 4,
+    "specialAbility": {
+      "cost": {
+        "quantity": 1,
+        "resourceType": "COIN"
+      }
+    }
+  }
+]

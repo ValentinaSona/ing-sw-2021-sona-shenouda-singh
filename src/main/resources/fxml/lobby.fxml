@@ -9,19 +9,32 @@
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.StackPane?>
 
-<StackPane fx:id="mainPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="720.0" prefWidth="1280.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.client.ui.gui.JFXControllers.GameCreationGUIController">
+<StackPane fx:id="mainPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="720.0" prefWidth="1280.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.client.ui.gui.JFXControllers.LobbyGUIController">
     <children>
         <AnchorPane prefHeight="200.0" prefWidth="200.0" StackPane.alignment="CENTER" />
         <BorderPane minHeight="-Infinity" minWidth="-Infinity" prefHeight="200.0" prefWidth="200.0">
             <center>
                 <StackPane prefHeight="150.0" prefWidth="200.0" BorderPane.alignment="CENTER">
                     <children>
-                        <Label fx:id="nicknameLabel" styleClass="normalLabel" text="I'm a label" textFill="WHITE">
+                        <Label fx:id="numPlayersLabel" onMouseReleased="#addPlaceholder" styleClass="normalLabel" text="I'm a label" textFill="WHITE">
                             <StackPane.margin>
                                 <Insets bottom="350.0" />
                             </StackPane.margin>
                         </Label>
-                  <ListView fx:id="players" maxHeight="245.0" maxWidth="500.0" prefHeight="200.0" prefWidth="200.0" />
+                  <ListView fx:id="players" maxHeight="255.0" maxWidth="500.0" prefHeight="210.0" prefWidth="200.0" />
+                  <ImageView fx:id="loading" fitHeight="58.0" fitWidth="36.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../assets/loading_wheel.png" />
+                     </image>
+                     <StackPane.margin>
+                        <Insets bottom="350.0" left="250.0" />
+                     </StackPane.margin>
+                  </ImageView>
+                  <Label fx:id="starting" styleClass="normalLabel" text="Starting game...">
+                     <StackPane.margin>
+                        <Insets top="300.0" />
+                     </StackPane.margin>
+                  </Label>
                     </children>
                 </StackPane>
             </center>
