@@ -26,7 +26,7 @@
          <center>
             <StackPane prefHeight="150.0" prefWidth="200.0" BorderPane.alignment="CENTER">
                <children>
-                  <Label styleClass="title" text="SINGLEPLAYER">
+                  <Label onMouseReleased="#goToSingleplayer" styleClass="title" text="SINGLEPLAYER">
                      <font>
                         <Font size="42.0" />
                      </font>
@@ -50,7 +50,7 @@
                         <Insets />
                      </StackPane.margin>
                   </Label>
-                  <Label layoutX="577.0" layoutY="288.0" styleClass="title" text="CREDITS">
+                  <Label layoutX="577.0" layoutY="288.0" onMouseReleased="#goToCredits" styleClass="title" text="CREDITS">
                      <font>
                         <Font size="42.0" />
                      </font>

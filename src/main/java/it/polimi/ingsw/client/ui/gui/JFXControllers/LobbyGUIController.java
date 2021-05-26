@@ -56,7 +56,7 @@ public class LobbyGUIController extends AbstractGUIController {
                 + " players");
     }
 
-
+    // Method exclusively for testing purposes
     public void addPlaceholder(MouseEvent mouseEvent) {
         if (UIController.getInstance().currentPlayerNum() < UIController.getInstance().totalPlayerNum())
             players.getItems().add("Placeholder");

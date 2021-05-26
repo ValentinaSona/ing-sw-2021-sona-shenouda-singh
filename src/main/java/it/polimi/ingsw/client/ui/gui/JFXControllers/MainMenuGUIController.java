@@ -9,6 +9,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.control.ToggleButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.StackPane;
@@ -123,5 +124,13 @@ public class MainMenuGUIController extends AbstractGUIController {
 
     public void goToOptions(MouseEvent mouseEvent) {
         change(ScreenName.OPTIONS, mouseEvent);
+    }
+
+    public void goToSingleplayer(MouseEvent mouseEvent) {
+        change(ScreenName.SINGLEPLAYER, mouseEvent);
+    }
+
+    public void goToCredits(MouseEvent mouseEvent) {
+        change(ScreenName.CREDITS, mouseEvent);
     }
 }

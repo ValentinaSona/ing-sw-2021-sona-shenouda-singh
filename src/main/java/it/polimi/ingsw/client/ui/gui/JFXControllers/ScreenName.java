@@ -3,6 +3,8 @@ package it.polimi.ingsw.client.ui.gui.JFXControllers;
 public enum ScreenName {
     MAIN_MENU("mainScreen.fxml", new String[]{"mainText.css", "standardBackground.css"}),
     OPTIONS("optionsScreen.fxml", new String[]{"standardBackground.css", "buttons.css"}),
+    SINGLEPLAYER("singleplayerScreen.fxml", new String[]{"standardBackground.css", "mainText.css", "buttons.css"}),
+    CREDITS("creditsScreen.fxml", new String[]{"standardBackground.css", "mainText.css", "buttons.css"}),
     MULTIPLAYER("multiplayerScreen.fxml", new String[]{"mainText.css", "standardBackground.css", "buttons.css"}),
     JOIN_GAME("joinScreen.fxml", new String[]{"mainText.css", "standardBackground.css", "buttons.css"}),
     CREATION("gameCreation.fxml", new String[]{"mainText.css", "standardBackground.css", "buttons.css"}),
