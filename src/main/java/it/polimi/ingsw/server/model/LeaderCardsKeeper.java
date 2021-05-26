@@ -15,8 +15,9 @@ public class LeaderCardsKeeper {
     List<LeaderCard> leaderCards;
 
     public LeaderCardsKeeper() {
+//TODO Uncomment when the file has been created - throws nullpointer exception because the .json is empty.
 
-        Gson gson = new Gson();
+/*        Gson gson = new Gson();
         try {
 
             leaderCards =  Arrays.asList(gson.fromJson(new FileReader(path), LeaderCard[].class));
@@ -24,7 +25,7 @@ public class LeaderCardsKeeper {
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
-        Collections.shuffle(leaderCards);
+        Collections.shuffle(leaderCards); */
     }
 
     /**

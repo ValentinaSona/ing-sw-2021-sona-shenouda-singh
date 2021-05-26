@@ -1,5 +1,8 @@
 package it.polimi.ingsw.server.model;
 
+import java.util.Arrays;
+import java.util.Objects;
+
 public class DevelopmentCard {
 
 	final private int id;
@@ -21,6 +24,21 @@ public class DevelopmentCard {
 		this.level = level;
 		this.victoryPoints = victoryPoints;
 		this.production = production;
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+		DevelopmentCard that = (DevelopmentCard) o;
+		return id == that.id && level == that.level && victoryPoints == that.victoryPoints && Arrays.equals(cost, that.cost) && type == that.type && production.equals(that.production);
+	}
+
+	@Override
+	public int hashCode() {
+		int result = Objects.hash(id, type, level, victoryPoints, production);
+		result = 31 * result + Arrays.hashCode(cost);
+		return result;
 	}
 
 	/**

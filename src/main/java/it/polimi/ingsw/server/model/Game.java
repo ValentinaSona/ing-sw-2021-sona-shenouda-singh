@@ -32,6 +32,13 @@ public class Game extends LambdaObservable<Transmittable> {
         return singleton;
     }
 
+    public static Game destroy(){
+        if(singleton != null){
+            singleton = null;
+        }
+        return singleton;
+    }
+
     /**
      * This constructor is used when we create a new game
      *
@@ -73,7 +80,7 @@ public class Game extends LambdaObservable<Transmittable> {
     public User getUserFromPlayer(Player player){return playerUserHashMap.get(player);}
 
     public ArrayList<Player> getPlayers() {
-        return new ArrayList<Player>(players);
+        return new ArrayList<>(players);
     }
 
     public Player getCurrentPlayer() {

@@ -20,7 +20,9 @@ public class DevelopmentCardSlot extends Slot {
     }
 
     public DevelopmentCard peek(){
-        return slot.peek();
+
+        if (!slot.empty()) return slot.peek();
+        else return null;
     }
 
     public void push(DevelopmentCard developmentCard){
@@ -47,7 +49,7 @@ public class DevelopmentCardSlot extends Slot {
     public void setTargetCard(DevelopmentCard targetCard, int row, int col) throws DevelopmentCardException {
         DevelopmentCard lastInsertion = peek();
 
-        if((lastInsertion.getLevel() == targetCard.getLevel() -1) && slot.size() <= MAX_LENGTH && id != Id.S_SLOT_1 && id != Id.S_SLOT_2){
+        if( ((lastInsertion == null && targetCard.getLevel() == 1 ) ||  ( lastInsertion != null && lastInsertion.getLevel() == targetCard.getLevel() -1)) && slot.size() <= MAX_LENGTH && id != Id.S_SLOT_1 && id != Id.S_SLOT_2){
             //we can put the card in this slot
             this.targetCard = targetCard;
             this.row = row;
@@ -79,7 +81,7 @@ public class DevelopmentCardSlot extends Slot {
 
         if( cost.length == resourceCloset.size()){
             for(Resource res : cost){
-                if(!resourceCloset.contains((Resource) res)){
+                if(!resourceCloset.contains(res)){
                     //if the resourceCloset doesn't contains the required resource
                     //the action is denied
                     resourceCloset.clear();

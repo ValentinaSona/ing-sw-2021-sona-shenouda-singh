@@ -23,6 +23,13 @@ public class ClientDepositResourceIntoSlotMessage implements ClientMessage, Cont
         this.card = card;
         this.jollyType = resourceType;
     }
+
+    public ClientDepositResourceIntoSlotMessage(Id slotId,  Map<Id, Resource> idResourceMap){
+        this.slotId = slotId;
+        this.idResourceMap =idResourceMap;
+        this.card = true;
+        this.jollyType = null;
+    }
     @Override
     public boolean handleMessage(Controller handler, RemoteViewHandler view, User user){
         handler.resourceController.depositResourceIntoSlot(this, view, user);

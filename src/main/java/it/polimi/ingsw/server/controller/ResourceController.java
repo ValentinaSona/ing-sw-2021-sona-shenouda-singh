@@ -28,6 +28,12 @@ public class ResourceController{
         return  singleton;
 
     }
+    public static ResourceController destroy(){
+        if(singleton != null){
+            singleton = null;
+        }
+        return null;
+    }
 
 
     /* ****************************************************
@@ -50,9 +56,9 @@ public class ResourceController{
                     model.getUserFromPlayer(player)
             ));
         }catch (VaticanReportException vaticanReportException){
-            //
+
+            // Run the validatePopeFavor for all the players in the game.
             ArrayList<Player> players = model.getPlayers();
-            players.remove(player);
 
             for(Player p : players){
                 FaithTrack faithTrack = p.getFaithTrack();
@@ -76,7 +82,7 @@ public class ResourceController{
     private void selectResources(Player player , Map<Id, Resource> idResourceMap) throws InvalidDepotException {
 
 
-        ArrayList<Id> warehouseIds = (ArrayList<Id>) Arrays.asList(Id.DEPOT_1, Id.DEPOT_2, Id.DEPOT_3, Id.S_DEPOT_1, Id.S_DEPOT_2);
+        ArrayList<Id> warehouseIds = new ArrayList<>(Arrays.asList( Id.DEPOT_1, Id.DEPOT_2, Id.DEPOT_3, Id.S_DEPOT_1, Id.S_DEPOT_2));
 
         for(Id id : idResourceMap.keySet()){
             if(warehouseIds.contains(id)){
@@ -139,23 +145,26 @@ public class ResourceController{
             ArrayList<Resource> tempResources = player.getTempResources();
             Resource faithPoints;
 
+            if (tempResources != null) {
 
-            for(Resource resource : tempResources) {
-                thrown += resource.getQuantity();
-            }
 
-            player.dumpTempResources();
-            model.notify(new ServerThrowResourceMessage(
-                    thrown,
-                    model.getUserFromPlayer(player)
-            ));
+                for (Resource resource : tempResources) {
+                    thrown += resource.getQuantity();
+                }
 
-            faithPoints = new Resource(thrown, ResourceType.FAITH);
-            ArrayList<Player> players = model.getPlayers();
-            players.remove(player);
+                player.dumpTempResources();
+                model.notify(new ServerThrowResourceMessage(
+                        thrown,
+                        model.getUserFromPlayer(player)
+                ));
 
-            for(Player p :  players) {
-                addFaithPoints(p, faithPoints);
+                faithPoints = new Resource(thrown, ResourceType.FAITH);
+                ArrayList<Player> players = model.getPlayers();
+                players.remove(player);
+
+                for (Player p : players) {
+                    addFaithPoints(p, faithPoints);
+                }
             }
         }
     }
@@ -188,7 +197,7 @@ public class ResourceController{
                     toDepot.addResource(fromResource);
                     //if no exception is thrown
                     fromDepot.subtractResource(toResource);
-                    //every time a change is done in the warehouse a copy of it is sent to everyplayer
+                    //every time a change is done in the warehouse a copy of it is sent to every player
 
                     model.notify(new ServerWarehouseMessage(
                             player.getVisibleWarehouse(),
@@ -231,9 +240,13 @@ public class ResourceController{
 
         Player player = model.getPlayerFromUser(user);
 
-        if( !(player.getTurn()) ||
-                model.getGameState() != GameState.PLAY ){
+        if(     !(player.getTurn()) ||
+                model.getGameState() != GameState.PLAY ||
+                //The request was malformed and references a resource not contained in tempResources.
+                !player.tempResourcesContains(action.getResource()) ) {
+
             view.handleStatusMessage(StatusMessage.CLIENT_ERROR);
+
         } else {
 
 
@@ -303,7 +316,7 @@ public class ResourceController{
                 // Move the resources in the slot's resource closet to keep track of what is being paid.
                 slot.setResourceCloset(action.getIdResourceMap());
 
-                /**
+                /*
                  * Called when the player has finished selecting the resources needed to pay for one production.
                  * Calls the check method to verify the resources deposited into the resource closet are enough and set the confirmed bool.
                  */
@@ -341,11 +354,6 @@ public class ResourceController{
             }
         }
     }
-
-    //TODO: Ho fatto in modo di prendere  in una volta tutte le risorse per ogni singola carta dovrebbe essere già meglio ho provato
-    //TODO: a rendere alcune variabili statiche ma si andava a complicare di molto la logica per gestire tutti i closet
-    //TODO: So this is called when one finishes putting together a single production? This parts looks a bit messy on the UX side? ALSO UI side might simplify checks.
-    //TODO: might a single resource closet be more functional? DUE FOR REFACTORING.
 
 
     /**

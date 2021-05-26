@@ -190,9 +190,9 @@ public class Player extends LambdaObservable<Transmittable> {
 		DevelopmentCardSlot slot2 = (DevelopmentCardSlot) slots.get(Id.SLOT_2.getValue());
 		DevelopmentCardSlot slot3 = (DevelopmentCardSlot) slots.get(Id.SLOT_3.getValue());
 
-		DevelopmentCardSlot[] developmentCardSlots = new DevelopmentCardSlot[]{slot1, slot2, slot3};
+		return new DevelopmentCardSlot[]{slot1, slot2, slot3};
 
-		return developmentCardSlots;
+
 	}
 
 	/**
@@ -262,7 +262,7 @@ public class Player extends LambdaObservable<Transmittable> {
 
 	/** TODO: tests id doesn't break
 	 * Called to add special slots to the slot array. they only contain productions.
-	 * @param cost
+	 * @param cost the resource the special production requires.
 	 */
 	public void addSpecialSlot(Resource cost){
 		Id id;
@@ -295,6 +295,20 @@ public class Player extends LambdaObservable<Transmittable> {
 		}
 		//	update(TEMP_RESOURCES_UPDATE, null, tempResources);
 	}
+
+	public boolean tempResourcesContains (Resource resource){
+		ArrayList<Resource> tempResources = getTempResources();
+
+		for(Resource temp : tempResources){
+			if(temp.getResourceType() == resource.getResourceType()){
+				if(temp.getQuantity() >= resource.getQuantity()){
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+
 
 	public void addToTempResources(ArrayList<Resource> resources){
 		this.tempResources = resources;
