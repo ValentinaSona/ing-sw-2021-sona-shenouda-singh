@@ -16,6 +16,7 @@ public class LeaderCardsKeeper {
 
     List<LeaderCard> leaderCards;
 
+    //TODO reminder to test this class to see if the file was created correctly
     public LeaderCardsKeeper() {
 
        Gson gson = new Gson();
