@@ -1,4 +1,4 @@
-package it.polimi.ingsw.server.model.observable;
+package it.polimi.ingsw.server.model;
 
 import it.polimi.ingsw.server.exception.InvalidDepotException;
 import it.polimi.ingsw.server.model.Id;
@@ -11,8 +11,7 @@ import it.polimi.ingsw.utils.observer.LambdaObservable;
 import static it.polimi.ingsw.server.model.ResourceType.FAITH;
 import static it.polimi.ingsw.server.model.ResourceType.JOLLY;
 
-//TODO: turn old updates into messages.
-public class Depot extends LambdaObservable<Transmittable> {
+public class Depot {
 	protected final int capacity;
 	protected final Id id;
 	protected Resource resource;

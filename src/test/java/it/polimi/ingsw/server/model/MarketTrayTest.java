@@ -1,13 +1,8 @@
 package it.polimi.ingsw.server.model;
 
-import it.polimi.ingsw.server.model.*;
-import it.polimi.ingsw.server.model.observable.MarketTray;
-import it.polimi.ingsw.server.model.observable.MarketTrayAbility;
-import it.polimi.ingsw.server.model.observable.Player;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;

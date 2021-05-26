@@ -2,30 +2,27 @@ package it.polimi.ingsw.server.controller;
 
 import it.polimi.ingsw.server.exception.*;
 import it.polimi.ingsw.server.model.*;
-import it.polimi.ingsw.server.model.observable.DevelopmentCardSlot;
-import it.polimi.ingsw.server.model.observable.Player;
+import it.polimi.ingsw.server.model.DevelopmentCardSlot;
+import it.polimi.ingsw.server.model.Player;
 import it.polimi.ingsw.server.view.RemoteViewHandler;
 import it.polimi.ingsw.utils.networking.transmittables.StatusMessage;
 import it.polimi.ingsw.utils.networking.transmittables.clientmessages.game.ClientBuyTargetCardMessage;
 import it.polimi.ingsw.utils.networking.transmittables.clientmessages.game.ClientSelectDevelopmentCardMessage;
+import it.polimi.ingsw.utils.networking.transmittables.servermessages.ServerBuyDevelopmentCardMessage;
 
 
-public class DevelopmentCardMarketController extends AbstractController{
-
-    private final DevMarket developmentCardsMarket;
+public class DevelopmentCardMarketController{
 
     private final ResourceController resourceController;
-
+    private Game model;
     private static DevelopmentCardMarketController singleton;
 
 
-    private DevelopmentCardMarketController(Model model){
-        super(model);
-        this.developmentCardsMarket = DevelopmentBuilder.build();
+    private DevelopmentCardMarketController(Game model){
         this.resourceController = ResourceController.getInstance(model);
     }
 
-    public static DevelopmentCardMarketController getInstance(Model model){
+    public static DevelopmentCardMarketController getInstance(Game model){
         if(singleton == null){
             singleton = new DevelopmentCardMarketController(model);
         }
@@ -42,13 +39,15 @@ public class DevelopmentCardMarketController extends AbstractController{
      */
     public void selectDevelopmentCard(ClientSelectDevelopmentCardMessage action, RemoteViewHandler view, User user){
 
-        Player player = getModel().getPlayerFromUser(user);
+        Player player = model.getPlayerFromUser(user);
 
-        if( !(player.getTurn()) || !(player.getMainAction()) ){
+        if( !(player.getTurn()) || !(player.getMainAction()) ||
+                model.getGameState() != GameState.PLAY ){
             view.handleStatusMessage(StatusMessage.CLIENT_ERROR);
         } else {
+            DevMarket developmentCardsMarket = model.getDevelopmentCardsMarket();
 
-            DevelopmentCard targetCard = developmentCardsMarket.getDevelopmentCards(player, action.getRow(),action.getCol());
+            DevelopmentCard targetCard = developmentCardsMarket.getDevelopmentCard(player, action.getRow(),action.getCol());
             DevelopmentCardSlot target = player.getDevelopmentCardSlots()[action.getTargetSlot().getValue()-1];
 
 
@@ -59,7 +58,10 @@ public class DevelopmentCardMarketController extends AbstractController{
                 target.setTargetCard(targetCard, action.getRow(), action.getCol());
                 view.handleStatusMessage(StatusMessage.CONTINUE);
 
-            } catch (DevelopmentCardException | NotSufficientResourceException e) {
+
+            } catch (DevelopmentCardException e) {
+                view.handleStatusMessage(StatusMessage.REQUIREMENTS_ERROR);
+            } catch (NotSufficientResourceException e) {
                 view.handleStatusMessage(StatusMessage.REQUIREMENTS_ERROR);
             }
         }
@@ -73,14 +75,13 @@ public class DevelopmentCardMarketController extends AbstractController{
      */
     public void buyTargetCard(ClientBuyTargetCardMessage action, RemoteViewHandler view, User user){
 
-        Player player = getModel().getPlayerFromUser(user);
+        Player player = model.getPlayerFromUser(user);
 
-        if( !(player.getTurn()) || !(player.getMainAction()) ){
+        if( !(player.getTurn()) || !(player.getMainAction()) ||
+                model.getGameState() != GameState.PLAY ){
             view.handleStatusMessage(StatusMessage.CLIENT_ERROR);
         } else {
-
             try {
-
                 DevelopmentCardSlot slot = player.getDevelopmentCardSlots()[action.getSlotId().getValue() - 1];
                 slot.check(true);
                 //if check doesn't throw any exception i can proceed to buy the card
@@ -88,8 +89,11 @@ public class DevelopmentCardMarketController extends AbstractController{
                 player.toggleMainAction();
                 slot.buyDevelopmentCard();
                 //now i can remove the card from the market
-                //TODO: is the return value actually ever used? Also why plural?
-                developmentCardsMarket.buyDevelopmentCards(slot.getRow(), slot.getCol());
+                //TODO: is the return value actually ever used?
+                model.notify(new ServerBuyDevelopmentCardMessage(
+                        model.getDevelopmentCardsMarket().buyDevelopmentCard(slot.getRow(), slot.getCol()),
+                        model.getUserFromPlayer(player)
+                ));
             } catch (NotSufficientResourceException e) {
                 try {
                     resourceController.resetResources(player, e.getTempResources());
@@ -97,6 +101,7 @@ public class DevelopmentCardMarketController extends AbstractController{
                     //if i enter this catch there is a problem in the way i am restoring the resources
                     invalidDepotException.printStackTrace();
                 }
+                view.handleStatusMessage(StatusMessage.CLIENT_ERROR);
             }
         }
     }
@@ -109,6 +114,6 @@ public class DevelopmentCardMarketController extends AbstractController{
      * @param discount the resource discount granted by the ability.
      */
     public void addMarketAbility(Player player, Resource discount){
-        developmentCardsMarket.addAbility(discount,player);
+        model.getDevelopmentCardsMarket().addAbility(discount,player);
     }
 }

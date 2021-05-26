@@ -1,10 +1,7 @@
-package it.polimi.ingsw.server.model.observable;
+package it.polimi.ingsw.server.model;
 
 import it.polimi.ingsw.server.exception.DevelopmentCardException;
 import it.polimi.ingsw.server.exception.NotSufficientResourceException;
-import it.polimi.ingsw.server.model.DevelopmentCard;
-import it.polimi.ingsw.server.model.Id;
-import it.polimi.ingsw.server.model.Resource;
 
 
 import java.util.HashMap;
@@ -87,14 +84,14 @@ public class DevelopmentCardSlot extends Slot {
                     //the action is denied
                     resourceCloset.clear();
                     //returning a map to the controller that will deposit the  resources in the right places
-                    HashMap<Id, Resource> copy = (HashMap<Id, Resource>) originResourceHashMap.clone();
+                    HashMap<Id, Resource> copy = new HashMap<>(originResourceHashMap);
                     originResourceHashMap.clear();
                     throw new NotSufficientResourceException(copy);
                 }
             }
         }else{
             resourceCloset.clear();
-            HashMap<Id, Resource> copy = (HashMap<Id, Resource>) originResourceHashMap.clone();
+            HashMap<Id, Resource> copy = new HashMap<>(originResourceHashMap);
             originResourceHashMap.clear();
             throw new NotSufficientResourceException(copy);
         }

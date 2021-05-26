@@ -3,27 +3,27 @@ package it.polimi.ingsw.server.controller;
 
 import it.polimi.ingsw.server.exception.TwoLeaderCardsException;
 import it.polimi.ingsw.server.model.*;
-import it.polimi.ingsw.server.model.observable.Player;
+import it.polimi.ingsw.server.model.Player;
 import it.polimi.ingsw.server.view.RemoteViewHandler;
 import it.polimi.ingsw.utils.networking.transmittables.StatusMessage;
 import it.polimi.ingsw.utils.networking.transmittables.clientmessages.game.ClientBuyMarblesMessage;
-import it.polimi.ingsw.utils.networking.transmittables.clientmessages.game.ClientConvertMarblesMessage;
 import it.polimi.ingsw.utils.networking.transmittables.clientmessages.game.ClientConvertWhiteMarblesMessage;
+import it.polimi.ingsw.utils.networking.transmittables.servermessages.ServerBoughtMarblesMessage;
+import it.polimi.ingsw.utils.networking.transmittables.servermessages.ServerChooseWhiteMarblesMessage;
 
 import java.util.ArrayList;
 
-public class MarketController extends AbstractController {
+public class MarketController{
     private static MarketController singleton;
-    private final Market market;
     private final ResourceController resourceController;
+    private final Game model;
 
-    private MarketController(Model model){
-        super(model);
-        this.market = MarketBuilder.build();
+    private MarketController(Game model){
+        this.model = model;
         this.resourceController = ResourceController.getInstance(model);
     }
 
-    public static MarketController getInstance(Model model){
+    public static MarketController getInstance(Game model){
         if(singleton == null){
             singleton = new MarketController(model);
         }
@@ -41,24 +41,30 @@ public class MarketController extends AbstractController {
      */
     public void buyMarbles(ClientBuyMarblesMessage action, RemoteViewHandler view, User user) {
 
-        Player player = getModel().getPlayerFromUser(user);
+        Player player = model.getPlayerFromUser(user);
 
-        if( !(player.getTurn()) || !(player.getMainAction()) ){
+        if( !(player.getTurn()) || !(player.getMainAction()) ||
+                model.getGameState() != GameState.PLAY ){
             view.handleStatusMessage(StatusMessage.CLIENT_ERROR);
         }else{
 
             try {
+                Market market = model.getMarketInstance();
                 player.toggleMainAction();
                 MarketMarble[] marbles = market.getResources(player, action.getRowCol());
 
                 ArrayList<Resource> resources = convertMarbles(marbles);
                 player.addToTempResources(resources);
-                view.handleStatusMessage(StatusMessage.CONTINUE);
+
+                model.notify(new ServerBoughtMarblesMessage(market.getVisible(),
+                        resources,
+                        model.getUserFromPlayer(player)));
 
             } catch (TwoLeaderCardsException e) {
                 //the client knows that if he receive this type of message while doing
                 //this action he has to choose between his leaderCards
-                view.handleStatusMessage(StatusMessage.CONTINUE_EXCEPTION);
+                model.notify(new ServerChooseWhiteMarblesMessage(e.getWhiteMarbles(),
+                        model.getUserFromPlayer(player)));
             }
         }
     }
@@ -73,45 +79,52 @@ public class MarketController extends AbstractController {
      */
     public void convertWhiteMarbles(ClientConvertWhiteMarblesMessage action, RemoteViewHandler view, User user) {
 
-        Player player = getModel().getPlayerFromUser(user);
+        Player player = model.getPlayerFromUser(user);
 
-        if( !(player.getTurn()) ){
+        if( !(player.getTurn()) ||
+                model.getGameState() != GameState.PLAY  ){
             view.handleStatusMessage(StatusMessage.CLIENT_ERROR);
         } else {
+            Market market = model.getMarketInstance();
+            player.toggleMainAction();
 
             MarketMarble[] marbles = market.getChosen(action.getChoices());
+
             ArrayList<Resource> resources = convertMarbles(marbles);
             player.addToTempResources(resources);
             // the client knows that if he receive this type of message while doing
             // this action he has to go on to deposit its resources.
-            view.handleStatusMessage(StatusMessage.CONTINUE);
+            model.notify(new ServerBoughtMarblesMessage(market.getVisible(),
+                    resources,
+                    model.getUserFromPlayer(player)));
         }
     }
 
+/**TODO questo metodo non penso serva la conversione delle marbles in risorse viene già fatto all'interno dei due metodi precedenti
 
-    /**
-     * Called if the course of the action has been interrupted by the TwoLeaderCardsException to finish the conversion of the resources.
-     * @param action the ClientMessage containing information about the player's action.
-     * @param view the player's corresponding RemoteViewHandler that will handle status messages to be sent back to the view.
-     * @param user the User corresponding to the player making the action.
-     */
-    public void convertMarbles(ClientConvertMarblesMessage action, RemoteViewHandler view, User user) {
+ * Called if the course of the action has been interrupted by the TwoLeaderCardsException to finish the conversion of the resources.
+ * @param action the ClientMessage containing information about the player's action.
+ * @param view the player's corresponding RemoteViewHandler that will handle status messages to be sent back to the view.
+ * @param user the User corresponding to the player making the action.
 
-        Player player = getModel().getPlayerFromUser(user);
+public void convertMarbles(ClientConvertMarblesMessage action, RemoteViewHandler view, User user) {
 
-        if( !(player.getTurn()) ){
-            view.handleStatusMessage(StatusMessage.CLIENT_ERROR);
-        } else {
+Player player = model.getPlayerFromUser(user);
 
-            ArrayList<Resource> resources = convertMarbles(action.getMarbles());
-            player.addToTempResources(resources);
-            // the client knows that if he receive this type of message while doing
-            // this action he has to go on to deposit its resources.
-            view.handleStatusMessage(StatusMessage.CONTINUE);
-        }
+if( !(player.getTurn()) ){
+view.handleStatusMessage(StatusMessage.CLIENT_ERROR);
+} else {
+
+ArrayList<Resource> resources = convertMarbles(action.getMarbles());
+player.addToTempResources(resources);
+// the client knows that if he receive this type of message while doing
+// this action he has to go on to deposit its resources.
+view.handleStatusMessage(StatusMessage.CONTINUE);
+}
 
 
-    }
+}
+ **/
 
     /**
      * Called on the definitive array of gained market marbles.
@@ -146,7 +159,7 @@ public class MarketController extends AbstractController {
 
         //if faithPoints is different from null
         if(faithPoints != null){
-            resourceController.addFaithPoints(getCurrentPlayer(), faithPoints);
+            resourceController.addFaithPoints(model.getCurrentPlayer(), faithPoints);
         }
         return temp;
     }
@@ -155,9 +168,9 @@ public class MarketController extends AbstractController {
      * This method is called by the LeaderCardsController when the conditions to activate
      * a leaderCard are verified.
      * @param player the Player activating the ability.
-     * @param marble the marble type granted by the ability.
+     * @param marbleAbility the  ability.
      */
-    public void addMarketAbility(Player player, MarketMarble marble){
-        market.addAbility(marble, player);
+    public void addMarketAbility(Player player, WhiteMarbleAbility marbleAbility){
+        model.getMarketInstance().addAbility(marbleAbility.getMarble(), player);
     }
 }

@@ -1,3 +1,4 @@
+/*
 package it.polimi.ingsw.utils.networking.transmittables.clientmessages.game;
 
 import it.polimi.ingsw.server.controller.Controller;
@@ -25,3 +26,4 @@ public class ClientConvertMarblesMessage implements ClientMessage, ControllerHan
         return marbles;
     }
 }
+*/

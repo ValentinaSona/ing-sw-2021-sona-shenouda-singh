@@ -4,19 +4,24 @@ import it.polimi.ingsw.server.controller.Controller;
 import it.polimi.ingsw.server.controller.User;
 import it.polimi.ingsw.server.model.Id;
 import it.polimi.ingsw.server.model.Resource;
+import it.polimi.ingsw.server.model.ResourceType;
 import it.polimi.ingsw.server.view.RemoteViewHandler;
 import it.polimi.ingsw.utils.networking.ControllerHandleable;
 import it.polimi.ingsw.utils.networking.transmittables.clientmessages.ClientMessage;
 
+import java.util.Map;
+
 public class ClientDepositResourceIntoSlotMessage implements ClientMessage, ControllerHandleable {
     private final Id slotId;
-    private final Resource resource;
-    private final Id resourceId;
+    private final Map<Id, Resource> idResourceMap;
+    private final Boolean card;
+    private final ResourceType jollyType;
 
-    public ClientDepositResourceIntoSlotMessage(Id slotId, Resource resource, Id resourceId){
+    public ClientDepositResourceIntoSlotMessage(Id slotId,  Map<Id, Resource> idResourceMap, ResourceType resourceType, Boolean card){
         this.slotId = slotId;
-        this.resource = resource;
-        this.resourceId = resourceId;
+        this.idResourceMap =idResourceMap;
+        this.card = card;
+        this.jollyType = resourceType;
     }
     @Override
     public boolean handleMessage(Controller handler, RemoteViewHandler view, User user){
@@ -28,11 +33,16 @@ public class ClientDepositResourceIntoSlotMessage implements ClientMessage, Cont
         return slotId;
     }
 
-    public Resource getResource() {
-        return resource;
+    public Boolean isForCard() {
+        return card;
     }
 
-    public Id getResourceId() {
-        return resourceId;
+    public Map<Id, Resource> getIdResourceMap() {
+        return idResourceMap;
     }
+
+    public ResourceType getJollyType() {
+        return jollyType;
+    }
+
 }

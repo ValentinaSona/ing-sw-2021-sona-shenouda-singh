@@ -1,4 +1,6 @@
-package it.polimi.ingsw.server.model;
+package it.polimi.ingsw.client.modelview;
+
+import it.polimi.ingsw.server.model.MarketMarble;
 
 public class MarketView {
 

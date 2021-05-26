@@ -1,8 +1,5 @@
 package it.polimi.ingsw.server.model;
 
-import it.polimi.ingsw.server.model.DevelopmentBuilder;
-import it.polimi.ingsw.server.model.DevelopmentCard;
-import it.polimi.ingsw.server.model.DevelopmentCardsMarket;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -16,7 +13,7 @@ class DevelopmentCardDeckTest {
         for(int i = 0; i < 3; i++) {
             for(int j = 0; j < 4; j++) {
                 DevelopmentCard card = market.getDecks()[i][j].firstCard();
-                assertEquals(card, market.buyDevelopmentCards(i, j));
+                assertEquals(card, market.buyDevelopmentCard(i, j));
 
             }
         }

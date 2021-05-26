@@ -1,7 +1,5 @@
 package it.polimi.ingsw.server.model;
 
-import it.polimi.ingsw.server.model.observable.Player;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -23,8 +21,8 @@ public class DevelopmentCardsMarketAbility implements DevMarket {
      * @param col column of the deck grid
      * @return the chosen card
      */
-    public DevelopmentCard buyDevelopmentCards(int row, int col) {
-        return cardsMarket.buyDevelopmentCards(row, col);
+    public DevelopmentCard buyDevelopmentCard(int row, int col) {
+        return cardsMarket.buyDevelopmentCard(row, col);
     }
 
     /**
@@ -35,9 +33,9 @@ public class DevelopmentCardsMarketAbility implements DevMarket {
      * @param col column of the deck grid
      * @return the chosen card with discounts applied (if any)
      */
-    public DevelopmentCard getDevelopmentCards(Player player, int row, int col) {
+    public DevelopmentCard getDevelopmentCard(Player player, int row, int col) {
 
-        DevelopmentCard card = cardsMarket.getDevelopmentCards(player, row, col);
+        DevelopmentCard card = cardsMarket.getDevelopmentCard(player, row, col);
 
         if (abilityMap.containsKey(player)) {
 

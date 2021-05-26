@@ -1,10 +1,6 @@
 package it.polimi.ingsw.server.model;
 
 import it.polimi.ingsw.server.exception.VaticanReportException;
-import it.polimi.ingsw.server.model.observable.FaithTrack;
-import it.polimi.ingsw.server.model.PopeFavorTiles;
-import it.polimi.ingsw.server.model.Resource;
-import it.polimi.ingsw.server.model.ResourceType;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
@@ -45,13 +41,13 @@ class FaithTrackTest {
         } catch (VaticanReportException e) {
         //Player has two faith, someone else triggers vatican.
         }
-        faithTrack.validatePopeFavor("1");
+        faithTrack.validatePopeFavor(1);
         assertEquals(PopeFavorTiles.DISMISSED,faithTrack.getPopeFavorTiles(0));
         assertEquals(PopeFavorTiles.DOWNWARDS,faithTrack.getPopeFavorTiles(1));
         assertEquals(PopeFavorTiles.DOWNWARDS,faithTrack.getPopeFavorTiles(2));
 
         //check that a second call does not modify.
-        faithTrack.validatePopeFavor("1");
+        faithTrack.validatePopeFavor(1);
         assertEquals(PopeFavorTiles.DISMISSED,faithTrack.getPopeFavorTiles(0));
         assertEquals(PopeFavorTiles.DOWNWARDS,faithTrack.getPopeFavorTiles(1));
         assertEquals(PopeFavorTiles.DOWNWARDS,faithTrack.getPopeFavorTiles(2));
@@ -61,7 +57,7 @@ class FaithTrackTest {
         } catch (VaticanReportException e) {
         }
         //player has eight faith,
-        faithTrack.validatePopeFavor("2");
+        faithTrack.validatePopeFavor(2);
         assertEquals(PopeFavorTiles.DISMISSED,faithTrack.getPopeFavorTiles(0));
         assertEquals(PopeFavorTiles.DISMISSED,faithTrack.getPopeFavorTiles(1));
         assertEquals(PopeFavorTiles.DOWNWARDS,faithTrack.getPopeFavorTiles(2));
@@ -71,7 +67,7 @@ class FaithTrackTest {
         } catch (VaticanReportException e) {
 
         }
-        faithTrack.validatePopeFavor("3");
+        faithTrack.validatePopeFavor(3);
         assertEquals(PopeFavorTiles.DISMISSED,faithTrack.getPopeFavorTiles(0));
         assertEquals(PopeFavorTiles.DISMISSED,faithTrack.getPopeFavorTiles(1));
         assertEquals(PopeFavorTiles.UPWARDS,faithTrack.getPopeFavorTiles(2));
@@ -89,7 +85,7 @@ class FaithTrackTest {
         FaithTrack faithTrack = new FaithTrack();
 
         try {
-            faithTrack.validatePopeFavor("0");
+            faithTrack.validatePopeFavor(0);
             Assertions.fail();
         } catch (RuntimeException e) {
 
@@ -99,7 +95,7 @@ class FaithTrackTest {
             faithTrack.addFaithPoints(8);
         } catch (VaticanReportException e) {
 
-            faithTrack.validatePopeFavor("1");
+            faithTrack.validatePopeFavor(1);
         }
 
         assertEquals(PopeFavorTiles.UPWARDS,faithTrack.getPopeFavorTiles(0));
@@ -112,7 +108,7 @@ class FaithTrackTest {
         } catch (VaticanReportException e) {
         }
         //player has eight faith,
-        faithTrack.validatePopeFavor("2");
+        faithTrack.validatePopeFavor(2);
         assertEquals(PopeFavorTiles.UPWARDS,faithTrack.getPopeFavorTiles(0));
         assertEquals(PopeFavorTiles.UPWARDS,faithTrack.getPopeFavorTiles(1));
         assertEquals(PopeFavorTiles.DOWNWARDS,faithTrack.getPopeFavorTiles(2));
@@ -122,7 +118,7 @@ class FaithTrackTest {
         } catch (VaticanReportException e) {
 
         }
-        faithTrack.validatePopeFavor("3");
+        faithTrack.validatePopeFavor(3);
         assertEquals(PopeFavorTiles.UPWARDS,faithTrack.getPopeFavorTiles(0));
         assertEquals(PopeFavorTiles.UPWARDS,faithTrack.getPopeFavorTiles(1));
         assertEquals(PopeFavorTiles.DISMISSED,faithTrack.getPopeFavorTiles(2));
@@ -142,7 +138,7 @@ class FaithTrackTest {
             faithTrack.addFaithPoints(8);
         } catch (VaticanReportException e) {
 
-            faithTrack.validatePopeFavor("1");
+            faithTrack.validatePopeFavor(1);
         }
 
         assertEquals(PopeFavorTiles.UPWARDS,faithTrack.getPopeFavorTiles(0));
@@ -155,7 +151,7 @@ class FaithTrackTest {
         } catch (VaticanReportException e) {
         }
         //player has eight faith,
-        faithTrack.validatePopeFavor("2");
+        faithTrack.validatePopeFavor(2);
         assertEquals(PopeFavorTiles.UPWARDS,faithTrack.getPopeFavorTiles(0));
         assertEquals(PopeFavorTiles.UPWARDS,faithTrack.getPopeFavorTiles(1));
         assertEquals(PopeFavorTiles.DOWNWARDS,faithTrack.getPopeFavorTiles(2));
@@ -165,7 +161,7 @@ class FaithTrackTest {
         } catch (VaticanReportException e) {
 
         }
-        faithTrack.validatePopeFavor("3");
+        faithTrack.validatePopeFavor(3);
         assertEquals(PopeFavorTiles.UPWARDS,faithTrack.getPopeFavorTiles(0));
         assertEquals(PopeFavorTiles.UPWARDS,faithTrack.getPopeFavorTiles(1));
         assertEquals(PopeFavorTiles.UPWARDS,faithTrack.getPopeFavorTiles(2));

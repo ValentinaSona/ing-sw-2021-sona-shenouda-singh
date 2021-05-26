@@ -15,7 +15,7 @@ public class ClientActivateProductionMessage implements ClientMessage, Controlle
 
     @Override
     public boolean handleMessage(Controller handler, RemoteViewHandler view, User user){
-        handler.resourceController.activateProduction(view, user);
+        handler.resourceController.activateProduction(this,view, user);
         return  true;
     }
 

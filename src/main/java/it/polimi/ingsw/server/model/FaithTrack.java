@@ -1,4 +1,4 @@
-package it.polimi.ingsw.server.model.observable;
+package it.polimi.ingsw.server.model;
 
 import it.polimi.ingsw.server.exception.VaticanReportException;
 import it.polimi.ingsw.server.model.PopeFavorTiles;
@@ -7,7 +7,7 @@ import it.polimi.ingsw.server.model.ResourceType;
 import it.polimi.ingsw.utils.networking.Transmittable;
 import it.polimi.ingsw.utils.observer.LambdaObservable;
 
-public class FaithTrack extends LambdaObservable<Transmittable> {
+public class FaithTrack {
 
 
 	private int faithMarker;
@@ -33,12 +33,12 @@ public class FaithTrack extends LambdaObservable<Transmittable> {
 		} else {
 			faithMarker += faith.getQuantity();
 			if (faithMarker >= 8 && getPopeFavorTiles(0) == PopeFavorTiles.DOWNWARDS ){
-				throw new VaticanReportException("1");
+				throw new VaticanReportException(1);
 			} else if(faithMarker >= 16 && getPopeFavorTiles(1) == PopeFavorTiles.DOWNWARDS){
-				throw new VaticanReportException("2");
+				throw new VaticanReportException(2);
 
 			} else if(faithMarker >= 24 && getPopeFavorTiles(2) == PopeFavorTiles.DOWNWARDS){
-				throw new VaticanReportException("3");
+				throw new VaticanReportException(3);
 			}
 		}
 
@@ -50,10 +50,10 @@ public class FaithTrack extends LambdaObservable<Transmittable> {
 		this.addFaithPoints(new Resource(faith, ResourceType.FAITH));
 	}
 
-	public void validatePopeFavor(String report) {
+	public void validatePopeFavor(int report) {
 
 		switch (report) {
-			case "1":
+			case 1:
 				if (faithMarker >= 5 && popeFavorTiles[0] != PopeFavorTiles.DISMISSED) {
 					popeFavorTiles[0] = PopeFavorTiles.UPWARDS;
 				} else {
@@ -61,7 +61,7 @@ public class FaithTrack extends LambdaObservable<Transmittable> {
 				}
 
 				break;
-			case "2":
+			case 2:
 
 				if (faithMarker >= 12 && popeFavorTiles[1] != PopeFavorTiles.DISMISSED) {
 					popeFavorTiles[1] = PopeFavorTiles.UPWARDS;
@@ -70,7 +70,7 @@ public class FaithTrack extends LambdaObservable<Transmittable> {
 				}
 
 				break;
-			case "3":
+			case 3:
 
 				if (faithMarker >= 19 && popeFavorTiles[2] != PopeFavorTiles.DISMISSED) {
 					popeFavorTiles[2] = PopeFavorTiles.UPWARDS;

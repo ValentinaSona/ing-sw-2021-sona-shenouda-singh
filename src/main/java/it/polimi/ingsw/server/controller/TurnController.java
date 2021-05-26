@@ -1,22 +1,25 @@
 package it.polimi.ingsw.server.controller;
 
-import it.polimi.ingsw.server.model.Model;
-import it.polimi.ingsw.server.model.observable.Player;
+import it.polimi.ingsw.server.model.Game;
+import it.polimi.ingsw.server.model.Player;
 import it.polimi.ingsw.server.view.RemoteViewHandler;
 import it.polimi.ingsw.utils.networking.transmittables.StatusMessage;
+import it.polimi.ingsw.utils.networking.transmittables.clientmessages.game.ClientEndTurnMessage;
+import it.polimi.ingsw.utils.networking.transmittables.servermessages.ServerStartTurnMessage;
 
 import java.util.ArrayList;
 
-public class TurnController extends AbstractController{
+public class TurnController{
     private static TurnController singleton;
+    private Game model;
 
     /*  Called when a player ends their turn.
             Modifies currentPlayer and playerList for all controller and resets players' actions as needed.
         */
-    private TurnController(Model model){
-        super(model);
+    private TurnController(Game model){
+        this.model = model;
     }
-    public static TurnController getInstance(Model model){
+    public static TurnController getInstance(Game model){
         if(singleton == null){
             singleton = new TurnController(model);
         }
@@ -29,27 +32,32 @@ public class TurnController extends AbstractController{
      * @param view the player's corresponding RemoteViewHandler that will handle status messages to be sent back to the view.
      * @param user the User corresponding to the player making the action.
      */
-    public void endTurn(RemoteViewHandler view, User user) {
+    public void endTurn(ClientEndTurnMessage action, RemoteViewHandler view, User user) {
 
-        Player player = getModel().getPlayerFromUser(user);
+        Player endingPlayer = model.getPlayerFromUser(user);
 
-        if( !(player.getTurn())  ){
+        if( !(endingPlayer.getTurn())  ){
             view.handleStatusMessage(StatusMessage.CLIENT_ERROR);
         }else{
-                player.toggleTurn();
+            endingPlayer.toggleTurn();
 
-                ArrayList<Player> players = getPlayersList();
-                int idx = players.indexOf(player);
+            ArrayList<Player> players = model.getPlayers();
+            int idx = players.indexOf(endingPlayer);
 
-                if(idx == players.size()-1){
-                    //restart from the first player in the list
-                    setCurrentPlayer(players.get(0));
-                }else{
-                    setCurrentPlayer(players.get(idx+1));
-                }
+            if(idx == players.size()-1){
+                //restart from the first player in the list
+                model.setCurrentPlayer(players.get(0));
+            }else{
+                model.setCurrentPlayer(players.get(idx+1));
+            }
 
-                getCurrentPlayer().toggleTurn();
-                getCurrentPlayer().toggleMainAction();
+            Player startingPlayer = model.getCurrentPlayer();
+            startingPlayer.toggleTurn();
+            startingPlayer.toggleMainAction();
+            model.notify(new ServerStartTurnMessage(
+                    model.getUserFromPlayer(startingPlayer),
+                    model.getUserFromPlayer(endingPlayer)
+            ));
 
         }
 

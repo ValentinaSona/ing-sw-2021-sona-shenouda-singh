@@ -1,7 +1,12 @@
 package it.polimi.ingsw.server.exception;
 
 public class VaticanReportException extends Exception {
-    public VaticanReportException(String message) {
-        super(message);
+    private final int report;
+
+    public VaticanReportException(int message) {
+        this.report = message;
     }
-}
+
+    public int getReport() {
+        return report;
+    }}

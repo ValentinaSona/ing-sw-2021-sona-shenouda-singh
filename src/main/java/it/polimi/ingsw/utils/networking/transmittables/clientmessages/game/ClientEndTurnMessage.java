@@ -15,7 +15,7 @@ public class ClientEndTurnMessage implements ClientMessage, ControllerHandleable
 
     @Override
     public boolean handleMessage(Controller handler, RemoteViewHandler view, User user){
-        handler.turnController.endTurn(view, user);
+        handler.turnController.endTurn(this,view, user);
         return  true;
     }
 

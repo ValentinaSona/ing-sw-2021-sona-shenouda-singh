@@ -11,13 +11,13 @@ public class ClientThrowResourcesMessage implements ClientMessage, ControllerHan
 
     public  ClientThrowResourcesMessage(){
 
-        }
+    }
 
-        @Override
-        public boolean handleMessage(Controller handler, RemoteViewHandler view, User user){
-            handler.resourceController.throwResources( view, user);
-            return  true;
-        }
+    @Override
+    public boolean handleMessage(Controller handler, RemoteViewHandler view, User user){
+        handler.resourceController.throwResources( view, user);
+        return  true;
+    }
 
 
 

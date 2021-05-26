@@ -1,32 +1,34 @@
 package it.polimi.ingsw.server.controller;
 
 import it.polimi.ingsw.server.model.*;
-import it.polimi.ingsw.server.model.observable.Depot;
-import it.polimi.ingsw.server.model.observable.DevelopmentCardSlot;
-import it.polimi.ingsw.server.model.observable.Player;
-import it.polimi.ingsw.server.model.observable.Strongbox;
+import it.polimi.ingsw.server.model.Depot;
+import it.polimi.ingsw.server.model.DevelopmentCardSlot;
+import it.polimi.ingsw.server.model.Player;
+import it.polimi.ingsw.server.model.Strongbox;
 import it.polimi.ingsw.server.view.RemoteViewHandler;
 import it.polimi.ingsw.utils.networking.transmittables.StatusMessage;
 import it.polimi.ingsw.utils.networking.transmittables.clientmessages.game.ClientActivateSpecialAbilityMessage;
 import it.polimi.ingsw.utils.networking.transmittables.clientmessages.game.ClientThrowLeaderCardMessage;
+import it.polimi.ingsw.utils.networking.transmittables.servermessages.ServerActivateLeaderCardAbilityMessage;
 
 import java.util.ArrayList;
 
-public class LeaderCardsController extends AbstractController{
+public class LeaderCardsController {
     private final MarketController marketController;
-    private final DevelopmentCardMarketController devController;
+    private final DevelopmentCardMarketController devMarketController;
     private final ResourceController resourceController;
     private static LeaderCardsController singleton;
+    private Game model;
 
 
-    private LeaderCardsController(Model model){
-        super(model);
+    private LeaderCardsController(Game model){
+        this.model = model;
         this.marketController = MarketController.getInstance(model);
-        this.devController = DevelopmentCardMarketController.getInstance(model);
+        this.devMarketController = DevelopmentCardMarketController.getInstance(model);
         this.resourceController = ResourceController.getInstance(model);
     }
 
-    public static LeaderCardsController getInstance(Model model){
+    public static LeaderCardsController getInstance(Game model){
         if(singleton == null){
             singleton = new LeaderCardsController(model);
         }
@@ -42,9 +44,10 @@ public class LeaderCardsController extends AbstractController{
      */
     public void activateSpecialAbility(ClientActivateSpecialAbilityMessage action, RemoteViewHandler view, User user){
 
-        Player player = getModel().getPlayerFromUser(user);
+        Player player = model.getPlayerFromUser(user);
 
-        if( !(player.getTurn())  ){
+        if( !(player.getTurn())  ||
+                model.getGameState() != GameState.PLAY ){
             view.handleStatusMessage(StatusMessage.CLIENT_ERROR);
         } else {
 
@@ -67,9 +70,10 @@ public class LeaderCardsController extends AbstractController{
      */
     public void throwLeaderCard(ClientThrowLeaderCardMessage action, RemoteViewHandler view, User user){
 
-        Player player = getModel().getPlayerFromUser(user);
+        Player player = model.getPlayerFromUser(user);
 
-        if( !(player.getTurn())  ){
+        if( !(player.getTurn())  ||
+                model.getGameState() != GameState.PLAY ){
             view.handleStatusMessage(StatusMessage.CLIENT_ERROR);
         } else {
 
@@ -135,13 +139,12 @@ public class LeaderCardsController extends AbstractController{
         if( ability instanceof WhiteMarbleAbility){
 
             WhiteMarbleAbility marbleAbility =(WhiteMarbleAbility) ability;
-            marketController.addMarketAbility(player, marbleAbility.getMarble());
+            marketController.addMarketAbility(player, marbleAbility);
 
         }else if( ability instanceof ProductionAbility){
 
             ProductionAbility productionAbility = (ProductionAbility) ability;
             player.addSpecialSlot(productionAbility.getCost());
-
         }else if( ability instanceof ExtraDepotAbility){
 
             ExtraDepotAbility depotAbility = (ExtraDepotAbility) ability;
@@ -150,16 +153,17 @@ public class LeaderCardsController extends AbstractController{
         }else if( ability instanceof DiscountAbility){
 
             DiscountAbility discountAbility = (DiscountAbility) ability;
-            devController.addMarketAbility(player, discountAbility.getDiscount());
-
+            devMarketController.addMarketAbility(player, discountAbility.getDiscount());
         }else{
             throw new RuntimeException("Unrecognized special ability type.");
         }
 
+        model.notify(new ServerActivateLeaderCardAbilityMessage(
+                targetCard,
+                model.getUserFromPlayer(player)
+        ));
         targetCard.setActive(true);
 
     }
-
-
 
 }

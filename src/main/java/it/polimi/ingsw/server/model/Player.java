@@ -1,6 +1,9 @@
-package it.polimi.ingsw.server.model.observable;
+package it.polimi.ingsw.server.model;
 
-import it.polimi.ingsw.server.model.*;
+import it.polimi.ingsw.client.modelview.FaithTrackView;
+import it.polimi.ingsw.client.modelview.SlotView;
+import it.polimi.ingsw.client.modelview.StrongboxView;
+import it.polimi.ingsw.client.modelview.WarehouseView;
 import it.polimi.ingsw.utils.networking.Transmittable;
 import it.polimi.ingsw.utils.observer.LambdaObservable;
 
@@ -77,7 +80,7 @@ public class Player extends LambdaObservable<Transmittable> {
 
 
 		faithTrack = new FaithTrack();
-		}
+	}
 
 	/**
 	 * Getter for boolean isMyTurn.
@@ -93,7 +96,7 @@ public class Player extends LambdaObservable<Transmittable> {
 	public void toggleTurn() {
 		isMyTurn = !isMyTurn;
 	}
-	
+
 
 	/**
 	 * Getter for boolean mainAction
@@ -119,7 +122,7 @@ public class Player extends LambdaObservable<Transmittable> {
 		return faithTrack;
 	}
 
-	/** 
+	/**
 	 * Getter for the leaderCards.
 	 * @return the player's leaderCards.
 	 */
@@ -127,6 +130,10 @@ public class Player extends LambdaObservable<Transmittable> {
 		return leaderCards;
 	}
 
+	public void setLeaderCards(LeaderCard[] leaderCards){
+		this.leaderCards.add(leaderCards[0]);
+		this.leaderCards.add(leaderCards[1]);
+	}
 	/**
 	 * Getter for the strongbox.
 	 * @return the player's strongbox.
@@ -186,6 +193,14 @@ public class Player extends LambdaObservable<Transmittable> {
 		DevelopmentCardSlot[] developmentCardSlots = new DevelopmentCardSlot[]{slot1, slot2, slot3};
 
 		return developmentCardSlots;
+	}
+
+	/**
+	 * Getter for the all types of production slot
+	 * @return all the development cards on the player's board.
+	 */
+	public ArrayList<Slot> getSlots() {
+		return slots;
 	}
 
 	/**
@@ -261,10 +276,6 @@ public class Player extends LambdaObservable<Transmittable> {
 		slots.add(new SpecialProduction(id, cost));
 	}
 
-	public void throwError(String message){
-
-	}
-
 	/**
 	 * This method is called when we succeed in storing a resource taken from tempResource in a depot
 	 * @param resource removes the stored resource from tempResources
@@ -282,7 +293,7 @@ public class Player extends LambdaObservable<Transmittable> {
 				break;
 			}
 		}
-	//	update(TEMP_RESOURCES_UPDATE, null, tempResources);
+		//	update(TEMP_RESOURCES_UPDATE, null, tempResources);
 	}
 
 	public void addToTempResources(ArrayList<Resource> resources){
@@ -295,7 +306,32 @@ public class Player extends LambdaObservable<Transmittable> {
 		//update(TEMP_RESOURCES_EMPTY, null, null);
 	}
 
+	public String getNickname() {
+		return nickname;
+	}
+
 	public ArrayList<Resource> getTempResources() {
 		return tempResources;
+	}
+
+	//TODO
+	public WarehouseView getVisibleWarehouse() {
+		return null;
+	}
+
+	//TODO
+	public FaithTrackView getVisibleFaithTrack() {
+		return null;
+	}
+
+
+	//TODO
+	public StrongboxView getVisibleStrongbox(){
+		return null;
+	}
+
+	//TODO
+	public ArrayList<SlotView> getVisibleSlots() {
+		return null;
 	}
 }

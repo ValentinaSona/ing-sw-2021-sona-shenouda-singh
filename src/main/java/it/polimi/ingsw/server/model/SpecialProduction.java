@@ -1,33 +1,30 @@
-package it.polimi.ingsw.server.model.observable;
+package it.polimi.ingsw.server.model;
 
 import it.polimi.ingsw.server.exception.NotSufficientResourceException;
-import it.polimi.ingsw.server.model.Id;
-import it.polimi.ingsw.server.model.Production;
-import it.polimi.ingsw.server.model.Resource;
-import it.polimi.ingsw.server.model.ResourceType;
 
 
 import java.util.HashMap;
+//TODO replace  update() calls with notify() of the lambdaObservable class
 
-public class BoardProduction extends Slot {
-    private Production boardProduction;
+public class SpecialProduction extends Slot {
+    private Production specialProduction;
     private ResourceType chosenType;
 
-    public BoardProduction(Id id){
+    public SpecialProduction(Id id, Resource productionCost){
         super(id);
-        Resource[] cost = new Resource[]{new Resource(2, ResourceType.JOLLY)};
-        Resource[] out = new Resource[]{new Resource(1, ResourceType.JOLLY)};
-        this.boardProduction = new Production(cost, out);
+        Resource[] cost = new Resource[]{productionCost};
+        Resource[] out = new Resource[]{new Resource(1, ResourceType.JOLLY), new Resource(1, ResourceType.FAITH)};
+        this.specialProduction = new Production(cost, out);
     }
 
     @Override
     public void check(boolean card) throws NotSufficientResourceException {
         if(card){
             //this method should never be called with card = true
-            //throw new RuntimeException("Super error");
+            throw new RuntimeException("Super error");
         }
 
-        Resource cost = boardProduction.getProductionCost()[0];
+        Resource cost = specialProduction.getProductionCost()[0];
 
         //to activate the board production we can use resource of different types
         int tot = 0;
@@ -37,15 +34,10 @@ public class BoardProduction extends Slot {
 
         if( cost.getQuantity() != tot){
             resourceCloset.clear();
-            HashMap<Id, Resource> copy = (HashMap<Id, Resource>) originResourceHashMap.clone();
+            HashMap<Id, Resource> copy = new HashMap<>(originResourceHashMap);
             originResourceHashMap.clear();
             throw new NotSufficientResourceException(copy);
         }
-
-        //if the player can activate the production but the output
-        //resourcetype is a jolly before activating the power we have to ask
-        //how the player wants to convert the jolly type
-       // update(JOLLY_RESOURCE, null, new Resource(1, ResourceType.JOLLY));
     }
 
     /**
@@ -54,9 +46,10 @@ public class BoardProduction extends Slot {
      * this method to declare how he wants to convert that jolly
      * @param resource
      */
-    public void chooseJolly(Resource resource){
-        this.chosenType = resource.getResourceType();
+    public void chooseJolly(ResourceType resource){
+        this.chosenType = resource;
     }
+
     @Override
     public Resource[] activateProduction() {
         if(confirmed){
@@ -64,7 +57,7 @@ public class BoardProduction extends Slot {
             chosenType = null;
             resourceCloset.clear();
             originResourceHashMap.clear();
-            return new Resource[]{new Resource(1, chosenType)};
+            return new Resource[]{new Resource(1, chosenType), new Resource(1, ResourceType.FAITH)};
         }else {
             return null;
         }

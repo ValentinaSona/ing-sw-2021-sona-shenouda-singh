@@ -1,3 +1,4 @@
+/*
 package it.polimi.ingsw.utils.networking.transmittables.clientmessages.game;
 
 import it.polimi.ingsw.server.controller.Controller;
@@ -24,3 +25,4 @@ public class ClientConfirmProductionMessage implements ClientMessage, Controller
         return slotId;
     }
 }
+*/

@@ -1,7 +1,7 @@
 package it.polimi.ingsw.server.model;
 
+import it.polimi.ingsw.client.modelview.MarketView;
 import it.polimi.ingsw.server.exception.TwoLeaderCardsException;
-import it.polimi.ingsw.server.model.observable.Player;
 
 import java.util.HashMap;
 import java.util.List;
@@ -20,5 +20,7 @@ public interface Market {
     MarketMarble[] getChosen(MarketMarble[] choice);
 
     HashMap <Player, List<MarketMarble>> getAbilityMap();
+
+    MarketView getVisible();
 
 }

@@ -1,7 +1,6 @@
-package it.polimi.ingsw.server.model.observable;
+package it.polimi.ingsw.server.model;
 
-import it.polimi.ingsw.server.model.Market;
-import it.polimi.ingsw.server.model.MarketMarble;
+import it.polimi.ingsw.client.modelview.MarketView;
 
 import java.util.*;
 
@@ -124,5 +123,11 @@ public class MarketTray implements Market {
 	public HashMap <Player, List<MarketMarble>> getAbilityMap() {
 		throw new RuntimeException("No player has still activated a white marble ability, invalid method");
 	}
+
+	//TODO
+    @Override
+    public MarketView getVisible() {
+        return null;
+    }
 
 }

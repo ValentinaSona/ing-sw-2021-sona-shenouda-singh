@@ -28,7 +28,7 @@ public class LambdaObservable <T>{
         }
     }
 
-    protected void notify(T message){
+    public void notify(T message){
         synchronized (observerMap){
             for(LambdaObserver observer : observerMap.keySet()){
                 //for every observer i am calling their update method that is

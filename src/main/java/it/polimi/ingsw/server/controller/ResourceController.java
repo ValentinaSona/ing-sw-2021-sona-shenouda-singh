@@ -3,30 +3,24 @@ package it.polimi.ingsw.server.controller;
 
 import it.polimi.ingsw.server.exception.*;
 import it.polimi.ingsw.server.model.*;
-import it.polimi.ingsw.server.model.observable.Depot;
-import it.polimi.ingsw.server.model.observable.DevelopmentCardSlot;
-import it.polimi.ingsw.server.model.observable.FaithTrack;
-import it.polimi.ingsw.server.model.observable.Player;
 import it.polimi.ingsw.server.view.RemoteViewHandler;
 import it.polimi.ingsw.utils.networking.transmittables.StatusMessage;
-import it.polimi.ingsw.utils.networking.transmittables.clientmessages.game.ClientConfirmProductionMessage;
-import it.polimi.ingsw.utils.networking.transmittables.clientmessages.game.ClientDepositIntoWarehouseMessage;
-import it.polimi.ingsw.utils.networking.transmittables.clientmessages.game.ClientDepositResourceIntoSlotMessage;
-import it.polimi.ingsw.utils.networking.transmittables.clientmessages.game.ClientTidyWarehouseMessage;
+import it.polimi.ingsw.utils.networking.transmittables.clientmessages.game.*;
+import it.polimi.ingsw.utils.networking.transmittables.servermessages.*;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
+import java.util.Map;
 
-public class ResourceController extends AbstractController {
+public class ResourceController{
     private static ResourceController singleton;
+    private final Game model;
 
-
-    private ResourceController(Model model){
-        super(model);
+    private ResourceController(Game model){
+        this.model = model;
     }
 
-    public static ResourceController getInstance(Model model){
+    public static ResourceController getInstance(Game model){
         if(singleton == null){
             singleton = new ResourceController(model);
         }
@@ -51,14 +45,22 @@ public class ResourceController extends AbstractController {
         try{
             FaithTrack faithTrack = player.getFaithTrack();
             faithTrack.addFaithPoints(faithPoints);
+            model.notify(new ServerFaithTrackMessage(
+                    player.getVisibleFaithTrack(),
+                    model.getUserFromPlayer(player)
+            ));
         }catch (VaticanReportException vaticanReportException){
-
-            ArrayList<Player> players = getPlayersList();
+            //
+            ArrayList<Player> players = model.getPlayers();
             players.remove(player);
 
             for(Player p : players){
                 FaithTrack faithTrack = p.getFaithTrack();
-                faithTrack.validatePopeFavor(vaticanReportException.getMessage());
+                faithTrack.validatePopeFavor(vaticanReportException.getReport());
+                model.notify(new ServerFaithTrackMessage(
+                        player.getVisibleFaithTrack(),
+                        model.getUserFromPlayer(p)
+                ));
             }
         }
     }
@@ -68,21 +70,23 @@ public class ResourceController extends AbstractController {
      * Subtracts resources from the strongbox or the warehouse as part of the process in which the user selects how to pay for a production/development card.
      * If the attempt to buy does not succeed, the resetResources method is invoked to place them back.
      * @param player Player whose resources are being managed.
-     * @param resource Resource being paid.
-     * @param resourceId Source from where the resources are being taken.
+     * @param idResourceMap a map with the source and the resource taken
      * @throws InvalidDepotException The selected Id does not contain the selected resource.
      */
-    private void selectResources(Player player , Resource resource, Id resourceId) throws InvalidDepotException {
+    private void selectResources(Player player , Map<Id, Resource> idResourceMap) throws InvalidDepotException {
 
 
         ArrayList<Id> warehouseIds = (ArrayList<Id>) Arrays.asList(Id.DEPOT_1, Id.DEPOT_2, Id.DEPOT_3, Id.S_DEPOT_1, Id.S_DEPOT_2);
 
-        if(warehouseIds.contains(resourceId)){
-            player.getWarehouse().get(resourceId.getValue()).subtractResource(resource);
-        }else if(resourceId == Id.STRONGBOX){
-            player.getStrongbox().subResources(resource);
-        }else {
-            throw new RuntimeException("Supplied ResourceId doesn't belong to warehouse or strongbox.");
+        for(Id id : idResourceMap.keySet()){
+            if(warehouseIds.contains(id)){
+                player.getWarehouse().get(id.getValue()).subtractResource(idResourceMap.get(id));
+            }else if(id == Id.STRONGBOX_SHIELD || id == Id.STRONGBOX_STONE || id == Id.STRONGBOX_SERVANT
+                    || id == Id.STRONGBOX_COIN){
+                player.getStrongbox().subResources(idResourceMap.get(id));
+            }else {
+                throw new RuntimeException("Supplied ResourceId doesn't belong to warehouse or strongbox.");
+            }
         }
 
     }
@@ -93,7 +97,7 @@ public class ResourceController extends AbstractController {
      * @param resourceHashMap Resources and the origin at which they must be returned.
      * @throws InvalidDepotException The previously supplied resources are somehow invalid.
      */
-    public void resetResources(Player player, HashMap<Id, Resource> resourceHashMap) throws InvalidDepotException {
+    public void resetResources(Player player, Map<Id, Resource> resourceHashMap) throws InvalidDepotException {
         ArrayList<Depot> warehouse = player.getWarehouse();
 
         ArrayList<Id> warehouseIds = (ArrayList<Id>) Arrays.asList(Id.DEPOT_1, Id.DEPOT_2, Id.DEPOT_3, Id.S_DEPOT_1, Id.S_DEPOT_2);
@@ -102,7 +106,8 @@ public class ResourceController extends AbstractController {
             if(warehouseIds.contains(id)){
                 warehouse.get(id.getValue()).addResource(resourceHashMap.get(id));
                 resourceHashMap.remove(id);
-            }else if(id == Id.STRONGBOX){
+            }else if(id == Id.STRONGBOX_SHIELD || id == Id.STRONGBOX_STONE || id == Id.STRONGBOX_SERVANT
+                    || id == Id.STRONGBOX_COIN){
                 player.getStrongbox().addResources(resourceHashMap.get(id));
                 resourceHashMap.remove(id);
             }else {
@@ -122,10 +127,11 @@ public class ResourceController extends AbstractController {
      * @param view the player's corresponding RemoteViewHandler that will handle status messages to be sent back to the view.
      * @param user the User corresponding to the player making the action.
      */
-    public void throwResources( RemoteViewHandler view, User user) {
-        Player player = getModel().getPlayerFromUser(user);
+    public void throwResources(RemoteViewHandler view, User user) {
+        Player player = model.getPlayerFromUser(user);
 
-        if( !(player.getTurn()) ){
+        if( !(player.getTurn()) ||
+                model.getGameState() != GameState.PLAY ){
             view.handleStatusMessage(StatusMessage.CLIENT_ERROR);
         } else {
 
@@ -139,15 +145,18 @@ public class ResourceController extends AbstractController {
             }
 
             player.dumpTempResources();
+            model.notify(new ServerThrowResourceMessage(
+                    thrown,
+                    model.getUserFromPlayer(player)
+            ));
 
             faithPoints = new Resource(thrown, ResourceType.FAITH);
-            ArrayList<Player> players = getPlayersList();
+            ArrayList<Player> players = model.getPlayers();
             players.remove(player);
 
             for(Player p :  players) {
                 addFaithPoints(p, faithPoints);
             }
-            view.handleStatusMessage(StatusMessage.OK);
         }
     }
 
@@ -159,16 +168,13 @@ public class ResourceController extends AbstractController {
      * @param user the User corresponding to the player making the action.
      */
     public void tidyWarehouse(ClientTidyWarehouseMessage action, RemoteViewHandler view, User user){
-        Player player = getModel().getPlayerFromUser(user);
+        Player player = model.getPlayerFromUser(user);
 
-        if( !(player.getTurn()) ){
+        if( !(player.getTurn()) ||
+                model.getGameState() != GameState.PLAY ){
             view.handleStatusMessage(StatusMessage.CLIENT_ERROR);
         } else {
-
-
             try {
-
-
                 Depot fromDepot = player.getWarehouse().get(action.getFrom().getValue());
                 Depot toDepot = player.getWarehouse().get(action.getTo().getValue());
 
@@ -182,7 +188,12 @@ public class ResourceController extends AbstractController {
                     toDepot.addResource(fromResource);
                     //if no exception is thrown
                     fromDepot.subtractResource(toResource);
-                    view.handleStatusMessage(StatusMessage.OK);
+                    //every time a change is done in the warehouse a copy of it is sent to everyplayer
+
+                    model.notify(new ServerWarehouseMessage(
+                            player.getVisibleWarehouse(),
+                            model.getUserFromPlayer(player)
+                    ));
                 } else {
                     if (fromResource.getQuantity() <= toDepot.getCapacity() && toResource.getQuantity() <= fromDepot.getCapacity()) {
                         //i can switch the content of the depot
@@ -191,7 +202,10 @@ public class ResourceController extends AbstractController {
 
                         toDepot.addResource(fromResource);
                         fromDepot.addResource(toResource);
-                        view.handleStatusMessage(StatusMessage.OK);
+                        model.notify(new ServerWarehouseMessage(
+                                player.getVisibleWarehouse(),
+                                model.getUserFromPlayer(player)
+                        ));
                     } else {
                         view.handleStatusMessage(StatusMessage.CLIENT_ERROR);
                     }
@@ -200,7 +214,7 @@ public class ResourceController extends AbstractController {
 
             } catch (InvalidDepotException invalidDepotException) {
                 //if i enter here it means that the action on the warehouse is failed
-                //and the player has been already informed
+                view.handleStatusMessage(StatusMessage.CLIENT_ERROR);
             }
         }
     }
@@ -215,9 +229,10 @@ public class ResourceController extends AbstractController {
     public void depositIntoWarehouse(ClientDepositIntoWarehouseMessage action, RemoteViewHandler view, User user){
 
 
-        Player player = getModel().getPlayerFromUser(user);
+        Player player = model.getPlayerFromUser(user);
 
-        if( !(player.getTurn()) ){
+        if( !(player.getTurn()) ||
+                model.getGameState() != GameState.PLAY ){
             view.handleStatusMessage(StatusMessage.CLIENT_ERROR);
         } else {
 
@@ -249,18 +264,19 @@ public class ResourceController extends AbstractController {
                 targetDepot.addResource(action.getResource());
 
                 // If the deposit fails the InvalidDepotException is thrown by addResources and the next statement is never executed, leaving the resources still to be deposited.
-                getCurrentPlayer().subFromTempResources(action.getResource());
-                view.handleStatusMessage(StatusMessage.CONTINUE);
+                player.subFromTempResources(action.getResource());
+                model.notify(new ServerDepositActionMessage(
+                        player.getTempResources(),
+                        player.getVisibleWarehouse(),
+                        model.getUserFromPlayer(player)
+                ));
 
 
             } catch (InvalidDepotException invalidDepotException) {
-                //the depot model has already notified the player of the error
-                //we just end the method
+                view.handleStatusMessage(StatusMessage.CLIENT_ERROR);
             }
         }
     }
-
-
 
 
     /**
@@ -272,65 +288,65 @@ public class ResourceController extends AbstractController {
      */
     public void depositResourceIntoSlot(ClientDepositResourceIntoSlotMessage action, RemoteViewHandler view, User user){
 
-
-        Player player = getModel().getPlayerFromUser(user);
-//TODO
-        if( !(player.getTurn())  || !(player.getMainAction()) ){
+        Player player = model.getPlayerFromUser(user);
+        if( !(player.getTurn())  || !(player.getMainAction()) ||
+                model.getGameState() != GameState.PLAY ){
             view.handleStatusMessage(StatusMessage.CLIENT_ERROR);
         } else {
 
             try{
 
-            // Remove the specified resources from the specified source.
-            selectResources(player, action.getResource(), action.getResourceId());
-            // Select the slot relative to the action ( its production is being activated / a card is being placed in it)
-            DevelopmentCardSlot slot = player.getDevelopmentCardSlots()[action.getResourceId().getValue()];
-            // Move the resources in the slot's resource closet to keep track of what is being paid.
-            slot.setResourceCloset(action.getResource(), action.getResourceId());
+                // Remove the specified resources from the specified source.
+                selectResources(player, action.getIdResourceMap());
+                // Select the slot relative to the action ( its production is being activated / a card is being placed in it)
+                Slot slot = player.getSlots().get(action.getSlotId().getValue());
+                // Move the resources in the slot's resource closet to keep track of what is being paid.
+                slot.setResourceCloset(action.getIdResourceMap());
 
+                /**
+                 * Called when the player has finished selecting the resources needed to pay for one production.
+                 * Calls the check method to verify the resources deposited into the resource closet are enough and set the confirmed bool.
+                 */
+                slot.check(action.isForCard());
+
+                //if the player has chosen a production that return a jolly we set the output resourceType
+                if(slot instanceof BoardProduction){
+                    ((BoardProduction)slot).chooseJolly(action.getJollyType());
+                }else if(slot instanceof SpecialProduction){
+                    ((SpecialProduction)slot).chooseJolly(action.getJollyType());
+                }
+                //if no exception is thrown this production or card is ready to be activated or bought
+                model.notify(new ServerDepositIntoSlotMessage(
+                        player.getVisibleWarehouse(),
+                        player.getVisibleStrongbox(),
+                        player.getVisibleSlots(),
+                        model.getUserFromPlayer(player)
+
+                ));
 
             } catch (InvalidDepotException invalidDepotException) {
                 //if i am trying to subtract more resources than the ones in a depot
+                //this should never happen
                 view.handleStatusMessage(StatusMessage.CLIENT_ERROR);
-            }
-        }
-    }
-
-    //TODO: So this is called when one finishes putting together a single production? This parts looks a bit messy on the UX side? ALSO UI side might simplify checks.
-    //TODO: might a single resource closet be more functional? DUE FOR REFACTORING.
-
-    /**
-     * Called when the player has finished selecting the resources needed to pay for one production.
-     * Calls the check method to verify the resources deposited into the resource closet are enough and set the confirmed bool.
-     * @param action the ClientMessage containing information about the player's action.
-     * @param view the player's corresponding RemoteViewHandler that will handle status messages to be sent back to the view.
-     * @param user the User corresponding to the player making the action.
-     */
-    public void confirmProduction(ClientConfirmProductionMessage action, RemoteViewHandler view, User user){
-
-        Player player = getModel().getPlayerFromUser(user);
-
-        if( !(player.getTurn())  || !(player.getMainAction()) ){
-            view.handleStatusMessage(StatusMessage.CLIENT_ERROR);
-        } else {
-
-            try{
-
-                //called if the player has deposit all the resources he need activate the production
-                //and in this way he give a confirm that he wants to activate this production
-                player.getDevelopmentCardSlots()[action.getSlotId().getValue()].check(false);
-                //after this action is done the player can not undo his moves
-
-            }catch (NotSufficientResourceException ex){
+            } catch (NotSufficientResourceException e) {
+                //if the check fails
                 try{
-                    resetResources(player, ex.getTempResources());
+                    resetResources(player, e.getTempResources());
+                    view.handleStatusMessage(StatusMessage.CLIENT_ERROR);
                 }catch(InvalidDepotException invalidDepotException){
                     //if i enter this catch there is a problem in the way i am restoring the resources
                     invalidDepotException.printStackTrace();
                 }
+
             }
         }
     }
+
+    //TODO: Ho fatto in modo di prendere  in una volta tutte le risorse per ogni singola carta dovrebbe essere già meglio ho provato
+    //TODO: a rendere alcune variabili statiche ma si andava a complicare di molto la logica per gestire tutti i closet
+    //TODO: So this is called when one finishes putting together a single production? This parts looks a bit messy on the UX side? ALSO UI side might simplify checks.
+    //TODO: might a single resource closet be more functional? DUE FOR REFACTORING.
+
 
     /**
      * Called when the user has selected and paid for all the production they wish to activate.
@@ -338,26 +354,30 @@ public class ResourceController extends AbstractController {
      * @param view the player's corresponding RemoteViewHandler that will handle status messages to be sent back to the view.
      * @param user the User corresponding to the player making the action.
      */
-    public void activateProduction(RemoteViewHandler view, User user){
+    public void activateProduction(ClientActivateProductionMessage action, RemoteViewHandler view, User user){
 
-        Player player = getModel().getPlayerFromUser(user);
+        Player player = model.getPlayerFromUser(user);
 
-        if( !(player.getTurn())  || !(player.getMainAction()) ){
+        if( !(player.getTurn())  || !(player.getMainAction()) ||
+                model.getGameState() != GameState.PLAY ){
             view.handleStatusMessage(StatusMessage.CLIENT_ERROR);
         } else {
-
             player.toggleMainAction();
-            DevelopmentCardSlot[] slots = player.getDevelopmentCardSlots();
+            ArrayList<Slot> slots = player.getSlots();
 
-            for (DevelopmentCardSlot dev : slots) {
+            for (Slot dev : slots) {
                 if (dev.isConfirmed()) {
-
                     player.getStrongbox().addResources(dev.activateProduction());
                 }
             }
+
+            model.notify(new ServerActivateProductionMessage(
+                    player.getVisibleStrongbox(),
+                    model.getUserFromPlayer(player)
+            ));
+
         }
     }
 
 
 }
-

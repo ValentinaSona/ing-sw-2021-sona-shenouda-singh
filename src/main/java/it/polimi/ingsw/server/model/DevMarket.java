@@ -1,7 +1,5 @@
 package it.polimi.ingsw.server.model;
 
-import it.polimi.ingsw.server.model.observable.Player;
-
 import java.util.HashMap;
 import java.util.List;
 
@@ -10,8 +8,8 @@ import java.util.List;
  */
 public interface DevMarket {
 
-    DevelopmentCard buyDevelopmentCards(int row, int col);
-    DevelopmentCard getDevelopmentCards(Player player, int row, int col);
+    DevelopmentCard buyDevelopmentCard(int row, int col);
+    DevelopmentCard getDevelopmentCard(Player player, int row, int col);
     void shuffle();
     DevelopmentCardDeck[][] getDecks();
     DevelopmentCard[][] getVisible();

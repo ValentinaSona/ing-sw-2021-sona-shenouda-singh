@@ -3,9 +3,10 @@ package it.polimi.ingsw.server;
 
 import it.polimi.ingsw.server.controller.Controller;
 import it.polimi.ingsw.server.controller.User;
-import it.polimi.ingsw.server.model.Model;
+import it.polimi.ingsw.server.model.Game;
 import it.polimi.ingsw.server.view.RemoteViewHandler;
 import it.polimi.ingsw.utils.networking.Connection;
+import it.polimi.ingsw.utils.networking.transmittables.clientmessages.game.DisconnectionMessage;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -13,17 +14,19 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class Match implements Runnable{
-    private Model model;
+    private Game model;
     private Controller controller;
     private final Map<String, Connection> participantMap;
     private final List<RemoteViewHandler> remoteViewList;
     private final Server server;
+    private boolean active;
 
 
     public Match(Server server){
         this.server = server;
         this.participantMap = new ConcurrentHashMap<>();
         this.remoteViewList = new LinkedList<>();
+        this.active = true;
     }
 
     public void addParticipant(String nickname, Connection connection) {
@@ -43,7 +46,7 @@ public class Match implements Runnable{
 
     @Override
     public void run(){
-        this.model = Model.getInstance(participantMap.size());
+        this.model = Game.getInstance(participantMap.size());
 
         this.controller = Controller.getInstance(model);
 
@@ -55,15 +58,43 @@ public class Match implements Runnable{
 
             model.subscribeUser(user);
 
-            model.addObserver(view);
+            model.addObserver(view, (observer, transmittable)->{
+                if(transmittable instanceof DisconnectionMessage){
+                    ((RemoteViewHandler)observer).requestDisconnection();
+                }else {
+                    ((RemoteViewHandler) observer).updateFromGame(transmittable);
+                }
+            });
+
 
             view.addObserver(controller, (observer, viewClientMessage) ->
                     ((Controller) observer).update(viewClientMessage) );
+
+            //TODO controllo che la connessione sia ancora attiva
         }
 
         //TODO setup of the game before the while{} that simply listen for message from the clients
+        controller.setup();
+
+        while (isActive()){
+            try{
+                controller.dispatchViewClientMessage();
+            }catch (Exception e){
+                e.printStackTrace();
+                //devo gestire l'errore disconnettendo tutti i giocatori
+            }
+
+            this.setActive(model.isActive());
+        }
 
 
+    }
 
+    public boolean isActive() {
+        return active;
+    }
+
+    public void setActive(boolean active) {
+        this.active = active;
     }
 }

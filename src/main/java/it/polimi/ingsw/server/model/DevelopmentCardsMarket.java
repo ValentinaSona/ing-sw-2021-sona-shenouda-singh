@@ -1,7 +1,5 @@
 package it.polimi.ingsw.server.model;
 
-import it.polimi.ingsw.server.model.observable.Player;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -20,7 +18,7 @@ public class DevelopmentCardsMarket implements  DevMarket {
 	 * @param col column of the selected deck
 	 * @return the card on top of the selected deck
 	 */
-	public DevelopmentCard buyDevelopmentCards(int row, int col) {
+	public DevelopmentCard buyDevelopmentCard(int row, int col) {
 		return decks[row][col].pickCard();
 	}
 
@@ -30,7 +28,7 @@ public class DevelopmentCardsMarket implements  DevMarket {
 	 * @param col column of the selected deck
 	 * @return the card on top of the selected deck
 	 */
-	public DevelopmentCard getDevelopmentCards(Player player, int row, int col){
+	public DevelopmentCard getDevelopmentCard(Player player, int row, int col){
 		return decks[row][col].firstCard();
 	}
 	/**

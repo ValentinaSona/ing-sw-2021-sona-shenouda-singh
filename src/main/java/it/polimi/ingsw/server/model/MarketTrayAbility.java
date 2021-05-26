@@ -1,14 +1,13 @@
-package it.polimi.ingsw.server.model.observable;
+package it.polimi.ingsw.server.model;
 
+import it.polimi.ingsw.client.modelview.MarketView;
 import it.polimi.ingsw.server.exception.TwoLeaderCardsException;
-import it.polimi.ingsw.server.model.*;
 
 import java.util.*;
 import java.util.stream.Stream;
 
-// TODO replace AbstractModel with LambdaObservable<Transmittable> and update() calls with notify()
-// TODO understanding if both marketTrayAbility and marketTray needs to extend LambdaObservable
-public class MarketTrayAbility extends AbstractModel implements Market {
+
+public class MarketTrayAbility implements Market {
 
     HashMap<Player, List<MarketMarble>> abilityMap;
 
@@ -59,8 +58,9 @@ public class MarketTrayAbility extends AbstractModel implements Market {
             }
 
             else {
-                update("CHOOSE_MARKET_ABILITY", null, abilityMap.get(player).toArray(new MarketMarble[0]));
-                throw new TwoLeaderCardsException();
+                //TODO al momento ho messo un valore a caso
+                //qunate biglie bianche ci sono ?? passalo come argomento dell'exception
+                throw new TwoLeaderCardsException(4);
             }
         }
 
@@ -96,5 +96,11 @@ public class MarketTrayAbility extends AbstractModel implements Market {
 
     public HashMap<Player, List<MarketMarble>> getAbilityMap() {
         return abilityMap;
+    }
+
+    //TODO
+    @Override
+    public MarketView getVisible() {
+        return null;
     }
 }

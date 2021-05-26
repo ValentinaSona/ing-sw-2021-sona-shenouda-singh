@@ -1,10 +1,6 @@
 package it.polimi.ingsw.server.model;
 
 import it.polimi.ingsw.server.exception.TwoLeaderCardsException;
-import it.polimi.ingsw.server.model.Market;
-import it.polimi.ingsw.server.model.MarketMarble;
-import it.polimi.ingsw.server.model.observable.MarketTrayAbility;
-import it.polimi.ingsw.server.model.observable.Player;
 import org.junit.jupiter.api.Test;
 
 import java.util.*;
