@@ -13,6 +13,8 @@ public class MarketTrayAbility implements Market {
 
     Market marketTray;
 
+    MarketMarble[] tempResources;
+
     /**
      * Constructor called by MarketTray when a player activates a WhiteMarbleAbility
      * @param marketTray the existing MarketTray
@@ -58,9 +60,8 @@ public class MarketTrayAbility implements Market {
             }
 
             else {
-                //TODO al momento ho messo un valore a caso
-                //qunate biglie bianche ci sono ?? passalo come argomento dell'exception
-                throw new TwoLeaderCardsException(4);
+                tempResources = resources;
+                throw new TwoLeaderCardsException((int) Stream.of(resources).filter(m -> m == MarketMarble.WHITE).count());
             }
         }
 
@@ -92,15 +93,24 @@ public class MarketTrayAbility implements Market {
 
     public MarketMarble getExtra() { return marketTray.getExtra(); }
 
-    public MarketMarble[] getChosen(MarketMarble[] choice){ return null; }
+    public MarketMarble[] getChosen(MarketMarble[] choice){
+
+        int i = 0;
+        for(MarketMarble m : tempResources) {
+            if (m == MarketMarble.WHITE) {
+               m = choice[i];
+               i++;
+            }
+        }
+
+        return tempResources;
+    }
 
     public HashMap<Player, List<MarketMarble>> getAbilityMap() {
         return abilityMap;
     }
 
-    //TODO
-    @Override
     public MarketView getVisible() {
-        return null;
+        return marketTray.getVisible();
     }
 }

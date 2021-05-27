@@ -124,10 +124,8 @@ public class MarketTray implements Market {
 		throw new RuntimeException("No player has still activated a white marble ability, invalid method");
 	}
 
-	//TODO
-    @Override
     public MarketView getVisible() {
-        return null;
+        return new MarketView(marketMarbles, extra);
     }
 
 }

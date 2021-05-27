@@ -21,8 +21,8 @@ public class GUI extends Application {
         scene.getStylesheets().add("css/mainText.css");
         scene.getStylesheets().add("css/standardBackground.css");
         primaryStage.setScene(scene);
-        primaryStage.setMinWidth(900);
-        primaryStage.setMinHeight(600);
+        primaryStage.setMinWidth(1280);
+        primaryStage.setMinHeight(720);
         primaryStage.show();
     }
 
