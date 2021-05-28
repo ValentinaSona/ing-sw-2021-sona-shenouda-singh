@@ -169,7 +169,7 @@ public class Lobby {
             }
             //if the first player disconnected while no one was in the lobby what will happen is
             //that we will do another time the while
-            ;
+
         }
 
     }

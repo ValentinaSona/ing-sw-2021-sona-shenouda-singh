@@ -5,3 +5,7 @@ Group composition: Antony Shenouda, Raul Singh, Valentina Sona.
 
 Persistenza, partita locale, resilienza.
 
+Coverage:
+
+
+![](/Coverage.png?raw=true)

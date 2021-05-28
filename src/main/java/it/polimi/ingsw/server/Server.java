@@ -79,7 +79,7 @@ public class Server {
     /**
      * This method can be called by the server itself in the submitMatch() method
      * or by the lobby if it has to handle a disconnection.
-     * @param connection
+     * @param connection the connection subjected to removal.
      */
     public void removeHandler(Connection connection){
         synchronized (handlerMap){

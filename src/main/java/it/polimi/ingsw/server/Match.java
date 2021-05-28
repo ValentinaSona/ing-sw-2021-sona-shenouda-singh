@@ -51,7 +51,7 @@ public class Match implements Runnable{
         this.controller = Controller.getInstance(model);
 
         //this list is already populated but we have yet to decide what the remoteView should do
-        //when notified by the model whith the notify() method
+        //when notified by the model with the notify() method
         for(RemoteViewHandler view : remoteViewList){
 
             User user = view.getUser();

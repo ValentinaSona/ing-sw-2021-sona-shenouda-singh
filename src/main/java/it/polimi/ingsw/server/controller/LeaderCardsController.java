@@ -73,12 +73,15 @@ public class LeaderCardsController {
         Player player = model.getPlayerFromUser(user);
 
         if( !(player.getTurn())  ||
-                model.getGameState() != GameState.PLAY ){
+                model.getGameState() != GameState.PLAY ) {
             view.handleStatusMessage(StatusMessage.CLIENT_ERROR);
+        } else if (player.getLeaderCards().get(action.getLeaderId().getValue()).isActive()) {
+            // Cannot throw an activated card.
+            view.handleStatusMessage(StatusMessage.REQUIREMENTS_ERROR);
         } else {
 
-            LeaderCard targetCard = player.getLeaderCards().get(action.getLeaderId().getValue());
-            player.getLeaderCards().remove(targetCard);
+            //LeaderCard targetCard = player.getLeaderCards().get(action.getLeaderId().getValue());
+            player.getLeaderCards().set(action.getLeaderId().getValue(), null);
             resourceController.addFaithPoints(player,new Resource(1, ResourceType.FAITH));
         }
     }
@@ -115,7 +118,7 @@ public class LeaderCardsController {
                 required = req.getResource().getQuantity();
 
                 for (Depot depot: warehouse){
-                    if (depot.getResource().getResourceType()==req.getResource().getResourceType()){
+                    if (depot.getResource() != null && depot.getResource().getResourceType()==req.getResource().getResourceType()){
                         possessed += depot.getResource().getQuantity();
                     }
                 }

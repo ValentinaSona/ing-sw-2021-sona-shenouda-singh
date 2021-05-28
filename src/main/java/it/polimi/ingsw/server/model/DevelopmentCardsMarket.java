@@ -6,7 +6,7 @@ import java.util.List;
 
 public class DevelopmentCardsMarket implements  DevMarket {
 
-	private DevelopmentCardDeck[][] decks;
+	private final DevelopmentCardDeck[][] decks;
 
 	public DevelopmentCardsMarket (DevelopmentCardDeck[][] decks) {
 		this.decks = decks;

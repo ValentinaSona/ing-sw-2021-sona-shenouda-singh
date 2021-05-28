@@ -12,9 +12,9 @@ public class Game extends LambdaObservable<Transmittable> {
     private static Game singleton;
     private final int numOfPlayers;
     private final ArrayList<Player> players = new ArrayList<>();
-    private final Market marketInstance;
+    private Market marketInstance;
     private final LeaderCardsKeeper leaderCardsKeeper;
-    private final DevelopmentCardsMarket developmentCardsMarket;
+    private DevMarket developmentCardsMarket;
     //da sostituire al più presto con mappa bidirezionale
     private final Map<User, Player> userPlayerHashMap = new HashMap<>();
     private final Map<Player, User> playerUserHashMap = new HashMap<>();
@@ -36,7 +36,7 @@ public class Game extends LambdaObservable<Transmittable> {
         if(singleton != null){
             singleton = null;
         }
-        return singleton;
+        return null;
     }
 
     /**
@@ -54,9 +54,13 @@ public class Game extends LambdaObservable<Transmittable> {
     public Market getMarketInstance(){
         return marketInstance;
     }
+    public void setMarketInstance(Market market) { marketInstance = market; }
 
-    public DevelopmentCardsMarket getDevelopmentCardsMarket() {
+    public DevMarket getDevelopmentCardsMarket() {
         return developmentCardsMarket;
+    }
+    public void setDevelopmentCardsMarket(DevMarket devMarket) {
+        developmentCardsMarket = devMarket;
     }
 
     public LeaderCardsKeeper getLeaderCardsKeeper() {

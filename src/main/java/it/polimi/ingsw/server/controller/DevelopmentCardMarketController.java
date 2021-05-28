@@ -19,6 +19,7 @@ public class DevelopmentCardMarketController{
 
 
     private DevelopmentCardMarketController(Game model){
+        this.model = model;
         this.resourceController = ResourceController.getInstance(model);
     }
 
@@ -114,6 +115,6 @@ public class DevelopmentCardMarketController{
      * @param discount the resource discount granted by the ability.
      */
     public void addMarketAbility(Player player, Resource discount){
-        model.getDevelopmentCardsMarket().addAbility(discount,player);
+        model.setDevelopmentCardsMarket(model.getDevelopmentCardsMarket().addAbility(discount,player));
     }
 }

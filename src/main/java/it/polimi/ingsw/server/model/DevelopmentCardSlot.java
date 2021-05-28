@@ -74,7 +74,6 @@ public class DevelopmentCardSlot extends Slot {
 
         if(card){
             cost = targetCard.getCost();
-            //faccio il check su sconti sul costo della carta
         }else {
             cost = slot.peek().getProduction().getProductionCost();
         }

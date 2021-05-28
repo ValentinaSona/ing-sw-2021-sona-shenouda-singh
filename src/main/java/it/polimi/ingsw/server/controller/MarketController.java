@@ -12,6 +12,7 @@ import it.polimi.ingsw.utils.networking.transmittables.servermessages.ServerBoug
 import it.polimi.ingsw.utils.networking.transmittables.servermessages.ServerChooseWhiteMarblesMessage;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class MarketController{
     private static MarketController singleton;
@@ -30,6 +31,14 @@ public class MarketController{
 
         return  singleton;
 
+    }
+
+
+    public static MarketController destroy(){
+        if(singleton != null){
+            singleton = null;
+        }
+        return null;
     }
 
     /**
@@ -53,7 +62,7 @@ public class MarketController{
                 player.toggleMainAction();
                 MarketMarble[] marbles = market.getResources(player, action.getRowCol());
 
-                ArrayList<Resource> resources = convertMarbles(marbles);
+                ArrayList<Resource> resources = (ArrayList<Resource>) convertMarbles(marbles);
                 player.addToTempResources(resources);
 
                 model.notify(new ServerBoughtMarblesMessage(market.getVisible(),
@@ -90,7 +99,7 @@ public class MarketController{
 
             MarketMarble[] marbles = market.getChosen(action.getChoices());
 
-            ArrayList<Resource> resources = convertMarbles(marbles);
+            ArrayList<Resource> resources = (ArrayList<Resource>) convertMarbles(marbles);
             player.addToTempResources(resources);
             // the client knows that if he receive this type of message while doing
             // this action he has to go on to deposit its resources.
@@ -100,32 +109,6 @@ public class MarketController{
         }
     }
 
-/**TODO questo metodo non penso serva la conversione delle marbles in risorse viene già fatto all'interno dei due metodi precedenti
-
- * Called if the course of the action has been interrupted by the TwoLeaderCardsException to finish the conversion of the resources.
- * @param action the ClientMessage containing information about the player's action.
- * @param view the player's corresponding RemoteViewHandler that will handle status messages to be sent back to the view.
- * @param user the User corresponding to the player making the action.
-
-public void convertMarbles(ClientConvertMarblesMessage action, RemoteViewHandler view, User user) {
-
-Player player = model.getPlayerFromUser(user);
-
-if( !(player.getTurn()) ){
-view.handleStatusMessage(StatusMessage.CLIENT_ERROR);
-} else {
-
-ArrayList<Resource> resources = convertMarbles(action.getMarbles());
-player.addToTempResources(resources);
-// the client knows that if he receive this type of message while doing
-// this action he has to go on to deposit its resources.
-view.handleStatusMessage(StatusMessage.CONTINUE);
-}
-
-
-}
- **/
-
     /**
      * Called on the definitive array of gained market marbles.
      * Returns an array of market marbles into an array of resources.
@@ -133,7 +116,7 @@ view.handleStatusMessage(StatusMessage.CONTINUE);
      * @param marbles marbles to be collected
      * @return ArrayList of resources, without faith included, to be deposited into the warehouse.
      */
-    private ArrayList<Resource> convertMarbles(MarketMarble[] marbles) {
+    private List<Resource> convertMarbles(MarketMarble[] marbles) {
         ArrayList<Resource> temp = new ArrayList<>();
         Resource faithPoints = null;
 
@@ -171,6 +154,6 @@ view.handleStatusMessage(StatusMessage.CONTINUE);
      * @param marbleAbility the  ability.
      */
     public void addMarketAbility(Player player, WhiteMarbleAbility marbleAbility){
-        model.getMarketInstance().addAbility(marbleAbility.getMarble(), player);
+        model.setMarketInstance(model.getMarketInstance().addAbility(marbleAbility.getMarble(), player));
     }
 }
