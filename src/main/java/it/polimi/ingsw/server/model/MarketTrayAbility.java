@@ -95,7 +95,7 @@ public class MarketTrayAbility implements Market {
 
     public MarketMarble[] getChosen(MarketMarble[] choice){
 
-        for (int i=0, j=0; i < tempResources.length; i++) {
+        for (int i=0, j=0; i < tempResources.length && j < choice.length; i++) {
             if (tempResources[i] == MarketMarble.WHITE) {
                 tempResources[i] = choice[j];
                 j++;

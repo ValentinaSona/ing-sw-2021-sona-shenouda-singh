@@ -11,13 +11,13 @@
 
 <BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.client.ui.gui.JFXControllers.LeaderSelectionGUIController">
    <left>
-      <StackPane minWidth="250.0" prefHeight="150.0" prefWidth="200.0" BorderPane.alignment="CENTER" />
+      <StackPane minWidth="150.0" prefHeight="150.0" prefWidth="150.0" BorderPane.alignment="CENTER" />
    </left>
    <right>
-      <StackPane minWidth="250.0" prefHeight="150.0" prefWidth="200.0" BorderPane.alignment="CENTER" />
+      <StackPane minWidth="150.0" prefHeight="150.0" prefWidth="150.0" BorderPane.alignment="CENTER" />
    </right>
    <center>
-      <GridPane fx:id="grid" maxWidth="1500.0" prefHeight="400.0" prefWidth="289.0" BorderPane.alignment="CENTER">
+      <GridPane fx:id="grid" maxWidth="1100.0" prefHeight="400.0" prefWidth="289.0" BorderPane.alignment="CENTER">
         <columnConstraints>
           <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
           <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
@@ -28,18 +28,19 @@
         </rowConstraints>
       </GridPane>
    </center>
-   <top>
-      <Label styleClass="normalLabel" text="Choose two cards:" BorderPane.alignment="CENTER">
-         <BorderPane.margin>
-            <Insets top="50.0" />
-         </BorderPane.margin>
-      </Label>
-   </top>
    <bottom>
-      <Button mnemonicParsing="false" styleClass="basicButton" text="Confirm choice" BorderPane.alignment="CENTER">
+      <Button mnemonicParsing="false" onAction="#confirmLeader" styleClass="basicButton" text="Confirm choice" BorderPane.alignment="CENTER">
          <BorderPane.margin>
             <Insets bottom="50.0" />
          </BorderPane.margin>
       </Button>
    </bottom>
+   <top>
+      <StackPane prefHeight="150.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+         <children>
+            <Label fx:id="choose" styleClass="normalLabel" text="Choose two leader cards:" />
+            <Label fx:id="moreThan2" opacity="0.0" styleClass="normalLabel" text="You can't choose more than two cards!" />
+         </children>
+      </StackPane>
+   </top>
 </BorderPane>

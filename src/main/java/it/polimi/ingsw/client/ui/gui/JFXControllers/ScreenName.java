@@ -9,7 +9,8 @@ public enum ScreenName {
     JOIN_GAME("joinScreen.fxml", new String[]{"mainText.css", "standardBackground.css", "buttons.css"}),
     CREATION("gameCreation.fxml", new String[]{"mainText.css", "standardBackground.css", "buttons.css"}),
     LOBBY("lobby.fxml", new String[]{"mainText.css", "standardBackground.css", "buttons.css", "list.css"}),
-    LEADER_SELECTION("leaderCardsChoice.fxml", new String[]{"mainText.css", "standardBackground.css", "buttons.css"});
+    LEADER_SELECTION("leaderCardsChoice.fxml", new String[]{"mainText.css", "standardBackground.css", "buttons.css"}),
+    PERSONAL_BOARD("personalBoardScreen.fxml", new String[]{"standardBackground.css"});
 
     private String fxml;
     private String[] css;

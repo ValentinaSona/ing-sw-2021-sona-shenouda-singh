@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.StackPane?>
+
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.client.ui.gui.JFXControllers.MainGameGUIController">
+    <left>
+        <StackPane minWidth="150.0" prefHeight="150.0" prefWidth="150.0" BorderPane.alignment="CENTER" />
+    </left>
+    <right>
+        <StackPane minWidth="150.0" prefHeight="150.0" prefWidth="150.0" BorderPane.alignment="CENTER" />
+    </right>
+    <top>
+        <Label styleClass="normalLabel" text="Choose two leader cards:" BorderPane.alignment="CENTER">
+            <BorderPane.margin>
+                <Insets top="70.0" />
+            </BorderPane.margin>
+        </Label>
+    </top>
+</BorderPane>
