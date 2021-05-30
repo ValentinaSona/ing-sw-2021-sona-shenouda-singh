@@ -1,5 +1,5 @@
 package it.polimi.ingsw.utils.networking;
-import it.polimi.ingsw.client.modelview.Client;
+import it.polimi.ingsw.client.Client;
 /**
  * All messages that implements this interface are processed by the
  * client method dispatchServerMessages

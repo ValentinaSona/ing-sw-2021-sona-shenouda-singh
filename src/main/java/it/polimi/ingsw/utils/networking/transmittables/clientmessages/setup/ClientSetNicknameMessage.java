@@ -27,7 +27,7 @@ public class ClientSetNicknameMessage implements ClientMessage, ServerHandleable
 
         if(status){
             //tell the client that the operation ended successfully
-            connection.send(StatusMessage.OK);
+            connection.send(StatusMessage.OK_NICK);
             handler.setNickname(nickname);
         }else {
             connection.send(StatusMessage.CLIENT_ERROR);

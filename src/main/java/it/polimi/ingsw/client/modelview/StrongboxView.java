@@ -1,4 +1,6 @@
 package it.polimi.ingsw.client.modelview;
 
-public class StrongboxView {
+import java.io.Serializable;
+
+public class StrongboxView implements Serializable {
 }

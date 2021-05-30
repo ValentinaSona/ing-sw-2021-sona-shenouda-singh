@@ -15,10 +15,9 @@ public class Connection extends LambdaObservable<Transmittable> implements Runna
 
     public Connection(Socket socket) throws IOException {
         this.socket = socket;
-        this.inputStream = new ObjectInputStream(socket.getInputStream());
         this.outputStream = new ObjectOutputStream(socket.getOutputStream());
         this.outputStream.flush();  //required otherwise the following instantiation of ObjectInputStream will block forever
-
+        this.inputStream = new ObjectInputStream(socket.getInputStream());
     }
 
     public boolean isActive() {
@@ -68,6 +67,8 @@ public class Connection extends LambdaObservable<Transmittable> implements Runna
                     return;
                 }
                 outputStream.writeObject(message);
+                System.out.println("Ho mandato un messaggio"+ message);
+                outputStream.flush();
             }
         }catch (IOException e){
             e.printStackTrace();
@@ -79,7 +80,9 @@ public class Connection extends LambdaObservable<Transmittable> implements Runna
     public synchronized void run(){
         while (isActive()){
             try{
+                System.out.println("InputStreaam .."+inputStream.available());
                 Transmittable inputObject = (Transmittable) inputStream.readObject();
+                System.out.println("Ho ricevuto un messaggio"+ inputObject);
                 this.notify(inputObject);
             }catch (IOException | ClassNotFoundException e){
                 e.printStackTrace();

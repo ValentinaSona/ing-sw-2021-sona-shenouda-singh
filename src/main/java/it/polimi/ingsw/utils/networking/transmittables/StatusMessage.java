@@ -25,9 +25,15 @@ public enum StatusMessage implements Transmittable {
     /**
      * Response message if the command has been executed successfully.
      */
-    OK,
+    OK_NICK,
+
+    OK_COUNT,
     /**
      * Response message if the command could not be executed due to an unexpected server error.
      */
-    SERVER_ERROR;
+    SERVER_ERROR,
+
+    SET_COUNT,
+
+    JOIN_LOBBY;
 }

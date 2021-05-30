@@ -2,7 +2,9 @@ package it.polimi.ingsw.client.modelview;
 
 import it.polimi.ingsw.server.model.MarketMarble;
 
-public class MarketView {
+import java.io.Serializable;
+
+public class MarketView implements Serializable {
 
     final private MarketMarble[][] tray;
     final private MarketMarble extra;

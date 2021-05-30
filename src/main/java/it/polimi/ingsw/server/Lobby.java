@@ -119,6 +119,12 @@ public class Lobby {
         }
         synchronized (lobbyRequestingConnections){
             lobbyRequestingConnections.add(connection);
+            System.out.println("si");
+            if(lobbyRequestingConnections.getFirst() != connection){
+                //invio messaggio di join della lobby
+                System.out.println("no");
+                connection.send(StatusMessage.JOIN_LOBBY);
+            }
             lobbyRequestingConnections.notifyAll();
         }
 
@@ -192,7 +198,7 @@ public class Lobby {
         synchronized (playerCountLock){
             currentLobbyPlayerCount = 0;
             //the operation is gone well but we need other info
-            firstConnection.send(StatusMessage.CONTINUE);
+            firstConnection.send(StatusMessage.SET_COUNT);
             while(currentLobbyPlayerCount == 0){
                 try {
                     //waiting for the first player to call setLobbyMaxPlayerCount

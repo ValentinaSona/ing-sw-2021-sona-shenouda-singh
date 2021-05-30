@@ -1,4 +1,6 @@
 package it.polimi.ingsw.client.modelview;
 
-public class SlotView {
+import java.io.Serializable;
+
+public class SlotView implements Serializable {
 }

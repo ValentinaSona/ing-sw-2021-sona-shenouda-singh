@@ -1,6 +1,10 @@
 package it.polimi.ingsw.client.ui.gui.JFXControllers;
 
+import it.polimi.ingsw.client.ui.MatchSettings;
 import it.polimi.ingsw.client.ui.UIController;
+import it.polimi.ingsw.client.ui.UiControllerInterface;
+import it.polimi.ingsw.utils.networking.Transmittable;
+import it.polimi.ingsw.utils.networking.transmittables.StatusMessage;
 import javafx.animation.FadeTransition;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -10,10 +14,13 @@ import javafx.scene.control.ListView;
 import javafx.scene.layout.StackPane;
 import javafx.util.Duration;
 
-public class GameCreationGUIController extends AbstractGUIController {
+public class GameCreationGUIController extends AbstractGUIController implements UiControllerInterface {
 
     private static String nickname;
     private int numberOfPlayers;
+    //non sapervo come trattare il metodo della setCreationGame questa
+    //cosa è da sistemare
+    private ActionEvent tempActionEvent;
 
     @FXML
     private Label nicknameLabel;
@@ -50,8 +57,28 @@ public class GameCreationGUIController extends AbstractGUIController {
         }
 
         else{
-            if (UIController.getInstance().setCreation(numberOfPlayers)) change(ScreenName.LOBBY, actionEvent);
+            //chiedo al server di creare una nuova partita
+            tempActionEvent = actionEvent;
+            UIController.getInstance().setCreation(this, numberOfPlayers);
         }
 
+    }
+
+    public void handleSetCountConfirmation(boolean success){
+        if(success){
+            change(ScreenName.LOBBY, tempActionEvent);
+        }else{
+            //messaggio d'errore a video
+        }
+    }
+    @Override
+    public void handleMessage(Transmittable message) {
+        if(message instanceof StatusMessage){
+            StatusMessage status = (StatusMessage) message;
+            if(status.equals(StatusMessage.OK_COUNT)){
+                //ho ricevuto l'ok dal server
+                handleSetCountConfirmation(true);
+            }
+        }
     }
 }

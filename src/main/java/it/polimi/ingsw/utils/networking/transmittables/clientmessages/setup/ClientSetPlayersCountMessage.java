@@ -28,7 +28,7 @@ public class ClientSetPlayersCountMessage implements ClientMessage, ServerHandle
 
         //the player is able to set the value
         if(status){
-            connection.send(StatusMessage.OK);
+            connection.send(StatusMessage.OK_COUNT);
         }else{
             //player count has already been set
             connection.send(StatusMessage.CLIENT_ERROR);

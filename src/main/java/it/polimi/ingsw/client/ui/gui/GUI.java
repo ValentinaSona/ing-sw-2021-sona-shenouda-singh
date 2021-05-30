@@ -1,5 +1,6 @@
 package it.polimi.ingsw.client.ui.gui;
 
+import it.polimi.ingsw.client.ui.Ui;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -10,7 +11,11 @@ import java.io.File;
 import java.net.URL;
 
 
-public class GUI extends Application {
+public class GUI extends Application implements Ui {
+
+    public void start(){
+        launch();
+    }
 
     @Override
     public void start(Stage primaryStage) throws Exception{

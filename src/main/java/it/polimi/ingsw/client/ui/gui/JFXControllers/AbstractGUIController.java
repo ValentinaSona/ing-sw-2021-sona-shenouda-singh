@@ -1,5 +1,6 @@
 package it.polimi.ingsw.client.ui.gui.JFXControllers;
 
+import it.polimi.ingsw.utils.networking.transmittables.servermessages.ServerMessage;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -49,5 +50,4 @@ public abstract class AbstractGUIController {
             scene.getStylesheets().add("css/" + css);
         }
     }
-
 }

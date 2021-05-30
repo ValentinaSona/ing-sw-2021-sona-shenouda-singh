@@ -1,4 +1,6 @@
 package it.polimi.ingsw.client.modelview;
 
-public class FaithTrackView {
+import java.io.Serializable;
+
+public class FaithTrackView implements Serializable {
 }
