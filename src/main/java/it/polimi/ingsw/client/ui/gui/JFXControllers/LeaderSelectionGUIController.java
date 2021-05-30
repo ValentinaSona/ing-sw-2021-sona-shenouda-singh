@@ -1,8 +1,11 @@
 package it.polimi.ingsw.client.ui.gui.JFXControllers;
 
+import it.polimi.ingsw.client.ui.UIController;
+import it.polimi.ingsw.client.ui.UiControllerInterface;
 import it.polimi.ingsw.client.ui.gui.LeaderCardSelection;
 import it.polimi.ingsw.server.model.LeaderCard;
 import it.polimi.ingsw.server.model.LeaderCardsKeeper;
+import it.polimi.ingsw.utils.networking.Transmittable;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
@@ -13,8 +16,9 @@ import javafx.scene.layout.GridPane;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
-public class LeaderSelectionGUIController extends AbstractGUIController {
+public class LeaderSelectionGUIController extends AbstractGUIController implements UiControllerInterface {
 
     private List<LeaderCardSelection> cardList;
     private int selectedCards;
@@ -49,9 +53,11 @@ public class LeaderSelectionGUIController extends AbstractGUIController {
                     selectedCards--;
                 }
                 else {
-                    grid.add(cardList.get(index).getSelection(), index, 0);
-                    cardList.get(index).setSelected(true);
-                    selectedCards++;
+                    if (selectedCards < 2) {
+                        grid.add(cardList.get(index).getSelection(), index, 0);
+                        cardList.get(index).setSelected(true);
+                        selectedCards++;
+                    }
                 }
             });
         }
@@ -59,10 +65,12 @@ public class LeaderSelectionGUIController extends AbstractGUIController {
     }
 
     public void confirmLeader(ActionEvent actionEvent) {
-        if (selectedCards > 2) {
-            choose.setOpacity(0);
-            moreThan2.setOpacity(1);
-        }
-        else if (selectedCards == 2) change(ScreenName.PERSONAL_BOARD, actionEvent);
+        if (selectedCards == 2) UIController.getInstance().chosenLeader(this,
+                cardList.stream().filter(LeaderCardSelection::isSelected).map(LeaderCardSelection::getCard).collect(Collectors.toList()));
     }
+
+    public void handleLeaderConfirmation() {}
+
+    @Override
+    public void handleMessage(Transmittable message) { }
 }

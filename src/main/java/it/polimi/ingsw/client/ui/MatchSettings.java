@@ -9,6 +9,9 @@ public class MatchSettings {
     private String clientNickname;
     private List<String> joiningPlayers;
 
+    private Double screenSizeX;
+    private Double screenSizeY;
+
     private static MatchSettings singleton;
 
     public static MatchSettings getInstance() {
@@ -42,5 +45,10 @@ public class MatchSettings {
 
     public List<String> getJoiningPlayers() {
         return joiningPlayers;
+    }
+
+    public void setScreenSize (Double x, Double y) {
+        screenSizeX = x;
+        screenSizeY = y;
     }
 }

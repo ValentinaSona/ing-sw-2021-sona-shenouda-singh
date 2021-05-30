@@ -10,17 +10,14 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.control.ListView;
 import javafx.scene.layout.StackPane;
 import javafx.util.Duration;
 
 public class GameCreationGUIController extends AbstractGUIController implements UiControllerInterface {
 
-    private static String nickname;
     private int numberOfPlayers;
     //non sapervo come trattare il metodo della setCreationGame questa
     //cosa è da sistemare
-    private ActionEvent tempActionEvent;
 
     @FXML
     private Label nicknameLabel;
@@ -34,17 +31,12 @@ public class GameCreationGUIController extends AbstractGUIController implements 
     @FXML
     private void initialize() {
         numberOfPlayers = 0;
-        nicknameLabel.setText(nickname);
+        nicknameLabel.setText(MatchSettings.getInstance().getClientNickname());
         FadeTransition fade = new FadeTransition(Duration.millis(300), creationPanel);
         fade.setFromValue(0);
         fade.setToValue(1);
         fade.play();
     }
-
-    public static void setNickname(String nickname) {
-        GameCreationGUIController.nickname = nickname;
-    }
-
 
     public void numSelected(ActionEvent actionEvent) {
         numberOfPlayers = Integer.parseInt(((Button)actionEvent.getSource()).getText());
@@ -58,7 +50,6 @@ public class GameCreationGUIController extends AbstractGUIController implements 
 
         else{
             //chiedo al server di creare una nuova partita
-            tempActionEvent = actionEvent;
             UIController.getInstance().setCreation(this, numberOfPlayers);
         }
 
@@ -66,7 +57,7 @@ public class GameCreationGUIController extends AbstractGUIController implements 
 
     public void handleSetCountConfirmation(boolean success){
         if(success){
-            change(ScreenName.LOBBY, tempActionEvent);
+            change(ScreenName.LOBBY);
         }else{
             //messaggio d'errore a video
         }

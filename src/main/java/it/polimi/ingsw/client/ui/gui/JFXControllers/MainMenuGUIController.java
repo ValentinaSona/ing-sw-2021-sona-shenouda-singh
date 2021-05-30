@@ -1,7 +1,9 @@
 package it.polimi.ingsw.client.ui.gui.JFXControllers;
 
+import it.polimi.ingsw.client.ui.MatchSettings;
 import it.polimi.ingsw.client.ui.UIController;
 import it.polimi.ingsw.client.ui.UiControllerInterface;
+import it.polimi.ingsw.client.ui.gui.GUIHelper;
 import it.polimi.ingsw.utils.networking.Transmittable;
 import it.polimi.ingsw.utils.networking.transmittables.StatusMessage;
 import javafx.animation.Interpolator;
@@ -21,12 +23,6 @@ import java.io.IOException;
 
 public class MainMenuGUIController extends AbstractGUIController implements UiControllerInterface {
 
-    private int numberOfPlayers = 0;
-    private String nickname;
-    //non sapervo come trattare il metodo della setCreationGame questa
-    //cosa è da sistemare
-    private ActionEvent tempActionEvent;
-
     @FXML
     private TextField nicknameField;
     @FXML
@@ -45,23 +41,26 @@ public class MainMenuGUIController extends AbstractGUIController implements UiCo
     private StackPane mainPane;
 
     public void goToMulti(MouseEvent mouseEvent) {
-        change(ScreenName.MULTIPLAYER, mouseEvent);
+        change(ScreenName.MULTIPLAYER);
     }
 
     public void joinGame(MouseEvent mouseEvent) {
-        change(ScreenName.JOIN_GAME, mouseEvent);
+        change(ScreenName.JOIN_GAME);
     }
 
     public void backToMain(MouseEvent mouseEvent) {
-        change(ScreenName.MAIN_MENU, mouseEvent);
+        change(ScreenName.MAIN_MENU);
     }
 
     public void backToMulti(MouseEvent mouseEvent) {
-        change(ScreenName.MULTIPLAYER, mouseEvent);
+        change(ScreenName.MULTIPLAYER);
+    }
+
+    @FXML
+    public void initialize() {
     }
 
     public void goToJoin(ActionEvent actionEvent) {
-        tempActionEvent = actionEvent;
         if (nicknameField.getText().isEmpty()) emptyNickname.setOpacity(1);
         else {
             emptyNickname.setOpacity(0);
@@ -93,7 +92,8 @@ public class MainMenuGUIController extends AbstractGUIController implements UiCo
             nicknameField.setEditable(true);
         }
         else {
-            nickname = nicknameField.getText();
+            String nickname = nicknameField.getText();
+            MatchSettings.getInstance().setClientNickname(nicknameField.getText());
             if(nickname.equals("a nickname") || nickname.equals("a Nickname") ||
                     nickname.equals("Nickname") || nickname.equals("nickname"))
                 party.setOpacity(1);
@@ -122,9 +122,7 @@ public class MainMenuGUIController extends AbstractGUIController implements UiCo
 
         translate.setByY(-120);
         translate.setOnFinished(e -> {
-            GameCreationGUIController.setNickname(nickname);
-            //da sistemare l'uso di tempActionEvent vedi sopra il commento
-            change(ScreenName.CREATION, tempActionEvent);
+            change(ScreenName.CREATION);
         });
         translate.play();
     }
@@ -141,15 +139,15 @@ public class MainMenuGUIController extends AbstractGUIController implements UiCo
     }
 
     public void goToOptions(MouseEvent mouseEvent) {
-        change(ScreenName.OPTIONS, mouseEvent);
+        change(ScreenName.OPTIONS);
     }
 
     public void goToSingleplayer(MouseEvent mouseEvent) {
-        change(ScreenName.SINGLEPLAYER, mouseEvent);
+        change(ScreenName.SINGLEPLAYER);
     }
 
     public void goToCredits(MouseEvent mouseEvent) {
-        change(ScreenName.CREDITS, mouseEvent);
+        change(ScreenName.CREDITS);
     }
 
     @Override

@@ -2,25 +2,20 @@ package it.polimi.ingsw.client.ui.gui.JFXControllers;
 
 import it.polimi.ingsw.client.ui.MatchSettings;
 import it.polimi.ingsw.client.ui.UIController;
+import it.polimi.ingsw.client.ui.UiControllerInterface;
+import it.polimi.ingsw.utils.networking.Transmittable;
 import javafx.animation.*;
 import javafx.fxml.FXML;
-import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
-import javafx.scene.effect.ColorAdjust;
-import javafx.scene.effect.GaussianBlur;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.StackPane;
-import javafx.scene.paint.Color;
 import javafx.scene.transform.Rotate;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
-import java.util.concurrent.TimeUnit;
-
-
-public class LobbyGUIController extends AbstractGUIController {
+public class LobbyGUIController extends AbstractGUIController implements UiControllerInterface {
 
     Timeline timeline;
 
@@ -75,10 +70,15 @@ public class LobbyGUIController extends AbstractGUIController {
             starting.setOpacity(1);
             Stage stage = (Stage) mainPane.getScene().getWindow();
             stage.setMaximized(true);
-            change(ScreenName.LEADER_SELECTION, mouseEvent);
+            change(ScreenName.LEADER_SELECTION);
 
         }
 
         updatePlayersHeader();
+    }
+
+    @Override
+    public void handleMessage(Transmittable message) {
+
     }
 }

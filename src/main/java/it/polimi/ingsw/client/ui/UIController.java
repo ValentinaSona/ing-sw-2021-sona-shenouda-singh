@@ -1,6 +1,7 @@
 package it.polimi.ingsw.client.ui;
 
 import it.polimi.ingsw.client.Client;
+import it.polimi.ingsw.server.model.LeaderCard;
 import it.polimi.ingsw.utils.networking.Connection;
 import it.polimi.ingsw.utils.networking.Transmittable;
 import it.polimi.ingsw.utils.networking.transmittables.clientmessages.setup.ClientJoinLobbyMessage;
@@ -10,6 +11,7 @@ import it.polimi.ingsw.utils.observer.LambdaObserver;
 
 import java.io.IOException;
 import java.net.Socket;
+import java.util.List;
 
 /**
  * This should be a universal controller called by the ui
@@ -59,6 +61,8 @@ public class UIController implements LambdaObserver{
         MatchSettings.getInstance().addPlayer(MatchSettings.getInstance().getClientNickname());
 
     }
+    // Metodo che viene chiamato dalla UI quando il giocatore ha scelto le 2 leader cards da tenere
+    public void chosenLeader(UiControllerInterface controller, List<LeaderCard> chosenCards) {}
 
     public String getClientNickname() {
         return  MatchSettings.getInstance().getClientNickname();

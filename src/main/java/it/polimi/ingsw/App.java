@@ -19,15 +19,10 @@ public class App
     private static final Logger LOGGER = Logger.getLogger(App.class.getName());
     public static void main( String[] args ) throws IOException {
         LOGGER.log(Level.INFO, "Logger initialized");
-        switch (args[0]){
-            case "gui":
-                new Client(new GUI()).getChosenUi().start();
-                break;
-            case "server":
-                new Server(9000).start();
-                break;
-            default:
-                System.out.println("Input non valido");
+        switch (args[0]) {
+            case "gui" -> new Client(new GUI()).getChosenUi().start();
+            case "server" -> new Server(9000).start();
+            default -> System.out.println("Input non valido");
         }
 
     }

@@ -80,7 +80,7 @@ public class Connection extends LambdaObservable<Transmittable> implements Runna
     public synchronized void run(){
         while (isActive()){
             try{
-                System.out.println("InputStreaam .."+inputStream.available());
+                System.out.println("InputStream .."+inputStream.available());
                 Transmittable inputObject = (Transmittable) inputStream.readObject();
                 System.out.println("Ho ricevuto un messaggio"+ inputObject);
                 this.notify(inputObject);

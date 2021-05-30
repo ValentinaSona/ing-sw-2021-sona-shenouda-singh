@@ -1,5 +1,6 @@
 package it.polimi.ingsw.client.ui.gui.JFXControllers;
 
+import it.polimi.ingsw.client.ui.gui.GUIHelper;
 import it.polimi.ingsw.utils.networking.transmittables.servermessages.ServerMessage;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -21,21 +22,10 @@ public abstract class AbstractGUIController {
     @FXML
     private StackPane mainPane;
 
-    public void change (ScreenName screen, MouseEvent event) {
+    public void change (ScreenName screen) {
 
-        Scene scene1 = ((Node) event.getSource()).getScene();
+        Scene scene = GUIHelper.getInstance().getCurrentScene();
 
-        changeScene(scene1, screen);
-    }
-
-    public void change (ScreenName screen, ActionEvent event) {
-
-        Scene scene1 = ((Node) event.getSource()).getScene();
-
-        changeScene(scene1, screen);
-    }
-
-    private void changeScene (Scene scene, ScreenName screen) {
         try {
             URL url = new File("src/main/resources/fxml/" + screen.fxml()).toURI().toURL();
             root = FXMLLoader.load(url);
