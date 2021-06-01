@@ -1,5 +1,7 @@
 package it.polimi.ingsw.server.model;
 
+import it.polimi.ingsw.client.modelview.DevMarketView;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -64,7 +66,7 @@ public class DevelopmentCardsMarketAbility implements DevMarket {
         return cardsMarket.getDecks();
     }
 
-    public DevelopmentCard[][] getVisible() {
+    public DevMarketView getVisible() {
         return cardsMarket.getVisible();
     }
 

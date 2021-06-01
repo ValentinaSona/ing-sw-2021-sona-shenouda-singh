@@ -1,5 +1,7 @@
 package it.polimi.ingsw.server.model;
 
+import it.polimi.ingsw.client.modelview.DevMarketView;
+
 import java.util.HashMap;
 import java.util.List;
 
@@ -12,7 +14,7 @@ public interface DevMarket {
     DevelopmentCard getDevelopmentCard(Player player, int row, int col);
     void shuffle();
     DevelopmentCardDeck[][] getDecks();
-    DevelopmentCard[][] getVisible();
+    DevMarketView getVisible();
     DevMarket addAbility(Resource discount, Player player);
     HashMap<Player, List<Resource>> getMap();
 

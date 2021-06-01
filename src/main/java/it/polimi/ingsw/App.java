@@ -20,7 +20,13 @@ public class App
     public static void main( String[] args ) throws IOException {
         LOGGER.log(Level.INFO, "Logger initialized");
         switch (args[0]) {
-            case "gui" -> new Client(new GUI()).getChosenUi().start();
+            case "gui" -> {
+                Client client = new Client(new GUI());
+                //mi metto semplicemente ad aspettare che vengano messi messaggi nella coda
+                //per dire al uiController di processarli
+                new Thread(()->client.run()).start();
+                client.getChosenUi().start();
+            }
             case "server" -> new Server(9000).start();
             default -> System.out.println("Input non valido");
         }

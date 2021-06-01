@@ -141,7 +141,9 @@ public class Controller implements LambdaObserver {
         startingPlayer.toggleMainAction();
 
         model.notify(new ServerStartSetupTurnMessage(
-                model.getUserFromPlayer(startingPlayer)
+                model.getUserFromPlayer(startingPlayer),
+                model.getMarketInstance().getVisible(),
+                model.getDevelopmentCardsMarket().getVisible()
         ));
     }
 

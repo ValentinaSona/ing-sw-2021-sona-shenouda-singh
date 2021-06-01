@@ -1,8 +1,9 @@
 package it.polimi.ingsw.server.model;
 
+import java.io.Serializable;
 import java.util.Objects;
 
-public class Resource {
+public class Resource implements Serializable {
 
 
 	private int quantity;

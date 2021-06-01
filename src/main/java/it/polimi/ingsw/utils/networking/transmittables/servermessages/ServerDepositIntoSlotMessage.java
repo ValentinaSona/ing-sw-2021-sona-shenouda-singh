@@ -3,7 +3,6 @@ package it.polimi.ingsw.utils.networking.transmittables.servermessages;
 import it.polimi.ingsw.client.Client;
 import it.polimi.ingsw.client.modelview.SlotView;
 import it.polimi.ingsw.client.modelview.StrongboxView;
-import it.polimi.ingsw.client.modelview.WarehouseView;
 import it.polimi.ingsw.server.controller.User;
 import it.polimi.ingsw.utils.networking.ClientHandleable;
 

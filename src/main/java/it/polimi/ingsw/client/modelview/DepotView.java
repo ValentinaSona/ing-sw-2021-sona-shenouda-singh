@@ -19,8 +19,9 @@ public class DepotView implements Serializable {
     public Id getId(){
         return id;
     }
+
     public Resource getResource() {
-        return new Resource(resource.getQuantity(), resource.getResourceType());
+        return resource;
     }
 
     public int getCapacity() {

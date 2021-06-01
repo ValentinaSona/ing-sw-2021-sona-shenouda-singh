@@ -1,6 +1,8 @@
 package it.polimi.ingsw.server.model;
 
-public class Production {
+import java.io.Serializable;
+
+public class Production implements Serializable {
 
 	private final Resource[] productionCost;
 

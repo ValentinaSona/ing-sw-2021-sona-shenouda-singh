@@ -2,16 +2,21 @@ package it.polimi.ingsw.client.ui;
 
 import it.polimi.ingsw.client.Client;
 import it.polimi.ingsw.server.model.LeaderCard;
+import it.polimi.ingsw.server.view.ViewClientMessage;
 import it.polimi.ingsw.utils.networking.Connection;
+import it.polimi.ingsw.utils.networking.ControllerHandleable;
 import it.polimi.ingsw.utils.networking.Transmittable;
 import it.polimi.ingsw.utils.networking.transmittables.clientmessages.setup.ClientJoinLobbyMessage;
 import it.polimi.ingsw.utils.networking.transmittables.clientmessages.setup.ClientSetNicknameMessage;
 import it.polimi.ingsw.utils.networking.transmittables.clientmessages.setup.ClientSetPlayersCountMessage;
 import it.polimi.ingsw.utils.observer.LambdaObserver;
 
+import javax.swing.tree.TreeNode;
 import java.io.IOException;
 import java.net.Socket;
 import java.util.List;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.LinkedBlockingDeque;
 
 /**
  * This should be a universal controller called by the ui
@@ -22,8 +27,7 @@ public class UIController implements LambdaObserver{
     private static UIController singleton;
     private Connection clientConnection;
     private UiControllerInterface currentController;
-    //devo capire come  passargli il client
-    private Client client;
+    private final BlockingQueue<Transmittable> serverMessages= new LinkedBlockingDeque<>();
 
     public static UIController getInstance() {
         if (singleton == null) singleton = new UIController();
@@ -41,7 +45,6 @@ public class UIController implements LambdaObserver{
         clientConnection.addObserver(this, (observer, transmittable)->{
             ((UIController) observer).update(transmittable);
         });
-
         //mando il messaggio
         Thread t = new Thread(clientConnection);
         t.start();
@@ -77,6 +80,20 @@ public class UIController implements LambdaObserver{
     }
 
     public void update(Transmittable serverMessage){
-        currentController.handleMessage(serverMessage);
+        try{
+            this.serverMessages.put(serverMessage);
+        }catch (InterruptedException e){
+            Thread.currentThread().interrupt();
+        }
     }
+
+    public void processServerMessage(){
+        try{
+            Transmittable message = this.serverMessages.take();
+            currentController.handleMessage(message);
+        }catch (InterruptedException e){
+            Thread.currentThread().interrupt();
+        }
+    }
+
 }

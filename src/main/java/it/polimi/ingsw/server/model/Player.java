@@ -3,7 +3,6 @@ package it.polimi.ingsw.server.model;
 import it.polimi.ingsw.client.modelview.FaithTrackView;
 import it.polimi.ingsw.client.modelview.SlotView;
 import it.polimi.ingsw.client.modelview.StrongboxView;
-import it.polimi.ingsw.client.modelview.WarehouseView;
 import it.polimi.ingsw.utils.networking.Transmittable;
 import it.polimi.ingsw.utils.observer.LambdaObservable;
 

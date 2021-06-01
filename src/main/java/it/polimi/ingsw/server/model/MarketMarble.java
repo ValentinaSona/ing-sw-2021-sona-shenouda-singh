@@ -1,6 +1,8 @@
 package it.polimi.ingsw.server.model;
 
-public enum MarketMarble {
+import java.io.Serializable;
+
+public enum MarketMarble implements Serializable {
 
 	RED, BLUE, PURPLE, YELLOW, WHITE, GREY;
 

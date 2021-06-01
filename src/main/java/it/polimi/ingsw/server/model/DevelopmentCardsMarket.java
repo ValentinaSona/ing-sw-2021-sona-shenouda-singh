@@ -1,5 +1,7 @@
 package it.polimi.ingsw.server.model;
 
+import it.polimi.ingsw.client.modelview.DevMarketView;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -58,7 +60,9 @@ public class DevelopmentCardsMarket implements  DevMarket {
 	 * @return a 2d-array containing all the cards on top of the decks
 	 * if the decks[i][j] is empty view[i][j] = null
 	 */
-	public DevelopmentCard[][] getVisible() {
+
+	public DevMarketView getVisible() {
+
 		DevelopmentCard[][] view = new DevelopmentCard[3][4];
 
 		for(int i = 0; i < 3; i++) {
@@ -72,7 +76,7 @@ public class DevelopmentCardsMarket implements  DevMarket {
 			}
 		}
 
-		return view;
+		return new DevMarketView(view);
 	}
 
 	/**
