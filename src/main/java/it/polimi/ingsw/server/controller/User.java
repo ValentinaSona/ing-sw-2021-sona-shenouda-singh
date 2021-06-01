@@ -1,6 +1,8 @@
 package it.polimi.ingsw.server.controller;
 
-public class User {
+import java.io.Serializable;
+
+public class User implements Serializable {
     public String nickName;
 
     public User(String nickName){

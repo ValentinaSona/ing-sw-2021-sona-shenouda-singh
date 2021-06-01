@@ -14,6 +14,7 @@ import it.polimi.ingsw.utils.observer.LambdaObserver;
 import javax.swing.tree.TreeNode;
 import java.io.IOException;
 import java.net.Socket;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingDeque;
@@ -36,10 +37,13 @@ public class UIController implements LambdaObserver{
 
     private UIController() {};
 
+    public void setCurrentController(UiControllerInterface currentController) {
+        this.currentController = currentController;
+    }
+
     public void sendNickname(UiControllerInterface controller, String nickname, String host, int port) throws IOException {
-        System.out.println("Voglio mandare nickname..");
         currentController = controller;
-        //MatchSettings.getInstance().setClientNickname(nickname);
+        MatchSettings.getInstance().setClientNickname(nickname);
         Socket clientSocket = new Socket(host, port);
         clientConnection = new Connection(clientSocket);
         clientConnection.addObserver(this, (observer, transmittable)->{
@@ -52,7 +56,6 @@ public class UIController implements LambdaObserver{
     }
 
     public void joinLobby(UiControllerInterface controller) {
-        System.out.println("Voglio joinare lobby..");
         currentController = controller;
         clientConnection.send(new ClientJoinLobbyMessage());
     }
@@ -60,24 +63,11 @@ public class UIController implements LambdaObserver{
     public void setCreation(UiControllerInterface controller, int playersNum) {
         currentController = controller;
         clientConnection.send(new ClientSetPlayersCountMessage(playersNum));
-        MatchSettings.getInstance().setPlayersNum(playersNum);
-        MatchSettings.getInstance().addPlayer(MatchSettings.getInstance().getClientNickname());
+        MatchSettings.getInstance().setTotalUsers(playersNum);
 
     }
     // Metodo che viene chiamato dalla UI quando il giocatore ha scelto le 2 leader cards da tenere
     public void chosenLeader(UiControllerInterface controller, List<LeaderCard> chosenCards) {}
-
-    public String getClientNickname() {
-        return  MatchSettings.getInstance().getClientNickname();
-    }
-
-    public int currentPlayerNum() {
-        return MatchSettings.getInstance().getJoiningPlayers().size();
-    }
-
-    public int totalPlayerNum() {
-        return MatchSettings.getInstance().getPlayersNum();
-    }
 
     public void update(Transmittable serverMessage){
         try{

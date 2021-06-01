@@ -73,7 +73,7 @@ public class MainMenuGUIController extends AbstractGUIController implements UiCo
             joinButton.setDisable(true);
 
             try {
-                UIController.getInstance().sendNickname(this, nicknameField.getText(),"127.0.0.1", 9000);
+                UIController.getInstance().sendNickname(this, nicknameField.getText(),"versus.ddnsfree.com", 10000);
             } catch (IOException e) {
                 //fallita l'istanziazione della socket porta o url invalidi
                 e.printStackTrace();

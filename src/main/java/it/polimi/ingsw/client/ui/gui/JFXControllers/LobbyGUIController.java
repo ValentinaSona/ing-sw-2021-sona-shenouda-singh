@@ -3,7 +3,10 @@ package it.polimi.ingsw.client.ui.gui.JFXControllers;
 import it.polimi.ingsw.client.ui.MatchSettings;
 import it.polimi.ingsw.client.ui.UIController;
 import it.polimi.ingsw.client.ui.UiControllerInterface;
+import it.polimi.ingsw.server.controller.User;
 import it.polimi.ingsw.utils.networking.Transmittable;
+import it.polimi.ingsw.utils.networking.transmittables.servermessages.ServerSetupGameMessage;
+import it.polimi.ingsw.utils.networking.transmittables.servermessages.ServerUpdateLobbyMessage;
 import javafx.animation.*;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
@@ -14,6 +17,8 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.transform.Rotate;
 import javafx.stage.Stage;
 import javafx.util.Duration;
+
+import java.util.ArrayList;
 
 public class LobbyGUIController extends AbstractGUIController implements UiControllerInterface {
 
@@ -32,7 +37,8 @@ public class LobbyGUIController extends AbstractGUIController implements UiContr
 
     @FXML
     private void initialize() {
-        players.getItems().add(UIController.getInstance().getClientNickname());
+        UIController.getInstance().setCurrentController(this);
+        players.getItems().add(MatchSettings.getInstance().getClientNickname());
         updatePlayersHeader();
 
         starting.setOpacity(0);
@@ -52,33 +58,41 @@ public class LobbyGUIController extends AbstractGUIController implements UiContr
     }
 
     private void updatePlayersHeader() {
-        numPlayersLabel.setText(UIController.getInstance().currentPlayerNum()
-                + "/" + UIController.getInstance().totalPlayerNum()
+        numPlayersLabel.setText(MatchSettings.getInstance().getCurrentUsersNum()
+                + "/" + MatchSettings.getInstance().getTotalUsers()
                 + " players");
     }
 
-    // Method exclusively for testing purposes
-    public void addPlaceholder(MouseEvent mouseEvent) {
-        if (UIController.getInstance().currentPlayerNum() < UIController.getInstance().totalPlayerNum())
-            players.getItems().add("Placeholder");
+    private void handleUpdateLobbyUser(ArrayList<User> lobbyUsers) {
+        players.getItems().clear();
+        MatchSettings.getInstance().setJoiningUsers(lobbyUsers);
 
-        MatchSettings.getInstance().addPlayer("Placeholder");
-
-        if (UIController.getInstance().currentPlayerNum() == UIController.getInstance().totalPlayerNum()) {
-            timeline.stop();
-            loading.setOpacity(0);
-            starting.setOpacity(1);
-            Stage stage = (Stage) mainPane.getScene().getWindow();
-            stage.setMaximized(true);
-            change(ScreenName.LEADER_SELECTION);
-
+        for(User u : lobbyUsers){
+            players.getItems().add(u.getNickName());
         }
 
         updatePlayersHeader();
     }
 
+    private void handleStartGameConfirmation(ArrayList<User> user){
+        timeline.stop();
+        loading.setOpacity(0);
+        starting.setOpacity(1);
+        Stage stage = (Stage) mainPane.getScene().getWindow();
+        stage.setMaximized(true);
+        change(ScreenName.LEADER_SELECTION);
+    }
+
     @Override
     public void handleMessage(Transmittable message) {
-
+        if(message instanceof ServerSetupGameMessage){
+            ServerSetupGameMessage  serverMessage = (ServerSetupGameMessage) message;
+            handleStartGameConfirmation(serverMessage.getUsers());
+        }else if(message instanceof ServerUpdateLobbyMessage){
+            ServerUpdateLobbyMessage serverMessage = (ServerUpdateLobbyMessage) message;
+            handleUpdateLobbyUser(serverMessage.getLobbyUsers());
+        }
     }
+
+
 }

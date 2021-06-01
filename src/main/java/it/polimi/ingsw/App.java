@@ -27,7 +27,7 @@ public class App
                 new Thread(()->client.run()).start();
                 client.getChosenUi().start();
             }
-            case "server" -> new Server(9000).start();
+            case "server" -> new Server(10000).start();
             default -> System.out.println("Input non valido");
         }
 

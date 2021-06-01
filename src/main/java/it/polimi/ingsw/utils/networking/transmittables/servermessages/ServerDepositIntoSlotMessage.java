@@ -1,6 +1,7 @@
 package it.polimi.ingsw.utils.networking.transmittables.servermessages;
 
 import it.polimi.ingsw.client.Client;
+import it.polimi.ingsw.client.modelview.DepotView;
 import it.polimi.ingsw.client.modelview.SlotView;
 import it.polimi.ingsw.client.modelview.StrongboxView;
 import it.polimi.ingsw.server.controller.User;
@@ -9,12 +10,12 @@ import it.polimi.ingsw.utils.networking.ClientHandleable;
 import java.util.ArrayList;
 
 public class ServerDepositIntoSlotMessage implements ServerMessage, ClientHandleable {
-    private final WarehouseView warehouseView;
+    private final ArrayList<DepotView> warehouseView;
     private final StrongboxView strongBoxView;
     private final ArrayList<SlotView> slotViews;
     private final User user;
 
-    public ServerDepositIntoSlotMessage(WarehouseView warehouseView, StrongboxView strongBoxView, ArrayList<SlotView> slotViews, User user){
+    public ServerDepositIntoSlotMessage(ArrayList<DepotView> warehouseView, StrongboxView strongBoxView, ArrayList<SlotView> slotViews, User user){
         this.slotViews = slotViews;
         this.strongBoxView = strongBoxView;
         this.warehouseView = warehouseView;
@@ -25,7 +26,7 @@ public class ServerDepositIntoSlotMessage implements ServerMessage, ClientHandle
         return user;
     }
 
-    public WarehouseView getWarehouseView() {
+    public ArrayList<DepotView> getWarehouseView() {
         return warehouseView;
     }
 

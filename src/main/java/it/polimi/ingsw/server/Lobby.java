@@ -1,7 +1,11 @@
 package it.polimi.ingsw.server;
 
+import it.polimi.ingsw.server.controller.User;
 import it.polimi.ingsw.utils.networking.Connection;
 import it.polimi.ingsw.utils.networking.transmittables.StatusMessage;
+import it.polimi.ingsw.utils.networking.transmittables.servermessages.ServerSetupUserMessage;
+import it.polimi.ingsw.utils.networking.transmittables.servermessages.ServerUpdateLobbyMessage;
+
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -121,9 +125,10 @@ public class Lobby {
             lobbyRequestingConnections.add(connection);
             System.out.println("si");
             if(lobbyRequestingConnections.getFirst() != connection){
-                //invio messaggio di join della lobby
-                System.out.println("no");
+                //informing the client he is not the first one
                 connection.send(StatusMessage.JOIN_LOBBY);
+                //updates the client about the number of player in the lobby
+                updateMessage();
             }
             lobbyRequestingConnections.notifyAll();
         }
@@ -207,6 +212,16 @@ public class Lobby {
                     Thread.currentThread().interrupt();
                 }
             }
+        }
+    }
+
+    private void updateMessage(){
+        ArrayList<User> lobbyUsers = new ArrayList<>();
+        for(Connection con: registeredNicknamesMap.keySet()){
+            lobbyUsers.add(new User(registeredNicknamesMap.get(con)));
+        }
+        for(Connection con : registeredNicknamesMap.keySet()){
+            con.send(new ServerUpdateLobbyMessage(lobbyUsers));
         }
     }
 

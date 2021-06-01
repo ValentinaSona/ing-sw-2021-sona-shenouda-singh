@@ -59,7 +59,7 @@ public class PlayerView {
         warehouse.add(new DepotView(Id.DEPOT_2, null,2));
         warehouse.add(new DepotView(Id.DEPOT_3, null, 3));
 
-        slots.add(new BoardProductionView(Id.BOARD_PRODUCTION));
+        slots.add(new BoardProductionView(Id.BOARD_PRODUCTION, false));
         slots.add(new DevelopmentCardSlotView(Id.SLOT_1));
         slots.add(new DevelopmentCardSlotView(Id.SLOT_2));
         slots.add(new DevelopmentCardSlotView(Id.SLOT_3));

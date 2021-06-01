@@ -16,7 +16,7 @@
             <center>
                 <StackPane prefHeight="150.0" prefWidth="200.0" BorderPane.alignment="CENTER">
                     <children>
-                        <Label fx:id="numPlayersLabel" onMouseReleased="#addPlaceholder" styleClass="normalLabel" text="I'm a label" textFill="WHITE">
+                        <Label fx:id="numPlayersLabel"  styleClass="normalLabel" text="I'm a label" textFill="WHITE">
                             <StackPane.margin>
                                 <Insets bottom="350.0" />
                             </StackPane.margin>

@@ -1,13 +1,16 @@
 package it.polimi.ingsw.client.ui;
 
+import it.polimi.ingsw.server.controller.User;
+import org.mockito.internal.util.StringUtil;
+
 import java.util.ArrayList;
 import java.util.List;
 
 public class MatchSettings {
 
-    private int playersNum;
+    private int totalUsers;
     private String clientNickname;
-    private List<String> joiningPlayers;
+    private List<User> joiningPlayers;
 
     private Double screenSizeX;
     private Double screenSizeY;
@@ -20,30 +23,38 @@ public class MatchSettings {
     }
 
     private MatchSettings(){
-        joiningPlayers = new ArrayList<>();
     }
 
     public void setClientNickname(String clientNickname) {
         this.clientNickname = clientNickname;
     }
 
-    public void setPlayersNum(int playersNum) {
-        this.playersNum = playersNum;
+    public void setTotalUsers(int totalUsers) {
+        this.totalUsers = totalUsers;
     }
 
-    public void addPlayer(String player) {
-        if (joiningPlayers.size() < playersNum) joiningPlayers.add(player);
+    public int getTotalUsers() {
+        return totalUsers;
     }
 
-    public int getPlayersNum() {
-        return playersNum;
+    public int getCurrentUsersNum(){
+
+        if(joiningPlayers == null){
+            return 1;
+        }else{
+            return joiningPlayers.size();
+        }
     }
 
     public String getClientNickname() {
         return clientNickname;
     }
 
-    public List<String> getJoiningPlayers() {
+    public void setJoiningUsers(List<User> users){
+        joiningPlayers = users;
+    }
+
+    public List<User> getJoiningUsers() {
         return joiningPlayers;
     }
 

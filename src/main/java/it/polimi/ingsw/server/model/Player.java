@@ -1,5 +1,6 @@
 package it.polimi.ingsw.server.model;
 
+import it.polimi.ingsw.client.modelview.DepotView;
 import it.polimi.ingsw.client.modelview.FaithTrackView;
 import it.polimi.ingsw.client.modelview.SlotView;
 import it.polimi.ingsw.client.modelview.StrongboxView;
@@ -328,7 +329,7 @@ public class Player extends LambdaObservable<Transmittable> {
 	}
 
 	//TODO
-	public WarehouseView getVisibleWarehouse() {
+	public ArrayList<DepotView> getVisibleWarehouse() {
 		return null;
 	}
 

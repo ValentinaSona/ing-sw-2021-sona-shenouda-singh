@@ -1,14 +1,17 @@
 package it.polimi.ingsw.utils.networking.transmittables.servermessages;
 
 import it.polimi.ingsw.client.Client;
+import it.polimi.ingsw.client.modelview.DepotView;
 import it.polimi.ingsw.server.controller.User;
 import it.polimi.ingsw.utils.networking.ClientHandleable;
 
+import java.util.ArrayList;
+
 public class ServerWarehouseMessage implements ServerMessage, ClientHandleable {
-    private final WarehouseView warehouseView;
+    private final ArrayList<DepotView> warehouseView;
     private final User user;
 
-    public ServerWarehouseMessage(WarehouseView warehouseView, User user){
+    public ServerWarehouseMessage(ArrayList<DepotView>  warehouseView, User user){
         this.warehouseView = warehouseView;
         this.user =user;
     }
@@ -17,7 +20,7 @@ public class ServerWarehouseMessage implements ServerMessage, ClientHandleable {
         return user;
     }
 
-    public WarehouseView getWarehouseView() {
+    public ArrayList<DepotView>  getWarehouseView() {
         return warehouseView;
     }
 
