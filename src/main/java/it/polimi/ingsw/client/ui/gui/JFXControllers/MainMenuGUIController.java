@@ -2,7 +2,6 @@ package it.polimi.ingsw.client.ui.gui.JFXControllers;
 
 import it.polimi.ingsw.client.modelview.MatchSettings;
 import it.polimi.ingsw.client.ui.controller.UIController;
-import it.polimi.ingsw.client.ui.controller.MainMenuController;
 import it.polimi.ingsw.utils.networking.transmittables.StatusMessage;
 import javafx.animation.Interpolator;
 import javafx.animation.TranslateTransition;
@@ -19,7 +18,7 @@ import javafx.util.Duration;
 
 import java.io.IOException;
 
-public class MainMenuGUIController extends AbstractGUIController implements MainMenuController {
+public class MainMenuGUIController extends AbstractGUIController {
 
     @FXML
     private TextField nicknameField;

@@ -236,7 +236,7 @@ public class Lobby {
             lobbyUsers.add(new User(registeredNicknamesMap.get(con)));
         }
         for(Connection con : registeredNicknamesMap.keySet()){
-            con.send(new ServerUpdateLobbyMessage(lobbyUsers));
+            con.send(new ServerUpdateLobbyMessage(lobbyUsers, currentLobbyPlayerCount ));
         }
     }
 

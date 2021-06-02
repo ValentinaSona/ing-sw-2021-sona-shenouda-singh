@@ -36,15 +36,14 @@ public class LeaderSelectionGUIController extends AbstractGUIController implemen
 
     @FXML
     public void initialize() {
-        UIController.getInstance().setCurrentController(this);
         selectedCards = 0;
         cardList = new ArrayList<>();
     }
 
     public void handleSetupUserMessage(ServerSetupUserMessage message) {
-        GameView.getInstance().getPlayerFromUser(message.getUser()).setFaithTrackView(message.getFaithTrackView());
         //se è il messaggio è per me faccioo vedere le carte altrimenti salvo i dati che mi servono e attendo
         if(!message.getUser().getNickName().equals(MatchSettings.getInstance().getClientNickname())){
+
             return;
         }
 
@@ -86,15 +85,11 @@ public class LeaderSelectionGUIController extends AbstractGUIController implemen
     }
 
     public void handleSetupActionMessage(ServerSetupActionMessage message){
-        //se il messaggio non è per me vado a modificare solo il warehouse del giocatore corrispondente e poi esco
-        GameView.getInstance().getPlayerFromUser(message.getUser()).setWarehouse(message.getWarehouseView());
         if(!message.getUser().getNickName().equals(MatchSettings.getInstance().getClientNickname())){
+            //model del giocatore corrispondente è stato modificato
             return;
         }
 
-        //se il messaggio è per me vado a settare le leaderCards che ho scelto
-        GameView.getInstance().getPlayerFromUser(message.getUser()).setLeaderCards(message.getChosen());
-        //adesso ho finito il turno di setup e sono in attesa che anche gli altri scelgano le proprie robe
     }
 
     //TODO

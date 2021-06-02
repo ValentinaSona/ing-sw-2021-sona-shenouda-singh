@@ -9,7 +9,6 @@ import it.polimi.ingsw.server.view.RemoteViewHandler;
 import it.polimi.ingsw.utils.networking.transmittables.StatusMessage;
 import it.polimi.ingsw.utils.networking.transmittables.clientmessages.game.ClientEndTurnMessage;
 import it.polimi.ingsw.utils.networking.transmittables.servermessages.ServerSetupUserMessage;
-import it.polimi.ingsw.utils.networking.transmittables.servermessages.ServerStartSetupTurnMessage;
 import it.polimi.ingsw.utils.networking.transmittables.servermessages.ServerStartTurnMessage;
 
 import java.util.ArrayList;

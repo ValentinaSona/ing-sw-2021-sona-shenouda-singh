@@ -2,8 +2,8 @@ package it.polimi.ingsw.utils.networking.transmittables.servermessages;
 
 import it.polimi.ingsw.client.modelview.DevMarketView;
 import it.polimi.ingsw.client.modelview.MarketView;
+import it.polimi.ingsw.client.ui.controller.DispatcherController;
 import it.polimi.ingsw.client.ui.controller.LobbyMenuController;
-import it.polimi.ingsw.client.ui.controller.UiControllerInterface;
 import it.polimi.ingsw.server.controller.User;
 import it.polimi.ingsw.utils.networking.ClientHandleable;
 
@@ -32,16 +32,10 @@ public class ServerSetupGameMessage implements ServerMessage, ClientHandleable {
         return marketView;
     }
 
-    //TODO
+
     @Override
-    public boolean handleMessage(UiControllerInterface handler) {
-        try{
-            ((LobbyMenuController) handler).handleSetupGameMessage(this);
-            return true;
-        }catch (ClassCastException e){
-            //this should never happen
-            e.printStackTrace();
-            return false;
-        }
+    public boolean handleMessage(DispatcherController handler) {
+        handler.handleSetupGame(this);
+        return true;
     }
 }

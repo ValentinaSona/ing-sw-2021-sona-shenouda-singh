@@ -1,6 +1,6 @@
 package it.polimi.ingsw.utils.networking.transmittables.servermessages;
 
-import it.polimi.ingsw.client.ui.controller.UiControllerInterface;
+import it.polimi.ingsw.client.ui.controller.DispatcherController;
 import it.polimi.ingsw.server.controller.User;
 import it.polimi.ingsw.utils.networking.ClientHandleable;
 
@@ -14,7 +14,7 @@ public class ServerChooseWhiteMarblesMessage implements ServerMessage, ClientHan
     }
 
     @Override
-    public boolean handleMessage(UiControllerInterface handler) {
+    public boolean handleMessage(DispatcherController handler) {
         return false;
     }
 }

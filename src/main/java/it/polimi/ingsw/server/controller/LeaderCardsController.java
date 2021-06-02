@@ -10,7 +10,7 @@ import it.polimi.ingsw.utils.networking.transmittables.StatusMessage;
 import it.polimi.ingsw.utils.networking.transmittables.clientmessages.game.ClientActivateSpecialAbilityMessage;
 import it.polimi.ingsw.utils.networking.transmittables.clientmessages.game.ClientThrowLeaderCardMessage;
 import it.polimi.ingsw.utils.networking.transmittables.servermessages.ServerActivateLeaderCardAbilityMessage;
-import it.polimi.ingsw.utils.networking.transmittables.servermessages.ServerThrownLeaderCardMessage;
+import it.polimi.ingsw.utils.networking.transmittables.servermessages.ServerThrowLeaderCardMessage;
 
 import java.util.ArrayList;
 
@@ -82,7 +82,7 @@ public class LeaderCardsController {
         } else {
 
             //LeaderCard targetCard = player.getLeaderCards().get(action.getLeaderId().getValue());
-            model.notify(new ServerThrownLeaderCardMessage(
+            model.notify(new ServerThrowLeaderCardMessage(
                     player.getLeaderCards().get(action.getLeaderId().getValue()),
                     model.getUserFromPlayer(player)
             ));

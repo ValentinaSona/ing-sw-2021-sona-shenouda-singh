@@ -64,7 +64,7 @@ public class LobbyGUIController extends AbstractGUIController implements LobbyMe
 
     public void handleUpdateLobbyMessage(ServerUpdateLobbyMessage message) {
         List<User> lobbyUsers = message.getLobbyUsers();
-        System.out.println("Update numro giocatory"+ message.getLobbyUsers());
+
         players.getItems().clear();
         MatchSettings.getInstance().setJoiningUsers(lobbyUsers);
 
@@ -83,10 +83,6 @@ public class LobbyGUIController extends AbstractGUIController implements LobbyMe
         stage.setMaximized(true);
         change(ScreenName.LEADER_SELECTION);
         //inizio setup del game mentre aspetto di ricevere le leaderCards
-        GameView.getInstance(message.getUsers());
-        GameView.getInstance().setMarketInstance(message.getMarketView());
-        GameView.getInstance().setDevelopmentCardsMarket(message.getDevMarketView());
-        System.out.println("finito il setup");
         //adesso aspetto che sia il mio turno di scegliere le carte leader
     }
 

@@ -1,5 +1,6 @@
 package it.polimi.ingsw.client.ui.gui.JFXControllers;
 
+import it.polimi.ingsw.client.ui.controller.DispatcherController;
 import it.polimi.ingsw.client.ui.controller.UIController;
 import it.polimi.ingsw.client.ui.controller.UiControllerInterface;
 import it.polimi.ingsw.client.ui.gui.GUIHelper;
@@ -18,7 +19,7 @@ public abstract class AbstractGUIController implements UiControllerInterface {
     private Parent root;
 
     public AbstractGUIController(){
-        UIController.getInstance().setCurrentController(this);
+        DispatcherController.getInstance().setCurrentController(this);
     }
     @FXML
     private StackPane mainPane;
