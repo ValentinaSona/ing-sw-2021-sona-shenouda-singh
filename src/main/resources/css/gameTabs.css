@@ -1,0 +1,15 @@
+.gameTab:hover{
+    -fx-background-color: #5a9cf2;
+    -fx-text-fill: white;
+    -fx-font-family: 'Crimson Pro Medium';
+    -fx-font-size: 40px;
+    -fx-background-insets: 0 0 -1 0, 0, 1, 2;
+}
+
+.gameTab {
+    -fx-background-color: rgba(0,0,0,0.5);
+    -fx-text-fill: white;
+    -fx-font-family: 'Crimson Pro Medium';
+    -fx-font-size: 40px;
+    -fx-background-insets: 0 0 -1 0, 0, 1, 2;
+}

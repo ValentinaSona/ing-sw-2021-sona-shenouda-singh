@@ -1,14 +1,15 @@
 package it.polimi.ingsw.client.ui.gui.JFXControllers;
 
-import it.polimi.ingsw.client.modelview.GameView;
+
 import it.polimi.ingsw.client.modelview.MatchSettings;
-import it.polimi.ingsw.client.ui.controller.UIController;
 import it.polimi.ingsw.client.ui.controller.LobbyMenuController;
 import it.polimi.ingsw.server.controller.User;
+
 import it.polimi.ingsw.utils.networking.transmittables.StatusMessage;
 import it.polimi.ingsw.utils.networking.transmittables.servermessages.ServerSetupGameMessage;
 import it.polimi.ingsw.utils.networking.transmittables.servermessages.ServerUpdateLobbyMessage;
 import javafx.animation.*;
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
@@ -63,27 +64,30 @@ public class LobbyGUIController extends AbstractGUIController implements LobbyMe
     }
 
     public void handleUpdateLobbyMessage(ServerUpdateLobbyMessage message) {
-        List<User> lobbyUsers = message.getLobbyUsers();
+        Platform.runLater(() -> {
+            List<User> lobbyUsers = message.getLobbyUsers();
 
-        players.getItems().clear();
-        MatchSettings.getInstance().setJoiningUsers(lobbyUsers);
+            players.getItems().clear();
+            MatchSettings.getInstance().setJoiningUsers(lobbyUsers);
 
-        for(User u : lobbyUsers){
-            players.getItems().add(u.getNickName());
-        }
+            for(User u : lobbyUsers){
+                players.getItems().add(u.getNickName());
+            }
 
-        updatePlayersHeader();
+            updatePlayersHeader();
+
+            if (MatchSettings.getInstance().getCurrentUsersNum() == MatchSettings.getInstance().getTotalUsers()) {
+                timeline.stop();
+                loading.setOpacity(0);
+                starting.setOpacity(1);
+                Stage stage = (Stage) mainPane.getScene().getWindow();
+                stage.setMaximized(true);
+            }
+        });
     }
 
     public void handleSetupGameMessage(ServerSetupGameMessage message){
-        timeline.stop();
-        loading.setOpacity(0);
-        starting.setOpacity(1);
-        Stage stage = (Stage) mainPane.getScene().getWindow();
-        stage.setMaximized(true);
         change(ScreenName.LEADER_SELECTION);
-        //inizio setup del game mentre aspetto di ricevere le leaderCards
-        //adesso aspetto che sia il mio turno di scegliere le carte leader
     }
 
     //TODO
@@ -91,6 +95,4 @@ public class LobbyGUIController extends AbstractGUIController implements LobbyMe
     public void handleStatusMessage(StatusMessage message) {
 
     }
-
-
 }
