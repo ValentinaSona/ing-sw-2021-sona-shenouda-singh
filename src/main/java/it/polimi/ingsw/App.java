@@ -3,6 +3,7 @@ package it.polimi.ingsw;
 
 import it.polimi.ingsw.client.Client;
 import it.polimi.ingsw.client.ui.gui.GUI;
+import it.polimi.ingsw.client.ui.cli.CLI;
 import it.polimi.ingsw.server.Server;
 import javafx.application.Application;
 
@@ -22,8 +23,13 @@ public class App
         switch (args[0]) {
             case "gui" -> {
                 Client client = new Client(new GUI());
-                //mi metto semplicemente ad aspettare che vengano messi messaggi nella coda
-                //per dire al uiController di processarli
+                // mi metto semplicemente ad aspettare che vengano messi messaggi nella coda
+                // per dire al uiController di processarli
+                new Thread(()->client.run()).start();
+                client.getChosenUi().start();
+            }
+            case "cli" -> {
+                Client client = new Client(new CLI());
                 new Thread(()->client.run()).start();
                 client.getChosenUi().start();
             }
