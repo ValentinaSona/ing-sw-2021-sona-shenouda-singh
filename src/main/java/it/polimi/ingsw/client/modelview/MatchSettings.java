@@ -1,9 +1,7 @@
-package it.polimi.ingsw.client.ui;
+package it.polimi.ingsw.client.modelview;
 
 import it.polimi.ingsw.server.controller.User;
-import org.mockito.internal.util.StringUtil;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class MatchSettings {

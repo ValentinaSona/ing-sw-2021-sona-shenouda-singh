@@ -1,6 +1,8 @@
 package it.polimi.ingsw.server.model;
 
-public class LeaderCard extends SpecialAbility {
+import java.io.Serializable;
+
+public class LeaderCard extends SpecialAbility implements Serializable {
 
 	private final int id;
 

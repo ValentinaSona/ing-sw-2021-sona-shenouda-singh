@@ -1,5 +1,6 @@
 package it.polimi.ingsw.utils.networking;
-import it.polimi.ingsw.client.Client;
+import it.polimi.ingsw.client.ui.controller.DispatcherController;
+
 /**
  * All messages that implements this interface are processed by the
  * client method dispatchServerMessages
@@ -11,5 +12,5 @@ public interface ClientHandleable {
      * @param handler
      * @return
      */
-    boolean handleMessage(Client handler);
+    boolean handleMessage(DispatcherController handler);
 }

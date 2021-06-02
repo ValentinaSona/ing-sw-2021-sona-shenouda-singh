@@ -4,6 +4,7 @@ import it.polimi.ingsw.client.modelview.MarketView;
 import it.polimi.ingsw.server.model.Market;
 import it.polimi.ingsw.server.model.MarketBuilder;
 import it.polimi.ingsw.server.model.MarketMarble;
+import it.polimi.ingsw.utils.networking.transmittables.StatusMessage;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.image.Image;
@@ -55,5 +56,12 @@ public class MarketGUIController extends AbstractGUIController {
 
     public void goToBoard(ActionEvent actionEvent) {
         change(ScreenName.PERSONAL_BOARD);
+    }
+
+    //TODO
+
+    @Override
+    public void handleStatusMessage(StatusMessage message) {
+
     }
 }

@@ -1,7 +1,8 @@
 package it.polimi.ingsw.utils.networking.transmittables.servermessages;
 
-import it.polimi.ingsw.client.Client;
 import it.polimi.ingsw.client.modelview.FaithTrackView;
+import it.polimi.ingsw.client.ui.controller.DispatcherController;
+import it.polimi.ingsw.client.ui.controller.LeaderCardSelectionController;
 import it.polimi.ingsw.server.controller.User;
 import it.polimi.ingsw.server.model.LeaderCard;
 import it.polimi.ingsw.utils.networking.ClientHandleable;
@@ -35,10 +36,9 @@ public class ServerSetupUserMessage implements ServerMessage, ClientHandleable {
         return faithTrackView;
     }
 
-    //TODO
-
     @Override
-    public boolean handleMessage(Client handler) {
-        return false;
+    public boolean handleMessage(DispatcherController handler) {
+        handler.handleSetupUser(this);
+        return true;
     }
 }

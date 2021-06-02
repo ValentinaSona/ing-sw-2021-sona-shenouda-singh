@@ -1,6 +1,8 @@
 package it.polimi.ingsw.server.model;
 
-public enum DevelopmentType {
+import java.io.Serializable;
+
+public enum DevelopmentType implements Serializable {
 
     GREEN, YELLOW, BLUE, PURPLE
 

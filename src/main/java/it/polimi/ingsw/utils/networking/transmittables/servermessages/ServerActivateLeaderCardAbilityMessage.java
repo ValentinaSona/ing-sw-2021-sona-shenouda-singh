@@ -1,6 +1,6 @@
 package it.polimi.ingsw.utils.networking.transmittables.servermessages;
 
-import it.polimi.ingsw.client.Client;
+import it.polimi.ingsw.client.ui.controller.DispatcherController;
 import it.polimi.ingsw.server.controller.User;
 import it.polimi.ingsw.server.model.LeaderCard;
 import it.polimi.ingsw.utils.networking.ClientHandleable;
@@ -24,7 +24,7 @@ public class ServerActivateLeaderCardAbilityMessage implements ServerMessage, Cl
 
     //TODO
     @Override
-    public boolean handleMessage(Client handler) {
+    public boolean handleMessage(DispatcherController handler) {
         return false;
     }
 }

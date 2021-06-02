@@ -1,21 +1,25 @@
 package it.polimi.ingsw.utils.networking.transmittables.servermessages;
 
-import it.polimi.ingsw.client.modelview.StrongboxView;
 import it.polimi.ingsw.client.ui.controller.DispatcherController;
 import it.polimi.ingsw.server.controller.User;
+import it.polimi.ingsw.server.model.LeaderCard;
 import it.polimi.ingsw.utils.networking.ClientHandleable;
 
-public class ServerActivateProductionMessage implements ServerMessage, ClientHandleable {
-    private final StrongboxView strongboxView;
+public class ServerThrowLeaderCardMessage implements ServerMessage, ClientHandleable {
+    private final LeaderCard leaderCard;
     private final User user;
 
-    public ServerActivateProductionMessage(StrongboxView strongboxView, User user){
-        this.strongboxView = strongboxView;
+    public ServerThrowLeaderCardMessage(LeaderCard leaderCard, User user) {
         this.user = user;
+        this.leaderCard = leaderCard;
     }
 
-    public StrongboxView getStrongboxView() {
-        return strongboxView;
+    public LeaderCard getLeaderCard() {
+        return leaderCard;
+    }
+
+    public User getUser() {
+        return user;
     }
 
     //TODO

@@ -8,6 +8,8 @@ import it.polimi.ingsw.utils.networking.transmittables.servermessages.ServerUpda
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Control flow the client when a connection with the server is established does the following steps:
@@ -18,6 +20,8 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 
 public class Lobby {
+    private static final Logger LOGGER = Logger.getLogger(Lobby.class.getName());
+
     private final static int MIN_PLAYER_PER_GAME = 1;
 
     private final static int MAX_PLAYER_PER_GAME = 4;
@@ -46,6 +50,7 @@ public class Lobby {
     public static Lobby getInstance(Server server) {
         if (singleton == null) {
             singleton = new Lobby(server);
+            LOGGER.log(Level.INFO, "First creation of the singleton class lobby");
         }
         return singleton;
     }
@@ -62,9 +67,10 @@ public class Lobby {
         //while a player is trying to register,  the map can't be modified by other threads
         synchronized (registeredNicknamesMap){
             if (registeredNicknamesMap.containsValue(nickname) || registeredNicknamesMap.containsKey(connection)) {
-                //we have already a player with that name or a connection from that client
+                LOGGER.log(Level.INFO, " we have already a player with that name or a connection from that client");
                 return false;
             } else {
+                LOGGER.log(Level.INFO,nickname+" connected to the lobby");
                 registeredNicknamesMap.put(connection, nickname);
                 return true;
             }
@@ -95,6 +101,8 @@ public class Lobby {
                 return false;
             }
 
+            LOGGER.log(Level.INFO, registeredNicknamesMap.get(connection)
+                    +"has set the playerCount to "+ playerCount);
             currentLobbyPlayerCount = playerCount;
             playerCountLock.notifyAll();
         }
@@ -118,12 +126,13 @@ public class Lobby {
         //the lobbyRequestingConnection
         synchronized (registeredNicknamesMap){
             if(!registeredNicknamesMap.containsValue(nickname) || !registeredNicknamesMap.containsKey(connection)){
+                LOGGER.log(Level.INFO,nickname+ "isn't registered and he is trying to join the lobby");
                 return false;
             }
         }
         synchronized (lobbyRequestingConnections){
             lobbyRequestingConnections.add(connection);
-            System.out.println("si");
+            LOGGER.log(Level.INFO, nickname+" joined successfully the lobby");
             if(lobbyRequestingConnections.getFirst() != connection){
                 //informing the client he is not the first one
                 connection.send(StatusMessage.JOIN_LOBBY);
@@ -172,7 +181,13 @@ public class Lobby {
             if(!participants.isEmpty()){
 
                 Match match= new Match(server);
+                List<Connection> connectionList = new ArrayList<>();
                 for(Connection c : participants.keySet()){
+                    connectionList.add(c);
+                }
+                //randomizing the order of the users
+                Collections.shuffle(connectionList);
+                for(Connection c : connectionList){
                     match.addParticipant(participants.get(c), c);
                 }
                 server.submitMatch(match);
@@ -221,7 +236,7 @@ public class Lobby {
             lobbyUsers.add(new User(registeredNicknamesMap.get(con)));
         }
         for(Connection con : registeredNicknamesMap.keySet()){
-            con.send(new ServerUpdateLobbyMessage(lobbyUsers));
+            con.send(new ServerUpdateLobbyMessage(lobbyUsers, currentLobbyPlayerCount ));
         }
     }
 

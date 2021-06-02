@@ -73,7 +73,6 @@ public class Match implements Runnable{
             //TODO controllo che la connessione sia ancora attiva
         }
 
-        //TODO setup of the game before the while{} that simply listen for message from the clients
         controller.setup();
 
         while (isActive()){
