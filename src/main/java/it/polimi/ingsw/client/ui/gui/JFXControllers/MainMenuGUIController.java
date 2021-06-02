@@ -79,6 +79,7 @@ public class MainMenuGUIController extends AbstractGUIController {
     }
 
     public void handleNicknameConfirmation(boolean success){
+        System.out.println("ho ricevuto il messagio");
         if(!success) {
             // TODO mostrare messaggio di errore
             joining.setOpacity(0);
@@ -147,7 +148,6 @@ public class MainMenuGUIController extends AbstractGUIController {
         change(ScreenName.CREDITS);
     }
 
-    @Override
     public void handleStatusMessage(StatusMessage message) {
 
         if(message.equals(StatusMessage.OK_NICK)){
@@ -160,6 +160,5 @@ public class MainMenuGUIController extends AbstractGUIController {
             //posso settare il numero di player
             handleJoinLobbyConfirmation(false);
         }
-
     }
 }
