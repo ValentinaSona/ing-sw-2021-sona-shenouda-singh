@@ -2,6 +2,8 @@ package it.polimi.ingsw.client.ui.controller;
 
 import it.polimi.ingsw.client.modelview.GameView;
 import it.polimi.ingsw.client.modelview.MatchSettings;
+import it.polimi.ingsw.client.ui.cli.CLI;
+import it.polimi.ingsw.client.ui.cli.controllers.CLIMessageHandler;
 import it.polimi.ingsw.utils.networking.ClientHandleable;
 import it.polimi.ingsw.utils.networking.Transmittable;
 import it.polimi.ingsw.utils.networking.transmittables.StatusMessage;
@@ -101,7 +103,7 @@ public class DispatcherController implements Runnable, LambdaObserver {
         if(gui){
             ((LobbyMenuController)currentController).handleSetupGameMessage(message);
         }else{
-
+            CLIMessageHandler.getInstance().handleServerSetupGameMessage(message);
         }
     }
     //TODO
@@ -109,7 +111,7 @@ public class DispatcherController implements Runnable, LambdaObserver {
         if(gui){
             ((LobbyMenuController)currentController).handleUpdateLobbyMessage(message);
         }else{
-
+            CLIMessageHandler.getInstance().handleUpdateLobbyMessage(message);
         }
     };
     //TODO
@@ -131,7 +133,7 @@ public class DispatcherController implements Runnable, LambdaObserver {
         if(gui){
             ((LeaderCardSelectionController)currentController).handleSetupUserMessage(message);
         }else {
-
+            CLIMessageHandler.getInstance().handleServerSetupUserMessage(message);
         }
     }
     //TODO
@@ -140,6 +142,7 @@ public class DispatcherController implements Runnable, LambdaObserver {
             currentController.handleStatusMessage(message);
         }else{
             //come gestisce gli status message la cli
+            CLIMessageHandler.getInstance().handleStatusMessage(message);
         }
     }
 }

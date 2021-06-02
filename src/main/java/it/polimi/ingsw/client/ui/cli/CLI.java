@@ -1,24 +1,22 @@
 package it.polimi.ingsw.client.ui.cli;
 
 import it.polimi.ingsw.client.ui.Ui;
-import it.polimi.ingsw.server.model.Resource;
-import it.polimi.ingsw.server.model.ResourceType;
+import it.polimi.ingsw.client.ui.cli.controllers.CLIMessageHandler;
+import it.polimi.ingsw.client.ui.cli.controllers.Menu;
+import it.polimi.ingsw.client.ui.controller.UIController;
+import it.polimi.ingsw.server.controller.LeaderCardsController;
+import it.polimi.ingsw.server.model.Game;
+import it.polimi.ingsw.utils.networking.transmittables.StatusMessage;
 
 import java.io.PrintStream;
 import java.util.Scanner;
 
+import static it.polimi.ingsw.client.ui.cli.CLIHelper.*;
+
 public class CLI implements Ui {
+    private final CLIMessageHandler msgHandler = CLIMessageHandler.getInstance(this);
     private final PrintStream output;
     private final Scanner input;
-    public static final String ANSI_RED = "\033[31m";
-    public static final String ANSI_GREEN = "\033[32m";
-    public static final String ANSI_YELLOW = "\033[33m";
-    public static final String ANSI_BLUE = "\033[34m";
-    public static final String ANSI_PURPLE = "\033[35m";
-    public static final String ANSI_CYAN = "\033[36m";
-    public static final String ANSI_WHITE = "\033[37m";
-    public static final String ANSI_RESET = "\033[0m";
-    public static final String CHECK_MARK = "\u2713";
 
 
 
@@ -33,7 +31,12 @@ public class CLI implements Ui {
         output = new PrintStream(System.out);
     }
 
-    private int getChoice(String[] options){
+    public void printMessage(Object msg){
+        output.println(msg);
+    }
+
+
+    public int getChoice(String[] options){
         int optNum = 1;
         int choice = 0;
         output.println("[ ] Choose an option:");
@@ -43,7 +46,6 @@ public class CLI implements Ui {
             optNum++;
         }
         output.println();
-
         while(true) {
             if(input.hasNextInt()) {
                 choice = input.nextInt();
@@ -58,19 +60,60 @@ public class CLI implements Ui {
 
 
         output.println("["+CHECK_MARK+"] Chosen: " + options[choice-1]);
+        output.flush();
         return choice;
     }
 
-    public static void main(String[] args) {
-        CLI cli = new CLI();
-        cli.start();
+    public String getString(String regex, String desc){
+
+        output.println(desc +":");
+        String choice;
+        input.nextLine();
+        while(true) {
+            if (input.hasNextLine()) {
+                choice = input.nextLine();
+                if (choice.matches(regex)) break;
+                else output.println("[X] "+ desc +":");
+            }
+
+        }
+
+
+        output.println("["+CHECK_MARK+"] Chosen: " + choice);
+        return choice;
     }
+
+    public int getInt(int lower, int upper){
+
+        int choice = 0;
+        while(true) {
+            if(input.hasNextInt()) {
+                choice = input.nextInt();
+            } else {
+                output.println("Input must range in between ["+ lower+  ","+upper+"]");
+                input.next();
+                continue;
+            }
+            if (choice >= lower && choice <= upper) break;
+            else output.println("Input must range in between ["+ lower+  ","+upper+"]");
+        }
+
+
+        output.println("["+CHECK_MARK+"] Chosen: " + choice);
+        output.flush();
+        return choice;
+    }
+
+
 
     @Override
-    public void start() {
+    public void start(){
         output.println(banner);
-        String[] options = {"Singleplayer", "Multiplayer","Credits", "Quit"};
-        getChoice(options);
+
+
+        Menu.getInstance(this).mainMenu();
+
 
     }
+
 }
