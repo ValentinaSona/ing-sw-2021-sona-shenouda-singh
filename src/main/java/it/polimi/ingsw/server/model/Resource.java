@@ -40,6 +40,32 @@ public class Resource implements Serializable {
 		return Objects.hash(quantity, resourceType);
 	}
 
+	@Override
+	public String toString() {
+		switch (resourceType) {
+			case SHIELD -> {
+				return "\033[34m " + quantity + " " + resourceType + "\033[0m";
+			}
+			case SERVANT -> {
+				return "\033[35m " + quantity + " " + resourceType + "\033[0m";
+			}
+			case FAITH -> {
+				return "\033[31m " + quantity + " " + resourceType + "\033[0m";
+			}
+			case STONE -> {
+				return "\033[36m " + quantity + " " + resourceType + "\033[0m";
+			}
+			case COIN -> {
+				return "\033[33m " + quantity + " " + resourceType + "\033[0m";
+			}
+			case JOLLY -> {
+				return "\033[37m " + quantity + " " + resourceType + "\033[0m";
+			}
+			default -> {
+				return "";
+			}
+		}
+	}
 
 	// Adds the argument to the resource
 	public void add(Resource other) {
