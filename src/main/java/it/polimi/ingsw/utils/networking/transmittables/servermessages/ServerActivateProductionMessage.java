@@ -1,7 +1,7 @@
 package it.polimi.ingsw.utils.networking.transmittables.servermessages;
 
-import it.polimi.ingsw.client.Client;
 import it.polimi.ingsw.client.modelview.StrongboxView;
+import it.polimi.ingsw.client.ui.controller.UiControllerInterface;
 import it.polimi.ingsw.server.controller.User;
 import it.polimi.ingsw.utils.networking.ClientHandleable;
 
@@ -20,7 +20,7 @@ public class ServerActivateProductionMessage implements ServerMessage, ClientHan
 
     //TODO
     @Override
-    public boolean handleMessage(Client handler) {
+    public boolean handleMessage(UiControllerInterface handler) {
         return false;
     }
 }

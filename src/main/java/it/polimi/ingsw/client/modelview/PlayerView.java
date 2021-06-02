@@ -2,6 +2,7 @@ package it.polimi.ingsw.client.modelview;
 
 import it.polimi.ingsw.server.model.*;
 import java.util.ArrayList;
+import java.util.List;
 
 
 public class PlayerView {
@@ -25,7 +26,7 @@ public class PlayerView {
      */
     private FaithTrackView faithTrackView;
 
-    private ArrayList<LeaderCard> leaderCards;
+    private List<LeaderCard> leaderCards;
 
     /**
      * Infinite depot where the production outputs are stored.
@@ -35,9 +36,9 @@ public class PlayerView {
     /**
      * Special production that turns 2 resources of any kind into one resource of any kind.
      */
-    private ArrayList<SlotView> slots;
+    private ArrayList<SlotView> slots = new ArrayList<>();
 
-    private ArrayList<DepotView> warehouse;
+    private ArrayList<DepotView> warehouse = new ArrayList<>();
 
     private ArrayList<Resource> tempResources;
 
@@ -100,11 +101,11 @@ public class PlayerView {
         this.faithTrackView = faithTrackView;
     }
 
-    public ArrayList<LeaderCard> getLeaderCards() {
+    public List<LeaderCard> getLeaderCards() {
         return leaderCards;
     }
 
-    public void setLeaderCards(ArrayList<LeaderCard> leaderCards) {
+    public void setLeaderCards(List<LeaderCard> leaderCards) {
         this.leaderCards = leaderCards;
     }
 

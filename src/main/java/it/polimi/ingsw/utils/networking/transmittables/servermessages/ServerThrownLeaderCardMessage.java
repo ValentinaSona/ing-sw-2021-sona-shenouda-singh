@@ -5,21 +5,21 @@ import it.polimi.ingsw.server.controller.User;
 import it.polimi.ingsw.server.model.LeaderCard;
 import it.polimi.ingsw.utils.networking.ClientHandleable;
 
-public class ServerActivateLeaderCardAbilityMessage implements ServerMessage, ClientHandleable {
-    private final LeaderCard ability;
+public class ServerThrownLeaderCardMessage implements ServerMessage, ClientHandleable {
+    private final LeaderCard leaderCard;
     private final User user;
 
-    public ServerActivateLeaderCardAbilityMessage(LeaderCard targetCard, User user) {
-        this.ability = targetCard;
+    public ServerThrownLeaderCardMessage(LeaderCard leaderCard, User user) {
         this.user = user;
+        this.leaderCard = leaderCard;
+    }
+
+    public LeaderCard getLeaderCard() {
+        return leaderCard;
     }
 
     public User getUser() {
         return user;
-    }
-
-    public LeaderCard getAbility() {
-        return ability;
     }
 
     //TODO

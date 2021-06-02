@@ -1,25 +1,26 @@
 package it.polimi.ingsw.utils.networking.transmittables.servermessages;
 
-import it.polimi.ingsw.client.Client;
 import it.polimi.ingsw.client.modelview.DepotView;
+import it.polimi.ingsw.client.ui.controller.UiControllerInterface;
 import it.polimi.ingsw.server.controller.User;
 import it.polimi.ingsw.server.model.LeaderCard;
 import it.polimi.ingsw.utils.networking.ClientHandleable;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class ServerSetupActionMessage implements ServerMessage, ClientHandleable {
     private final ArrayList<DepotView> warehouseView;
     private final User user;
-    private final LeaderCard[] chosen;
+    private final List<LeaderCard> chosen;
 
-    public ServerSetupActionMessage(ArrayList<DepotView> warehouseView, LeaderCard[] chosen, User user){
+    public ServerSetupActionMessage(ArrayList<DepotView> warehouseView, List<LeaderCard> chosen, User user){
         this.chosen = chosen;
         this.user = user;
         this.warehouseView = warehouseView;
     }
 
-    public LeaderCard[] getChosen() {
+    public List<LeaderCard> getChosen() {
         return chosen;
     }
 
@@ -34,7 +35,7 @@ public class ServerSetupActionMessage implements ServerMessage, ClientHandleable
     //TODO
 
     @Override
-    public boolean handleMessage(Client handler) {
+    public boolean handleMessage(UiControllerInterface handler) {
         return false;
     }
 }

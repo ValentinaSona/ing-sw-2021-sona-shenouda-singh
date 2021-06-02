@@ -24,7 +24,6 @@ public class App
                 Client client = new Client(new GUI());
                 //mi metto semplicemente ad aspettare che vengano messi messaggi nella coda
                 //per dire al uiController di processarli
-                new Thread(()->client.run()).start();
                 client.getChosenUi().start();
             }
             case "server" -> new Server(10000).start();

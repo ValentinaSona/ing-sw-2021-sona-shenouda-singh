@@ -1,5 +1,7 @@
 package it.polimi.ingsw.server.model;
 
-public class SpecialAbility {
+import java.io.Serializable;
+
+public class SpecialAbility implements Serializable {
 
 }

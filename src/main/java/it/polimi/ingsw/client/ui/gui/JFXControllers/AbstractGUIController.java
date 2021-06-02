@@ -1,24 +1,25 @@
 package it.polimi.ingsw.client.ui.gui.JFXControllers;
 
+import it.polimi.ingsw.client.ui.controller.UIController;
+import it.polimi.ingsw.client.ui.controller.UiControllerInterface;
 import it.polimi.ingsw.client.ui.gui.GUIHelper;
-import it.polimi.ingsw.utils.networking.transmittables.servermessages.ServerMessage;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.StackPane;
-import javafx.stage.Stage;
+
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 
-public abstract class AbstractGUIController {
+public abstract class AbstractGUIController implements UiControllerInterface {
 
     private Parent root;
 
+    public AbstractGUIController(){
+        UIController.getInstance().setCurrentController(this);
+    }
     @FXML
     private StackPane mainPane;
 

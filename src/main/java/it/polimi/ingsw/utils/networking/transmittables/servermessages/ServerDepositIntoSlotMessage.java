@@ -1,9 +1,9 @@
 package it.polimi.ingsw.utils.networking.transmittables.servermessages;
 
-import it.polimi.ingsw.client.Client;
 import it.polimi.ingsw.client.modelview.DepotView;
 import it.polimi.ingsw.client.modelview.SlotView;
 import it.polimi.ingsw.client.modelview.StrongboxView;
+import it.polimi.ingsw.client.ui.controller.UiControllerInterface;
 import it.polimi.ingsw.server.controller.User;
 import it.polimi.ingsw.utils.networking.ClientHandleable;
 
@@ -39,7 +39,7 @@ public class ServerDepositIntoSlotMessage implements ServerMessage, ClientHandle
     }
 
     @Override
-    public boolean handleMessage(Client handler) {
+    public boolean handleMessage(UiControllerInterface handler) {
         return false;
     }
 }

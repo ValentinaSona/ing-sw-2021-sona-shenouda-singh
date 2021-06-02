@@ -1,6 +1,7 @@
 package it.polimi.ingsw.utils.networking.transmittables.servermessages;
 
-import it.polimi.ingsw.client.Client;
+import it.polimi.ingsw.client.ui.controller.LobbyMenuController;
+import it.polimi.ingsw.client.ui.controller.UiControllerInterface;
 import it.polimi.ingsw.server.controller.User;
 import it.polimi.ingsw.utils.networking.ClientHandleable;
 
@@ -17,9 +18,16 @@ public class ServerUpdateLobbyMessage implements ServerMessage, ClientHandleable
         return lobbyUsers;
     }
 
-    //TODO
+
     @Override
-    public boolean handleMessage(Client handler) {
-        return false;
+    public boolean handleMessage(UiControllerInterface handler) {
+        try{
+            ((LobbyMenuController) handler).handleUpdateLobbyMessage(this);
+            return true;
+        }catch (ClassCastException e){
+            //this should never happen
+            e.printStackTrace();
+            return false;
+        }
     }
 }

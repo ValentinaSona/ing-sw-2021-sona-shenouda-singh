@@ -1,6 +1,8 @@
 package it.polimi.ingsw.server.model;
 
-public class Requirement {
+import java.io.Serializable;
+
+public class Requirement implements Serializable {
 
     final private int number;
     final private int level;

@@ -1,10 +1,11 @@
 package it.polimi.ingsw.client.ui.gui.JFXControllers;
 
-import it.polimi.ingsw.client.ui.MatchSettings;
-import it.polimi.ingsw.client.ui.UIController;
-import it.polimi.ingsw.client.ui.UiControllerInterface;
+import it.polimi.ingsw.client.modelview.GameView;
+import it.polimi.ingsw.client.modelview.MatchSettings;
+import it.polimi.ingsw.client.ui.controller.UIController;
+import it.polimi.ingsw.client.ui.controller.LobbyMenuController;
 import it.polimi.ingsw.server.controller.User;
-import it.polimi.ingsw.utils.networking.Transmittable;
+import it.polimi.ingsw.utils.networking.transmittables.StatusMessage;
 import it.polimi.ingsw.utils.networking.transmittables.servermessages.ServerSetupGameMessage;
 import it.polimi.ingsw.utils.networking.transmittables.servermessages.ServerUpdateLobbyMessage;
 import javafx.animation.*;
@@ -12,15 +13,14 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.StackPane;
 import javafx.scene.transform.Rotate;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
-import java.util.ArrayList;
+import java.util.List;
 
-public class LobbyGUIController extends AbstractGUIController implements UiControllerInterface {
+public class LobbyGUIController extends AbstractGUIController implements LobbyMenuController {
 
     Timeline timeline;
 
@@ -37,7 +37,6 @@ public class LobbyGUIController extends AbstractGUIController implements UiContr
 
     @FXML
     private void initialize() {
-        UIController.getInstance().setCurrentController(this);
         players.getItems().add(MatchSettings.getInstance().getClientNickname());
         updatePlayersHeader();
 
@@ -63,7 +62,9 @@ public class LobbyGUIController extends AbstractGUIController implements UiContr
                 + " players");
     }
 
-    private void handleUpdateLobbyUser(ArrayList<User> lobbyUsers) {
+    public void handleUpdateLobbyMessage(ServerUpdateLobbyMessage message) {
+        List<User> lobbyUsers = message.getLobbyUsers();
+        System.out.println("Update numro giocatory"+ message.getLobbyUsers());
         players.getItems().clear();
         MatchSettings.getInstance().setJoiningUsers(lobbyUsers);
 
@@ -74,24 +75,25 @@ public class LobbyGUIController extends AbstractGUIController implements UiContr
         updatePlayersHeader();
     }
 
-    private void handleStartGameConfirmation(ArrayList<User> user){
+    public void handleSetupGameMessage(ServerSetupGameMessage message){
         timeline.stop();
         loading.setOpacity(0);
         starting.setOpacity(1);
         Stage stage = (Stage) mainPane.getScene().getWindow();
         stage.setMaximized(true);
         change(ScreenName.LEADER_SELECTION);
+        //inizio setup del game mentre aspetto di ricevere le leaderCards
+        GameView.getInstance(message.getUsers());
+        GameView.getInstance().setMarketInstance(message.getMarketView());
+        GameView.getInstance().setDevelopmentCardsMarket(message.getDevMarketView());
+        System.out.println("finito il setup");
+        //adesso aspetto che sia il mio turno di scegliere le carte leader
     }
 
+    //TODO
     @Override
-    public void handleMessage(Transmittable message) {
-        if(message instanceof ServerSetupGameMessage){
-            ServerSetupGameMessage  serverMessage = (ServerSetupGameMessage) message;
-            handleStartGameConfirmation(serverMessage.getUsers());
-        }else if(message instanceof ServerUpdateLobbyMessage){
-            ServerUpdateLobbyMessage serverMessage = (ServerUpdateLobbyMessage) message;
-            handleUpdateLobbyUser(serverMessage.getLobbyUsers());
-        }
+    public void handleStatusMessage(StatusMessage message) {
+
     }
 
 

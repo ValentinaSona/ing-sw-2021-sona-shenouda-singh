@@ -1,10 +1,8 @@
 package it.polimi.ingsw.client.ui.gui.JFXControllers;
 
-import it.polimi.ingsw.client.ui.MatchSettings;
-import it.polimi.ingsw.client.ui.UIController;
-import it.polimi.ingsw.client.ui.UiControllerInterface;
-import it.polimi.ingsw.client.ui.gui.GUIHelper;
-import it.polimi.ingsw.utils.networking.Transmittable;
+import it.polimi.ingsw.client.modelview.MatchSettings;
+import it.polimi.ingsw.client.ui.controller.UIController;
+import it.polimi.ingsw.client.ui.controller.MainMenuController;
 import it.polimi.ingsw.utils.networking.transmittables.StatusMessage;
 import javafx.animation.Interpolator;
 import javafx.animation.TranslateTransition;
@@ -21,7 +19,7 @@ import javafx.util.Duration;
 
 import java.io.IOException;
 
-public class MainMenuGUIController extends AbstractGUIController implements UiControllerInterface {
+public class MainMenuGUIController extends AbstractGUIController implements MainMenuController {
 
     @FXML
     private TextField nicknameField;
@@ -73,7 +71,7 @@ public class MainMenuGUIController extends AbstractGUIController implements UiCo
             joinButton.setDisable(true);
 
             try {
-                UIController.getInstance().sendNickname(this, nicknameField.getText(),"versus.ddnsfree.com", 10000);
+                UIController.getInstance().sendNickname(nicknameField.getText(),"127.0.0.1", 10000);
             } catch (IOException e) {
                 //fallita l'istanziazione della socket porta o url invalidi
                 e.printStackTrace();
@@ -82,7 +80,6 @@ public class MainMenuGUIController extends AbstractGUIController implements UiCo
     }
 
     public void handleNicknameConfirmation(boolean success){
-        System.out.println("ho ricevuto il messagio");
         if(!success) {
             // TODO mostrare messaggio di errore
             joining.setOpacity(0);
@@ -97,7 +94,8 @@ public class MainMenuGUIController extends AbstractGUIController implements UiCo
             if(nickname.equals("a nickname") || nickname.equals("a Nickname") ||
                     nickname.equals("Nickname") || nickname.equals("nickname"))
                 party.setOpacity(1);
-            UIController.getInstance().joinLobby(this);
+            UIController.getInstance().joinLobby();
+
         }
     }
 
@@ -151,19 +149,18 @@ public class MainMenuGUIController extends AbstractGUIController implements UiCo
     }
 
     @Override
-    public void handleMessage(Transmittable message) {
-        if(message instanceof StatusMessage){
-            StatusMessage status = (StatusMessage) message;
-            if(status.equals(StatusMessage.OK_NICK)){
-                //posso validare il nickname
-                handleNicknameConfirmation(true);
-            }else if(status.equals(StatusMessage.SET_COUNT)){
-                //posso settare il numero di player
-                handleJoinLobbyConfirmation(true);
-            }else if(status.equals(StatusMessage.JOIN_LOBBY)){
-                //posso settare il numero di player
-                handleJoinLobbyConfirmation(false);
-            }
+    public void handleStatusMessage(StatusMessage message) {
+
+        if(message.equals(StatusMessage.OK_NICK)){
+            //posso validare il nickname
+            handleNicknameConfirmation(true);
+        }else if(message.equals(StatusMessage.SET_COUNT)){
+            //posso settare il numero di player
+            handleJoinLobbyConfirmation(true);
+        }else if(message.equals(StatusMessage.JOIN_LOBBY)){
+            //posso settare il numero di player
+            handleJoinLobbyConfirmation(false);
         }
+
     }
 }

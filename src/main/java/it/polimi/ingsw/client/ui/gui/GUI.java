@@ -1,6 +1,6 @@
 package it.polimi.ingsw.client.ui.gui;
 
-import it.polimi.ingsw.client.ui.MatchSettings;
+import it.polimi.ingsw.client.modelview.MatchSettings;
 import it.polimi.ingsw.client.ui.Ui;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;

@@ -1,9 +1,10 @@
 package it.polimi.ingsw.server.model;
 
+import java.io.Serializable;
 import java.util.Arrays;
 import java.util.Objects;
 
-public class DevelopmentCard {
+public class DevelopmentCard implements Serializable {
 
 	final private int id;
 

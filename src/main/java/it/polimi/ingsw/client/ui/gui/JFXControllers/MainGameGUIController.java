@@ -1,5 +1,6 @@
 package it.polimi.ingsw.client.ui.gui.JFXControllers;
 
+import it.polimi.ingsw.utils.networking.transmittables.StatusMessage;
 import javafx.beans.binding.Bindings;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -17,5 +18,11 @@ public class MainGameGUIController extends AbstractGUIController {
 
     public void goToMarket(ActionEvent actionEvent) {
         change(ScreenName.MARKET);
+    }
+
+    //TODO
+    @Override
+    public void handleStatusMessage(StatusMessage message) {
+
     }
 }

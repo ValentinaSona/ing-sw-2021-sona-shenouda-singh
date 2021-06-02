@@ -9,7 +9,6 @@ import java.util.Map;
 
 public class GameView implements Serializable {
     private static GameView singleton;
-    private final int numOfPlayers;
     private final ArrayList<PlayerView> players = new ArrayList<>();
     private final ArrayList<User> users;
     private MarketView marketInstance;
@@ -19,9 +18,17 @@ public class GameView implements Serializable {
     private PlayerView currentPlayer;
 
 
-    public static GameView getInstance(int numberOfPlayers, ArrayList<User> users){
+    public static GameView getInstance(ArrayList<User> users){
         if(singleton == null){
-            singleton = new GameView(numberOfPlayers, users);
+            singleton = new GameView(users);
+        }
+
+        return singleton;
+    }
+
+    public static GameView getInstance(){
+        if(singleton == null){
+            throw new RuntimeException("this method should never be called if the game is not yet initialized");
         }
 
         return singleton;
@@ -38,8 +45,7 @@ public class GameView implements Serializable {
      * This constructor is used when we create a new game
      *
      */
-    private GameView(int numberOfPlayers, ArrayList<User> users){
-        this.numOfPlayers = numberOfPlayers;
+    private GameView(ArrayList<User> users){
         this.users = users;
         for(User user : users){
             userPlayerHashMap.put(user, new PlayerView(user.getNickName()));

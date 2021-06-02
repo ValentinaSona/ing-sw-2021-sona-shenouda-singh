@@ -67,7 +67,7 @@ public class Controller implements LambdaObserver {
         }
     }
 
-    //TODO fase di setup in cui vengono mandati ai player la richiesta della scelta delle carte
+
     public void setup(){
         ArrayList<User> users = new ArrayList<>();
         ArrayList<Player> players = model.getPlayers();
@@ -77,74 +77,13 @@ public class Controller implements LambdaObserver {
         }
 
         model.notify(new ServerSetupGameMessage(
-                users
-        ));
-
-        LeaderCardsKeeper keeper = model.getLeaderCardsKeeper();
-        //ad ogni player invio le leaderCard da cui deve scegliere e
-        //le risorse iniziali che deve scegliere e di quanto è avanzato sul tracciato fede
-        //TODO: scriver meglio questo ciclo for ero di fretta e non avevo altre idee
-        for(int i = 0; i < players.size(); i++){
-            switch (i){
-                case 0:
-                    model.notify(new ServerSetupUserMessage(
-                            0,
-                            players.get(i).getVisibleFaithTrack(),
-                            keeper.pickFour(),
-                            model.getUserFromPlayer(players.get(i))
-                    ));
-                    break;
-                case 1:
-                    model.notify(new ServerSetupUserMessage(
-                            1,
-                            players.get(i).getVisibleFaithTrack(),
-                            keeper.pickFour(),
-                            model.getUserFromPlayer(players.get(i))
-                    ));
-                    break;
-                case 2:
-                    try {
-                        players.get(i).getFaithTrack().addFaithPoints(1);
-                    } catch (VaticanReportException e) {
-                        //during the setup this exception will never be thrown
-                        e.printStackTrace();
-                    }
-                    model.notify(new ServerSetupUserMessage(
-                            1,
-                            players.get(i).getVisibleFaithTrack(),
-                            keeper.pickFour(),
-                            model.getUserFromPlayer(players.get(i))
-                    ));
-                    break;
-                case 3:
-                    try {
-                        players.get(i).getFaithTrack().addFaithPoints(1);
-                    } catch (VaticanReportException e) {
-                        //during the setup this exception will never be thrown
-                        e.printStackTrace();
-                    }
-                    model.notify(new ServerSetupUserMessage(
-                            2,
-                            players.get(i).getVisibleFaithTrack(),
-                            keeper.pickFour(),
-                            model.getUserFromPlayer(players.get(i))
-                    ));
-                    break;
-            }
-        }
-
-        //adesso il primo giocatore della lista user avrà la view utilizzabile e quindi potrà
-        //scegliere le risorse da usare e le leaderCard scelte
-        model.setCurrentPlayer(players.get(0));
-        Player startingPlayer = model.getCurrentPlayer();
-        startingPlayer.toggleTurn();
-        startingPlayer.toggleMainAction();
-
-        model.notify(new ServerStartSetupTurnMessage(
-                model.getUserFromPlayer(startingPlayer),
+                users,
                 model.getMarketInstance().getVisible(),
                 model.getDevelopmentCardsMarket().getVisible()
         ));
+
+        model.setCurrentPlayer(players.get(0));
+        turnController.startSetupTurn();
     }
 
     public void setupAction(ClientSetupActionMessage action, RemoteViewHandler view, User user){
@@ -167,17 +106,12 @@ public class Controller implements LambdaObserver {
 
             model.notify(new ServerSetupActionMessage(
                     player.getVisibleWarehouse(),
-                    (LeaderCard[]) player.getLeaderCards().toArray(),
+                    player.getLeaderCards(),
                     model.getUserFromPlayer(player)
             ));
 
-            ArrayList<Player> players = model.getPlayers();
 
-            if(players.indexOf(player) == players.size()-1){
-                model.setGameState(GameState.PLAY);
-            }
-            ClientEndTurnMessage endTurnMessage =new ClientEndTurnMessage();
-            turnController.endTurn(endTurnMessage, view, user);
+            turnController.endSetupTurn();
         }
     }
 }
