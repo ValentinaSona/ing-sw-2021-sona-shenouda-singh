@@ -233,9 +233,10 @@ public class Lobby {
     private void updateMessage(){
         ArrayList<User> lobbyUsers = new ArrayList<>();
         for(Connection con: registeredNicknamesMap.keySet()){
-            lobbyUsers.add(new User(registeredNicknamesMap.get(con)));
+            if(lobbyRequestingConnections.contains(con))
+                lobbyUsers.add(new User(registeredNicknamesMap.get(con)));
         }
-        for(Connection con : registeredNicknamesMap.keySet()){
+        for(Connection con : lobbyRequestingConnections){
             con.send(new ServerUpdateLobbyMessage(lobbyUsers, currentLobbyPlayerCount ));
         }
     }

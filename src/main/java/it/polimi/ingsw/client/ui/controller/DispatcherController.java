@@ -7,8 +7,6 @@ import it.polimi.ingsw.utils.networking.Transmittable;
 import it.polimi.ingsw.utils.networking.transmittables.StatusMessage;
 import it.polimi.ingsw.utils.networking.transmittables.servermessages.*;
 import it.polimi.ingsw.utils.observer.LambdaObserver;
-import javafx.application.Platform;
-
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingDeque;
 

@@ -8,6 +8,7 @@ import it.polimi.ingsw.utils.networking.transmittables.clientmessages.setup.Clie
 import static org.junit.jupiter.api.Assertions.*;
 
 import it.polimi.ingsw.utils.networking.transmittables.clientmessages.setup.ClientSetPlayersCountMessage;
+import it.polimi.ingsw.utils.networking.transmittables.servermessages.ServerUpdateLobbyMessage;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -79,16 +80,26 @@ class LobbyTest {
     public void setJoinLobby(int idx, boolean countYetToSet, int count) throws InterruptedException {
         Thread t = new Thread(()->{
             connectionHandlers[idx].update(new ClientJoinLobbyMessage());
-            if(countYetToSet){
-                //if i am the first player to join
-                Transmittable statusContinue = null;
-                try {
+            Transmittable statusContinue = null;
+
+            try{
+                statusContinue = backToClient.take();
+                if(countYetToSet){
+                    //if i am the first player to join
+                    assertEquals(StatusMessage.SET_COUNT, statusContinue);
+                    connectionHandlers[idx].update(new ClientSetPlayersCountMessage(count));
                     statusContinue = backToClient.take();
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
+                    assertEquals(StatusMessage.OK_COUNT, statusContinue);
+                }else{
+                    assertEquals(StatusMessage.JOIN_LOBBY, statusContinue);
+
+                    for(int i = 0; i<=idx; i++){
+                        statusContinue = backToClient.take();
+                        assertEquals(count, ((ServerUpdateLobbyMessage)statusContinue).getNumOfPlayer());
+                    }
                 }
-                assertEquals(StatusMessage.CONTINUE, statusContinue);
-                connectionHandlers[idx].update(new ClientSetPlayersCountMessage(count));
+            }catch (Exception e){
+                e.printStackTrace();
             }
         });
         t.start();
