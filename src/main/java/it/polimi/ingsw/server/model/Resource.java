@@ -44,22 +44,22 @@ public class Resource implements Serializable {
 	public String toString() {
 		switch (resourceType) {
 			case SHIELD -> {
-				return "\033[34m " + quantity + " " + resourceType + "\033[0m";
+				return "\033[34m" + quantity + " " + resourceType + "\033[0m";
 			}
 			case SERVANT -> {
-				return "\033[35m " + quantity + " " + resourceType + "\033[0m";
+				return "\033[35m" + quantity + " " + resourceType + "\033[0m";
 			}
 			case FAITH -> {
-				return "\033[31m " + quantity + " " + resourceType + "\033[0m";
+				return "\033[31m" + quantity + " " + resourceType + "\033[0m";
 			}
 			case STONE -> {
-				return "\033[36m " + quantity + " " + resourceType + "\033[0m";
+				return "\033[37m" + quantity + " " + resourceType + "\033[0m";
 			}
 			case COIN -> {
-				return "\033[33m " + quantity + " " + resourceType + "\033[0m";
+				return "\033[33m" + quantity + " " + resourceType + "\033[0m";
 			}
 			case JOLLY -> {
-				return "\033[37m " + quantity + " " + resourceType + "\033[0m";
+				return quantity + " " + resourceType;
 			}
 			default -> {
 				return "";

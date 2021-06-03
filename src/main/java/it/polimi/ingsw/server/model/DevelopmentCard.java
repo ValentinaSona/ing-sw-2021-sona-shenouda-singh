@@ -4,6 +4,9 @@ import java.io.Serializable;
 import java.util.Arrays;
 import java.util.Objects;
 
+import static it.polimi.ingsw.client.ui.cli.CLIHelper.*;
+import static it.polimi.ingsw.client.ui.cli.CLIHelper.ANSI_RESET;
+
 public class DevelopmentCard implements Serializable {
 
 	final private int id;
@@ -80,4 +83,23 @@ public class DevelopmentCard implements Serializable {
 		return production;
 	}
 
+	@Override
+	public String toString() {
+		String color = "";
+
+		switch (getType()){
+			case BLUE -> color = ANSI_BLUE + SQUARE + ANSI_RESET;
+			case GREEN -> color = ANSI_GREEN + SQUARE + ANSI_RESET;
+			case PURPLE -> color = ANSI_PURPLE + SQUARE + ANSI_RESET;
+			case YELLOW -> color = ANSI_YELLOW + SQUARE + ANSI_RESET;
+		}
+
+		return "" +
+				color + "\tCost: " + Arrays.toString(cost).substring(1, Arrays.toString(cost).length() - 1) +"\n"+
+				color +"\tType: " + type +", Level: "+ level + "\n"+
+				color +"\tProduction: " + production + "\n"+
+				color +"\tVictory points: " + victoryPoints +'\n';
+	}
 }
+
+

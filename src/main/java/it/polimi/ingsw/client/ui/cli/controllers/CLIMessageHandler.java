@@ -13,9 +13,11 @@ public class CLIMessageHandler {
 
     private static CLIMessageHandler singleton;
     private final CLI cli;
+    private final Menu menu;
 
     public CLIMessageHandler(CLI cli) {
         this.cli = cli;
+        this.menu = Menu.getInstance();
     }
 
     public static CLIMessageHandler getInstance(CLI cli){
@@ -50,14 +52,19 @@ public class CLIMessageHandler {
     public void handleServerSetupGameMessage(ServerSetupGameMessage message){
 
         cli.printMessage("["+CHECK_MARK+"] The lobby is full! The game is starting!");
-        Menu.getInstance().setupMenu();
+        //Menu.getInstance().setupMenu();
 
     }
 
     public void handleServerSetupUserMessage(ServerSetupUserMessage message){
 
-        cli.printMessage("["+CHECK_MARK+"] It's your turn! Select \"Pick starting resources\" to continue.");
-        Menu.getInstance().setSetupTurn(true);
+        if (message.getResources() != 0) {
+            cli.printMessage("[" + CHECK_MARK + "] You've received " + message.getResources() + " resources. Select \"Pick starting resources\" to continue.");
+        }
 
+        Menu.getInstance().setState(MenuStates.SETUP, message);
+        synchronized (Menu.getInstance()) {
+            Menu.getInstance().notifyAll();
+        }
     }
 }

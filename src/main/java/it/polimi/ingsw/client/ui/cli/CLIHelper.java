@@ -12,6 +12,7 @@ public class CLIHelper {
     public static final String CHECK_MARK = "\u2713";
     public static final String CIRCLE = "\u26AB";
     public static final String WHITE_CIRCLE = "\u26AA";
+    public static final String SQUARE = "\u25A0";
 
     public static final String MARBLE_LEGEND =
                 ANSI_BLUE + CIRCLE + ANSI_RESET + " Blue, "+

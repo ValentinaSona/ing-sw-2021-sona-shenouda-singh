@@ -69,6 +69,7 @@ class LobbyTest {
 
     public void setNickname(int idx, String nickname) throws InterruptedException {
         connectionHandlers[idx].update(new ClientSetNicknameMessage(nickname));
+
         assertEquals(StatusMessage.OK_NICK, backToClient.take());
     }
 

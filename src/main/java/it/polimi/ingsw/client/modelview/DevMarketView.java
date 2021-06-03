@@ -4,6 +4,9 @@ import it.polimi.ingsw.server.model.DevelopmentCard;
 
 
 import java.io.Serializable;
+import java.util.Arrays;
+
+import static it.polimi.ingsw.client.ui.cli.CLIHelper.*;
 
 public class DevMarketView implements Serializable {
     final private DevelopmentCard[][] tray;
@@ -16,4 +19,24 @@ public class DevMarketView implements Serializable {
         return tray;
     }
 
+    @Override
+    public String toString() {
+
+        String marketPrint = "";
+
+
+        for (int i = 0; i < 4; i++) {
+
+            for (int j = 0; j < 3; j++) {
+
+                marketPrint+= tray[j][i] + "\n";
+                if(j!= 2 && i == 3) marketPrint+="\n\n";
+            }
+
+        }
+
+
+
+        return marketPrint;
+    }
 }

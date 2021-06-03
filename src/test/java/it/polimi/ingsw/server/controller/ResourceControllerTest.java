@@ -276,6 +276,7 @@ class ResourceControllerTest {
         var production = new Production(new Resource[]{new Resource(2, ResourceType.SHIELD)}, new Resource[]{new Resource(2,ResourceType.SERVANT)});
         var card = new DevelopmentCard(0, new Resource[]{new Resource(1,ResourceType.COIN)} , DevelopmentType.BLUE, 1, 1, production );
 
+
         DevelopmentCardSlot targetSlot = model.getPlayerFromUser(merlin).getDevelopmentCardSlots()[0];
         try {
             targetSlot.setTargetCard(card, 1,2);

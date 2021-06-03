@@ -45,7 +45,7 @@ public class CLI implements Ui {
             output.printf("\t%d) %s \n", optNum, option);
             optNum++;
         }
-        output.println();
+
         while(true) {
             if(input.hasNextInt()) {
                 choice = input.nextInt();
