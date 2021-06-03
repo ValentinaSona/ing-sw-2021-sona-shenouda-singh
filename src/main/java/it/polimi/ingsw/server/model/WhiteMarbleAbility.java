@@ -11,4 +11,9 @@ public class WhiteMarbleAbility extends SpecialAbility {
 	public MarketMarble getMarble() {
 		return marble;
 	}
+
+	@Override
+	public String toString() {
+		return MarketMarble.WHITE.toColorString()+ "-> " + marble.toColorString();
+	}
 }

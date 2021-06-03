@@ -1,6 +1,9 @@
 package it.polimi.ingsw.server.model;
 
 import com.google.gson.Gson;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.typeadapters.RuntimeTypeAdapterFactory;
 
 import java.io.FileNotFoundException;
 import java.io.FileReader;
@@ -9,6 +12,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+
 
 public class LeaderCardsKeeper {
 
@@ -19,8 +23,19 @@ public class LeaderCardsKeeper {
     //TODO reminder to test this class to see if the file was created correctly
     public LeaderCardsKeeper() {
 
-       Gson gson = new Gson();
+      RuntimeTypeAdapterFactory<SpecialAbility> shapeAdapterFactory = RuntimeTypeAdapterFactory
+                .of(SpecialAbility.class, "abilityType")
+                .registerSubtype(DiscountAbility.class, "discount")
+                .registerSubtype(WhiteMarbleAbility.class, "marble")
+                .registerSubtype(ExtraDepotAbility.class, "depot")
+                .registerSubtype(ProductionAbility.class, "production");
+        Gson gson = new GsonBuilder()
+                        .registerTypeAdapterFactory(shapeAdapterFactory)
+                        .create();
+        //Gson gson = new Gson();
         try {
+
+
 
             leaderCards =  Stream.of(gson.fromJson(new FileReader(path), LeaderCard[].class)).collect(Collectors.toList());
             // Json file added, still has to be tested

@@ -11,4 +11,9 @@ public class DiscountAbility extends SpecialAbility {
 	public Resource getDiscount() {
 		return discount;
 	}
+
+	@Override
+	public String toString() {
+		return "-" + discount;
+	}
 }

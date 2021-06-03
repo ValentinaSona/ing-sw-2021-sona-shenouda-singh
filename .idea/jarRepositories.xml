@@ -16,5 +16,10 @@
       <option name="name" value="JBoss Community repository" />
       <option name="url" value="https://repository.jboss.org/nexus/content/repositories/public/" />
     </remote-repository>
+    <remote-repository>
+      <option name="id" value="my-repo1" />
+      <option name="name" value="your custom repo" />
+      <option name="url" value="https://artifactory.cronapp.io/public-release/" />
+    </remote-repository>
   </component>
 </project>

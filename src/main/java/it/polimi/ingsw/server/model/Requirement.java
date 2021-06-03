@@ -47,4 +47,15 @@ public class Requirement implements Serializable {
     public boolean isResource() {
         return isResource;
     }
+
+    @Override
+    public String toString() {
+        if (!isResource){
+            String levels = "";
+            if (level !=0)  levels = "(Lv. " + level +")";
+            return number + " " + type + levels;
+        } else {
+            return resource.toString();
+        }
+    }
 }

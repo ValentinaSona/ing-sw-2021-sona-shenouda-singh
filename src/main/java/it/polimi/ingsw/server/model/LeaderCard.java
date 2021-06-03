@@ -1,6 +1,7 @@
 package it.polimi.ingsw.server.model;
 
 import java.io.Serializable;
+import java.util.Arrays;
 
 public class LeaderCard extends SpecialAbility implements Serializable {
 
@@ -41,5 +42,15 @@ public class LeaderCard extends SpecialAbility implements Serializable {
 
 	public int getId() {
 		return id;
+	}
+
+	@Override
+	public String toString() {
+
+		return "" +
+				"\tRequirements: " + Arrays.toString(requirements).substring(1, Arrays.toString(requirements).length() - 1)+ "\n" +
+
+				"\tSpecial ability: " + specialAbility.toString() + "\n"+
+				"\tVictory points: " + victoryPoints + "\n";
 	}
 }

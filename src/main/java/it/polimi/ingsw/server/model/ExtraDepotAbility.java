@@ -17,4 +17,9 @@ public class ExtraDepotAbility extends SpecialAbility {
 	public ResourceType getType() {
 		return type;
 	}
+
+	@Override
+	public String toString() {
+		return capacity + " " + type +" depot";
+	}
 }
