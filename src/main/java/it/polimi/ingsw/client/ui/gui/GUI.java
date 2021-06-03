@@ -25,7 +25,6 @@ public class GUI extends Application implements Ui {
 
         Rectangle2D screenBounds = Screen.getPrimary().getBounds();
         System.out.println(screenBounds);
-        MatchSettings.getInstance().setScreenSize(screenBounds.getMaxX(), screenBounds.getMaxY());
 
         URL url = new File("src/main/resources/fxml/mainScreen.fxml").toURI().toURL();
         Parent root = FXMLLoader.load(url);

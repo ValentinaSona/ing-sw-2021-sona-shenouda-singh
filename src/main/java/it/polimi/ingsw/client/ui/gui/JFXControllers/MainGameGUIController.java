@@ -4,10 +4,13 @@ import it.polimi.ingsw.utils.networking.transmittables.StatusMessage;
 import javafx.beans.binding.Bindings;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 
 public class MainGameGUIController extends AbstractGUIController {
 
+    @FXML
+    private HBox labelBox;
     @FXML
     private StackPane boardPane;
 

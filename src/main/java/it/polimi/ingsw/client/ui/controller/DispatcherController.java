@@ -4,6 +4,8 @@ import it.polimi.ingsw.client.modelview.GameView;
 import it.polimi.ingsw.client.modelview.MatchSettings;
 import it.polimi.ingsw.client.ui.cli.CLI;
 import it.polimi.ingsw.client.ui.cli.controllers.CLIMessageHandler;
+import it.polimi.ingsw.client.ui.gui.GUIHelper;
+import it.polimi.ingsw.client.ui.gui.JFXControllers.ScreenName;
 import it.polimi.ingsw.utils.networking.ClientHandleable;
 import it.polimi.ingsw.utils.networking.Transmittable;
 import it.polimi.ingsw.utils.networking.transmittables.StatusMessage;
@@ -129,7 +131,19 @@ public class DispatcherController implements Runnable, LambdaObserver {
     public void handleSetupUser(ServerSetupUserMessage message){
         GameView.getInstance().getPlayerFromUser(message.getUser()).setFaithTrackView(message.getFaithTrackView());
         if(gui){
-            ((LeaderCardSelectionController)currentController).handleSetupUserMessage(message);
+
+            synchronized (DispatcherController.getInstance()) {
+
+                while(GUIHelper.getInstance().getCurrentScreen() != ScreenName.STARTING_CHOICE) {
+                    try {
+                        DispatcherController.getInstance().wait();
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+
+                ((LeaderCardSelectionController)currentController).handleSetupUserMessage(message);
+            }
         }else {
             CLIMessageHandler.getInstance().handleServerSetupUserMessage(message);
         }

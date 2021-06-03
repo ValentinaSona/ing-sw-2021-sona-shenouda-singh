@@ -3,8 +3,10 @@ package it.polimi.ingsw.client.ui.gui.JFXControllers;
 import it.polimi.ingsw.client.modelview.MatchSettings;
 import it.polimi.ingsw.client.ui.controller.UIController;
 import it.polimi.ingsw.client.ui.controller.UiControllerInterface;
+import it.polimi.ingsw.client.ui.gui.GUIHelper;
 import it.polimi.ingsw.utils.networking.transmittables.StatusMessage;
 import javafx.animation.FadeTransition;
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -27,6 +29,7 @@ public class GameCreationGUIController extends AbstractGUIController implements 
 
     @FXML
     private void initialize() {
+        GUIHelper.getInstance().setCurrentScreen(ScreenName.CREATION);
         numberOfPlayers = 0;
         nicknameLabel.setText(MatchSettings.getInstance().getClientNickname());
         FadeTransition fade = new FadeTransition(Duration.millis(300), creationPanel);
@@ -53,20 +56,24 @@ public class GameCreationGUIController extends AbstractGUIController implements 
     }
 
     public void handleSetCountConfirmation(boolean success){
-        if(success){
-            change(ScreenName.LOBBY);
-        }else{
-            //messaggio d'errore a video
-        }
+        Platform.runLater(() -> {
+            if(success){
+                change(ScreenName.LOBBY);
+            }else{
+                //messaggio d'errore a video
+            }
+        });
     }
 
     @Override
     public void handleStatusMessage(StatusMessage message) {
 
-        if(message.equals(StatusMessage.OK_COUNT)){
-            //ho ricevuto l'ok dal server
-            handleSetCountConfirmation(true);
-        }
+        Platform.runLater(() -> {
+            if(message.equals(StatusMessage.OK_COUNT)){
+                //ho ricevuto l'ok dal server
+                handleSetCountConfirmation(true);
+            }
+        });
 
     }
 }
