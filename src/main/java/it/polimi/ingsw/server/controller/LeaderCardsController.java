@@ -1,5 +1,6 @@
 package it.polimi.ingsw.server.controller;
 
+import it.polimi.ingsw.server.exception.EndOfGameException;
 import it.polimi.ingsw.server.model.*;
 import it.polimi.ingsw.server.model.Depot;
 import it.polimi.ingsw.server.model.DevelopmentCardSlot;
@@ -69,7 +70,7 @@ public class LeaderCardsController {
      * @param view the player's corresponding RemoteViewHandler that will handle status messages to be sent back to the view.
      * @param user the User corresponding to the player making the action.
      */
-    public void throwLeaderCard(ClientThrowLeaderCardMessage action, RemoteViewHandler view, User user){
+    public void throwLeaderCard(ClientThrowLeaderCardMessage action, RemoteViewHandler view, User user) throws EndOfGameException {
 
         Player player = model.getPlayerFromUser(user);
 
@@ -87,6 +88,7 @@ public class LeaderCardsController {
                     model.getUserFromPlayer(player)
             ));
             player.getLeaderCards().set(action.getLeaderId().getValue(), null);
+
             resourceController.addFaithPoints(player,new Resource(1, ResourceType.FAITH));
         }
     }

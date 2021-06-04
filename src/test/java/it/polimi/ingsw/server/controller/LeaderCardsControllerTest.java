@@ -3,6 +3,7 @@ package it.polimi.ingsw.server.controller;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.typeadapters.RuntimeTypeAdapterFactory;
+import it.polimi.ingsw.server.exception.EndOfGameException;
 import it.polimi.ingsw.server.model.*;
 import it.polimi.ingsw.server.view.RemoteViewHandler;
 import it.polimi.ingsw.utils.networking.Connection;
@@ -64,7 +65,11 @@ class LeaderCardsControllerTest {
 
 
         var message2 = new ClientThrowLeaderCardMessage(Id.LEADER_CARD_1);
-        controller.throwLeaderCard(message2,view, merlin);
+        try {
+            controller.throwLeaderCard(message2,view, merlin);
+        } catch (EndOfGameException e) {
+            e.printStackTrace();
+        }
         Assertions.assertNull(model.getPlayerFromUser(merlin).getLeaderCards().get(Id.LEADER_CARD_1.getValue()));
 
     }

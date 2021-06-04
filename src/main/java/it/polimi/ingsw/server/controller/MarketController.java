@@ -1,6 +1,7 @@
 package it.polimi.ingsw.server.controller;
 
 
+import it.polimi.ingsw.server.exception.EndOfGameException;
 import it.polimi.ingsw.server.exception.TwoLeaderCardsException;
 import it.polimi.ingsw.server.model.*;
 import it.polimi.ingsw.server.model.Player;
@@ -48,7 +49,7 @@ public class MarketController{
      * @param view the player's corresponding RemoteViewHandler that will handle status messages to be sent back to the view.
      * @param user the User corresponding to the player making the action.
      */
-    public void buyMarbles(ClientBuyMarblesMessage action, RemoteViewHandler view, User user) {
+    public void buyMarbles(ClientBuyMarblesMessage action, RemoteViewHandler view, User user) throws EndOfGameException {
 
         Player player = model.getPlayerFromUser(user);
 
@@ -65,6 +66,7 @@ public class MarketController{
                 ArrayList<Resource> resources = (ArrayList<Resource>) convertMarbles(marbles);
                 player.addToTempResources(resources);
 
+                //TODO: should also send faithTrack;
                 model.notify(new ServerBoughtMarblesMessage(market.getVisible(),
                         resources,
                         model.getUserFromPlayer(player)));
@@ -86,7 +88,7 @@ public class MarketController{
      * @param view the player's corresponding RemoteViewHandler that will handle status messages to be sent back to the view.
      * @param user the User corresponding to the player making the action.
      */
-    public void convertWhiteMarbles(ClientConvertWhiteMarblesMessage action, RemoteViewHandler view, User user) {
+    public void convertWhiteMarbles(ClientConvertWhiteMarblesMessage action, RemoteViewHandler view, User user) throws EndOfGameException {
 
         Player player = model.getPlayerFromUser(user);
 
@@ -116,7 +118,7 @@ public class MarketController{
      * @param marbles marbles to be collected
      * @return ArrayList of resources, without faith included, to be deposited into the warehouse.
      */
-    private List<Resource> convertMarbles(MarketMarble[] marbles) {
+    private List<Resource> convertMarbles(MarketMarble[] marbles) throws EndOfGameException {
         ArrayList<Resource> temp = new ArrayList<>();
         Resource faithPoints = null;
 

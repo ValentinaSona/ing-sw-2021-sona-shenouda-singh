@@ -2,6 +2,7 @@ package it.polimi.ingsw.utils.networking.transmittables.clientmessages.game;
 
 import it.polimi.ingsw.server.controller.Controller;
 import it.polimi.ingsw.server.controller.User;
+import it.polimi.ingsw.server.exception.EndOfGameException;
 import it.polimi.ingsw.server.model.Id;
 import it.polimi.ingsw.server.view.RemoteViewHandler;
 import it.polimi.ingsw.utils.networking.ControllerHandleable;
@@ -16,11 +17,18 @@ public class ClientThrowLeaderCardMessage  implements ClientMessage, ControllerH
 
     @Override
     public boolean handleMessage(Controller handler, RemoteViewHandler view, User user){
-        handler.leaderCardsController.throwLeaderCard(this, view, user);
+        try {
+            handler.leaderCardsController.throwLeaderCard(this, view, user);
+        } catch (EndOfGameException e) {
+            endOfGame(handler, view);
+        }
         return true;
     }
 
     public Id getLeaderId() {
         return leaderCardId;
+    }
+    private void endOfGame(Controller handler, RemoteViewHandler view) {
+        handler.turnController.endOfGame(view);
     }
 }

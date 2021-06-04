@@ -1,6 +1,7 @@
 package it.polimi.ingsw.server.controller;
 
 import it.polimi.ingsw.server.exception.DevelopmentCardException;
+import it.polimi.ingsw.server.exception.EndOfGameException;
 import it.polimi.ingsw.server.exception.InvalidDepotException;
 import it.polimi.ingsw.server.model.*;
 import it.polimi.ingsw.server.view.RemoteViewHandler;
@@ -43,12 +44,19 @@ class ResourceControllerTest {
         model.subscribeUser(arthur);
         model.subscribeUser(merlin);
 
-        controller.addFaithPoints(model.getPlayerFromUser(arthur), new Resource(2, ResourceType.FAITH));
+        try {
+            controller.addFaithPoints(model.getPlayerFromUser(arthur), new Resource(2, ResourceType.FAITH));
+        } catch (EndOfGameException e) {
+            e.printStackTrace();
+        }
         Assertions.assertEquals(2, model.getPlayerFromUser(arthur).getFaithTrack().getFaithMarker());
 
 
-
-        controller.addFaithPoints(model.getPlayerFromUser(merlin), new Resource(10, ResourceType.FAITH));
+        try {
+            controller.addFaithPoints(model.getPlayerFromUser(merlin), new Resource(10, ResourceType.FAITH));
+        } catch (EndOfGameException e) {
+            e.printStackTrace();
+        }
 
         Assertions.assertEquals(10, model.getPlayerFromUser(merlin).getFaithTrack().getFaithMarker());
         Assertions.assertEquals(2, model.getPlayerFromUser(arthur).getFaithTrack().getFaithMarker());
@@ -80,7 +88,11 @@ class ResourceControllerTest {
         model.setGameState(GameState.PLAY);
 
 
-        controller.throwResources(view, merlin);
+        try {
+            controller.throwResources(view, merlin);
+        } catch (EndOfGameException e) {
+            e.printStackTrace();
+        }
 
         Assertions.assertEquals(0, model.getPlayerFromUser(merlin).getFaithTrack().getFaithMarker());
         Assertions.assertEquals(0, model.getPlayerFromUser(arthur).getFaithTrack().getFaithMarker());
@@ -90,7 +102,11 @@ class ResourceControllerTest {
         resources.add(new Resource(2,ResourceType.STONE));
         model.getPlayerFromUser(merlin).addToTempResources(resources);
 
-        controller.throwResources(view, merlin);
+        try {
+            controller.throwResources(view, merlin);
+        } catch (EndOfGameException e) {
+            e.printStackTrace();
+        }
         Assertions.assertEquals(0, model.getPlayerFromUser(merlin).getFaithTrack().getFaithMarker());
         Assertions.assertEquals(2, model.getPlayerFromUser(arthur).getFaithTrack().getFaithMarker());
 

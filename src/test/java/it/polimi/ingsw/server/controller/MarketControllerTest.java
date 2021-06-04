@@ -1,5 +1,6 @@
 package it.polimi.ingsw.server.controller;
 
+import it.polimi.ingsw.server.exception.EndOfGameException;
 import it.polimi.ingsw.server.model.*;
 import it.polimi.ingsw.server.view.RemoteViewHandler;
 import it.polimi.ingsw.utils.networking.Connection;
@@ -82,7 +83,11 @@ class MarketControllerTest {
 
         var message = new ClientBuyMarblesMessage(0);
 
-        controller.buyMarbles(message, view, merlin);
+        try {
+            controller.buyMarbles(message, view, merlin);
+        } catch (EndOfGameException e) {
+            e.printStackTrace();
+        }
 
         Assertions.assertEquals(faithPoints.getQuantity(), model.getPlayerFromUser(merlin).getFaithTrack().getFaithMarker());
         Assertions.assertEquals(resources, model.getPlayerFromUser(merlin).getTempResources());
@@ -180,11 +185,19 @@ class MarketControllerTest {
 
 
         var message = new ClientBuyMarblesMessage(i);
-        controller.buyMarbles(message, view, merlin);
+        try {
+            controller.buyMarbles(message, view, merlin);
+        } catch (EndOfGameException e) {
+            e.printStackTrace();
+        }
 
         var mess2 = new ClientConvertWhiteMarblesMessage(colors);
 
-        controller.convertWhiteMarbles(mess2, view, merlin);
+        try {
+            controller.convertWhiteMarbles(mess2, view, merlin);
+        } catch (EndOfGameException e) {
+            e.printStackTrace();
+        }
 
         var actual = model.getPlayerFromUser(merlin).getTempResources();
         for (int f = 0; f < resources.size(); f++){

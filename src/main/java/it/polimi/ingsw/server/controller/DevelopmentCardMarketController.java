@@ -68,13 +68,13 @@ public class DevelopmentCardMarketController{
         }
     }
 
-    /** TODO: this needs some serious refactoring. Why are we having slot.check() set a boolean? It should not get to calling buy slot.buyDevelopmentCard() anyway if it throws?
+    /**
      * Called to actually buy the card and
      * @param action the ClientMessage containing information about the player's action.
      * @param view the player's corresponding RemoteViewHandler that will handle status messages to be sent back to the view.
      * @param user the User corresponding to the player making the action.
      */
-    public void buyTargetCard(ClientBuyTargetCardMessage action, RemoteViewHandler view, User user){
+    public void buyTargetCard(ClientBuyTargetCardMessage action, RemoteViewHandler view, User user) throws EndOfGameException {
 
         Player player = model.getPlayerFromUser(user);
 
@@ -89,12 +89,22 @@ public class DevelopmentCardMarketController{
                 //in this case i don't have to separate the two action as opposed to the production process of validation because i can buy only one card every turn
                 player.toggleMainAction();
                 slot.buyDevelopmentCard();
+
+
+
                 //now i can remove the card from the market
-                //TODO: is the return value actually ever used?
                 model.notify(new ServerBuyDevelopmentCardMessage(
                         model.getDevelopmentCardsMarket().buyDevelopmentCard(slot.getRow(), slot.getCol()),
                         model.getUserFromPlayer(player)
                 ));
+                int cards = 0;
+                for (DevelopmentCardSlot devSlot : player.getDevelopmentCardSlots()){
+                    cards += devSlot.getSlot().size();
+                }
+
+                if (cards >= 7) throw new EndOfGameException(false);
+
+
             } catch (NotSufficientResourceException e) {
                 try {
                     resourceController.resetResources(player, e.getTempResources());

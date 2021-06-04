@@ -45,4 +45,5 @@ public abstract class Slot {
     }
 
     public abstract Resource[] activateProduction();
+
 }

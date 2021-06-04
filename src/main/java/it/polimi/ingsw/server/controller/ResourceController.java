@@ -47,7 +47,7 @@ public class ResourceController{
      * @param player Player who is gaining the additional faith points.
      * @param faithPoints Resource to be added to the faith track.
      */
-    public void addFaithPoints(Player player, Resource faithPoints){
+    public void addFaithPoints(Player player, Resource faithPoints) throws EndOfGameException {
         try{
             FaithTrack faithTrack = player.getFaithTrack();
             faithTrack.addFaithPoints(faithPoints);
@@ -69,7 +69,9 @@ public class ResourceController{
                 ));
             }
 
-            // TODO: here, throw an end of game exception if vatican report is 3
+            if (vaticanReportException.getReport()==3) {
+                throw new EndOfGameException(false);
+            }
 
         }
     }
@@ -136,7 +138,7 @@ public class ResourceController{
      * @param view the player's corresponding RemoteViewHandler that will handle status messages to be sent back to the view.
      * @param user the User corresponding to the player making the action.
      */
-    public void throwResources(RemoteViewHandler view, User user) {
+    public void throwResources(RemoteViewHandler view, User user) throws EndOfGameException {
         Player player = model.getPlayerFromUser(user);
 
         if( !(player.getTurn()) ||

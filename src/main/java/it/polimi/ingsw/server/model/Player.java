@@ -180,6 +180,7 @@ public class Player extends LambdaObservable<Transmittable> {
 		return true;
 	}
 
+
 	/**
 	 * Getter for the development card developmentCardSlots.
 	 * @return all the development cards on the player's board.
