@@ -1,6 +1,7 @@
 package it.polimi.ingsw.server.model;
 
 import it.polimi.ingsw.client.modelview.DevMarketView;
+import it.polimi.ingsw.server.exception.EndOfGameException;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -69,6 +70,8 @@ public class DevelopmentCardsMarketAbility implements DevMarket {
     public DevMarketView getVisible() {
         return cardsMarket.getVisible();
     }
+
+    public void discard (DevelopmentType color) throws EndOfGameException {cardsMarket.discard(color);}
 
     /**
      * Method called when a player activates a new DiscountAbility

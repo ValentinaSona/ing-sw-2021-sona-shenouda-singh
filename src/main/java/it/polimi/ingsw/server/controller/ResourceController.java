@@ -68,11 +68,14 @@ public class ResourceController{
                         model.getUserFromPlayer(p)
                 ));
             }
+
+            // TODO: here, throw an end of game exception if vatican report is 3
+
         }
     }
 
 
-    /** TODO: check exception source
+    /**
      * Subtracts resources from the strongbox or the warehouse as part of the process in which the user selects how to pay for a production/development card.
      * If the attempt to buy does not succeed, the resetResources method is invoked to place them back.
      * @param player Player whose resources are being managed.
@@ -159,6 +162,10 @@ public class ResourceController{
                 ));
 
                 faithPoints = new Resource(thrown, ResourceType.FAITH);
+
+
+                // TODO: also, handle solo game (Instead of other players, faith points go to Lorenzo).
+
                 ArrayList<Player> players = model.getPlayers();
                 players.remove(player);
 

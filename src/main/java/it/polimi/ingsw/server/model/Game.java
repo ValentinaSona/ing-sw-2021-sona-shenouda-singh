@@ -21,6 +21,8 @@ public class Game extends LambdaObservable<Transmittable> {
     private Player currentPlayer;
     private boolean active;
     private GameState gameState;
+    private final boolean solo;
+    private Lorenzo Lorenzo;
 
 
 
@@ -49,6 +51,25 @@ public class Game extends LambdaObservable<Transmittable> {
         this.developmentCardsMarket = DevelopmentBuilder.build();
         this.leaderCardsKeeper = new LeaderCardsKeeper();
         this.gameState = GameState.SETUP_GAME;
+
+        if (numberOfPlayers==1){
+            // If the game is a single player
+            this.solo = true;
+            this.Lorenzo = new Lorenzo();
+
+        } else {
+
+            this.solo = false;
+            this.Lorenzo = null;
+        }
+    }
+
+    public Lorenzo getLorenzo() {
+        return Lorenzo;
+    }
+
+    public boolean isSolo() {
+        return solo;
     }
 
     public Market getMarketInstance(){

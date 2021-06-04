@@ -128,6 +128,7 @@ public class DispatcherController implements Runnable, LambdaObserver {
     //TODO
     public void handleSetupUser(ServerSetupUserMessage message){
         GameView.getInstance().getPlayerFromUser(message.getUser()).setFaithTrackView(message.getFaithTrackView());
+
         if(gui){
             ((LeaderCardSelectionController)currentController).handleSetupUserMessage(message);
         }else {
