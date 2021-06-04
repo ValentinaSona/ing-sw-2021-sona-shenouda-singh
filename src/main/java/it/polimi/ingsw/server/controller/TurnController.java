@@ -177,22 +177,22 @@ public class TurnController{
             case DISCARD_BLUE -> {
                 model.getDevelopmentCardsMarket().discard(DevelopmentType.BLUE);
                 model.getDevelopmentCardsMarket().discard(DevelopmentType.BLUE);
-                model.notify(new ServerSoloDiscardMessage(model.getDevelopmentCardsMarket().getVisible()));
+                model.notify(new ServerSoloDiscardMessage(model.getDevelopmentCardsMarket().getVisible(), DevelopmentType.BLUE));
             }
             case DISCARD_GREEN -> {
                 model.getDevelopmentCardsMarket().discard(DevelopmentType.GREEN);
                 model.getDevelopmentCardsMarket().discard(DevelopmentType.GREEN);
-                model.notify(new ServerSoloDiscardMessage(model.getDevelopmentCardsMarket().getVisible()));
+                model.notify(new ServerSoloDiscardMessage(model.getDevelopmentCardsMarket().getVisible(), DevelopmentType.GREEN));
             }
             case DISCARD_PURPLE -> {
                 model.getDevelopmentCardsMarket().discard(DevelopmentType.PURPLE);
                 model.getDevelopmentCardsMarket().discard(DevelopmentType.PURPLE);
-                model.notify(new ServerSoloDiscardMessage(model.getDevelopmentCardsMarket().getVisible()));
+                model.notify(new ServerSoloDiscardMessage(model.getDevelopmentCardsMarket().getVisible(), DevelopmentType.PURPLE));
             }
             case DISCARD_YELLOW -> {
                 model.getDevelopmentCardsMarket().discard(DevelopmentType.YELLOW);
                 model.getDevelopmentCardsMarket().discard(DevelopmentType.YELLOW);
-                model.notify(new ServerSoloDiscardMessage(model.getDevelopmentCardsMarket().getVisible()));
+                model.notify(new ServerSoloDiscardMessage(model.getDevelopmentCardsMarket().getVisible(), DevelopmentType.YELLOW));
 
             }
         }
