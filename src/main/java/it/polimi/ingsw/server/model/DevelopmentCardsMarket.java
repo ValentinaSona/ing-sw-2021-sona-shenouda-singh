@@ -1,6 +1,7 @@
 package it.polimi.ingsw.server.model;
 
 import it.polimi.ingsw.client.modelview.DevMarketView;
+import it.polimi.ingsw.server.exception.EndOfGameException;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -98,4 +99,30 @@ public class DevelopmentCardsMarket implements  DevMarket {
 	public HashMap<Player, List<Resource>> getMap() {
 		throw new RuntimeException("No player has still activated a discount ability, invalid method");
 	}
+
+	/**
+	 * Called by the solo action tokens of type discard.
+	 * @param color The type of development cards to discard.
+	 * @throws EndOfGameException when no development cards are left. The game is automatically lost.
+	 */
+	public void discard(DevelopmentType color) throws EndOfGameException {
+		int type = 0;
+		switch (color){
+			case GREEN -> type = 0;
+			case BLUE -> type = 1;
+			case YELLOW -> type = 2;
+			case PURPLE -> type = 3;
+		}
+
+		for (int i = 0; i < 3; i++){
+			if  (decks[i][type].cardsLeft()!= 0){
+				decks[i][type].pickCard();
+				return;
+			}
+		}
+		// If no cards are left of that type, the game has been lost.
+		throw new EndOfGameException(true);
+
+	}
+
 }

@@ -59,7 +59,7 @@ public class CLIMessageHandler {
     public void handleServerSetupUserMessage(ServerSetupUserMessage message){
 
         if (message.getResources() != 0) {
-            cli.printMessage("[" + CHECK_MARK + "] You've received " + message.getResources() + " resources. Select \"Pick starting resources\" to continue.");
+            cli.printMessage("[ ] You've received " + message.getResources() + " resources. Select \"Pick starting resources\" to continue.");
         }
 
         Menu.getInstance().setState(MenuStates.SETUP, message);

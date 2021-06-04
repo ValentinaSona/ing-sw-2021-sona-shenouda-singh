@@ -260,7 +260,7 @@ public class Player extends LambdaObservable<Transmittable> {
 		warehouse.add(new SpecialDepot(capacity, id, type));
 	}
 
-	/** TODO: tests id doesn't break
+	/**
 	 * Called to add special slots to the slot array. they only contain productions.
 	 * @param cost the resource the special production requires.
 	 */
@@ -296,6 +296,12 @@ public class Player extends LambdaObservable<Transmittable> {
 		//	update(TEMP_RESOURCES_UPDATE, null, tempResources);
 	}
 
+	/**
+	 * Preemptively checks if tempResources contains the argument.
+	 * Used to check that nothing has gone wrong with the messages.
+	 * @param resource resource to check for.
+	 * @return whether the resource is present or not.
+	 */
 	public boolean tempResourcesContains (Resource resource){
 		ArrayList<Resource> tempResources = getTempResources();
 
@@ -312,12 +318,11 @@ public class Player extends LambdaObservable<Transmittable> {
 
 	public void addToTempResources(ArrayList<Resource> resources){
 		this.tempResources = resources;
-		//update(TEMP_RESOURCES_UPDATE, null, tempResources);
+
 	}
 
 	public void dumpTempResources(){
 		tempResources.clear();
-		//update(TEMP_RESOURCES_EMPTY, null, null);
 	}
 
 	public String getNickname() {
@@ -348,4 +353,21 @@ public class Player extends LambdaObservable<Transmittable> {
 	public ArrayList<SlotView> getVisibleSlots() {
 		return null;
 	}
+
+	public int getVictoryPoints(){
+		int vp = 0;
+
+		for (Slot slot : slots) {
+			for (DevelopmentCard card : ((DevelopmentCardSlot) slot).getSlot()){
+				vp += card.getVictoryPoints();
+			}
+		}
+
+		//TODO FINISH
+		return vp;
+
+
+	}
+
+
 }

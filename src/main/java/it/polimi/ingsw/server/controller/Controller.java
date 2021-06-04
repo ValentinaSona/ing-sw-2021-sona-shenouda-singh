@@ -55,6 +55,7 @@ public class Controller implements LambdaObserver {
         }catch (InterruptedException e){
             Thread.currentThread().interrupt();
         }
+
     }
 
     public void dispatchViewClientMessage(){
@@ -65,6 +66,11 @@ public class Controller implements LambdaObserver {
         }catch (InterruptedException e){
             Thread.currentThread().interrupt();
         }
+        //TODO: possible handle point of EndofGame?
+    }
+
+    private void endGame(){
+
     }
 
 

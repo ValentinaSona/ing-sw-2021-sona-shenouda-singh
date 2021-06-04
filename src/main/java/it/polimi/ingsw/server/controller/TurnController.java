@@ -1,13 +1,12 @@
 package it.polimi.ingsw.server.controller;
 
+import it.polimi.ingsw.server.exception.EndOfGameException;
 import it.polimi.ingsw.server.exception.VaticanReportException;
-import it.polimi.ingsw.server.model.Game;
-import it.polimi.ingsw.server.model.GameState;
-import it.polimi.ingsw.server.model.LeaderCardsKeeper;
-import it.polimi.ingsw.server.model.Player;
+import it.polimi.ingsw.server.model.*;
 import it.polimi.ingsw.server.view.RemoteViewHandler;
 import it.polimi.ingsw.utils.networking.transmittables.StatusMessage;
 import it.polimi.ingsw.utils.networking.transmittables.clientmessages.game.ClientEndTurnMessage;
+import it.polimi.ingsw.utils.networking.transmittables.servermessages.ServerFaithTrackMessage;
 import it.polimi.ingsw.utils.networking.transmittables.servermessages.ServerSetupUserMessage;
 import it.polimi.ingsw.utils.networking.transmittables.servermessages.ServerStartTurnMessage;
 
@@ -56,6 +55,10 @@ public class TurnController{
             }else{
                 model.setCurrentPlayer(players.get(idx+1));
             }
+
+            // TODO: LorenzoAction();
+            // TODO: Add a message to tell client wtf happened?
+
 
             Player startingPlayer = model.getCurrentPlayer();
             startingPlayer.toggleTurn();
@@ -130,6 +133,61 @@ public class TurnController{
         }else{
             model.setCurrentPlayer(players.get(idx+1));
             startSetupTurn();
+        }
+
+    }
+
+    /** TODO: two messages to define here, one for the black cross and one for the updated develmarket view.
+     * Performs a random solo action.
+     * @throws EndOfGameException if Lorenzo wins.
+     */
+    private void LorenzoAction() throws EndOfGameException {
+        switch (model.getLorenzo().pop()){
+            case MOVE -> {
+                try {
+                    model.getLorenzo().getFaithTrack().addFaithPoints(2);
+                } catch (VaticanReportException e) {
+                    Player player = model.getPlayers().get(0);
+                    player.getFaithTrack().validatePopeFavor(e.getReport());
+
+                    // This null needs to be handled client side but shouldn't be a problem as it's expected of singleplayer.
+                    model.notify( new ServerFaithTrackMessage( player.getVisibleFaithTrack(), null ) );
+
+                    if (e.getReport()==3) throw new EndOfGameException(true);
+
+                }
+            }
+
+            case MOVE_SHUFFLE -> {
+                try {
+                    model.getLorenzo().getFaithTrack().addFaithPoints(1);
+                } catch (VaticanReportException e) {
+                    Player player = model.getPlayers().get(0);
+                    player.getFaithTrack().validatePopeFavor(e.getReport());
+
+                    // This null needs to be handled client side but shouldn't be a problem as it's expected of singleplayer.
+                    model.notify( new ServerFaithTrackMessage( player.getVisibleFaithTrack(), null ) );
+
+                }
+                model.getLorenzo().shuffle();
+            }
+            case DISCARD_BLUE -> {
+                model.getDevelopmentCardsMarket().discard(DevelopmentType.BLUE);
+                model.getDevelopmentCardsMarket().discard(DevelopmentType.BLUE);
+            }
+            case DISCARD_GREEN -> {
+                model.getDevelopmentCardsMarket().discard(DevelopmentType.GREEN);
+                model.getDevelopmentCardsMarket().discard(DevelopmentType.GREEN);
+            }
+            case DISCARD_PURPLE -> {
+                model.getDevelopmentCardsMarket().discard(DevelopmentType.PURPLE);
+                model.getDevelopmentCardsMarket().discard(DevelopmentType.PURPLE);
+            }
+            case DISCARD_YELLOW -> {
+                model.getDevelopmentCardsMarket().discard(DevelopmentType.YELLOW);
+                model.getDevelopmentCardsMarket().discard(DevelopmentType.YELLOW);
+
+            }
         }
 
     }

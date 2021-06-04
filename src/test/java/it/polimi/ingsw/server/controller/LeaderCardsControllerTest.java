@@ -1,5 +1,8 @@
 package it.polimi.ingsw.server.controller;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.typeadapters.RuntimeTypeAdapterFactory;
 import it.polimi.ingsw.server.model.*;
 import it.polimi.ingsw.server.view.RemoteViewHandler;
 import it.polimi.ingsw.utils.networking.Connection;
@@ -7,6 +10,8 @@ import it.polimi.ingsw.utils.networking.transmittables.clientmessages.game.Clien
 import it.polimi.ingsw.utils.networking.transmittables.clientmessages.game.ClientThrowLeaderCardMessage;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+
+import java.io.FileReader;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.mock;
@@ -40,6 +45,7 @@ class LeaderCardsControllerTest {
         var req2 = new Requirement[]{new Requirement(new Resource(2, ResourceType.COIN))};
         LeaderCard card = new LeaderCard(0,req,2,new WhiteMarbleAbility(MarketMarble.BLUE));
         LeaderCard card2 = new LeaderCard(0,req2,2,new DiscountAbility(new Resource(1,ResourceType.SHIELD)));
+
 
         model.getPlayerFromUser(merlin).setLeaderCards(new LeaderCard[]{card, card2});
         model.getPlayerFromUser(merlin).getStrongbox().addResources(new Resource(3, ResourceType.COIN));
