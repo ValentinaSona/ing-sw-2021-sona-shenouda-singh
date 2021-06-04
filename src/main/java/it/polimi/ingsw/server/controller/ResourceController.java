@@ -49,12 +49,16 @@ public class ResourceController{
      */
     public void addFaithPoints(Player player, Resource faithPoints) throws EndOfGameException {
         try{
-            FaithTrack faithTrack = player.getFaithTrack();
-            faithTrack.addFaithPoints(faithPoints);
-            model.notify(new ServerFaithTrackMessage(
-                    player.getVisibleFaithTrack(),
-                    model.getUserFromPlayer(player)
-            ));
+            if (!model.isSolo()) {
+                FaithTrack faithTrack = player.getFaithTrack();
+                faithTrack.addFaithPoints(faithPoints);
+                model.notify(new ServerFaithTrackMessage(
+                        player.getVisibleFaithTrack(),
+                        model.getUserFromPlayer(player)
+                ));
+            } else {
+                model.getLorenzo().getFaithTrack().addFaithPoints(faithPoints);
+            }
         }catch (VaticanReportException vaticanReportException){
 
             // Run the validatePopeFavor for all the players in the game.
@@ -165,14 +169,16 @@ public class ResourceController{
 
                 faithPoints = new Resource(thrown, ResourceType.FAITH);
 
+                if (!model.isSolo()) {
+                    ArrayList<Player> players = model.getPlayers();
+                    players.remove(player);
 
-                // TODO: also, handle solo game (Instead of other players, faith points go to Lorenzo).
-
-                ArrayList<Player> players = model.getPlayers();
-                players.remove(player);
-
-                for (Player p : players) {
-                    addFaithPoints(p, faithPoints);
+                    for (Player p : players) {
+                        addFaithPoints(p, faithPoints);
+                    }
+                } else {
+                    // Add them to Lorenzo.
+                    addFaithPoints(null,faithPoints);
                 }
             }
         }
