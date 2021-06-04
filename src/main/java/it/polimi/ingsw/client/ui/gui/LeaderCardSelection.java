@@ -14,7 +14,7 @@ public class LeaderCardSelection {
         this.card = card;
         this.image = image;
         isSelected = false;
-        selection = new ImageView(new Image("assets/card_selection.png"));
+        selection = new ImageView(new Image("assets/game/leader_cards/card_selection.png"));
     }
 
     public boolean isSelected() {

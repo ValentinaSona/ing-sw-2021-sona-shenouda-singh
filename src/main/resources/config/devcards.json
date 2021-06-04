@@ -29,7 +29,7 @@
           }
         },
         {
-          "id": 4,
+          "id": 12,
           "cost": [
             {
               "quantity": 2,
@@ -67,7 +67,7 @@
           }
         },
         {
-          "id": 43,
+          "id": 4,
           "cost": [
             {
               "quantity": 1,
@@ -101,7 +101,7 @@
           }
         },
         {
-          "id": 47,
+          "id": 8,
           "cost": [
             {
               "quantity": 3,
@@ -141,7 +141,7 @@
     {
       "deck": [
         {
-          "id": 1,
+          "id": 10,
           "cost": [
             {
               "quantity": 3,
@@ -175,7 +175,7 @@
           }
         },
         {
-          "id": 6,
+          "id": 14,
           "cost": [
             {
               "quantity": 2,
@@ -213,7 +213,7 @@
           }
         },
         {
-          "id": 45,
+          "id": 6,
           "cost": [
             {
               "quantity": 1,
@@ -245,6 +245,32 @@
               }
             ]
           }
+        },
+        {
+          "id": 2,
+          "cost": [
+            {
+              "quantity": 2,
+              "resourceType": "COIN"
+            }
+          ],
+          "type": "BLUE",
+          "level": 1,
+          "victoryPoints": 1,
+          "production": {
+            "productionCost": [
+              {
+                "quantity": 1,
+                "resourceType": "SHIELD"
+              }
+            ],
+            "productionOut": [
+              {
+                "quantity": 1,
+                "resourceType": "FAITH"
+              }
+            ]
+          }
         }
       ],
       "level": 1,
@@ -253,7 +279,7 @@
     {
       "deck": [
         {
-          "id": 3,
+          "id": 11,
           "cost": [
             {
               "quantity": 3,
@@ -287,7 +313,7 @@
           }
         },
         {
-          "id": 7,
+          "id": 15,
           "cost": [
             {
               "quantity": 2,
@@ -325,7 +351,7 @@
           }
         },
         {
-          "id": 33,
+          "id": 3,
           "cost": [
             {
               "quantity": 2,
@@ -351,7 +377,7 @@
           }
         },
         {
-          "id": 46,
+          "id": 7,
           "cost": [
             {
               "quantity": 1,
@@ -391,7 +417,7 @@
     {
       "deck": [
         {
-          "id": 2,
+          "id": 9,
           "cost": [
             {
               "quantity": 3,
@@ -425,7 +451,7 @@
           }
         },
         {
-          "id": 5,
+          "id": 13,
           "cost": [
             {
               "quantity": 2,
@@ -463,7 +489,7 @@
           }
         },
         {
-          "id": 11,
+          "id": 1,
           "cost": [
             {
               "quantity": 2,
@@ -489,7 +515,7 @@
           }
         },
         {
-          "id": 44,
+          "id": 5,
           "cost": [
             {
               "quantity": 1,
@@ -531,14 +557,10 @@
     {
       "deck": [
         {
-          "id": 8,
+          "id": 16,
           "cost": [
             {
-              "quantity": 2,
-              "resourceType": "STONE"
-            },
-            {
-              "quantity": 2,
+              "quantity": 4,
               "resourceType": "SHIELD"
             }
           ],
@@ -561,7 +583,7 @@
           }
         },
         {
-          "id": 13,
+          "id": 20,
           "cost": [
             {
               "quantity": 3,
@@ -595,7 +617,7 @@
           }
         },
         {
-          "id": 17,
+          "id": 24,
           "cost": [
             {
               "quantity": 5,
@@ -625,7 +647,7 @@
           }
         },
         {
-          "id": 21,
+          "id": 28,
           "cost": [
             {
               "quantity": 3,
@@ -665,7 +687,7 @@
     {
       "deck": [
         {
-          "id": 10,
+          "id": 18,
           "cost": [
             {
               "quantity": 4,
@@ -683,70 +705,6 @@
               }
             ],
             "productionOut": [
-              {
-                "quantity": 2,
-                "resourceType": "FAITH"
-              }
-            ]
-          }
-        },
-        {
-          "id": 15,
-          "cost": [
-            {
-              "quantity": 3,
-              "resourceType": "COIN"
-            },
-            {
-              "quantity": 2,
-              "resourceType": "STONE"
-            }
-          ],
-          "type": "BLUE",
-          "level": 2,
-          "victoryPoints": 6,
-          "production": {
-            "productionCost": [
-              {
-                "quantity": 1,
-                "resourceType": "COIN"
-              },
-              {
-                "quantity": 1,
-                "resourceType": "STONE"
-              }
-            ],
-            "productionOut": [
-              {
-                "quantity": 3,
-                "resourceType": "SERVANT"
-              }
-            ]
-          }
-        },
-        {
-          "id": 19,
-          "cost": [
-            {
-              "quantity": 5,
-              "resourceType": "COIN"
-            }
-          ],
-          "type": "BLUE",
-          "level": 2,
-          "victoryPoints": 7,
-          "production": {
-            "productionCost": [
-              {
-                "quantity": 2,
-                "resourceType": "SERVANT"
-              }
-            ],
-            "productionOut": [
-              {
-                "quantity": 2,
-                "resourceType": "SHIELD"
-              },
               {
                 "quantity": 2,
                 "resourceType": "FAITH"
@@ -758,237 +716,15 @@
           "id": 22,
           "cost": [
             {
-              "quantity": 2,
-              "resourceType": "COIN"
-            }
-          ],
-          "type": "BLUE",
-          "level": 2,
-          "victoryPoints": 1,
-          "production": {
-            "productionCost": [
-              {
-                "quantity": 1,
-                "resourceType": "SHIELD"
-              }
-            ],
-            "productionOut": [
-              {
-                "quantity": 1,
-                "resourceType": "FAITH"
-              }
-            ]
-          }
-        },
-        {
-          "id": 24,
-          "cost": [
-            {
               "quantity": 3,
               "resourceType": "COIN"
             },
             {
-              "quantity": 3,
+              "quantity": 2,
               "resourceType": "STONE"
             }
           ],
           "type": "BLUE",
-          "level": 2,
-          "victoryPoints": 8,
-          "production": {
-            "productionCost": [
-              {
-                "quantity": 1,
-                "resourceType": "SERVANT"
-              }
-            ],
-            "productionOut": [
-              {
-                "quantity": 2,
-                "resourceType": "STONE"
-              },
-              {
-                "quantity": 1,
-                "resourceType": "FAITH"
-              }
-            ]
-          }
-        }
-      ],
-      "level": 2,
-      "color": "BLUE"
-    },
-    {
-      "deck": [
-        {
-          "id": 12,
-          "cost": [
-            {
-              "quantity": 4,
-              "resourceType": "STONE"
-            }
-          ],
-          "type": "YELLOW",
-          "level": 2,
-          "victoryPoints": 5,
-          "production": {
-            "productionCost": [
-              {
-                "quantity": 1,
-                "resourceType": "SHIELD"
-              }
-            ],
-            "productionOut": [
-              {
-                "quantity": 2,
-                "resourceType": "FAITH"
-              }
-            ]
-          }
-        },
-        {
-          "id": 16,
-          "cost": [
-            {
-              "quantity": 3,
-              "resourceType": "STONE"
-            },
-            {
-              "quantity": 2,
-              "resourceType": "SHIELD"
-            }
-          ],
-          "type": "YELLOW",
-          "level": 2,
-          "victoryPoints": 6,
-          "production": {
-            "productionCost": [
-              {
-                "quantity": 1,
-                "resourceType": "STONE"
-              },
-              {
-                "quantity": 1,
-                "resourceType": "SHIELD"
-              }
-            ],
-            "productionOut": [
-              {
-                "quantity": 3,
-                "resourceType": "COIN"
-              }
-            ]
-          }
-        },
-        {
-          "id": 20,
-          "cost": [
-            {
-              "quantity": 5,
-              "resourceType": "STONE"
-            }
-          ],
-          "type": "YELLOW",
-          "level": 2,
-          "victoryPoints": 7,
-          "production": {
-            "productionCost": [
-              {
-                "quantity": 2,
-                "resourceType": "SHIELD"
-              }
-            ],
-            "productionOut": [
-              {
-                "quantity": 2,
-                "resourceType": "SERVANT"
-              },
-              {
-                "quantity": 2,
-                "resourceType": "FAITH"
-              }
-            ]
-          }
-        },
-        {
-          "id": 25,
-          "cost": [
-            {
-              "quantity": 3,
-              "resourceType": "STONE"
-            },
-            {
-              "quantity": 3,
-              "resourceType": "SERVANT"
-            }
-          ],
-          "type": "YELLOW",
-          "level": 2,
-          "victoryPoints": 8,
-          "production": {
-            "productionCost": [
-              {
-                "quantity": 1,
-                "resourceType": "SHIELD"
-              }
-            ],
-            "productionOut": [
-              {
-                "quantity": 2,
-                "resourceType": "COIN"
-              },
-              {
-                "quantity": 1,
-                "resourceType": "FAITH"
-              }
-            ]
-          }
-        }
-      ],
-      "level": 2,
-      "color": "YELLOW"
-    },
-    {
-      "deck": [
-        {
-          "id": 9,
-          "cost": [
-            {
-              "quantity": 4,
-              "resourceType": "SERVANT"
-            }
-          ],
-          "type": "PURPLE",
-          "level": 2,
-          "victoryPoints": 5,
-          "production": {
-            "productionCost": [
-              {
-                "quantity": 1,
-                "resourceType": "COIN"
-              }
-            ],
-            "productionOut": [
-              {
-                "quantity": 2,
-                "resourceType": "FAITH"
-              }
-            ]
-          }
-        },
-        {
-          "id": 14,
-          "cost": [
-            {
-              "quantity": 3,
-              "resourceType": "SERVANT"
-            },
-            {
-              "quantity": 2,
-              "resourceType": "COIN"
-            }
-          ],
-          "type": "PURPLE",
           "level": 2,
           "victoryPoints": 6,
           "production": {
@@ -999,111 +735,39 @@
               },
               {
                 "quantity": 1,
-                "resourceType": "SERVANT"
+                "resourceType": "STONE"
               }
             ],
             "productionOut": [
               {
                 "quantity": 3,
-                "resourceType": "SHIELD"
-              }
-            ]
-          }
-        },
-        {
-          "id": 18,
-          "cost": [
-            {
-              "quantity": 5,
-              "resourceType": "SERVANT"
-            }
-          ],
-          "type": "PURPLE",
-          "level": 2,
-          "victoryPoints": 7,
-          "production": {
-            "productionCost": [
-              {
-                "quantity": 2,
-                "resourceType": "STONE"
-              }
-            ],
-            "productionOut": [
-              {
-                "quantity": 2,
-                "resourceType": "COIN"
-              },
-              {
-                "quantity": 2,
-                "resourceType": "FAITH"
-              }
-            ]
-          }
-        },
-        {
-          "id": 23,
-          "cost": [
-            {
-              "quantity": 3,
-              "resourceType": "SERVANT"
-            },
-            {
-              "quantity": 3,
-              "resourceType": "SHIELD"
-            }
-          ],
-          "type": "PURPLE",
-          "level": 2,
-          "victoryPoints": 8,
-          "production": {
-            "productionCost": [
-              {
-                "quantity": 1,
-                "resourceType": "STONE"
-              }
-            ],
-            "productionOut": [
-              {
-                "quantity": 2,
                 "resourceType": "SERVANT"
-              },
-              {
-                "quantity": 1,
-                "resourceType": "FAITH"
               }
             ]
           }
-        }
-      ],
-      "level": 2,
-      "color": "PURPLE"
-    }
-  ],
-  [
-    {
-      "deck": [
+        },
         {
           "id": 26,
           "cost": [
             {
-              "quantity": 6,
-              "resourceType": "SHIELD"
+              "quantity": 5,
+              "resourceType": "COIN"
             }
           ],
-          "type": "GREEN",
-          "level": 3,
-          "victoryPoints": 9,
+          "type": "BLUE",
+          "level": 2,
+          "victoryPoints": 7,
           "production": {
             "productionCost": [
               {
                 "quantity": 2,
-                "resourceType": "COIN"
+                "resourceType": "SERVANT"
               }
             ],
             "productionOut": [
               {
-                "quantity": 3,
-                "resourceType": "STONE"
+                "quantity": 2,
+                "resourceType": "SHIELD"
               },
               {
                 "quantity": 2,
@@ -1116,6 +780,338 @@
           "id": 30,
           "cost": [
             {
+              "quantity": 3,
+              "resourceType": "COIN"
+            },
+            {
+              "quantity": 3,
+              "resourceType": "STONE"
+            }
+          ],
+          "type": "BLUE",
+          "level": 2,
+          "victoryPoints": 8,
+          "production": {
+            "productionCost": [
+              {
+                "quantity": 1,
+                "resourceType": "SERVANT"
+              }
+            ],
+            "productionOut": [
+              {
+                "quantity": 2,
+                "resourceType": "STONE"
+              },
+              {
+                "quantity": 1,
+                "resourceType": "FAITH"
+              }
+            ]
+          }
+        }
+      ],
+      "level": 2,
+      "color": "BLUE"
+    },
+    {
+      "deck": [
+        {
+          "id": 19,
+          "cost": [
+            {
+              "quantity": 4,
+              "resourceType": "STONE"
+            }
+          ],
+          "type": "YELLOW",
+          "level": 2,
+          "victoryPoints": 5,
+          "production": {
+            "productionCost": [
+              {
+                "quantity": 1,
+                "resourceType": "SHIELD"
+              }
+            ],
+            "productionOut": [
+              {
+                "quantity": 2,
+                "resourceType": "FAITH"
+              }
+            ]
+          }
+        },
+        {
+          "id": 23,
+          "cost": [
+            {
+              "quantity": 3,
+              "resourceType": "STONE"
+            },
+            {
+              "quantity": 2,
+              "resourceType": "SHIELD"
+            }
+          ],
+          "type": "YELLOW",
+          "level": 2,
+          "victoryPoints": 6,
+          "production": {
+            "productionCost": [
+              {
+                "quantity": 1,
+                "resourceType": "STONE"
+              },
+              {
+                "quantity": 1,
+                "resourceType": "SHIELD"
+              }
+            ],
+            "productionOut": [
+              {
+                "quantity": 3,
+                "resourceType": "COIN"
+              }
+            ]
+          }
+        },
+        {
+          "id": 27,
+          "cost": [
+            {
+              "quantity": 5,
+              "resourceType": "STONE"
+            }
+          ],
+          "type": "YELLOW",
+          "level": 2,
+          "victoryPoints": 7,
+          "production": {
+            "productionCost": [
+              {
+                "quantity": 2,
+                "resourceType": "SHIELD"
+              }
+            ],
+            "productionOut": [
+              {
+                "quantity": 2,
+                "resourceType": "SERVANT"
+              },
+              {
+                "quantity": 2,
+                "resourceType": "FAITH"
+              }
+            ]
+          }
+        },
+        {
+          "id": 31,
+          "cost": [
+            {
+              "quantity": 3,
+              "resourceType": "STONE"
+            },
+            {
+              "quantity": 3,
+              "resourceType": "SERVANT"
+            }
+          ],
+          "type": "YELLOW",
+          "level": 2,
+          "victoryPoints": 8,
+          "production": {
+            "productionCost": [
+              {
+                "quantity": 1,
+                "resourceType": "SHIELD"
+              }
+            ],
+            "productionOut": [
+              {
+                "quantity": 2,
+                "resourceType": "COIN"
+              },
+              {
+                "quantity": 1,
+                "resourceType": "FAITH"
+              }
+            ]
+          }
+        }
+      ],
+      "level": 2,
+      "color": "YELLOW"
+    },
+    {
+      "deck": [
+        {
+          "id": 17,
+          "cost": [
+            {
+              "quantity": 4,
+              "resourceType": "SERVANT"
+            }
+          ],
+          "type": "PURPLE",
+          "level": 2,
+          "victoryPoints": 5,
+          "production": {
+            "productionCost": [
+              {
+                "quantity": 1,
+                "resourceType": "COIN"
+              }
+            ],
+            "productionOut": [
+              {
+                "quantity": 2,
+                "resourceType": "FAITH"
+              }
+            ]
+          }
+        },
+        {
+          "id": 21,
+          "cost": [
+            {
+              "quantity": 3,
+              "resourceType": "SERVANT"
+            },
+            {
+              "quantity": 2,
+              "resourceType": "COIN"
+            }
+          ],
+          "type": "PURPLE",
+          "level": 2,
+          "victoryPoints": 6,
+          "production": {
+            "productionCost": [
+              {
+                "quantity": 1,
+                "resourceType": "COIN"
+              },
+              {
+                "quantity": 1,
+                "resourceType": "SERVANT"
+              }
+            ],
+            "productionOut": [
+              {
+                "quantity": 3,
+                "resourceType": "SHIELD"
+              }
+            ]
+          }
+        },
+        {
+          "id": 25,
+          "cost": [
+            {
+              "quantity": 5,
+              "resourceType": "SERVANT"
+            }
+          ],
+          "type": "PURPLE",
+          "level": 2,
+          "victoryPoints": 7,
+          "production": {
+            "productionCost": [
+              {
+                "quantity": 2,
+                "resourceType": "STONE"
+              }
+            ],
+            "productionOut": [
+              {
+                "quantity": 2,
+                "resourceType": "COIN"
+              },
+              {
+                "quantity": 2,
+                "resourceType": "FAITH"
+              }
+            ]
+          }
+        },
+        {
+          "id": 29,
+          "cost": [
+            {
+              "quantity": 3,
+              "resourceType": "SERVANT"
+            },
+            {
+              "quantity": 3,
+              "resourceType": "SHIELD"
+            }
+          ],
+          "type": "PURPLE",
+          "level": 2,
+          "victoryPoints": 8,
+          "production": {
+            "productionCost": [
+              {
+                "quantity": 1,
+                "resourceType": "STONE"
+              }
+            ],
+            "productionOut": [
+              {
+                "quantity": 2,
+                "resourceType": "SERVANT"
+              },
+              {
+                "quantity": 1,
+                "resourceType": "FAITH"
+              }
+            ]
+          }
+        }
+      ],
+      "level": 2,
+      "color": "PURPLE"
+    }
+  ],
+  [
+    {
+      "deck": [
+        {
+          "id": 32,
+          "cost": [
+            {
+              "quantity": 6,
+              "resourceType": "SHIELD"
+            }
+          ],
+          "type": "GREEN",
+          "level": 3,
+          "victoryPoints": 9,
+          "production": {
+            "productionCost": [
+              {
+                "quantity": 2,
+                "resourceType": "COIN"
+              }
+            ],
+            "productionOut": [
+              {
+                "quantity": 3,
+                "resourceType": "STONE"
+              },
+              {
+                "quantity": 2,
+                "resourceType": "FAITH"
+              }
+            ]
+          }
+        },
+        {
+          "id": 36,
+          "cost": [
+            {
               "quantity": 5,
               "resourceType": "SHIELD"
             },
@@ -1155,7 +1151,7 @@
           }
         },
         {
-          "id": 35,
+          "id": 40,
           "cost": [
             {
               "quantity": 7,
@@ -1185,37 +1181,7 @@
           }
         },
         {
-          "id": 37,
-          "cost": [
-            {
-              "quantity": 7,
-              "resourceType": "COIN"
-            }
-          ],
-          "type": "GREEN",
-          "level": 3,
-          "victoryPoints": 11,
-          "production": {
-            "productionCost": [
-              {
-                "quantity": 1,
-                "resourceType": "STONE"
-              }
-            ],
-            "productionOut": [
-              {
-                "quantity": 1,
-                "resourceType": "SHIELD"
-              },
-              {
-                "quantity": 3,
-                "resourceType": "FAITH"
-              }
-            ]
-          }
-        },
-        {
-          "id": 39,
+          "id": 44,
           "cost": [
             {
               "quantity": 4,
@@ -1255,7 +1221,7 @@
     {
       "deck": [
         {
-          "id": 28,
+          "id": 34,
           "cost": [
             {
               "quantity": 6,
@@ -1285,7 +1251,7 @@
           }
         },
         {
-          "id": 32,
+          "id": 38,
           "cost": [
             {
               "quantity": 5,
@@ -1327,7 +1293,7 @@
           }
         },
         {
-          "id": 41,
+          "id": 46,
           "cost": [
             {
               "quantity": 4,
@@ -1359,6 +1325,36 @@
               }
             ]
           }
+        },
+        {
+          "id": 42,
+          "cost": [
+            {
+              "quantity": 7,
+              "resourceType": "COIN"
+            }
+          ],
+          "type": "BLUE",
+          "level": 3,
+          "victoryPoints": 11,
+          "production": {
+            "productionCost": [
+              {
+                "quantity": 1,
+                "resourceType": "STONE"
+              }
+            ],
+            "productionOut": [
+              {
+                "quantity": 1,
+                "resourceType": "SHIELD"
+              },
+              {
+                "quantity": 3,
+                "resourceType": "FAITH"
+              }
+            ]
+          }
         }
       ],
       "level": 3,
@@ -1367,7 +1363,7 @@
     {
       "deck": [
         {
-          "id": 29,
+          "id": 35,
           "cost": [
             {
               "quantity": 6,
@@ -1397,7 +1393,7 @@
           }
         },
         {
-          "id": 34,
+          "id": 39,
           "cost": [
             {
               "quantity": 5,
@@ -1439,7 +1435,7 @@
           }
         },
         {
-          "id": 38,
+          "id": 43,
           "cost": [
             {
               "quantity": 7,
@@ -1469,7 +1465,7 @@
           }
         },
         {
-          "id": 42,
+          "id": 47,
           "cost": [
             {
               "quantity": 4,
@@ -1509,7 +1505,7 @@
     {
       "deck": [
         {
-          "id": 27,
+          "id": 33,
           "cost": [
             {
               "quantity": 6,
@@ -1539,7 +1535,7 @@
           }
         },
         {
-          "id": 31,
+          "id": 37,
           "cost": [
             {
               "quantity": 5,
@@ -1581,7 +1577,7 @@
           }
         },
         {
-          "id": 36,
+          "id": 41,
           "cost": [
             {
               "quantity": 7,
@@ -1611,7 +1607,7 @@
           }
         },
         {
-          "id": 40,
+          "id": 45,
           "cost": [
             {
               "quantity": 4,

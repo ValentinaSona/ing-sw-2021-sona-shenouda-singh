@@ -2,9 +2,11 @@ package it.polimi.ingsw.client.ui.gui.JFXControllers;
 
 import it.polimi.ingsw.client.modelview.MatchSettings;
 import it.polimi.ingsw.client.ui.controller.UIController;
+import it.polimi.ingsw.client.ui.gui.GUIHelper;
 import it.polimi.ingsw.utils.networking.transmittables.StatusMessage;
 import javafx.animation.Interpolator;
 import javafx.animation.TranslateTransition;
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -55,6 +57,7 @@ public class MainMenuGUIController extends AbstractGUIController {
 
     @FXML
     public void initialize() {
+        GUIHelper.getInstance().setCurrentScreen(ScreenName.MAIN_MENU);
     }
 
     public void goToJoin(ActionEvent actionEvent) {
@@ -70,7 +73,7 @@ public class MainMenuGUIController extends AbstractGUIController {
             joinButton.setDisable(true);
 
             try {
-                UIController.getInstance().sendNickname(nicknameField.getText(),"127.0.0.1", 10000);
+                UIController.getInstance().sendNickname(nicknameField.getText(),"127.0.0.1", 10001);
             } catch (IOException e) {
                 //fallita l'istanziazione della socket porta o url invalidi
                 e.printStackTrace();
@@ -79,31 +82,35 @@ public class MainMenuGUIController extends AbstractGUIController {
     }
 
     public void handleNicknameConfirmation(boolean success){
-        System.out.println("ho ricevuto il messagio");
-        if(!success) {
-            // TODO mostrare messaggio di errore
-            joining.setOpacity(0);
-            chooseNick.setOpacity(1);
-            joinButton.setOpacity(1);
-            joinButton.setDisable(false);
-            nicknameField.setEditable(true);
-        }
-        else {
-            String nickname = nicknameField.getText();
-            MatchSettings.getInstance().setClientNickname(nicknameField.getText());
-            if(nickname.equals("a nickname") || nickname.equals("a Nickname") ||
-                    nickname.equals("Nickname") || nickname.equals("nickname"))
-                party.setOpacity(1);
-            UIController.getInstance().joinLobby();
+        Platform.runLater(() -> {
+            System.out.println("ho ricevuto il messagio");
+            if(!success) {
+                // TODO mostrare messaggio di errore
+                joining.setOpacity(0);
+                chooseNick.setOpacity(1);
+                joinButton.setOpacity(1);
+                joinButton.setDisable(false);
+                nicknameField.setEditable(true);
+            }
+            else {
+                String nickname = nicknameField.getText();
+                MatchSettings.getInstance().setClientNickname(nicknameField.getText());
+                if(nickname.equals("a nickname") || nickname.equals("a Nickname") ||
+                        nickname.equals("Nickname") || nickname.equals("nickname"))
+                    party.setOpacity(1);
+                UIController.getInstance().joinLobby();
 
-        }
+            }
+        });
     }
 
     public void handleJoinLobbyConfirmation(boolean isFirst){
-        if (isFirst)
-            setGameCreation();
-        else
-            setJoiningGame();
+        Platform.runLater(() -> {
+            if (isFirst) {
+                setGameCreation();}
+            else
+                setJoiningGame();
+        });
     }
 
     public void setGameCreation() {
@@ -125,7 +132,9 @@ public class MainMenuGUIController extends AbstractGUIController {
         translate.play();
     }
 
-    public void setJoiningGame() {}
+    public void setJoiningGame() {
+        change(ScreenName.LOBBY);
+    }
 
     public void goToJoinEnter(ActionEvent actionEvent) {
         goToJoin(actionEvent);
@@ -150,15 +159,17 @@ public class MainMenuGUIController extends AbstractGUIController {
 
     public void handleStatusMessage(StatusMessage message) {
 
-        if(message.equals(StatusMessage.OK_NICK)){
-            //posso validare il nickname
-            handleNicknameConfirmation(true);
-        }else if(message.equals(StatusMessage.SET_COUNT)){
-            //posso settare il numero di player
-            handleJoinLobbyConfirmation(true);
-        }else if(message.equals(StatusMessage.JOIN_LOBBY)){
-            //posso settare il numero di player
-            handleJoinLobbyConfirmation(false);
-        }
+        Platform.runLater(() -> {
+            if(message.equals(StatusMessage.OK_NICK)){
+                //posso validare il nickname
+                handleNicknameConfirmation(true);
+            }else if(message.equals(StatusMessage.SET_COUNT)){
+                //posso settare il numero di player
+                handleJoinLobbyConfirmation(true);
+            }else if(message.equals(StatusMessage.JOIN_LOBBY)){
+                //posso settare il numero di player
+                handleJoinLobbyConfirmation(false);
+            }
+        });
     }
 }

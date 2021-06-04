@@ -2,7 +2,9 @@ package it.polimi.ingsw.client.ui.gui.JFXControllers;
 
 
 import it.polimi.ingsw.client.modelview.MatchSettings;
+import it.polimi.ingsw.client.ui.controller.DispatcherController;
 import it.polimi.ingsw.client.ui.controller.LobbyMenuController;
+import it.polimi.ingsw.client.ui.gui.GUIHelper;
 import it.polimi.ingsw.server.controller.User;
 
 import it.polimi.ingsw.utils.networking.transmittables.StatusMessage;
@@ -15,9 +17,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.StackPane;
-import javafx.scene.transform.Rotate;
 import javafx.stage.Stage;
-import javafx.util.Duration;
 
 import java.util.List;
 
@@ -38,23 +38,15 @@ public class LobbyGUIController extends AbstractGUIController implements LobbyMe
 
     @FXML
     private void initialize() {
+
+        GUIHelper.getInstance().setCurrentScreen(ScreenName.LOBBY);
+
         players.getItems().add(MatchSettings.getInstance().getClientNickname());
         updatePlayersHeader();
 
         starting.setOpacity(0);
-        timeline = new Timeline(new KeyFrame(Duration.seconds(0.1), ev -> {
-            RotateTransition rotate = new RotateTransition();
-            rotate.setAxis(Rotate.Z_AXIS);
-            rotate.setByAngle(360);
-            rotate.setCycleCount(1);
-            rotate.setDuration(Duration.millis(1000));
-            rotate.setInterpolator(Interpolator.LINEAR);
-            rotate.setNode(loading);
-            rotate.play();
-        }));
-        timeline.setCycleCount(Animation.INDEFINITE);
-        timeline.play();
 
+        timeline = GUIHelper.loadingWheel(loading);
     }
 
     private void updatePlayersHeader() {
@@ -66,6 +58,7 @@ public class LobbyGUIController extends AbstractGUIController implements LobbyMe
     public void handleUpdateLobbyMessage(ServerUpdateLobbyMessage message) {
         Platform.runLater(() -> {
             List<User> lobbyUsers = message.getLobbyUsers();
+            MatchSettings.getInstance().setTotalUsers(message.getNumOfPlayer());
 
             players.getItems().clear();
             MatchSettings.getInstance().setJoiningUsers(lobbyUsers);
@@ -87,7 +80,15 @@ public class LobbyGUIController extends AbstractGUIController implements LobbyMe
     }
 
     public void handleSetupGameMessage(ServerSetupGameMessage message){
-        change(ScreenName.LEADER_SELECTION);
+
+        Platform.runLater(() -> {
+            GUIHelper.getInstance().buildNickList(message.getUsers());
+
+            synchronized (DispatcherController.getInstance()) {
+                change(ScreenName.STARTING_CHOICE);
+                DispatcherController.getInstance().notifyAll();
+            }
+        });
     }
 
     //TODO
