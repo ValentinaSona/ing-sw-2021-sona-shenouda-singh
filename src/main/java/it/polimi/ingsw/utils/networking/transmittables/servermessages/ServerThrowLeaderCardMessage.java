@@ -22,9 +22,9 @@ public class ServerThrowLeaderCardMessage implements ServerMessage, ClientHandle
         return user;
     }
 
-    //TODO
     @Override
     public boolean handleMessage(DispatcherController handler) {
-        return false;
+        handler.handleThrowLeaderCard(this);
+        return true;
     }
 }

@@ -40,6 +40,7 @@ public class ServerDepositIntoSlotMessage implements ServerMessage, ClientHandle
 
     @Override
     public boolean handleMessage(DispatcherController handler) {
-        return false;
+        handler.handleDepositIntoSlot(this);
+        return true;
     }
 }

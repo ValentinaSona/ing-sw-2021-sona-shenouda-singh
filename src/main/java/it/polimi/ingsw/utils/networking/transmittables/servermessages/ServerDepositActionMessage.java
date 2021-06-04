@@ -31,10 +31,9 @@ public class ServerDepositActionMessage implements ServerMessage, ClientHandleab
         return tempResources;
     }
 
-    //TODO
-
     @Override
     public boolean handleMessage(DispatcherController handler) {
-        return false;
+        handler.handleDepositAction(this);
+        return true;
     }
 }

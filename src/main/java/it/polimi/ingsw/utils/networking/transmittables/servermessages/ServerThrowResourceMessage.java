@@ -21,9 +21,9 @@ public class ServerThrowResourceMessage implements ServerMessage, ClientHandleab
         return thrownResources;
     }
 
-    //TODO
     @Override
     public boolean handleMessage(DispatcherController handler) {
-        return false;
+        handler.handleThrowResource(this);
+        return true;
     }
 }

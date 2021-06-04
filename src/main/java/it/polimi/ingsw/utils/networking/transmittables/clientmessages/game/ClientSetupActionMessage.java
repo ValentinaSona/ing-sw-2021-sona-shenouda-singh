@@ -36,9 +36,10 @@ public class ClientSetupActionMessage implements ClientMessage, ControllerHandle
         return idResourceMap;
     }
 
-    //TODO
+
     @Override
     public boolean handleMessage(Controller handler, RemoteViewHandler view, User user) {
+        handler.setupAction(this, view,user);
         return false;
     }
 }

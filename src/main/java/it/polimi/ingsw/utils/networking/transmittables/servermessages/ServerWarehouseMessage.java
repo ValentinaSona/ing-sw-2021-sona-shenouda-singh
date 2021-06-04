@@ -24,9 +24,9 @@ public class ServerWarehouseMessage implements ServerMessage, ClientHandleable {
         return warehouseView;
     }
 
-    //TODO
     @Override
     public boolean handleMessage(DispatcherController handler) {
-        return false;
+        handler.handleWarehouse(this);
+        return true;
     }
 }

@@ -13,9 +13,10 @@ public class ServerFaithTrackMessage  implements ServerMessage, ClientHandleable
         this.faithTrackView = faithTrackView;
         this.user = user;
     }
-    //TODO
+
     @Override
     public boolean handleMessage(DispatcherController handler) {
-        return false;
+        handler.handleFaithTrackMessage(this);
+        return true;
     }
 }

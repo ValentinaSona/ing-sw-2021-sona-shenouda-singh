@@ -32,10 +32,9 @@ public class ServerSetupActionMessage implements ServerMessage, ClientHandleable
         return warehouseView;
     }
 
-    //TODO
-
     @Override
     public boolean handleMessage(DispatcherController handler) {
-        return false;
+        handler.handleSetupAction(this);
+        return true;
     }
 }

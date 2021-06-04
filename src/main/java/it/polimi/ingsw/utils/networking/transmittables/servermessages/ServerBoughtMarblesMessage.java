@@ -19,9 +19,9 @@ public class ServerBoughtMarblesMessage implements ServerMessage, ClientHandleab
         this.user = user;
     }
 
-    //TODO
     @Override
     public boolean handleMessage(DispatcherController handler) {
-        return false;
+        handler.handleBoughtMarbles(this);
+        return true;
     }
 }

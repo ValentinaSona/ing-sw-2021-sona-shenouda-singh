@@ -22,9 +22,9 @@ public class ServerActivateLeaderCardAbilityMessage implements ServerMessage, Cl
         return ability;
     }
 
-    //TODO
     @Override
     public boolean handleMessage(DispatcherController handler) {
-        return false;
+        handler.handleActivateLeaderCardAbility(this);
+        return true;
     }
 }

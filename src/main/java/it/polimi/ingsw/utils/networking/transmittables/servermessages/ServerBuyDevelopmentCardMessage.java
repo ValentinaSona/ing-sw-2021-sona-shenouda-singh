@@ -22,9 +22,9 @@ public class ServerBuyDevelopmentCardMessage implements ServerMessage, ClientHan
         return card;
     }
 
-    //TODO
     @Override
     public boolean handleMessage(DispatcherController handler) {
+        handler.handleBuyDevelopmentCard(this);
         return false;
     }
 }

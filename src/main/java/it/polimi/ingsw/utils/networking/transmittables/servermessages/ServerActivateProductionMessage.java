@@ -18,9 +18,10 @@ public class ServerActivateProductionMessage implements ServerMessage, ClientHan
         return strongboxView;
     }
 
-    //TODO
+
     @Override
     public boolean handleMessage(DispatcherController handler) {
-        return false;
+        handler.handleActivateProduction(this);
+        return true;
     }
 }

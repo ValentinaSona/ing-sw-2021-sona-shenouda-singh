@@ -15,6 +15,7 @@ public class ServerChooseWhiteMarblesMessage implements ServerMessage, ClientHan
 
     @Override
     public boolean handleMessage(DispatcherController handler) {
+        handler.handleChooseWhiteMarbles(this);
         return false;
     }
 }

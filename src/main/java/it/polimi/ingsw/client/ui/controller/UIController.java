@@ -16,6 +16,7 @@ import it.polimi.ingsw.utils.observer.LambdaObserver;
 import java.io.IOException;
 import java.net.Socket;
 
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -65,6 +66,9 @@ public class UIController implements LambdaObserver{
     // Metodo che viene chiamato dalla UI quando il giocatore ha scelto le 2 leader cards da tenere
     public void chosenStartingResources(Map<Id, Resource> idResourceMap, LeaderCard[] chosen) {
         String nickname = MatchSettings.getInstance().getClientNickname();
+        if(idResourceMap == null){
+            idResourceMap = new HashMap<>();
+        }
         clientConnection.send(new ClientSetupActionMessage(idResourceMap,
                 chosen,
                 new User(nickname)));

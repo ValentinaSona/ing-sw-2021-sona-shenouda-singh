@@ -21,9 +21,10 @@ public class ServerStartTurnMessage implements ServerMessage, ClientHandleable {
         return startingTurn;
     }
 
-    //TODO
+
     @Override
     public boolean handleMessage(DispatcherController handler) {
-        return false;
+        handler.handleStartTurn(this);
+        return true;
     }
 }
