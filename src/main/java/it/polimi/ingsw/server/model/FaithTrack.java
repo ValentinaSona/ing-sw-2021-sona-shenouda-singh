@@ -83,4 +83,24 @@ public class FaithTrack {
 		}
 	}
 
+	public int getVictoryPoints(){
+
+		int tiles = 0;
+
+		if (popeFavorTiles[0]==PopeFavorTiles.UPWARDS) tiles += 2;
+		if (popeFavorTiles[1]==PopeFavorTiles.UPWARDS) tiles += 3;
+		if (popeFavorTiles[2]==PopeFavorTiles.UPWARDS) tiles += 4;
+
+		if (faithMarker>=24) return 20 + tiles;
+		else if (faithMarker>= 21) return 16 + tiles;
+		else if (faithMarker >=18) return 12 + tiles;
+		else if (faithMarker >=15) return 9 + tiles;
+		else if (faithMarker >=12) return 6 + tiles;
+		else if (faithMarker >=9) return 4 + tiles;
+		else if (faithMarker >=6) return 2 + tiles;
+		else if (faithMarker >=2) return 1 + tiles;
+		else return 0 + tiles;
+
+	}
+
 }

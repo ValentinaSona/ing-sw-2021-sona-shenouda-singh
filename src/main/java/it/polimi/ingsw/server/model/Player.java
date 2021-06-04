@@ -354,6 +354,10 @@ public class Player extends LambdaObservable<Transmittable> {
 		return null;
 	}
 
+	/**
+	 * Calculates the player total victory points.
+	 * @return the total victory points.
+	 */
 	public int getVictoryPoints(){
 		int vp = 0;
 
@@ -363,7 +367,16 @@ public class Player extends LambdaObservable<Transmittable> {
 			}
 		}
 
-		//TODO FINISH
+		vp += faithTrack.getVictoryPoints();
+
+		for (LeaderCard card : leaderCards){
+			if (card.isActive()) vp += card.getVictoryPoints();
+		}
+
+		for (Resource resource : getTotalResources()){
+			vp += resource.getQuantity()%5;
+		}
+
 		return vp;
 
 

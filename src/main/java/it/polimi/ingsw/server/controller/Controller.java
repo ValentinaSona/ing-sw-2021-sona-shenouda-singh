@@ -63,15 +63,15 @@ public class Controller implements LambdaObserver {
             ViewClientMessage action = this.actionToProcess.take();
             ControllerHandleable handleable = (ControllerHandleable) action.clientMessage;
             handleable.handleMessage(this, action.view, action.user);
+
+
+
         }catch (InterruptedException e){
             Thread.currentThread().interrupt();
         }
-        //TODO: possible handle point of EndofGame?
-    }
-
-    private void endGame(){
 
     }
+
 
 
     public void setup(){

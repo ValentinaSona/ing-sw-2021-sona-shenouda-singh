@@ -2,6 +2,7 @@ package it.polimi.ingsw.utils.networking;
 
 import it.polimi.ingsw.server.controller.Controller;
 import it.polimi.ingsw.server.controller.User;
+import it.polimi.ingsw.server.exception.EndOfGameException;
 import it.polimi.ingsw.server.view.RemoteViewHandler;
 
 /**
@@ -18,4 +19,5 @@ public interface ControllerHandleable {
      * @return true if there where no errors while processing this message
      */
     boolean handleMessage(Controller handler, RemoteViewHandler view, User user);
+
 }

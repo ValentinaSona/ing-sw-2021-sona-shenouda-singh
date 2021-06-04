@@ -6,12 +6,11 @@ import it.polimi.ingsw.server.model.*;
 import it.polimi.ingsw.server.view.RemoteViewHandler;
 import it.polimi.ingsw.utils.networking.transmittables.StatusMessage;
 import it.polimi.ingsw.utils.networking.transmittables.clientmessages.game.ClientEndTurnMessage;
-import it.polimi.ingsw.utils.networking.transmittables.servermessages.ServerFaithTrackMessage;
-import it.polimi.ingsw.utils.networking.transmittables.servermessages.ServerSetupUserMessage;
-import it.polimi.ingsw.utils.networking.transmittables.servermessages.ServerStartTurnMessage;
+import it.polimi.ingsw.utils.networking.transmittables.servermessages.*;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class TurnController{
     private static TurnController singleton;
@@ -37,7 +36,7 @@ public class TurnController{
      * @param view the player's corresponding RemoteViewHandler that will handle status messages to be sent back to the view.
      * @param user the User corresponding to the player making the action.
      */
-    public void endTurn(ClientEndTurnMessage action, RemoteViewHandler view, User user) {
+    public void endTurn(ClientEndTurnMessage action, RemoteViewHandler view, User user) throws EndOfGameException {
 
         Player endingPlayer = model.getPlayerFromUser(user);
 
@@ -56,8 +55,9 @@ public class TurnController{
                 model.setCurrentPlayer(players.get(idx+1));
             }
 
-            // TODO: LorenzoAction();
-            // TODO: Add a message to tell client wtf happened?
+            if (model.isSolo()) {
+                    LorenzoAction();
+            }
 
 
             Player startingPlayer = model.getCurrentPlayer();
@@ -137,7 +137,7 @@ public class TurnController{
 
     }
 
-    /** TODO: two messages to define here, one for the black cross and one for the updated develmarket view.
+    /**
      * Performs a random solo action.
      * @throws EndOfGameException if Lorenzo wins.
      */
@@ -156,6 +156,7 @@ public class TurnController{
                     if (e.getReport()==3) throw new EndOfGameException(true);
 
                 }
+                model.notify(new ServerSoloMoveMessage(model.getLorenzo().getBlackCross(), false));
             }
 
             case MOVE_SHUFFLE -> {
@@ -170,26 +171,63 @@ public class TurnController{
 
                 }
                 model.getLorenzo().shuffle();
+
+                model.notify(new ServerSoloMoveMessage(model.getLorenzo().getBlackCross(), true));
             }
             case DISCARD_BLUE -> {
                 model.getDevelopmentCardsMarket().discard(DevelopmentType.BLUE);
                 model.getDevelopmentCardsMarket().discard(DevelopmentType.BLUE);
+                model.notify(new ServerSoloDiscardMessage(model.getDevelopmentCardsMarket().getVisible()));
             }
             case DISCARD_GREEN -> {
                 model.getDevelopmentCardsMarket().discard(DevelopmentType.GREEN);
                 model.getDevelopmentCardsMarket().discard(DevelopmentType.GREEN);
+                model.notify(new ServerSoloDiscardMessage(model.getDevelopmentCardsMarket().getVisible()));
             }
             case DISCARD_PURPLE -> {
                 model.getDevelopmentCardsMarket().discard(DevelopmentType.PURPLE);
                 model.getDevelopmentCardsMarket().discard(DevelopmentType.PURPLE);
+                model.notify(new ServerSoloDiscardMessage(model.getDevelopmentCardsMarket().getVisible()));
             }
             case DISCARD_YELLOW -> {
                 model.getDevelopmentCardsMarket().discard(DevelopmentType.YELLOW);
                 model.getDevelopmentCardsMarket().discard(DevelopmentType.YELLOW);
+                model.notify(new ServerSoloDiscardMessage(model.getDevelopmentCardsMarket().getVisible()));
 
             }
         }
 
     }
 
+    /**
+     * Called when the game is done.
+     * @param view The view.
+     */
+    public void endOfGame(RemoteViewHandler view){
+
+        Map<User, Integer> scores = new LinkedHashMap<>();
+
+        for (Player player : model.getPlayers()){
+            scores.put(model.getUserFromPlayer(player), player.getVictoryPoints() );
+        }
+
+        Map<User, Integer> rank = new LinkedHashMap<>();
+
+        Map.Entry<User,Integer> highest = new AbstractMap.SimpleEntry<User,Integer>(null,0);
+        int size = scores.size();
+
+        while(rank.size()< size){
+            highest.setValue(0);
+            for (Player player: model.getPlayers()){
+                if (scores.get(model.getUserFromPlayer(player)) > highest.getValue()){
+                    highest = new AbstractMap.SimpleEntry<User,Integer>(model.getUserFromPlayer(player),scores.get(model.getUserFromPlayer(player)));
+                }
+            }
+            scores.remove(highest.getKey());
+            rank.put(highest.getKey(),highest.getValue());
+        }
+
+        model.notify(new ServerFinalScoreMessage(rank));
+
+    }
 }

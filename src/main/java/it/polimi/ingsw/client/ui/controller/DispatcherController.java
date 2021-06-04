@@ -94,6 +94,16 @@ public class DispatcherController implements Runnable, LambdaObserver {
     public void handleActivateProduction(ServerActivateProductionMessage message){}
     //TODO
     public void handleActivateLeaderCardAbility(ServerActivateLeaderCardAbilityMessage message){}
+
+    //TODO for end of game.
+    public void handleFinalScore(ServerFinalScoreMessage message){}
+
+    //TODO for SOLO game
+    public void handleSoloDiscard(ServerSoloDiscardMessage message){}
+    //TODO for SOLO game
+    public void handleSoloMove(ServerSoloMoveMessage message){}
+
+
     //TODO
     public void handleSetupGame(ServerSetupGameMessage message){
         GameView.getInstance(message.getUsers());
@@ -106,7 +116,7 @@ public class DispatcherController implements Runnable, LambdaObserver {
             CLIMessageHandler.getInstance().handleServerSetupGameMessage(message);
         }
     }
-    //TODO
+
     public void handleUpdateLobby(ServerUpdateLobbyMessage message){
         if(gui){
             ((LobbyMenuController)currentController).handleUpdateLobbyMessage(message);
@@ -114,7 +124,7 @@ public class DispatcherController implements Runnable, LambdaObserver {
             CLIMessageHandler.getInstance().handleUpdateLobbyMessage(message);
         }
     };
-    //TODO
+
     public void handleSetupAction(ServerSetupActionMessage message){
         GameView.getInstance().getPlayerFromUser(message.getUser()).setWarehouse(message.getWarehouseView());
         if(message.getUser().getNickName().equals(MatchSettings.getInstance().getClientNickname())){
@@ -127,7 +137,7 @@ public class DispatcherController implements Runnable, LambdaObserver {
 
         }
     }
-    //TODO
+
     public void handleSetupUser(ServerSetupUserMessage message){
         GameView.getInstance().getPlayerFromUser(message.getUser()).setFaithTrackView(message.getFaithTrackView());
 
@@ -149,12 +159,11 @@ public class DispatcherController implements Runnable, LambdaObserver {
             CLIMessageHandler.getInstance().handleServerSetupUserMessage(message);
         }
     }
-    //TODO
+
     public void handleStatus(StatusMessage message){
         if(gui){
             currentController.handleStatusMessage(message);
         }else{
-            //come gestisce gli status message la cli
             CLIMessageHandler.getInstance().handleStatusMessage(message);
         }
     }
