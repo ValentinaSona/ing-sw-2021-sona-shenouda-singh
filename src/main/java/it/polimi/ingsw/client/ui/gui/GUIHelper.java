@@ -83,7 +83,8 @@ public class GUIHelper {
         for(int i = 2; i >= 0; i--) {
             for(int j = 0; j < 4; j++) {
 
-                grid.add(new ImageView(new Image("assets/game/development_cards/" + cards[i][j].getId() + ".png", 173, 261, false, false)), j, i);
+                if (cards[i][j] != null)
+                    grid.add(new ImageView(new Image("assets/game/development_cards/" + cards[i][j].getId() + ".png", 187, 281, false, false)), j, i);
 
             }
         }

@@ -68,7 +68,7 @@
             </GridPane>
             <Rectangle fx:id="marketTray" arcHeight="40.0" arcWidth="40.0" fill="#000000bf" height="600.0" stroke="TRANSPARENT" strokeType="INSIDE" width="600.0" StackPane.alignment="CENTER_LEFT">
                <StackPane.margin>
-                  <Insets left="100.0" />
+                  <Insets left="200.0" />
                </StackPane.margin>
             </Rectangle>
             <GridPane fx:id="marketGrid" gridLinesVisible="true" maxHeight="450.0" maxWidth="550.0" prefHeight="455.0" prefWidth="547.0" StackPane.alignment="CENTER_LEFT">
@@ -86,7 +86,7 @@
                 <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
               </rowConstraints>
                <StackPane.margin>
-                  <Insets bottom="70.0" left="120.0" />
+                  <Insets bottom="70.0" left="220.0" />
                </StackPane.margin>
             </GridPane>
             <Label fx:id="choiceLabel" styleClass="gameTitle" text="Setup choice" StackPane.alignment="TOP_CENTER">
