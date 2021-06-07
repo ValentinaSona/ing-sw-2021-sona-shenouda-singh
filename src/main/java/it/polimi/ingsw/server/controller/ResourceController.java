@@ -10,6 +10,7 @@ import it.polimi.ingsw.utils.networking.transmittables.servermessages.*;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 
 public class ResourceController{
@@ -113,7 +114,7 @@ public class ResourceController{
      * @throws InvalidDepotException The previously supplied resources are somehow invalid.
      */
     public void resetResources(Player player, Map<Id, Resource> resourceHashMap) throws InvalidDepotException {
-        ArrayList<Depot> warehouse = player.getWarehouse();
+        List<Depot> warehouse = player.getWarehouse();
 
         ArrayList<Id> warehouseIds = (ArrayList<Id>) Arrays.asList(Id.DEPOT_1, Id.DEPOT_2, Id.DEPOT_3, Id.S_DEPOT_1, Id.S_DEPOT_2);
 
@@ -151,7 +152,7 @@ public class ResourceController{
         } else {
 
             int thrown = 0;
-            ArrayList<Resource> tempResources = player.getTempResources();
+            List<Resource> tempResources = player.getTempResources();
             Resource faithPoints;
 
             if (tempResources != null) {
@@ -266,7 +267,7 @@ public class ResourceController{
 
 
             try {
-                ArrayList<Depot> warehouse = player.getWarehouse();
+                List<Depot> warehouse = player.getWarehouse();
                 Depot targetDepot = warehouse.get(action.getSlotId().getValue());
 
                 Id[] standardDepots = {Id.DEPOT_1, Id.DEPOT_2, Id.DEPOT_3};
@@ -386,7 +387,7 @@ public class ResourceController{
             view.handleStatusMessage(StatusMessage.CLIENT_ERROR);
         } else {
             player.toggleMainAction();
-            ArrayList<Slot> slots = player.getSlots();
+            List<Slot> slots = player.getSlots();
 
             for (Slot dev : slots) {
                 if (dev.isConfirmed()) {

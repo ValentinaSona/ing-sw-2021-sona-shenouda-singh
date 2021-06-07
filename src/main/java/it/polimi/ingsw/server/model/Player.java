@@ -1,14 +1,13 @@
 package it.polimi.ingsw.server.model;
 
-import it.polimi.ingsw.client.modelview.DepotView;
-import it.polimi.ingsw.client.modelview.FaithTrackView;
-import it.polimi.ingsw.client.modelview.SlotView;
-import it.polimi.ingsw.client.modelview.StrongboxView;
+import it.polimi.ingsw.client.modelview.*;
 import it.polimi.ingsw.utils.networking.Transmittable;
 import it.polimi.ingsw.utils.observer.LambdaObservable;
 
 import java.util.ArrayList;
 import java.util.EmptyStackException;
+import java.util.List;
+import java.util.stream.Collectors;
 
 //TODO does player really need to be observable??
 public class Player extends LambdaObservable<Transmittable> {
@@ -38,7 +37,7 @@ public class Player extends LambdaObservable<Transmittable> {
 	 */
 	private final FaithTrack faithTrack;
 
-	private final ArrayList<LeaderCard> leaderCards = new ArrayList<>();
+	private List<LeaderCard> leaderCards = new ArrayList<>();
 
 	/**
 	 * Infinite depot where the production outputs are stored.
@@ -48,11 +47,11 @@ public class Player extends LambdaObservable<Transmittable> {
 	/**
 	 * Special production that turns 2 resources of any kind into one resource of any kind.
 	 */
-	private final ArrayList<Slot> slots =  new ArrayList<>();
+	private final List<Slot> slots =  new ArrayList<>();
 
-	private ArrayList<Depot> warehouse = new ArrayList<>();
+	private List<Depot> warehouse = new ArrayList<>();
 
-	private ArrayList<Resource> tempResources;
+	private List<Resource> tempResources;
 
 	/** TODO: when is the player interaction for the initial resources made? May need to change type to resource
 	 ** TODO: likewise, when is the leaderCard interaction made? Doesn't the constructor need to have 2 or 4 as input?
@@ -80,6 +79,21 @@ public class Player extends LambdaObservable<Transmittable> {
 
 
 		faithTrack = new FaithTrack();
+	}
+
+	public Player(PlayerView playerView) {
+
+		nickname = playerView.getNickname();
+		isMyTurn = false;
+		isDisconnected = false;
+		mainAction = false;
+
+		strongbox = new Strongbox(playerView.getStrongboxView());
+		warehouse = playerView.getWarehouse().stream().map(Depot::new).collect(Collectors.toList());
+		// TODO need help to know how slots are handled
+		faithTrack = new FaithTrack(playerView.getFaithTrackView());
+
+		leaderCards = playerView.getLeaderCards();
 	}
 
 	/**
@@ -126,7 +140,7 @@ public class Player extends LambdaObservable<Transmittable> {
 	 * Getter for the leaderCards.
 	 * @return the player's leaderCards.
 	 */
-	public ArrayList<LeaderCard> getLeaderCards() {
+	public List<LeaderCard> getLeaderCards() {
 		return leaderCards;
 	}
 
@@ -200,7 +214,7 @@ public class Player extends LambdaObservable<Transmittable> {
 	 * Getter for the all types of production slot
 	 * @return all the development cards on the player's board.
 	 */
-	public ArrayList<Slot> getSlots() {
+	public List<Slot> getSlots() {
 		return slots;
 	}
 
@@ -245,7 +259,7 @@ public class Player extends LambdaObservable<Transmittable> {
 	 * Getter for the warehouse.
 	 * @return the player's warehouse.
 	 */
-	public ArrayList<Depot> getWarehouse() {
+	public List<Depot> getWarehouse() {
 		return warehouse;
 	}
 
@@ -282,7 +296,7 @@ public class Player extends LambdaObservable<Transmittable> {
 	 * @param resource removes the stored resource from tempResources
 	 */
 	public void subFromTempResources(Resource resource){
-		ArrayList<Resource> tempResources = getTempResources();
+		List<Resource> tempResources = getTempResources();
 
 		for(Resource res : tempResources){
 			if(res.getResourceType() == resource.getResourceType()){
@@ -304,7 +318,7 @@ public class Player extends LambdaObservable<Transmittable> {
 	 * @return whether the resource is present or not.
 	 */
 	public boolean tempResourcesContains (Resource resource){
-		ArrayList<Resource> tempResources = getTempResources();
+		List<Resource> tempResources = getTempResources();
 
 		for(Resource temp : tempResources){
 			if(temp.getResourceType() == resource.getResourceType()){
@@ -330,7 +344,7 @@ public class Player extends LambdaObservable<Transmittable> {
 		return nickname;
 	}
 
-	public ArrayList<Resource> getTempResources() {
+	public List<Resource> getTempResources() {
 		return tempResources;
 	}
 

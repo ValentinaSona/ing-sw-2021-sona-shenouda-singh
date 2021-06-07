@@ -9,7 +9,7 @@ import java.util.stream.Stream;
 
 public class MarketTrayAbility implements Market {
 
-    HashMap<Player, List<MarketMarble>> abilityMap;
+    Map<Player, List<MarketMarble>> abilityMap;
 
     Market marketTray;
 
@@ -20,7 +20,7 @@ public class MarketTrayAbility implements Market {
      * @param marketTray the existing MarketTray
      * @param abilityMap the map containing players as key and a list of the corresponding WhiteMarbleAbility as value
      */
-    public MarketTrayAbility (Market marketTray, HashMap<Player, List<MarketMarble>> abilityMap) {
+    public MarketTrayAbility (Market marketTray, Map<Player, List<MarketMarble>> abilityMap) {
         this.abilityMap = abilityMap;
         this.marketTray = marketTray;
     }
@@ -31,7 +31,7 @@ public class MarketTrayAbility implements Market {
      * @param extra the saved extra marble
      * @param abilityMap the map with players and their respective WhiteMarbleAbility (if any)
      */
-    public MarketTrayAbility (MarketMarble[][] tray, MarketMarble extra, HashMap<Player, List<MarketMarble>> abilityMap) {
+    public MarketTrayAbility (MarketMarble[][] tray, MarketMarble extra, Map<Player, List<MarketMarble>> abilityMap) {
 
         this.marketTray = new MarketTray(tray, extra);
         this.abilityMap = abilityMap;
@@ -105,7 +105,7 @@ public class MarketTrayAbility implements Market {
         return tempResources;
     }
 
-    public HashMap<Player, List<MarketMarble>> getAbilityMap() {
+    public Map<Player, List<MarketMarble>> getAbilityMap() {
         return abilityMap;
     }
 

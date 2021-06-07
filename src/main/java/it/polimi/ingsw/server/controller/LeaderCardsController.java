@@ -14,6 +14,7 @@ import it.polimi.ingsw.utils.networking.transmittables.servermessages.ServerActi
 import it.polimi.ingsw.utils.networking.transmittables.servermessages.ServerThrowLeaderCardMessage;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class LeaderCardsController {
     private final MarketController marketController;
@@ -104,7 +105,7 @@ public class LeaderCardsController {
 
         Requirement[] requirements = targetCard.getRequirements();
         DevelopmentCardSlot[] developmentCardSlots = player.getDevelopmentCardSlots();
-        ArrayList<Depot> warehouse = player.getWarehouse();
+        List<Depot> warehouse = player.getWarehouse();
         Strongbox strongbox = player.getStrongbox();
 
         for (Requirement req : requirements){

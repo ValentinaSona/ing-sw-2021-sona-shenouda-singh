@@ -7,19 +7,20 @@ import it.polimi.ingsw.server.model.Resource;
 import it.polimi.ingsw.utils.networking.ClientHandleable;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class ServerDepositActionMessage implements ServerMessage, ClientHandleable {
-    private final ArrayList<Resource> tempResources;
-    private final ArrayList<DepotView> warehouseView;
+    private final List<Resource> tempResources;
+    private final List<DepotView> warehouseView;
     private final User user;
 
-    public ServerDepositActionMessage(ArrayList<Resource> tempResources, ArrayList<DepotView> warehouseView, User user){
+    public ServerDepositActionMessage(List<Resource> tempResources, ArrayList<DepotView> warehouseView, User user){
         this.tempResources = tempResources;
         this.warehouseView = warehouseView;
         this.user = user;
     }
 
-    public ArrayList<DepotView> getWarehouseView() {
+    public List<DepotView> getWarehouseView() {
         return warehouseView;
     }
 
@@ -27,7 +28,7 @@ public class ServerDepositActionMessage implements ServerMessage, ClientHandleab
         return user;
     }
 
-    public ArrayList<Resource> getTempResources() {
+    public List<Resource> getTempResources() {
         return tempResources;
     }
 

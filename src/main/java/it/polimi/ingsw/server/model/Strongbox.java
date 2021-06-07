@@ -1,5 +1,6 @@
 package it.polimi.ingsw.server.model;
 
+import it.polimi.ingsw.client.modelview.StrongboxView;
 import it.polimi.ingsw.server.model.Resource;
 import it.polimi.ingsw.server.model.ResourceType;
 import it.polimi.ingsw.utils.networking.Transmittable;
@@ -23,6 +24,13 @@ public class Strongbox{
         this.stone = new Resource(0, STONE);
         this.servant = new Resource(0, SERVANT);
 
+    }
+
+    public Strongbox(StrongboxView strongboxView) {
+        this.shield = strongboxView.getShield();
+        this.coin = strongboxView.getCoin();
+        this.stone = strongboxView.getStone();
+        this.servant = strongboxView.getServant();
     }
 
     /**

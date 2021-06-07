@@ -1,5 +1,6 @@
 package it.polimi.ingsw.server.model;
 
+import it.polimi.ingsw.client.modelview.FaithTrackView;
 import it.polimi.ingsw.server.exception.VaticanReportException;
 import it.polimi.ingsw.server.model.PopeFavorTiles;
 import it.polimi.ingsw.server.model.Resource;
@@ -17,6 +18,11 @@ public class FaithTrack {
 	public FaithTrack() {
 		this.popeFavorTiles = new PopeFavorTiles[]{PopeFavorTiles.DOWNWARDS, PopeFavorTiles.DOWNWARDS,PopeFavorTiles.DOWNWARDS};
 		this.faithMarker = 0;
+	}
+
+	public FaithTrack(FaithTrackView faithTrackView) {
+		popeFavorTiles = faithTrackView.getPopeFavorTiles();
+		faithMarker = faithTrackView.getFaithMarker();
 	}
 
 	public int getFaithMarker() {
@@ -101,6 +107,10 @@ public class FaithTrack {
 		else if (faithMarker >=2) return 1 + tiles;
 		else return 0 + tiles;
 
+	}
+
+	public PopeFavorTiles[] getPopeFavorTiles() {
+		return popeFavorTiles;
 	}
 
 }

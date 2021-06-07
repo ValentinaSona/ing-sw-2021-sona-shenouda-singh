@@ -19,11 +19,20 @@ public class FaithTrackView implements Serializable {
         this.faithMarker = faithMarker;
     }
 
+    public FaithTrackView (FaithTrack faithTrack) {
+        faithMarker = faithTrack.getFaithMarker();
+        popeFavorTiles = faithTrack.getPopeFavorTiles();
+    }
+
     public int getFaithMarker() {
         return faithMarker;
     }
 
     public PopeFavorTiles getPopeFavorTiles(int index) {
         return popeFavorTiles[index];
+    }
+
+    public PopeFavorTiles[] getPopeFavorTiles() {
+        return popeFavorTiles;
     }
 }

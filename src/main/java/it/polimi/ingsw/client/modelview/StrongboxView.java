@@ -1,6 +1,7 @@
 package it.polimi.ingsw.client.modelview;
 
 import it.polimi.ingsw.server.model.Resource;
+import it.polimi.ingsw.server.model.Strongbox;
 
 import java.io.Serializable;
 
@@ -23,6 +24,14 @@ public class StrongboxView implements Serializable {
         this.stone = new Resource(0, STONE);
         this.servant = new Resource(0, SERVANT);
 
+    }
+
+    public  StrongboxView(Strongbox strongbox) {
+        Resource [] resources = strongbox.getAvailableResources();
+        shield = resources[0];
+        coin = resources[1];
+        stone = resources[2];
+        servant = resources[3];
     }
 
     public Resource getShield() {

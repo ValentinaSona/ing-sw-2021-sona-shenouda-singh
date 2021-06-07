@@ -3,15 +3,17 @@ package it.polimi.ingsw.server.model;
 import it.polimi.ingsw.server.controller.User;
 import it.polimi.ingsw.utils.networking.Transmittable;
 import it.polimi.ingsw.utils.observer.LambdaObservable;
+import it.polimi.ingsw.utils.persistence.SavedState;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class Game extends LambdaObservable<Transmittable> {
     private static Game singleton;
     private final int numOfPlayers;
-    private final ArrayList<Player> players = new ArrayList<>();
+    private List<Player> players = new ArrayList<>();
     private Market marketInstance;
     private final LeaderCardsKeeper leaderCardsKeeper;
     private DevMarket developmentCardsMarket;
@@ -32,6 +34,16 @@ public class Game extends LambdaObservable<Transmittable> {
         }
 
         return singleton;
+    }
+
+    public static void restore(SavedState savedState) {
+
+        if (singleton != null)
+            throw new RuntimeException("Game already initialized, cannot load saved game!");
+
+        else
+            singleton = new Game(savedState);
+
     }
 
     public static Game destroy(){
@@ -70,6 +82,36 @@ public class Game extends LambdaObservable<Transmittable> {
 
     public boolean isSolo() {
         return solo;
+    }
+
+    private Game(SavedState savedState){
+
+        this.numOfPlayers = savedState.numOfPlayers();
+        this.marketInstance = MarketBuilder.build(
+                savedState.getSavedMarket().getSavedTray(),
+                savedState.getSavedMarket().getSavedExtra(),
+                savedState.getMarketMap());
+        this.developmentCardsMarket = DevelopmentBuilder.build(
+                savedState.getSavedDevMarket().getSavedDecks(),
+                savedState.getDevMap()
+        );
+        this.leaderCardsKeeper = new LeaderCardsKeeper();
+        this.players = savedState.getSavedPlayers();
+        this.currentPlayer = savedState.currentPlayer();
+
+        if (savedState.numOfPlayers() == 1){
+            // If the game is a single player
+            this.solo = true;
+            this.Lorenzo = new Lorenzo();
+
+        } else {
+
+            this.solo = false;
+            this.Lorenzo = null;
+        }
+
+        this.gameState = GameState.PLAY;
+
     }
 
     public Market getMarketInstance(){

@@ -3,18 +3,20 @@ package it.polimi.ingsw.server.model;
 import it.polimi.ingsw.client.modelview.DevMarketView;
 import it.polimi.ingsw.server.exception.EndOfGameException;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 
 public class DevelopmentCardsMarketAbility implements DevMarket {
 
-    DevelopmentCardsMarket cardsMarket;
-    HashMap<Player, List<Resource>> abilityMap;
+    private DevelopmentCardsMarket cardsMarket;
+    private Map<Player, List<Resource>> abilityMap;
 
-    public DevelopmentCardsMarketAbility (DevelopmentCardsMarket cardsMarket, HashMap<Player, List<Resource>> abilityMap) {
+    public DevelopmentCardsMarketAbility (DevelopmentCardsMarket cardsMarket, Map<Player, List<Resource>> abilityMap) {
         this.cardsMarket = cardsMarket;
+        this.abilityMap = abilityMap;
+    }
+
+    public DevelopmentCardsMarketAbility (DevelopmentCardDeck[][] cards, Map<Player, List<Resource>> abilityMap) {
+        this.cardsMarket = new DevelopmentCardsMarket(cards);
         this.abilityMap = abilityMap;
     }
 
@@ -86,7 +88,7 @@ public class DevelopmentCardsMarketAbility implements DevMarket {
         return this;
     }
 
-    public HashMap<Player, List<Resource>> getMap() {
+    public Map<Player, List<Resource>> getMap() {
         return abilityMap;
     }
 }

@@ -1,11 +1,13 @@
 package it.polimi.ingsw.server.model;
 
+import it.polimi.ingsw.server.exception.NotDecoratedException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -49,8 +51,14 @@ class MarketTrayTest {
 
         Assertions.assertTrue(market instanceof MarketTrayAbility);
 
-        HashMap<Player, List<MarketMarble>> map = market.getAbilityMap();
+        Map<Player, List<MarketMarble>> map = null;
+        try {
+            map = market.getAbilityMap();
+        } catch (NotDecoratedException e) {
+            e.printStackTrace();
+        }
 
+        assert map != null;
         Assertions.assertTrue(map.containsKey(jimmy));
         assertEquals(Collections.singletonList(MarketMarble.BLUE), map.get(jimmy) );
 

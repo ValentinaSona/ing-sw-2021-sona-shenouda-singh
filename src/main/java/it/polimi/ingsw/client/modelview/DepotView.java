@@ -1,5 +1,6 @@
 package it.polimi.ingsw.client.modelview;
 
+import it.polimi.ingsw.server.model.Depot;
 import it.polimi.ingsw.server.model.Id;
 import it.polimi.ingsw.server.model.Resource;
 
@@ -14,6 +15,12 @@ public class DepotView implements Serializable {
         this.id = id;
         this.resource = resource;
         this.capacity = capacity;
+    }
+
+    public DepotView(Depot depot) {
+        id = depot.getId();
+        resource = depot.getResource();
+        capacity = depot.getCapacity();
     }
 
     public Id getId(){

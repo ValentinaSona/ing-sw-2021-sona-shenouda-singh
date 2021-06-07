@@ -2,6 +2,7 @@ package it.polimi.ingsw.server.controller;
 
 
 import it.polimi.ingsw.server.exception.EndOfGameException;
+import it.polimi.ingsw.server.exception.NotDecoratedException;
 import it.polimi.ingsw.server.exception.TwoLeaderCardsException;
 import it.polimi.ingsw.server.model.*;
 import it.polimi.ingsw.server.model.Player;
@@ -99,7 +100,13 @@ public class MarketController{
             Market market = model.getMarketInstance();
             player.toggleMainAction();
 
-            MarketMarble[] marbles = market.getChosen(action.getChoices());
+            MarketMarble[] marbles = new MarketMarble[0];
+
+            try {
+                marbles = market.getChosen(action.getChoices());
+            } catch (NotDecoratedException e) {
+                e.printStackTrace();
+            }
 
             ArrayList<Resource> resources = (ArrayList<Resource>) convertMarbles(marbles);
             player.addToTempResources(resources);

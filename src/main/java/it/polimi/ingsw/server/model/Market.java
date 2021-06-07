@@ -1,10 +1,12 @@
 package it.polimi.ingsw.server.model;
 
 import it.polimi.ingsw.client.modelview.MarketView;
+import it.polimi.ingsw.server.exception.NotDecoratedException;
 import it.polimi.ingsw.server.exception.TwoLeaderCardsException;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 // TODO add getVisible method
 public interface Market {
@@ -17,9 +19,9 @@ public interface Market {
 
     MarketMarble getExtra();
 
-    MarketMarble[] getChosen(MarketMarble[] choice);
+    MarketMarble[] getChosen(MarketMarble[] choice) throws NotDecoratedException;
 
-    HashMap <Player, List<MarketMarble>> getAbilityMap();
+    Map<Player, List<MarketMarble>> getAbilityMap() throws NotDecoratedException;
 
     MarketView getVisible();
 

@@ -1,5 +1,6 @@
 package it.polimi.ingsw.server.model;
 
+import it.polimi.ingsw.client.modelview.DepotView;
 import it.polimi.ingsw.server.exception.InvalidDepotException;
 import it.polimi.ingsw.server.model.Id;
 import it.polimi.ingsw.server.model.Resource;
@@ -25,6 +26,12 @@ public class Depot {
 	public Depot (int capacity, Id id, ResourceType resourceType){
 		this(capacity,id);
 		resource = new Resource(0, resourceType);
+	}
+
+	public Depot (DepotView depotView) {
+		capacity = depotView.getCapacity();
+		id = depotView.getId();
+		resource = depotView.getResource();
 	}
 
 	/**

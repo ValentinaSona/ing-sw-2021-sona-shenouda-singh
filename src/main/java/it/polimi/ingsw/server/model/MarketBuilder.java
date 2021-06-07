@@ -3,6 +3,7 @@ package it.polimi.ingsw.server.model;
 import java.security.SecureRandom;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class MarketBuilder {
 
@@ -38,7 +39,7 @@ public class MarketBuilder {
      * @param playerAbilities saved map of player WhiteMarbleAbilities, in case of no abilities a empty map should be provided
      * @return the constructed market, which could be a marketTray or a MarketTrayAbility depending of the state of the saved game
      */
-    public static Market build ( MarketMarble[][] importedTray, MarketMarble importedExtra, HashMap<Player, List<MarketMarble>> playerAbilities) {
+    public static Market build ( MarketMarble[][] importedTray, MarketMarble importedExtra, Map<Player, List<MarketMarble>> playerAbilities) {
 
         if (playerAbilities.isEmpty()) { // If there are no active abilities in the market
             return new MarketTray(importedTray, importedExtra);

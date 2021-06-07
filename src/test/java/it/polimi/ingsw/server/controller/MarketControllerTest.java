@@ -1,6 +1,7 @@
 package it.polimi.ingsw.server.controller;
 
 import it.polimi.ingsw.server.exception.EndOfGameException;
+import it.polimi.ingsw.server.exception.NotDecoratedException;
 import it.polimi.ingsw.server.model.*;
 import it.polimi.ingsw.server.view.RemoteViewHandler;
 import it.polimi.ingsw.utils.networking.Connection;
@@ -133,7 +134,11 @@ class MarketControllerTest {
 
         Market market = model.getMarketInstance();
 
-        Assertions.assertEquals(playerAbilities, market.getAbilityMap().get(model.getPlayerFromUser(merlin)));
+        try {
+            Assertions.assertEquals(playerAbilities, market.getAbilityMap().get(model.getPlayerFromUser(merlin)));
+        } catch (NotDecoratedException e) {
+            e.printStackTrace();
+        }
 
         var tray = market.getTray();
         int i = 0;

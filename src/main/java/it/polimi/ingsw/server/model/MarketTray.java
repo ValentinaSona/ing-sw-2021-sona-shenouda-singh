@@ -1,6 +1,7 @@
 package it.polimi.ingsw.server.model;
 
 import it.polimi.ingsw.client.modelview.MarketView;
+import it.polimi.ingsw.server.exception.NotDecoratedException;
 
 import java.util.*;
 
@@ -116,12 +117,12 @@ public class MarketTray implements Market {
 		return extra;
 	}
 
-	public MarketMarble[] getChosen(MarketMarble[] choice){
-		throw new RuntimeException("No player has still activated a white marble ability, invalid method");
+	public MarketMarble[] getChosen(MarketMarble[] choice) throws NotDecoratedException {
+		throw new NotDecoratedException();
 	}
 
-	public HashMap <Player, List<MarketMarble>> getAbilityMap() {
-		throw new RuntimeException("No player has still activated a white marble ability, invalid method");
+	public Map<Player, List<MarketMarble>> getAbilityMap() throws NotDecoratedException {
+		throw new NotDecoratedException();
 	}
 
     public MarketView getVisible() {

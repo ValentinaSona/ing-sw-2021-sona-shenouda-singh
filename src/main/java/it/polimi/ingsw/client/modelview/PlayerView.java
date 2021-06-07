@@ -3,6 +3,7 @@ package it.polimi.ingsw.client.modelview;
 import it.polimi.ingsw.server.model.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 
 public class PlayerView {
@@ -36,11 +37,11 @@ public class PlayerView {
     /**
      * Special production that turns 2 resources of any kind into one resource of any kind.
      */
-    private ArrayList<SlotView> slots = new ArrayList<>();
+    private List<SlotView> slots = new ArrayList<>();
 
-    private ArrayList<DepotView> warehouse = new ArrayList<>();
+    private List<DepotView> warehouse = new ArrayList<>();
 
-    private ArrayList<Resource> tempResources;
+    private List<Resource> tempResources;
 
     /** TODO: when is the player interaction for the initial resources made? May need to change type to resource
      ** TODO: likewise, when is the leaderCard interaction made? Doesn't the constructor need to have 2 or 4 as input?
@@ -65,8 +66,20 @@ public class PlayerView {
         slots.add(new DevelopmentCardSlotView(Id.SLOT_2));
         slots.add(new DevelopmentCardSlotView(Id.SLOT_3));
 
-
         faithTrackView = new FaithTrackView();
+    }
+
+    public PlayerView(Player player) {
+
+        nickname = player.getNickname();
+        isMyTurn = false;
+        mainAction = false;
+
+        strongboxView = new StrongboxView(player.getStrongbox());
+        warehouse = player.getWarehouse().stream().map(DepotView::new).collect(Collectors.toList());
+        // TODO need help to know how slots are handled
+        faithTrackView = new FaithTrackView(player.getFaithTrack());
+
     }
 
     public String getNickname() {
@@ -117,27 +130,27 @@ public class PlayerView {
         this.strongboxView = strongboxView;
     }
 
-    public ArrayList<SlotView> getSlots() {
+    public List<SlotView> getSlots() {
         return slots;
     }
 
-    public void setSlots(ArrayList<SlotView> slots) {
+    public void setSlots(List<SlotView> slots) {
         this.slots = slots;
     }
 
-    public ArrayList<DepotView> getWarehouse() {
+    public List<DepotView> getWarehouse() {
         return warehouse;
     }
 
-    public void setWarehouse(ArrayList<DepotView> warehouse) {
+    public void setWarehouse(List<DepotView> warehouse) {
         this.warehouse = warehouse;
     }
 
-    public ArrayList<Resource> getTempResources() {
+    public List<Resource> getTempResources() {
         return tempResources;
     }
 
-    public void setTempResources(ArrayList<Resource> tempResources) {
+    public void setTempResources(List<Resource> tempResources) {
         this.tempResources = tempResources;
     }
 }
