@@ -22,6 +22,15 @@ public class LeaderCard extends SpecialAbility implements Serializable {
 		this.victoryPoints = victoryPoints;
 		this.specialAbility = specialAbility;
 	}
+
+	public LeaderCard(int id, Requirement[] requirements, int victoryPoints, SpecialAbility specialAbility, String abilityType){
+		this.id = id;
+		this.requirements = requirements;
+		this.isActive = false;
+		this.victoryPoints = victoryPoints;
+		this.specialAbility = specialAbility;
+		specialAbility.setAbilityType(abilityType);
+	}
 	public Boolean isActive() {
 		return isActive;
 	}

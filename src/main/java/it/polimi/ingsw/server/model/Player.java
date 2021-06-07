@@ -47,7 +47,7 @@ public class Player extends LambdaObservable<Transmittable> {
 	/**
 	 * Special production that turns 2 resources of any kind into one resource of any kind.
 	 */
-	private final List<Slot> slots =  new ArrayList<>();
+	private List<Slot> slots =  new ArrayList<>();
 
 	private List<Depot> warehouse = new ArrayList<>();
 
@@ -81,7 +81,7 @@ public class Player extends LambdaObservable<Transmittable> {
 		faithTrack = new FaithTrack();
 	}
 
-	public Player(PlayerView playerView) {
+	public Player(PlayerView playerView, List<Slot> slots) {
 
 		nickname = playerView.getNickname();
 		isMyTurn = false;
@@ -90,7 +90,7 @@ public class Player extends LambdaObservable<Transmittable> {
 
 		strongbox = new Strongbox(playerView.getStrongboxView());
 		warehouse = playerView.getWarehouse().stream().map(Depot::new).collect(Collectors.toList());
-		// TODO need help to know how slots are handled
+		this.slots = slots;
 		faithTrack = new FaithTrack(playerView.getFaithTrackView());
 
 		leaderCards = playerView.getLeaderCards();
