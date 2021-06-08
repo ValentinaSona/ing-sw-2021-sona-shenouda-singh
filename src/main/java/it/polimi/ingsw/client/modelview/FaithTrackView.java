@@ -4,6 +4,7 @@ import it.polimi.ingsw.server.model.FaithTrack;
 import it.polimi.ingsw.server.model.PopeFavorTiles;
 
 import java.io.Serializable;
+import java.util.Arrays;
 
 public class FaithTrackView implements Serializable {
     private final int faithMarker;
@@ -34,5 +35,17 @@ public class FaithTrackView implements Serializable {
 
     public PopeFavorTiles[] getPopeFavorTiles() {
         return popeFavorTiles;
+    }
+
+
+    @Override
+    public String toString() {
+
+
+
+        return "FaithTrackView{" +
+                "faithMarker=" + faithMarker +
+                ", popeFavorTiles=" + Arrays.toString(popeFavorTiles) +
+                '}';
     }
 }

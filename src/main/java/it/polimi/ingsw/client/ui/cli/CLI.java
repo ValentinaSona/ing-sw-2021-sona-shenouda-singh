@@ -110,7 +110,7 @@ public class CLI implements Ui {
     public void start(){
         output.println(banner);
 
-
+        output.println(FAITH_TRACK);
         Menu.getInstance(this).mainMenu();
 
 
