@@ -14,6 +14,7 @@ public class CLIHelper {
     public static final String WHITE_CIRCLE = "\u26AA";
     public static final String SQUARE = "\u25A0";
     public static final String CROSS = "\u2671";
+    public static final String LINE = "\u203E";
 
     public static final String MARBLE_LEGEND =
                 ANSI_BLUE + CIRCLE + ANSI_RESET + " Blue, "+
@@ -24,15 +25,18 @@ public class CLIHelper {
                 WHITE_CIRCLE +  " White";
 
     public static final String FAITH_TRACK =
-                ANSI_WHITE + SQUARE + SQUARE + SQUARE + ANSI_RESET + ANSI_YELLOW + SQUARE + ANSI_RESET +
-                ANSI_WHITE + SQUARE + SQUARE + ANSI_RESET + ANSI_YELLOW + SQUARE + ANSI_RESET +
-                ANSI_WHITE + SQUARE + ANSI_RESET + ANSI_RED +SQUARE + ANSI_RESET + ANSI_YELLOW + SQUARE + ANSI_RESET +
-                ANSI_WHITE + SQUARE + SQUARE + ANSI_RESET + ANSI_YELLOW + SQUARE + ANSI_RESET +
-                ANSI_WHITE + SQUARE + SQUARE + ANSI_RESET + ANSI_YELLOW + SQUARE + ANSI_RESET +
-                ANSI_RED + SQUARE + ANSI_RESET + ANSI_WHITE + SQUARE + ANSI_RESET + ANSI_YELLOW + SQUARE + ANSI_RESET +
-                ANSI_WHITE + SQUARE + SQUARE + ANSI_RESET + ANSI_YELLOW + SQUARE + ANSI_RESET +
-                ANSI_WHITE + SQUARE + SQUARE + ANSI_RESET + ANSI_RED + SQUARE + ANSI_RESET + "\n"
-            ;
+                ANSI_WHITE + " " + SQUARE +  " " + SQUARE +  " " + SQUARE +  " " + ANSI_RESET + ANSI_YELLOW + SQUARE + " " + ANSI_RESET +
+                ANSI_WHITE + SQUARE +  " " + SQUARE +  " " + ANSI_RESET + ANSI_YELLOW + SQUARE + " " + ANSI_RESET +
+                ANSI_WHITE + SQUARE + " " + ANSI_RESET + ANSI_RED + SQUARE + " " + ANSI_RESET + ANSI_YELLOW + SQUARE + " " + ANSI_RESET +
+                ANSI_WHITE + SQUARE + " " + SQUARE + " " + ANSI_RESET + ANSI_YELLOW + SQUARE + " " + ANSI_RESET +
+                ANSI_WHITE + SQUARE +  " " + SQUARE + " " + ANSI_RESET + ANSI_YELLOW + SQUARE + " " + ANSI_RESET +
+                ANSI_RED + SQUARE + " " + ANSI_RESET + ANSI_WHITE + SQUARE + " " + ANSI_RESET + ANSI_YELLOW + SQUARE + " " + ANSI_RESET +
+                ANSI_WHITE + SQUARE + " " + SQUARE + " " + ANSI_RESET + ANSI_YELLOW + SQUARE + " " + ANSI_RESET +
+                ANSI_WHITE + SQUARE + " " + SQUARE + " " + ANSI_RESET + ANSI_RED + SQUARE + " " + ANSI_RESET + "\n" +
+                "          |-------|     |---------|   |-----------|";
+
+
+    ;
 
 }
 

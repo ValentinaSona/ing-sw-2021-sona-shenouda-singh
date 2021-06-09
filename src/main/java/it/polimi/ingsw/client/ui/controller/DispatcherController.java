@@ -125,6 +125,7 @@ public class DispatcherController implements Runnable, LambdaObserver {
         }
     };
 
+
     public void handleSetupAction(ServerSetupActionMessage message){
         GameView.getInstance().getPlayerFromUser(message.getUser()).setWarehouse(message.getWarehouseView());
         if(message.getUser().getNickName().equals(MatchSettings.getInstance().getClientNickname())){
@@ -134,10 +135,15 @@ public class DispatcherController implements Runnable, LambdaObserver {
         if(gui){
             ((LeaderCardSelectionController)currentController).handleSetupActionMessage(message);
         }else {
-
+            CLIMessageHandler.getInstance().handleServerSetupActionMessage(message);
         }
     }
 
+    /**
+     * This message is received by ALL users. Only the user indicated in the message proceeds to handle its contents.
+     * This method updates the player's faith track before passing the message to the UI for handling.
+     * @param message contains resource number, 4 leader cards, a faith track and the addressed user.
+     */
     public void handleSetupUser(ServerSetupUserMessage message){
         GameView.getInstance().getPlayerFromUser(message.getUser()).setFaithTrackView(message.getFaithTrackView());
 

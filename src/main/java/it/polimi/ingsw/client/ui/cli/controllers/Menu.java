@@ -13,12 +13,10 @@ import it.polimi.ingsw.utils.networking.transmittables.servermessages.ServerMess
 import it.polimi.ingsw.utils.networking.transmittables.servermessages.ServerSetupUserMessage;
 
 import java.io.IOException;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Set;
 
-import static it.polimi.ingsw.client.ui.cli.CLIHelper.MARBLE_LEGEND;
+import static it.polimi.ingsw.client.ui.cli.CLIHelper.*;
 
 
 public class Menu {
@@ -49,6 +47,7 @@ public class Menu {
 
     public Menu(CLI cli) {
         this.cli = cli;
+
     }
 
 
@@ -62,6 +61,21 @@ public class Menu {
         return singleton;
     }
 
+    public void run(){
+        while (true) {
+
+            // Launches various menus
+            switch (state) {
+                case MAIN -> mainMenu();
+                case SETUP -> setupMenu();
+                case GAME -> gameMenu();
+            }
+            // If a menu arrives naturally to its end, wait for a state change to print the next one.
+            waitStateChange();
+
+            // Add here a catch for when a method is brutally interrupted.
+        }
+    }
 
     public void mainMenu(){
         String[] options = {"Singleplayer", "Multiplayer","Credits", "Quit"};
@@ -91,9 +105,29 @@ public class Menu {
 
 
         switch (state){
+            case MAIN -> mainMenu();
             case SETUP -> setupMenu();
+            case GAME -> gameMenu();
         }
 
+    }
+
+    private void gameMenu() {
+        String[] options =
+                {"See market", "See development card market", "See faith tracks", "See your board", "See other players boards", "Buy from market", "Buy Development Card", "Activate Productions", "Leader Action", "End Turn"};
+
+        switch (cli.getChoice(options)){
+            case 1 -> {
+                cli.printMessage(MARBLE_LEGEND);
+                cli.printMessage(GameView.getInstance().getMarketInstance());
+                gameMenu();
+            }
+            case 2 -> {
+                cli.printMessage(GameView.getInstance().getDevelopmentCardsMarket());
+                gameMenu();
+            }
+            default -> gameMenu();
+        }
     }
 
     private void credits() {
@@ -110,7 +144,7 @@ public class Menu {
                     UIController.getInstance().sendNickname(nickname, "127.0.0.1", 10001);
                     UIController.getInstance().joinLobby();
                 } catch (IOException e) {
-                    cli.printMessage("Unable to connect to server. Returning to main menu.");
+                    cli.printMessage("[X] Unable to connect to server. Returning to main menu.");
                     mainMenu();
                 }
             }
@@ -129,18 +163,26 @@ public class Menu {
         }
     }
 
-    public void setupMenu(){
 
+    public void setupMenu(){
 
         String[] options;
 
         if(((ServerSetupUserMessage) inMsg).getUser().getNickName().equals(MatchSettings.getInstance().getClientNickname())) {
 
+            if (((ClientSetupActionMessage)outMsg)!= null && ((ClientSetupActionMessage)outMsg).getChosen()== null)
+                cli.printMessage("[ ] You've received a selection of leader cards. Select \"Pick leader cards\" to continue.");
+
             if (((ServerSetupUserMessage) inMsg).getResources() != 0) {
+
+                if (((ClientSetupActionMessage)outMsg)!= null && ((ClientSetupActionMessage)outMsg).getIdResourceMap()== null)
+                    cli.printMessage("[ ] You've received " + ((ServerSetupUserMessage) inMsg).getResources() + " resources. Select \"Pick starting resources\" to continue.");
                 options = new String[]{"See market", "See development card market", "See faith track", "Pick leader cards", "Pick starting resources"};
+
             } else
                 options = new String[]{"See market", "See development card market", "See faith track", "Pick leader cards"};
         } else {
+
             options = new String[]{"See market", "See development card market", "See faith track"};
         }
 
@@ -156,10 +198,12 @@ public class Menu {
                     setupMenu();
                 }
                 case 3 -> {
+                    cli.printMessage(cli.getView().getFaithTrackView());
                     setupMenu();
                 }
                 case 4 -> {
                     pickLeaders();
+
                     if (((ClientSetupActionMessage)outMsg).getIdResourceMap()!= null) {
                         var msg = ((ClientSetupActionMessage)outMsg);
                         UIController.getInstance().chosenStartingResources(msg.getIdResourceMap(), msg.getChosen());
@@ -169,18 +213,57 @@ public class Menu {
 
                 }
                 case 5 -> {
-                    setupMenu();
+                    pickResources();
+
+                    if (((ClientSetupActionMessage)outMsg).getChosen()!= null) {
+
+                        var msg = ((ClientSetupActionMessage)outMsg);
+                        UIController.getInstance().chosenStartingResources(msg.getIdResourceMap(), msg.getChosen());
+
+                    } else setupMenu();
+
+                    waitStateChange();
+
                 }
             }
 
+    }
+
+    private void pickResources(){
+        Map<Id, Resource> map = new HashMap<Id, Resource>();
+        int max = ((ServerSetupUserMessage) inMsg).getResources();
+
+        if (outMsg != null && ((ClientSetupActionMessage)outMsg).getIdResourceMap() != null) {
+            cli.printMessage("[X] You have already picked your resources");
+            return;
+        }
+
+        while (max > 0 ){
+            Resource resource = cli.getResource(max);
+            max -= resource.getQuantity();
+            map.put(Id.DEPOT_2, resource);
+        }
+
+        var user = ((ServerSetupUserMessage)inMsg).getUser();
+
+        if (outMsg!=null && ((ClientSetupActionMessage)outMsg).getChosen()!= null)
+            // The user has already selected the leader cards.
+            outMsg = new ClientSetupActionMessage(map, ((ClientSetupActionMessage)outMsg).getChosen(), user);
+        else
+            // The user still has to pick their leader cards.
+            outMsg = new ClientSetupActionMessage(map, null, user);
+
+
+        cli.printMessage("["+CHECK_MARK+"] Your resources have been placed in your depots. You'll be able to rearrange them freely once the game begins.");
     }
 
     private void pickLeaders() {
         var cards4 = ((ServerSetupUserMessage) inMsg).getLeaderCards();
         LeaderCard[] chosen = new LeaderCard[2];
 
-        if (cards4 == null) {
+        if (outMsg != null && ((ClientSetupActionMessage)outMsg).getChosen() != null) {
             cli.printMessage("[X] You have already picked your cards");
+            return;
         }
 
         String[] cardOptions = new String[4];
@@ -191,7 +274,7 @@ public class Menu {
         int choice = cli.getChoice(cardOptions);
 
         chosen[0] = cards4[choice-1];
-        cards4[choice-1] =null;
+        cards4[choice-1] = null;
 
         cardOptions = new String[4];
         for (int i = 0; i < cards4.length; i++) {
@@ -200,7 +283,7 @@ public class Menu {
         }
         cli.printMessage("[ ] Pick one from these leader cards: (2/2 cards to pick)");
 
-        int choice2 = 0;
+        int choice2;
         do {
             choice2 = cli.getChoice(cardOptions);
         } while (choice == choice2);
@@ -210,14 +293,15 @@ public class Menu {
 
         if (((ServerSetupUserMessage)inMsg).getResources() == 0)
             // The user doesn't have resources, so they don't need to pick them.
-            outMsg = (ClientMessage) new ClientSetupActionMessage(new HashMap<Id, Resource>(), chosen, user);
+            outMsg = new ClientSetupActionMessage(new HashMap<>(), chosen, user);
 
         else if (outMsg!=null && ((ClientSetupActionMessage)outMsg).getIdResourceMap()!= null)
             // The user has resources and has already selected them.
-            outMsg = (ClientMessage) new ClientSetupActionMessage(((ClientSetupActionMessage)outMsg).getIdResourceMap(), chosen, user);
+            outMsg = new ClientSetupActionMessage(((ClientSetupActionMessage)outMsg).getIdResourceMap(), chosen, user);
         else
             // The user still has to pick their resources.
-            outMsg = (ClientMessage) new ClientSetupActionMessage(null, chosen, user);
+            outMsg = new ClientSetupActionMessage(null, chosen, user);
+
     }
 
 

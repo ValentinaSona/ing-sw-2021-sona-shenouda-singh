@@ -1,15 +1,22 @@
 package it.polimi.ingsw.client.ui.cli;
 
+import it.polimi.ingsw.client.modelview.GameView;
+import it.polimi.ingsw.client.modelview.MatchSettings;
+import it.polimi.ingsw.client.modelview.PlayerView;
 import it.polimi.ingsw.client.ui.Ui;
 import it.polimi.ingsw.client.ui.cli.controllers.CLIMessageHandler;
 import it.polimi.ingsw.client.ui.cli.controllers.Menu;
 import it.polimi.ingsw.client.ui.controller.UIController;
 import it.polimi.ingsw.server.controller.LeaderCardsController;
+import it.polimi.ingsw.server.controller.User;
 import it.polimi.ingsw.server.model.Game;
+import it.polimi.ingsw.server.model.Resource;
+import it.polimi.ingsw.server.model.ResourceType;
 import it.polimi.ingsw.utils.networking.transmittables.StatusMessage;
 
-import java.io.PrintStream;
+import java.io.*;
 import java.util.Scanner;
+import java.util.function.Predicate;
 
 import static it.polimi.ingsw.client.ui.cli.CLIHelper.*;
 
@@ -17,6 +24,10 @@ public class CLI implements Ui {
     private final CLIMessageHandler msgHandler = CLIMessageHandler.getInstance(this);
     private final PrintStream output;
     private final Scanner input;
+    private boolean skip;
+
+
+    private PlayerView view;
 
 
 
@@ -29,16 +40,53 @@ public class CLI implements Ui {
     public CLI()  {
         input = new Scanner(System.in);
         output = new PrintStream(System.out);
+
+
+    }
+
+
+
+    public void provideInput(String data) {
+
+    }
+
+    public void setView(){
+        String nick = MatchSettings.getInstance().getClientNickname();
+        for (PlayerView playerView : GameView.getInstance().getPlayers()){
+            if (playerView.getNickname().equals(nick)) this.view = playerView;
+        }
+    }
+
+    public PlayerView getView() {
+        return view;
     }
 
     public void printMessage(Object msg){
         output.println(msg);
     }
 
+    public Resource getResource(int max){
+        String[] choice;
+        do {
+           choice = getString("[0-9]+[ ](stone|coin|servant|shield)[s]?$", "Choose a valid resource (e.g. '2 servant|coin|shield|stones') up to a maximum of " + max).split(" ", 2);
 
-    public int getChoice(String[] options){
+        } while (Integer.parseInt(choice[0]) <= 0 || Integer.parseInt(choice[0]) > max);
+
+        if (choice[1] != null && choice[1].length() > 0 && choice[1].charAt(choice[1].length() - 1) == 's') {
+            choice[1] = choice[1].substring(0, choice[1].length() - 1);
+        }
+
+        return new Resource(Integer.parseInt(choice[0]) , ResourceType.parseInput(choice[1]));
+    }
+
+    public void setSkip(boolean skip) {
+        this.skip = skip;
+    }
+
+    public int getChoice(String[] options, boolean enableHidden){
         int optNum = 1;
         int choice = 0;
+        skip = false;
         output.println("[ ] Choose an option:");
         for (String option : options){
 
@@ -47,28 +95,35 @@ public class CLI implements Ui {
         }
 
         while(true) {
-            if(input.hasNextInt()) {
+            if(input.hasNextInt() || skip ) {
                 choice = input.nextInt();
+
             } else {
                 output.println("Input must be the number of a menu item");
                 input.next();
                 continue;
             }
             if (choice > 0 && choice < optNum) break;
+            if (enableHidden == true && choice == 0) break;
             else output.println("Input must be the number of a menu item");
         }
 
 
-        output.println("["+CHECK_MARK+"] Chosen: " + options[choice-1]);
+        if (choice !=0) output.println("["+CHECK_MARK+"] Chosen: " + options[choice-1]);
         output.flush();
-        return choice;
+        input.nextLine();
+
+        if (skip) return 0;
+        else return choice;
+    }
+    public int getChoice(String[] options){
+        return getChoice(options, false);
     }
 
     public String getString(String regex, String desc){
 
-        output.println(desc +":");
+        output.println("[ ] " + desc +":");
         String choice;
-        input.nextLine();
         while(true) {
             if (input.hasNextLine()) {
                 choice = input.nextLine();
@@ -101,6 +156,7 @@ public class CLI implements Ui {
 
         output.println("["+CHECK_MARK+"] Chosen: " + choice);
         output.flush();
+
         return choice;
     }
 
@@ -110,7 +166,6 @@ public class CLI implements Ui {
     public void start(){
         output.println(banner);
 
-        output.println(FAITH_TRACK);
         Menu.getInstance(this).mainMenu();
 
 

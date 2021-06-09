@@ -1,11 +1,13 @@
 package it.polimi.ingsw.client.ui.cli.controllers;
 
+import it.polimi.ingsw.client.modelview.MatchSettings;
 import it.polimi.ingsw.client.ui.cli.CLI;
 import it.polimi.ingsw.client.ui.controller.UIController;
 import it.polimi.ingsw.utils.networking.transmittables.StatusMessage;
-import it.polimi.ingsw.utils.networking.transmittables.servermessages.ServerSetupGameMessage;
-import it.polimi.ingsw.utils.networking.transmittables.servermessages.ServerSetupUserMessage;
-import it.polimi.ingsw.utils.networking.transmittables.servermessages.ServerUpdateLobbyMessage;
+import it.polimi.ingsw.utils.networking.transmittables.servermessages.*;
+
+import java.io.ByteArrayInputStream;
+import java.nio.charset.StandardCharsets;
 
 import static it.polimi.ingsw.client.ui.cli.CLIHelper.CHECK_MARK;
 
@@ -47,24 +49,58 @@ public class CLIMessageHandler {
     public void handleUpdateLobbyMessage(ServerUpdateLobbyMessage message){
 
         cli.printMessage("["+CHECK_MARK+"] Another player has joined! ("+message.getLobbyUsers().size()+"/"+message.getNumOfPlayer()+")");
+
     }
 
     public void handleServerSetupGameMessage(ServerSetupGameMessage message){
 
         cli.printMessage("["+CHECK_MARK+"] The lobby is full! The game is starting!");
-        //Menu.getInstance().setupMenu();
+
+        // Saves the user's playerView for ease of access.
+        cli.setView();
 
     }
 
+    /**
+     * This message is received by ALL users. Only the user indicated in the message proceeds to handle its contents.
+     * Other users are notified that another player is choosing their cards.
+     * @param message contains resource number, 4 leader cards, a faith track and the addressed user.
+     */
     public void handleServerSetupUserMessage(ServerSetupUserMessage message){
 
-        if (message.getResources() != 0) {
-            cli.printMessage("[ ] You've received " + message.getResources() + " resources. Select \"Pick starting resources\" to continue.");
+        if ( message.getUser().getNickName().equals( MatchSettings.getInstance().getClientNickname() )) {
+            cli.printMessage("["+CHECK_MARK+"] It's your turn! If you don't see new options in the menu, pick any one option to refresh it.");
+
+            if (message.getFaithTrackView() != null && message.getFaithTrackView().getFaithMarker() > 0)
+                cli.printMessage("["+CHECK_MARK+"] You have received " + message.getFaithTrackView().getFaithMarker() + " faith points.");
+        } else {
+            cli.printMessage("[ ] " + message.getUser().getNickName() + " is selecting their leader cards. You can explore the board in the meantime.");
         }
+
+
 
         Menu.getInstance().setState(MenuStates.SETUP, message);
         synchronized (Menu.getInstance()) {
             Menu.getInstance().notifyAll();
         }
     }
+
+    public void handleServerSetupActionMessage(ServerSetupActionMessage message){
+
+        if ( message.getUser().getNickName().equals( MatchSettings.getInstance().getClientNickname() )) {
+            cli.printMessage("["+CHECK_MARK+"] You have received the selected cards and resources");
+
+        } else {
+            cli.printMessage("["+CHECK_MARK+"] " + message.getUser().getNickName() + " has selected their leader cards.");
+        }
+
+    }
+
+    public void handleServerStartTurnMessage(ServerStartTurnMessage message){
+
+    }
+
+
+
+
 }

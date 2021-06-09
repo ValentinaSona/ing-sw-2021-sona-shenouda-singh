@@ -75,6 +75,9 @@ public class Match implements Runnable{
 
         controller.setup();
 
+        //TODO: this as an alternate method to EndOfGame?
+        model.setActive(true);
+
         while (isActive()){
             try{
                 controller.dispatchViewClientMessage();

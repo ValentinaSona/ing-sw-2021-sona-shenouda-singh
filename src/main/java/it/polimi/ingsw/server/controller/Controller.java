@@ -107,6 +107,7 @@ public class Controller implements LambdaObserver {
                     player.getWarehouse().get(id.getValue()).addResource(idResourceMap.get(id));
                 } catch (InvalidDepotException e) {
                     //this should never happen in the during the setup
+                    //TODO: not true, the fourth player receives two different resources. But, since
                 }
             }
 

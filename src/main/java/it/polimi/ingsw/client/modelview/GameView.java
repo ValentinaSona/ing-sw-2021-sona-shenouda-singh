@@ -66,6 +66,7 @@ public class GameView implements Serializable {
     }
 
 
+
     public PlayerView getPlayerFromUser(User user){
         return userPlayerHashMap.get(user);
     }

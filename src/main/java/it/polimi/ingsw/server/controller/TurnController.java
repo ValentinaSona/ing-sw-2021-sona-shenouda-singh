@@ -84,23 +84,23 @@ public class TurnController{
         LeaderCardsKeeper keeper = model.getLeaderCardsKeeper();
         int currentPlayerIdx = players.indexOf(startingPlayer);
         int resources = 0;
-        int faitPoints = 0;
+        int faithPoints = 0;
 
         if(currentPlayerIdx == 0 || currentPlayerIdx == 1){
             resources = currentPlayerIdx;
         }else if(currentPlayerIdx == 2){
             resources = 1;
-            faitPoints = 1;
+            faithPoints = 1;
         }else if(currentPlayerIdx == 3){
             resources = 2;
-            faitPoints = 2;
+            faithPoints = 2;
         }else{
             new RuntimeException("This should never happen");
         }
 
 
         try {
-            startingPlayer.getFaithTrack().addFaithPoints(faitPoints);
+            startingPlayer.getFaithTrack().addFaithPoints(faithPoints);
         } catch (VaticanReportException e) {
             //during the setup this exception will never be thrown
             e.printStackTrace();
@@ -116,9 +116,12 @@ public class TurnController{
     }
 
     public void endSetupTurn(){
+        //TODO: Doesn't send third one?
         Player endingPlayer = model.getCurrentPlayer();
         ArrayList<Player> players = model.getPlayers();
         int idx = players.indexOf(endingPlayer);
+
+        endingPlayer.toggleTurn();
 
         //last player has done the setup procedure
         if(idx == players.size()-1){
