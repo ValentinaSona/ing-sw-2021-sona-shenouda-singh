@@ -4,19 +4,12 @@ import it.polimi.ingsw.client.modelview.GameView;
 import it.polimi.ingsw.client.modelview.MatchSettings;
 import it.polimi.ingsw.client.modelview.PlayerView;
 import it.polimi.ingsw.client.ui.Ui;
-import it.polimi.ingsw.client.ui.cli.controllers.CLIMessageHandler;
-import it.polimi.ingsw.client.ui.cli.controllers.Menu;
-import it.polimi.ingsw.client.ui.controller.UIController;
-import it.polimi.ingsw.server.controller.LeaderCardsController;
-import it.polimi.ingsw.server.controller.User;
-import it.polimi.ingsw.server.model.Game;
+import it.polimi.ingsw.client.ui.cli.menus.MenuRunner;
 import it.polimi.ingsw.server.model.Resource;
 import it.polimi.ingsw.server.model.ResourceType;
-import it.polimi.ingsw.utils.networking.transmittables.StatusMessage;
 
 import java.io.*;
 import java.util.Scanner;
-import java.util.function.Predicate;
 
 import static it.polimi.ingsw.client.ui.cli.CLIHelper.*;
 
@@ -24,8 +17,6 @@ public class CLI implements Ui {
     private final CLIMessageHandler msgHandler = CLIMessageHandler.getInstance(this);
     private final PrintStream output;
     private final Scanner input;
-    private boolean skip;
-
 
     private PlayerView view;
 
@@ -44,11 +35,6 @@ public class CLI implements Ui {
 
     }
 
-
-
-    public void provideInput(String data) {
-
-    }
 
     public void setView(){
         String nick = MatchSettings.getInstance().getClientNickname();
@@ -79,14 +65,9 @@ public class CLI implements Ui {
         return new Resource(Integer.parseInt(choice[0]) , ResourceType.parseInput(choice[1]));
     }
 
-    public void setSkip(boolean skip) {
-        this.skip = skip;
-    }
-
     public int getChoice(String[] options, boolean enableHidden){
         int optNum = 1;
-        int choice = 0;
-        skip = false;
+        int choice;
         output.println("[ ] Choose an option:");
         for (String option : options){
 
@@ -95,7 +76,7 @@ public class CLI implements Ui {
         }
 
         while(true) {
-            if(input.hasNextInt() || skip ) {
+            if(input.hasNextInt()) {
                 choice = input.nextInt();
 
             } else {
@@ -104,7 +85,7 @@ public class CLI implements Ui {
                 continue;
             }
             if (choice > 0 && choice < optNum) break;
-            if (enableHidden == true && choice == 0) break;
+            if (enableHidden && choice == 0) break;
             else output.println("Input must be the number of a menu item");
         }
 
@@ -112,9 +93,7 @@ public class CLI implements Ui {
         if (choice !=0) output.println("["+CHECK_MARK+"] Chosen: " + options[choice-1]);
         output.flush();
         input.nextLine();
-
-        if (skip) return 0;
-        else return choice;
+        return choice;
     }
     public int getChoice(String[] options){
         return getChoice(options, false);
@@ -166,7 +145,7 @@ public class CLI implements Ui {
     public void start(){
         output.println(banner);
 
-        Menu.getInstance(this).mainMenu();
+        MenuRunner.getInstance(this).run();
 
 
     }

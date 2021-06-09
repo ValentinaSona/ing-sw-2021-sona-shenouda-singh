@@ -9,7 +9,9 @@ import java.util.Map;
 
 public class GameView implements Serializable {
     private static GameView singleton;
-    private final ArrayList<PlayerView> players = new ArrayList<>();
+    //TODO: removed because unused.
+
+    // private final ArrayList<PlayerView> players = new ArrayList<>();
     private final ArrayList<User> users;
     private MarketView marketInstance;
     private DevMarketView developmentCardsMarket;
@@ -72,7 +74,8 @@ public class GameView implements Serializable {
     }
 
     public ArrayList<PlayerView> getPlayers() {
-        return new ArrayList<>(players);
+
+        return new ArrayList<>(userPlayerHashMap.values());
     }
 
     public PlayerView getCurrentPlayer() {

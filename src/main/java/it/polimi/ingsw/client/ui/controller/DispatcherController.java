@@ -2,8 +2,7 @@ package it.polimi.ingsw.client.ui.controller;
 
 import it.polimi.ingsw.client.modelview.GameView;
 import it.polimi.ingsw.client.modelview.MatchSettings;
-import it.polimi.ingsw.client.ui.cli.CLI;
-import it.polimi.ingsw.client.ui.cli.controllers.CLIMessageHandler;
+import it.polimi.ingsw.client.ui.cli.CLIMessageHandler;
 import it.polimi.ingsw.client.ui.gui.GUIHelper;
 import it.polimi.ingsw.client.ui.gui.JFXControllers.ScreenName;
 import it.polimi.ingsw.utils.networking.ClientHandleable;
@@ -76,8 +75,7 @@ public class DispatcherController implements Runnable, LambdaObserver {
     public void handleThrowResource(ServerThrowResourceMessage message){}
     //TODO
     public void handleThrowLeaderCard(ServerThrowLeaderCardMessage message){}
-    //TODO
-    public void handleStartTurn(ServerStartTurnMessage message){}
+
     //TODO
     public void handleFaithTrackMessage(ServerFaithTrackMessage message){}
     //TODO
@@ -123,9 +121,13 @@ public class DispatcherController implements Runnable, LambdaObserver {
         }else{
             CLIMessageHandler.getInstance().handleUpdateLobbyMessage(message);
         }
-    };
+    }
 
-
+    /**
+     * This message is received by ALL users. Only the user indicated in the message proceeds to handle its contents.
+     * This method updates the player's warehouse before passing the message to the UI for handling.
+     * @param message handleable.
+     */
     public void handleSetupAction(ServerSetupActionMessage message){
         GameView.getInstance().getPlayerFromUser(message.getUser()).setWarehouse(message.getWarehouseView());
         if(message.getUser().getNickName().equals(MatchSettings.getInstance().getClientNickname())){
@@ -165,6 +167,29 @@ public class DispatcherController implements Runnable, LambdaObserver {
             CLIMessageHandler.getInstance().handleServerSetupUserMessage(message);
         }
     }
+
+    /**
+     * This message is received by ALL users. Only the user indicated as starting in the message proceeds to handle its contents.
+     * This method contains references to the players starting and ending their turn and sets the relative parameters.
+     * @param message Contains two users.
+     */
+    public void handleStartTurn(ServerStartTurnMessage message){
+        // Change current player reference
+        GameView.getInstance().setCurrentPlayer(GameView.getInstance().getPlayerFromUser(message.getStartingTurn()));
+        // Set starting player to have their turn and main action.
+        GameView.getInstance().getPlayerFromUser(message.getStartingTurn()).setMyTurn(true);
+        GameView.getInstance().getPlayerFromUser(message.getStartingTurn()).setMainAction(true);
+        // Make sure the ending player turn ends.
+        GameView.getInstance().getPlayerFromUser(message.getEndingTurn()).setMyTurn(false);
+        GameView.getInstance().getPlayerFromUser(message.getEndingTurn()).setMainAction(false);
+
+        if(gui){
+
+        }else {
+            CLIMessageHandler.getInstance().handleServerStartTurnMessage(message);
+        }
+    }
+
 
     public void handleStatus(StatusMessage message){
         if(gui){

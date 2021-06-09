@@ -353,9 +353,12 @@ public class Player extends LambdaObservable<Transmittable> {
 		return null;
 	}
 
-	//TODO
+	/**
+	 * Creates the reduced, serializable version of the faith track that is sent to the client.
+	 * @return the serializable FaithTrackView.
+	 */
 	public FaithTrackView getVisibleFaithTrack() {
-		return null;
+		return new FaithTrackView(faithTrack.getFaithMarker(),faithTrack.getPopeFavorTiles());
 	}
 
 

@@ -33,10 +33,10 @@ public class CLIHelper {
                 ANSI_RED + SQUARE + " " + ANSI_RESET + ANSI_WHITE + SQUARE + " " + ANSI_RESET + ANSI_YELLOW + SQUARE + " " + ANSI_RESET +
                 ANSI_WHITE + SQUARE + " " + SQUARE + " " + ANSI_RESET + ANSI_YELLOW + SQUARE + " " + ANSI_RESET +
                 ANSI_WHITE + SQUARE + " " + SQUARE + " " + ANSI_RESET + ANSI_RED + SQUARE + " " + ANSI_RESET + "\n" +
-                "          |-------|     |---------|   |-----------|";
+                "          |-------|     |---------|   |-----------|\n";
 
 
-    ;
+
 
 }
 

@@ -30,7 +30,7 @@ public class DevMarketView implements Serializable {
             for (int j = 0; j < 3; j++) {
 
                 marketPrint += tray[j][i] + "\n";
-                if( i == 3 && j != 2) marketPrint+="\n\n";
+                if( i != 3 && j == 2) marketPrint+="\n\n";
             }
 
         }

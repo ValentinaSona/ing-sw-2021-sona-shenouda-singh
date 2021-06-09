@@ -95,7 +95,6 @@ public class DevelopmentCard implements Serializable {
 		}
 
 		return "" +
-				color + "\tId: " + id +"\n"+
 				color + "\tCost: " + Arrays.toString(cost).substring(1, Arrays.toString(cost).length() - 1) +"\n"+
 				color +"\tType: " + type +", Level: "+ level + "\n"+
 				color +"\tProduction: " + production + "\n"+

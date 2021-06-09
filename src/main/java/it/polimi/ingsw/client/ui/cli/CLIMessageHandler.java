@@ -1,13 +1,11 @@
-package it.polimi.ingsw.client.ui.cli.controllers;
+package it.polimi.ingsw.client.ui.cli;
 
 import it.polimi.ingsw.client.modelview.MatchSettings;
-import it.polimi.ingsw.client.ui.cli.CLI;
+import it.polimi.ingsw.client.ui.cli.menus.MenuRunner;
+import it.polimi.ingsw.client.ui.cli.menus.MenuStates;
 import it.polimi.ingsw.client.ui.controller.UIController;
 import it.polimi.ingsw.utils.networking.transmittables.StatusMessage;
 import it.polimi.ingsw.utils.networking.transmittables.servermessages.*;
-
-import java.io.ByteArrayInputStream;
-import java.nio.charset.StandardCharsets;
 
 import static it.polimi.ingsw.client.ui.cli.CLIHelper.CHECK_MARK;
 
@@ -15,11 +13,11 @@ public class CLIMessageHandler {
 
     private static CLIMessageHandler singleton;
     private final CLI cli;
-    private final Menu menu;
+    private final MenuRunner menu;
 
     public CLIMessageHandler(CLI cli) {
         this.cli = cli;
-        this.menu = Menu.getInstance();
+        this.menu = MenuRunner.getInstance();
     }
 
     public static CLIMessageHandler getInstance(CLI cli){
@@ -74,14 +72,14 @@ public class CLIMessageHandler {
             if (message.getFaithTrackView() != null && message.getFaithTrackView().getFaithMarker() > 0)
                 cli.printMessage("["+CHECK_MARK+"] You have received " + message.getFaithTrackView().getFaithMarker() + " faith points.");
         } else {
-            cli.printMessage("[ ] " + message.getUser().getNickName() + " is selecting their leader cards. You can explore the board in the meantime.");
+            cli.printMessage("[ ] " + message.getUser().getNickName() + " is selecting their leader cards.");
         }
 
 
 
-        Menu.getInstance().setState(MenuStates.SETUP, message);
-        synchronized (Menu.getInstance()) {
-            Menu.getInstance().notifyAll();
+        MenuRunner.getInstance().setState(MenuStates.SETUP, message);
+        synchronized (MenuRunner.getInstance()) {
+            MenuRunner.getInstance().notifyAll();
         }
     }
 
@@ -89,6 +87,7 @@ public class CLIMessageHandler {
 
         if ( message.getUser().getNickName().equals( MatchSettings.getInstance().getClientNickname() )) {
             cli.printMessage("["+CHECK_MARK+"] You have received the selected cards and resources");
+
 
         } else {
             cli.printMessage("["+CHECK_MARK+"] " + message.getUser().getNickName() + " has selected their leader cards.");
@@ -98,6 +97,10 @@ public class CLIMessageHandler {
 
     public void handleServerStartTurnMessage(ServerStartTurnMessage message){
 
+        MenuRunner.getInstance().setState(MenuStates.GAME, message);
+        synchronized (MenuRunner.getInstance()) {
+            MenuRunner.getInstance().notifyAll();
+        }
     }
 
 
