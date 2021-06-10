@@ -75,18 +75,15 @@ public class DispatcherController implements Runnable, LambdaObserver {
     //TODO
     public void handleThrowLeaderCard(ServerThrowLeaderCardMessage message){}
 
-    //TODO
-    public void handleFaithTrackMessage(ServerFaithTrackMessage message){}
+
     //TODO
     public void handleDepositIntoSlot(ServerDepositIntoSlotMessage message){}
-    //TODO
-    public void handleDepositAction(ServerDepositActionMessage  message){}
+
     //TODO
     public void handleChooseWhiteMarbles(ServerChooseWhiteMarblesMessage message){}
     //TODO
     public void handleBuyDevelopmentCard(ServerBuyDevelopmentCardMessage message){}
-    //TODO
-    public void handleBoughtMarbles(ServerBoughtMarblesMessage message){}
+
     //TODO
     public void handleActivateProduction(ServerActivateProductionMessage message){}
     //TODO
@@ -101,7 +98,7 @@ public class DispatcherController implements Runnable, LambdaObserver {
     public void handleSoloMove(ServerSoloMoveMessage message){}
 
 
-    //TODO
+
     public void handleSetupGame(ServerSetupGameMessage message){
         GameView.getInstance(message.getUsers());
         GameView.getInstance().setMarketInstance(message.getMarketView());
@@ -202,6 +199,46 @@ public class DispatcherController implements Runnable, LambdaObserver {
 
         }else {
             CLIMessageHandler.getInstance().handleServerWarehouseMessage(message);
+        }
+    }
+
+
+    public void handleBoughtMarbles(ServerBoughtMarblesMessage message){
+        GameView.getInstance().getPlayerFromUser(message.getUser()).setTempResources(message.getBoughtResources());
+        GameView.getInstance().setMarketInstance(message.getMarketView());
+        GameView.getInstance().getCurrentPlayer().setMainAction(false);
+
+        if(gui){
+
+        }else {
+            CLIMessageHandler.getInstance().handleServerBoughtMarblesMessage(message);
+        }
+
+    }
+
+    /**
+     * Notifies of changes to any players faith track.
+     * @param message the message to be handled.
+     */
+    public void handleFaithTrackMessage(ServerFaithTrackMessage message){
+        GameView.getInstance().getPlayerFromUser(message.getUser()).setFaithTrackView(message.getFaithTrackView());
+
+        if(gui){
+
+        }else {
+            CLIMessageHandler.getInstance().handleServerFaithTrackMessage (message);
+        }
+    }
+
+
+    public void handleDepositAction(ServerDepositActionMessage  message){
+        GameView.getInstance().getPlayerFromUser(message.getUser()).setTempResources(message.getTempResources());
+        GameView.getInstance().getPlayerFromUser(message.getUser()).setWarehouse(message.getWarehouseView());
+
+        if(gui){
+
+        }else {
+            CLIMessageHandler.getInstance().handleServerDepositActionMessage(message);
         }
     }
 

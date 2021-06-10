@@ -6,11 +6,7 @@ import it.polimi.ingsw.client.modelview.GameView;
 import it.polimi.ingsw.client.modelview.MatchSettings;
 import it.polimi.ingsw.client.modelview.PlayerView;
 import it.polimi.ingsw.client.ui.cli.CLI;
-import it.polimi.ingsw.server.model.Id;
-import it.polimi.ingsw.server.model.LeaderCard;
-import it.polimi.ingsw.server.model.Resource;
-import it.polimi.ingsw.server.model.ResourceType;
-import it.polimi.ingsw.utils.networking.transmittables.clientmessages.ClientMessage;
+import it.polimi.ingsw.server.model.*;
 import it.polimi.ingsw.utils.networking.transmittables.servermessages.ServerMessage;
 
 import static it.polimi.ingsw.client.ui.cli.CLIHelper.*;
@@ -24,15 +20,15 @@ public class MenuRunner {
 
     private MenuStates state = MAIN;
 
-    private GameActions lastAction;
-    private GameActions presentAction;
+    private GameActions contextAction;
+    private GameActions currentAction;
 
     private final GameMenu gameMenu;
     private final MainMenu mainMenu;
     private final SetupMenu setupMenu;
 
     private ServerMessage inMsg;
-    boolean wait = false;
+    volatile boolean wait = false;
 
 
     public MenuStates getState() {
@@ -49,17 +45,17 @@ public class MenuRunner {
         this.wait = false;
         this.inMsg = msg;
     }
-    public GameActions getLastAction() {
-        return lastAction;
+    public GameActions getContextAction() {
+        return contextAction;
     }
 
-    public void setLastAction(GameActions lastAction) {
-        this.lastAction = lastAction;
+    public void setContextAction(GameActions contextAction) {
+        this.contextAction = contextAction;
     }
 
-    public GameActions getPresentAction() { return presentAction; }
+    public GameActions getCurrentAction() { return currentAction; }
 
-    public void setPresentAction(GameActions presentAction) { this.presentAction = presentAction; }
+    public void setCurrentAction(GameActions currentAction) { this.currentAction = currentAction; }
 
     public ServerMessage getInMsg() {
         return inMsg;
@@ -122,12 +118,39 @@ public class MenuRunner {
         while (wait) {
             try {
                 MenuRunner.getInstance().wait();
-                if (lastAction == presentAction) wait = false;
+                if (contextAction == currentAction) wait = false;
             } catch (InterruptedException e) {
 
             }
         }
     }
+
+    /**
+     * Used to unlock from waitResponse().
+     * @param action action being unlocked.
+     * @param msg informational message that will be printed.
+     */
+    public void sendResponse(GameActions action, String msg){
+        synchronized (MenuRunner.getInstance()) {
+            setCurrentAction(action);
+            MenuRunner.getInstance().notifyAll();
+            cli.printMessage(msg);
+        }
+    }
+
+    /**
+     * Used to unlock from waitResponse() when there's multiple possible outcomes for an action.
+     * @param action action being unlocked.
+     * @param newAction new state that will be set to show what kind of response was given.
+     * @param msg informational message that will be printed.
+     */
+    public void sendResponse(GameActions action, GameActions newAction, String msg){
+        sendResponse(action, msg);
+        while (wait == true) {
+        }
+        setCurrentAction(newAction);
+    }
+
 
 
     public void printFaithTracks(){

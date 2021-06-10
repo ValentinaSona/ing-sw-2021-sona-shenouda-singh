@@ -6,8 +6,7 @@ import it.polimi.ingsw.server.model.Id;
 import it.polimi.ingsw.server.model.LeaderCard;
 import it.polimi.ingsw.server.model.Resource;
 import it.polimi.ingsw.utils.networking.Connection;
-import it.polimi.ingsw.utils.networking.transmittables.clientmessages.game.ClientSetupActionMessage;
-import it.polimi.ingsw.utils.networking.transmittables.clientmessages.game.ClientTidyWarehouseMessage;
+import it.polimi.ingsw.utils.networking.transmittables.clientmessages.game.*;
 import it.polimi.ingsw.utils.networking.transmittables.clientmessages.setup.ClientJoinLobbyMessage;
 import it.polimi.ingsw.utils.networking.transmittables.clientmessages.setup.ClientSetNicknameMessage;
 import it.polimi.ingsw.utils.networking.transmittables.clientmessages.setup.ClientSetPlayersCountMessage;
@@ -87,6 +86,14 @@ public class UIController implements LambdaObserver{
     public void tidyWarehouse(Id from, Id to){
         clientConnection.send(new ClientTidyWarehouseMessage(from,to));
     }
+
+    public void buyMarbles(int rowCol){
+        clientConnection.send(new ClientBuyMarblesMessage(rowCol));
+    }
+
+    public void depositIntoWarehouse(Id id, Resource resource){clientConnection.send(new ClientDepositIntoWarehouseMessage(id, resource));}
+
+    public void throwResources(){clientConnection.send(new ClientThrowResourcesMessage());}
 
 
 

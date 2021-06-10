@@ -6,11 +6,13 @@ import it.polimi.ingsw.client.modelview.PlayerView;
 import it.polimi.ingsw.client.ui.Ui;
 import it.polimi.ingsw.client.ui.cli.menus.MenuRunner;
 import it.polimi.ingsw.server.controller.User;
+import it.polimi.ingsw.server.model.Id;
 import it.polimi.ingsw.server.model.Resource;
 import it.polimi.ingsw.server.model.ResourceType;
 import it.polimi.ingsw.utils.networking.transmittables.servermessages.ServerMessage;
 import it.polimi.ingsw.utils.networking.transmittables.servermessages.ServerStartTurnMessage;
 import it.polimi.ingsw.utils.networking.transmittables.servermessages.ServerWarehouseMessage;
+import javafx.util.Pair;
 
 import java.io.*;
 import java.util.Scanner;
@@ -55,6 +57,25 @@ public class CLI implements Ui {
         output.println(msg);
     }
 
+    public Pair<Id, Resource> getIdResourcePair(boolean isDepot, boolean special, int special_num){
+        // TODO: add boolean if for devslots
+        String regex = "";
+        String[] choice;
+
+        if (special) {
+            if (special_num == 1) regex = "[0-9]+[ ](stone|coin|servant|shield)[s]?( @ )([D][1-3]|[S][1])$";
+            if (special_num == 1) regex = "[0-9]+[ ](stone|coin|servant|shield)[s]?( @ )([D][1-3]|[S][1-2])$";
+        } else regex = "[0-9]+[ ](stone|coin|servant|shield)[s]?( @ )[D][1-3]$";
+
+        do {
+            choice = getString(regex, "Format: <number> <resource type> @ <D or S><number>").split(" ", 4);
+
+        } while (Integer.parseInt(choice[0]) <= 0 );
+
+        return new Pair<>(parseId(choice[3]), parseResource(choice[0],choice[1]));
+
+    }
+
     public Resource getResource(int max){
         String[] choice;
         do {
@@ -62,11 +83,31 @@ public class CLI implements Ui {
 
         } while (Integer.parseInt(choice[0]) <= 0 || Integer.parseInt(choice[0]) > max);
 
-        if (choice[1] != null && choice[1].length() > 0 && choice[1].charAt(choice[1].length() - 1) == 's') {
-            choice[1] = choice[1].substring(0, choice[1].length() - 1);
+        return parseResource(choice[0],choice[1]);
+    }
+
+    private Resource parseResource(String number, String type){
+        if (type.charAt(type.length() - 1) == 's') {
+            type = type.substring(0, type.length() - 1);
         }
 
-        return new Resource(Integer.parseInt(choice[0]) , ResourceType.parseInput(choice[1]));
+        return new Resource(Integer.parseInt(number) , ResourceType.parseInput(type));
+    }
+
+    private Id parseId(String id){
+        if (id.charAt(0)=='D'){
+            switch (id.charAt(1)){
+                case '1' -> { return Id.DEPOT_1; }
+                case '2' -> { return Id.DEPOT_2; }
+                case '3' -> { return Id.DEPOT_3; }
+            }
+        } else if (id.charAt(0)=='S'){
+            switch (id.charAt(1)) {
+                case '1' -> { return Id.S_DEPOT_1; }
+                case '2' -> { return Id.S_DEPOT_2; }
+            }
+        }
+        return null;
     }
 
     public int getChoice(String[] options, boolean enableHidden){
@@ -122,6 +163,11 @@ public class CLI implements Ui {
         return choice;
     }
 
+    public boolean getYesOrNo(String desc){
+        String choice = getString("(yes|y|no|n)$", desc + "(yes/y/no/n)");
+        return choice.charAt(0) == 'y';
+    }
+
     public int getInt(int lower, int upper){
 
         int choice = 0;
@@ -149,7 +195,8 @@ public class CLI implements Ui {
     @Override
     public void start(){
         output.println(banner);
-        MenuRunner.getInstance(this).run();
+
+       MenuRunner.getInstance(this).run();
     }
 
 }

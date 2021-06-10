@@ -122,6 +122,7 @@ public class TurnController{
         int idx = players.indexOf(endingPlayer);
 
         endingPlayer.toggleTurn();
+        endingPlayer.toggleMainAction();
 
         //last player has done the setup procedure
         if(idx == players.size()-1){
@@ -154,7 +155,7 @@ public class TurnController{
                     player.getFaithTrack().validatePopeFavor(e.getReport());
 
                     // This null needs to be handled client side but shouldn't be a problem as it's expected of singleplayer.
-                    model.notify( new ServerFaithTrackMessage( player.getVisibleFaithTrack(), null ) );
+                    model.notify( new ServerFaithTrackMessage( player.getVisibleFaithTrack(), 2, null ) );
 
                     if (e.getReport()==3) throw new EndOfGameException(true);
 
@@ -170,7 +171,7 @@ public class TurnController{
                     player.getFaithTrack().validatePopeFavor(e.getReport());
 
                     // This null needs to be handled client side but shouldn't be a problem as it's expected of singleplayer.
-                    model.notify( new ServerFaithTrackMessage( player.getVisibleFaithTrack(), null ) );
+                    model.notify( new ServerFaithTrackMessage( player.getVisibleFaithTrack(), 1,null ) );
 
                 }
                 model.getLorenzo().shuffle();

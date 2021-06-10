@@ -1,10 +1,15 @@
 package it.polimi.ingsw.client.ui.cli.menus;
 
+import it.polimi.ingsw.client.modelview.DepotView;
 import it.polimi.ingsw.client.modelview.GameView;
 import it.polimi.ingsw.client.ui.cli.CLI;
 import it.polimi.ingsw.client.ui.controller.UIController;
+import it.polimi.ingsw.server.model.Depot;
 import it.polimi.ingsw.server.model.Id;
-import it.polimi.ingsw.utils.networking.transmittables.servermessages.ServerSetupUserMessage;
+import it.polimi.ingsw.server.model.Resource;
+import javafx.util.Pair;
+
+import java.util.stream.Collectors;
 
 import static it.polimi.ingsw.client.ui.cli.CLIHelper.CHECK_MARK;
 import static it.polimi.ingsw.client.ui.cli.CLIHelper.MARBLE_LEGEND;
@@ -31,9 +36,9 @@ public class GameMenu {
         if (cli.getView().isMyTurn()){
             if (cli.getView().isMainAction()){
 
-                return new String[] {"See market", "See development card market", "See faith tracks", "See your board", "See other players boards", "Arrange warehouse", "Buy from market", "Buy Development Card", "Activate Productions", "Leader Action", "End Turn"};
+                return new String[] {"See market / buy marbles", "See development card market / buy cards ", "See your board / activate productions", "See other players boards", "See faith tracks",  "Arrange warehouse", "Leader Action", "End Turn"};
             } else {
-                return new String[] {"See market", "See development card market", "See faith tracks", "See your board", "See other players boards", "Arrange warehouse", "Leader Action", "End Turn"};
+                return new String[] {"See market", "See development card market", "See other players boards",  "See faith tracks", "See your board", "Arrange warehouse", "Leader Action", "End Turn"};
             }
 
         } else {
@@ -43,13 +48,11 @@ public class GameMenu {
 
 
     private void gameMenu() {
-        String[] options =
-                {"See market", "See development card market", "See faith tracks", "See your board", "See other players boards", "Arrange warehouse", "Buy from market", "Buy Development Card", "Activate Productions", "Leader Action", "End Turn"};
+        String[] options = getGameOptions();
 
         switch (cli.getChoice(options)){
             case 1 -> {
-                cli.printMessage(MARBLE_LEGEND);
-                cli.printMessage(GameView.getInstance().getMarketInstance());
+                marketBuy();
                 gameMenu();
             }
             case 2 -> {
@@ -57,14 +60,15 @@ public class GameMenu {
                 gameMenu();
             }
             case 3 -> {
-                runner.printFaithTracks();
-                gameMenu();
-            }
-            case 4 -> {
                 runner.printDepots();
                 runner.printPlayedLeaders();
                 gameMenu();
             }
+            case 4 -> {
+                runner.printFaithTracks();
+                gameMenu();
+            }
+
             case 6 -> {
                 tidyWarehouse();
                 gameMenu();
@@ -74,6 +78,86 @@ public class GameMenu {
                 gameMenu();
             }
             default -> gameMenu();
+        }
+    }
+
+    private void marketBuy() {
+        String[] options;
+        cli.printMessage(MARBLE_LEGEND);
+        cli.printMessage(GameView.getInstance().getMarketInstance());
+
+
+        if (cli.getView().isMyTurn() && cli.getView().isMainAction()){
+            options = new String[]{"Row 1", "Row 2", "Row 3", "Column 1", "Column 2", "Column 3", "Column 4", "No, Return to game menu"};
+        } else return;
+
+        int choice = cli.getChoice(options);
+
+        if (choice == options.length) return;
+        cli.printMessage("[ ] Do you wish to take resources from the market?");
+
+        runner.setContextAction(GameActions.BUY_MARBLES);
+        runner.setCurrentAction(GameActions.WAITING);
+
+        cli.printMessage("[ ] Buying marbles from "+ options[choice-1]);
+
+        synchronized (MenuRunner.getInstance()) {
+            UIController.getInstance().buyMarbles(choice-1);
+            runner.waitResponse();
+        }
+
+        if (runner.getCurrentAction() == GameActions.DEPOSIT_RESOURCES){
+            depositResources();
+        } else if (runner.getCurrentAction() == GameActions.TWO_LEADERS){
+            // TODO: Two leaders
+            depositResources();
+        }
+    }
+
+    private void depositResources() {
+
+        var warehouse = cli.getView().getWarehouse();
+        int special_num =0;
+        boolean special = false;
+
+        for (DepotView depot: warehouse){
+            if (depot.getId() == Id.S_DEPOT_1 || depot.getId() == Id.S_DEPOT_2 ) {
+                special_num++;
+                special = true;
+            }
+        }
+
+
+        var tempResources = cli.getView().getTempResources();
+
+        while (!tempResources.isEmpty()){
+
+            tempResources = cli.getView().getTempResources();
+            String resourcePrint = tempResources.stream()
+                    .map(String::valueOf)
+                    .collect(Collectors.joining(" , ", "", ""));
+
+
+            cli.printMessage("["+CHECK_MARK+"] You have received the following resources: "+ resourcePrint);
+
+            if (!cli.getYesOrNo("Do you wish to proceed to deposit them? They will be thrown away otherwise. ")){
+                UIController.getInstance().throwResources();
+                return;
+            }
+
+            runner.printDepots();
+            cli.printMessage("[ ] Select the resources and the depot you wish to deposit into (e.g. 1 coin @ D1 or 2 servants @ S1 for special depots)");
+            Pair<Id, Resource> values = cli.getIdResourcePair(true, special, special_num);
+
+            runner.setContextAction(GameActions.DEPOSIT_RESOURCES);
+            runner.setCurrentAction(GameActions.WAITING);
+            cli.printMessage("[ ] Depositing " + values.getKey() + " into " + values.getValue());
+
+            synchronized (MenuRunner.getInstance()) {
+                UIController.getInstance().depositIntoWarehouse(values.getKey(), values.getValue());
+                runner.waitResponse();
+            }
+
         }
     }
 
@@ -111,8 +195,8 @@ public class GameMenu {
         options[choice-1] = unselected;
 
 
-        runner.setLastAction(GameActions.TIDY_WAREHOUSE);
-        runner.setPresentAction(GameActions.WAITING);
+        runner.setContextAction(GameActions.TIDY_WAREHOUSE);
+        runner.setCurrentAction(GameActions.WAITING);
 
         cli.printMessage("[ ] Swapping "+ options[choice-1]+" and "+ options[choice2-1]);
 
@@ -121,7 +205,8 @@ public class GameMenu {
             runner.waitResponse();
         }
 
-        runner.setPresentAction(GameActions.MENU);
+        if (cli.getView().getTempResources()!= null)
+            runner.setContextAction(GameActions.DEPOSIT_RESOURCES);
     }
 
 }

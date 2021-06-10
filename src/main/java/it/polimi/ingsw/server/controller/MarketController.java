@@ -67,7 +67,6 @@ public class MarketController{
                 ArrayList<Resource> resources = (ArrayList<Resource>) convertMarbles(marbles);
                 player.addToTempResources(resources);
 
-                //TODO: should also send faithTrack;
                 model.notify(new ServerBoughtMarblesMessage(market.getVisible(),
                         resources,
                         model.getUserFromPlayer(player)));

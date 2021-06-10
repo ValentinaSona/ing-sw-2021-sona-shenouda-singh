@@ -55,6 +55,7 @@ public class ResourceController{
                 faithTrack.addFaithPoints(faithPoints);
                 model.notify(new ServerFaithTrackMessage(
                         player.getVisibleFaithTrack(),
+                        faithPoints.getQuantity(),
                         model.getUserFromPlayer(player)
                 ));
             } else {
@@ -70,6 +71,7 @@ public class ResourceController{
                 faithTrack.validatePopeFavor(vaticanReportException.getReport());
                 model.notify(new ServerFaithTrackMessage(
                         player.getVisibleFaithTrack(),
+                        faithPoints.getQuantity(),
                         model.getUserFromPlayer(p)
                 ));
             }
@@ -261,7 +263,6 @@ public class ResourceController{
      * @param user the User corresponding to the player making the action.
      */
     public void depositIntoWarehouse(ClientDepositIntoWarehouseMessage action, RemoteViewHandler view, User user){
-
 
         Player player = model.getPlayerFromUser(user);
 

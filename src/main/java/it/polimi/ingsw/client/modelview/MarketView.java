@@ -33,11 +33,14 @@ public class MarketView implements Serializable {
            for (int j = 0; j < 4; j++){
                marketPrint += tray[i][j].toColorString();
            }
-           if (i != 2) marketPrint += "\n";
+           if (i != 2) marketPrint += "<- " + i+1 + "\n";
            else  marketPrint += "\t Extra: ";
        }
         marketPrint += extra.toColorString();
         marketPrint += "\n";
+        marketPrint += "\t ^ ^ ^ ^\n";
+        marketPrint += "\t | | | |\n";
+        marketPrint += "\t 1 2 3 4\n";
 
 
         return marketPrint;
