@@ -186,8 +186,8 @@ public class ResourceController{
     }
 
     /**
-     * Called when a player want to withdraw Resources from a depot in order
-     * to put them in an other depot or if he want to throw them
+     * Called when a player want to withdraw Resources from a depot in order.
+     * to put them in an other depot or if he want to throw them.
      * @param action the ClientMessage containing information about the player's action.
      * @param view the player's corresponding RemoteViewHandler that will handle status messages to be sent back to the view.
      * @param user the User corresponding to the player making the action.
@@ -195,8 +195,8 @@ public class ResourceController{
     public void tidyWarehouse(ClientTidyWarehouseMessage action, RemoteViewHandler view, User user){
         Player player = model.getPlayerFromUser(user);
 
-        if( !(player.getTurn()) ||
-                model.getGameState() != GameState.PLAY ){
+        // A player can rearrange their warehouse even if not their turn
+        if( model.getGameState() != GameState.PLAY ){
             view.handleStatusMessage(StatusMessage.CLIENT_ERROR);
         } else {
             try {
@@ -207,19 +207,25 @@ public class ResourceController{
                 Resource fromResource = fromDepot.getResource();
                 Resource toResource = toDepot.getResource();
 
+                // If both deposits are empty, there is nothing to do
+                if ((toResource == null || toResource.getQuantity() == 0)&&(fromResource== null || fromResource.getQuantity() == 0)) {
 
-                if (toDepot.getResource() == null || toDepot.getResource().getQuantity() == 0) {
+                    view.handleStatusMessage(StatusMessage.CONTINUE);
+
+                }  else if (toResource == null || toResource.getQuantity() == 0) {
                     //if i am trying to move resources to an empty specialDepot or a empty normal depot
                     toDepot.addResource(fromResource);
                     //if no exception is thrown
-                    fromDepot.subtractResource(toResource);
-                    //every time a change is done in the warehouse a copy of it is sent to every player
+                    fromDepot.subtractResource(fromResource);
 
-                    model.notify(new ServerWarehouseMessage(
-                            player.getVisibleWarehouse(),
-                            model.getUserFromPlayer(player)
-                    ));
+                } else if (fromResource == null || fromResource.getQuantity() == 0) {
+                    //if i am trying to move resources from an empty specialDepot or a empty normal depot
+                    fromDepot.addResource(toResource);
+                    //if no exception is thrown
+                    toDepot.subtractResource(toResource);
+
                 } else {
+
                     if (fromResource.getQuantity() <= toDepot.getCapacity() && toResource.getQuantity() <= fromDepot.getCapacity()) {
                         //i can switch the content of the depot
                         toDepot.subtractResource(toResource);
@@ -227,19 +233,22 @@ public class ResourceController{
 
                         toDepot.addResource(fromResource);
                         fromDepot.addResource(toResource);
-                        model.notify(new ServerWarehouseMessage(
-                                player.getVisibleWarehouse(),
-                                model.getUserFromPlayer(player)
-                        ));
+
                     } else {
-                        view.handleStatusMessage(StatusMessage.CLIENT_ERROR);
+                        view.handleStatusMessage(StatusMessage.REQUIREMENTS_ERROR);
                     }
                 }
 
+                //every time a change is done in the warehouse a copy of it is sent to every player
+                model.notify(new ServerWarehouseMessage(
+                        player.getVisibleWarehouse(),
+                        model.getUserFromPlayer(player)
+                ));
+
 
             } catch (InvalidDepotException invalidDepotException) {
-                //if i enter here it means that the action on the warehouse is failed
-                view.handleStatusMessage(StatusMessage.CLIENT_ERROR);
+                //if i enter here it means that the action on the warehouse has failed
+            view.handleStatusMessage(StatusMessage.REQUIREMENTS_ERROR);
             }
         }
     }

@@ -69,8 +69,7 @@ public class DispatcherController implements Runnable, LambdaObserver {
         }
     }
 
-    //TODO
-    public void handleWarehouse(ServerWarehouseMessage message){}
+
     //TODO
     public void handleThrowResource(ServerThrowResourceMessage message){}
     //TODO
@@ -129,8 +128,10 @@ public class DispatcherController implements Runnable, LambdaObserver {
      * @param message handleable.
      */
     public void handleSetupAction(ServerSetupActionMessage message){
+
         GameView.getInstance().getPlayerFromUser(message.getUser()).setWarehouse(message.getWarehouseView());
         if(message.getUser().getNickName().equals(MatchSettings.getInstance().getClientNickname())){
+            // Other players don't know the leader cards
             GameView.getInstance().getPlayerFromUser(message.getUser()).setLeaderCards(message.getChosen());
         }
 
@@ -187,6 +188,20 @@ public class DispatcherController implements Runnable, LambdaObserver {
 
         }else {
             CLIMessageHandler.getInstance().handleServerStartTurnMessage(message);
+        }
+    }
+
+    /**
+     * Handles updates to the warehouse. Returned after tidy warehouse.
+     * @param message contains warehouse and corresponding user.
+     */
+    public void handleWarehouse(ServerWarehouseMessage message){
+        GameView.getInstance().getPlayerFromUser(message.getUser()).setWarehouse(message.getWarehouseView());
+
+        if(gui){
+
+        }else {
+            CLIMessageHandler.getInstance().handleServerWarehouseMessage(message);
         }
     }
 

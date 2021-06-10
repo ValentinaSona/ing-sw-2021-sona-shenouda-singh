@@ -333,7 +333,6 @@ public class Player extends LambdaObservable<Transmittable> {
 
 	public void addToTempResources(ArrayList<Resource> resources){
 		this.tempResources = resources;
-
 	}
 
 	public void dumpTempResources(){
@@ -348,9 +347,15 @@ public class Player extends LambdaObservable<Transmittable> {
 		return tempResources;
 	}
 
-	//TODO
+
 	public ArrayList<DepotView> getVisibleWarehouse() {
-		return null;
+
+		List<DepotView> list = new ArrayList<>();
+
+		for (Depot depot: warehouse){
+			list.add(new DepotView(depot));
+		}
+		return (ArrayList<DepotView>) list;
 	}
 
 	/**
@@ -361,10 +366,12 @@ public class Player extends LambdaObservable<Transmittable> {
 		return new FaithTrackView(faithTrack.getFaithMarker(),faithTrack.getPopeFavorTiles());
 	}
 
-
-	//TODO
+	/**
+	 * Creates the reduced, serializable version of the strongbox that is sent to the client.
+	 * @return the serializable StrongboxView.
+	 */
 	public StrongboxView getVisibleStrongbox(){
-		return null;
+		return new StrongboxView(strongbox);
 	}
 
 	//TODO

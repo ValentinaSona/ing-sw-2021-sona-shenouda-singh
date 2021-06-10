@@ -7,6 +7,7 @@ import it.polimi.ingsw.server.model.LeaderCard;
 import it.polimi.ingsw.server.model.Resource;
 import it.polimi.ingsw.utils.networking.Connection;
 import it.polimi.ingsw.utils.networking.transmittables.clientmessages.game.ClientSetupActionMessage;
+import it.polimi.ingsw.utils.networking.transmittables.clientmessages.game.ClientTidyWarehouseMessage;
 import it.polimi.ingsw.utils.networking.transmittables.clientmessages.setup.ClientJoinLobbyMessage;
 import it.polimi.ingsw.utils.networking.transmittables.clientmessages.setup.ClientSetNicknameMessage;
 import it.polimi.ingsw.utils.networking.transmittables.clientmessages.setup.ClientSetPlayersCountMessage;
@@ -20,7 +21,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * This should be a universal controller called by the ui
+ * This is the class through which bot cli and gui interact with the server.
+ * Its methods are wrappers for the various messages the server expects to receive, so that both cli and gui are ensured to communicate consistently.
  */
 
 public class UIController implements LambdaObserver{
@@ -37,6 +39,14 @@ public class UIController implements LambdaObserver{
     private UIController() {};
 
 
+    /**
+     * Invoked by cli and gui after nickname selection to make first contact with server.
+     * Creates a ClientSetNicknameMessage and establishes connection.
+     * @param nickname user's chosen nickname.
+     * @param host hostname of the server.
+     * @param port port on which server is running.
+     * @throws IOException If there are problems with the socket.
+     */
     public void sendNickname(String nickname, String host, int port) throws IOException {
         MatchSettings.getInstance().setClientNickname(nickname);
         DispatcherController dispatcherController = DispatcherController.getInstance();
@@ -72,6 +82,10 @@ public class UIController implements LambdaObserver{
         clientConnection.send(new ClientSetupActionMessage(idResourceMap,
                 chosen,
                 new User(nickname)));
+    }
+
+    public void tidyWarehouse(Id from, Id to){
+        clientConnection.send(new ClientTidyWarehouseMessage(from,to));
     }
 
 

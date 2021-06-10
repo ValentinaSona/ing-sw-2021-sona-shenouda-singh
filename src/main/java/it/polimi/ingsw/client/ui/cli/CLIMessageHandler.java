@@ -1,6 +1,7 @@
 package it.polimi.ingsw.client.ui.cli;
 
 import it.polimi.ingsw.client.modelview.MatchSettings;
+import it.polimi.ingsw.client.ui.cli.menus.GameActions;
 import it.polimi.ingsw.client.ui.cli.menus.MenuRunner;
 import it.polimi.ingsw.client.ui.cli.menus.MenuStates;
 import it.polimi.ingsw.client.ui.controller.UIController;
@@ -38,6 +39,7 @@ public class CLIMessageHandler {
                 UIController.getInstance().setCreation( cli.getInt(2,4));
             }
             case OK_COUNT -> cli.printMessage("["+CHECK_MARK+"] The server has created the lobby! Wait for other players to join! ");
+
             default ->  cli.printMessage("Server Says: "+ msg);
         }
 
@@ -98,8 +100,23 @@ public class CLIMessageHandler {
     public void handleServerStartTurnMessage(ServerStartTurnMessage message){
 
         MenuRunner.getInstance().setState(MenuStates.GAME, message);
+
         synchronized (MenuRunner.getInstance()) {
             MenuRunner.getInstance().notifyAll();
+        }
+
+    }
+
+
+    public void handleServerWarehouseMessage(ServerWarehouseMessage message){
+
+        if ( message.getUser().getNickName().equals( MatchSettings.getInstance().getClientNickname() )) {
+            synchronized (MenuRunner.getInstance()) {
+                MenuRunner.getInstance().setPresentAction(GameActions.TIDY_WAREHOUSE);
+                MenuRunner.getInstance().notifyAll();
+                cli.printMessage("[" + CHECK_MARK + "] The depots contents have been swapped.");
+            }
+
         }
     }
 

@@ -6,6 +6,4 @@ public class BoardProductionView extends SlotView {
     public BoardProductionView(Id boardProduction, boolean confirmed) {
         super(boardProduction,confirmed);
     }
-
-
 }

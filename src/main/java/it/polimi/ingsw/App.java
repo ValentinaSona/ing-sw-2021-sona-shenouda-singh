@@ -29,7 +29,7 @@ public class App
                 DispatcherController.getInstance(true);
                 client.getChosenUi().start();
             }
-            case "server" -> new Server(10001).start();
+            case "server" -> new Server(10002).start();
             case "cli" -> {
                 Client client = new Client(new CLI());
                 //mi metto semplicemente ad aspettare che vengano messi messaggi nella coda

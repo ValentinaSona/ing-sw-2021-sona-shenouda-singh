@@ -5,8 +5,12 @@ import it.polimi.ingsw.client.modelview.MatchSettings;
 import it.polimi.ingsw.client.modelview.PlayerView;
 import it.polimi.ingsw.client.ui.Ui;
 import it.polimi.ingsw.client.ui.cli.menus.MenuRunner;
+import it.polimi.ingsw.server.controller.User;
 import it.polimi.ingsw.server.model.Resource;
 import it.polimi.ingsw.server.model.ResourceType;
+import it.polimi.ingsw.utils.networking.transmittables.servermessages.ServerMessage;
+import it.polimi.ingsw.utils.networking.transmittables.servermessages.ServerStartTurnMessage;
+import it.polimi.ingsw.utils.networking.transmittables.servermessages.ServerWarehouseMessage;
 
 import java.io.*;
 import java.util.Scanner;
@@ -69,6 +73,7 @@ public class CLI implements Ui {
         int optNum = 1;
         int choice;
         output.println("[ ] Choose an option:");
+        // TODO: make this a single print so that messages cannot be printed inside the menu. Or synchronize it.
         for (String option : options){
 
             output.printf("\t%d) %s \n", optNum, option);
@@ -144,10 +149,7 @@ public class CLI implements Ui {
     @Override
     public void start(){
         output.println(banner);
-
         MenuRunner.getInstance(this).run();
-
-
     }
 
 }
