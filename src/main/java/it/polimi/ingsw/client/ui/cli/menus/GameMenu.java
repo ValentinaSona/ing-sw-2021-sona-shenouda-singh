@@ -127,12 +127,12 @@ public class GameMenu {
             }
         }
 
-
+        //TODO Need menu -> rearrange, throw, deposit. Not giving option to rearrange rn.
         var tempResources = cli.getView().getTempResources();
 
         while (!tempResources.isEmpty()){
 
-            tempResources = cli.getView().getTempResources();
+
             String resourcePrint = tempResources.stream()
                     .map(String::valueOf)
                     .collect(Collectors.joining(" , ", "", ""));
@@ -158,6 +158,7 @@ public class GameMenu {
                 runner.waitResponse();
             }
 
+            tempResources = cli.getView().getTempResources();
         }
     }
 
