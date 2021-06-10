@@ -69,6 +69,7 @@ public class Connection extends LambdaObservable<Transmittable> implements Runna
                 outputStream.writeObject(message);
                 System.out.println("Ho mandato un messaggio"+ message);
                 outputStream.flush();
+                outputStream.reset();
             }
         }catch (IOException e){
             e.printStackTrace();
