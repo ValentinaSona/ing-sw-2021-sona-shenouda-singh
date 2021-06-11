@@ -4,8 +4,11 @@
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
+
+
   <groupId>it.polimi.ingsw</groupId>
   <artifactId>GC5</artifactId>
+  <packaging>jar</packaging>
   <version>1.0-SNAPSHOT</version>
 
   <name>GC05</name>
@@ -13,7 +16,7 @@
 
   <repositories>
 
-    <repository>      <id>my-repo1</id>
+    <repository> <id>my-repo1</id>
       <name>your custom repo</name>
       <url>https://artifactory.cronapp.io/public-release/</url>
 
@@ -104,11 +107,17 @@
       <artifactId>javafx-fxml</artifactId>
       <version>15.0.1</version>
     </dependency>
+    <dependency>
+      <groupId>com.neuronrobotics</groupId>
+      <artifactId>nrjavaserial</artifactId>
+      <version>3.13.0</version>
+    </dependency>
   </dependencies>
 
   <build>
     <pluginManagement><!-- lock down plugins versions to avoid using Maven defaults (may be moved to parent pom) -->
       <plugins>
+
         <!-- clean lifecycle, see https://maven.apache.org/ref/current/maven-core/lifecycles.html#clean_Lifecycle -->
         <plugin>
           <artifactId>maven-clean-plugin</artifactId>
@@ -126,6 +135,13 @@
         <plugin>
           <artifactId>maven-jar-plugin</artifactId>
           <version>3.0.2</version>
+          <configuration>
+            <archive>
+              <manifest>
+                <mainClass>it.polimi.ingsw.App</mainClass>
+              </manifest>
+            </archive>
+          </configuration>
         </plugin>
         <plugin>
           <artifactId>maven-install-plugin</artifactId>
@@ -159,7 +175,29 @@
 
       </configuration>
     </plugin>
-
+    <plugin>
+      <groupId>org.apache.maven.plugins</groupId>
+      <artifactId>maven-shade-plugin</artifactId>
+      <version>1.4</version>
+      <configuration>
+        <transformers>
+          <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+            <manifestEntries>
+              <mainClass>it.polimi.ingsw.App</mainClass>
+              <Build-Number>123</Build-Number>
+            </manifestEntries>
+          </transformer>
+        </transformers>
+      </configuration>
+      <executions>
+        <execution>
+          <phase>package</phase>
+          <goals>
+            <goal>shade</goal>
+          </goals>
+        </execution>
+      </executions>
+    </plugin>
     <!--
     <plugin>
       <groupId>org.jacoco</groupId>
