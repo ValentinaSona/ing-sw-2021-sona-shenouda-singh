@@ -111,7 +111,7 @@ public class CLI implements Ui {
         return null;
     }
 
-    public int getChoice(String[] options, boolean enableRefresh){
+    public int getChoice(String[] options, boolean enableRefresh, boolean isMenu){
         int optNum = 1;
         int choice;
         output.println("[ ] Choose an option:");
@@ -164,7 +164,7 @@ public class CLI implements Ui {
 
                         //if (!interrupted) t.join();
                     }
-                    if (interrupted) return 0;
+                    if (interrupted && isMenu) return 0;
                 }
             } catch (IOException | InterruptedException e) {
                 e.printStackTrace();
@@ -180,7 +180,7 @@ public class CLI implements Ui {
     }
 
     public int getChoice(String[] options){
-        return getChoice(options, false);
+        return getChoice(options, false, false);
     }
 
     public String getString(String regex, String desc){

@@ -38,11 +38,11 @@ public class GameMenu {
 
                 return new String[] {"See market / buy marbles", "See development card market / buy cards ", "See your board / activate productions", "See other players boards", "See faith tracks",  "Arrange warehouse", "Leader Action", "End Turn"};
             } else {
-                return new String[] {"See market", "See development card market", "See your board", "See other players boards",  "See faith tracks", "See your board", "Arrange warehouse", "Leader Action", "End Turn"};
+                return new String[] {"See market", "See development card market", "See your board", "See other players boards",  "See faith tracks", "Arrange warehouse", "Leader Action", "End Turn"};
             }
 
         } else {
-            return new String[] {"See market", "See development card market", "See your board", "See other players boards", "See faith tracks",  "Arrange warehouse"};
+            return new String[] {"See market", "See development card market", "See your board", "See other players boards", "See faith tracks", "Arrange warehouse"};
         }
     }
 
@@ -50,7 +50,7 @@ public class GameMenu {
     private void gameMenu(boolean hasBeenRefreshed) {
         String[] options = getGameOptions();
 
-        switch (cli.getChoice(options, hasBeenRefreshed)){
+        switch (cli.getChoice(options, hasBeenRefreshed, true)){
             case 0 -> gameMenu(true);
             case 1 -> {
                 marketBuy();
@@ -75,11 +75,26 @@ public class GameMenu {
                 tidyWarehouse();
                 gameMenu(false);
             }
-            case 10 -> {
+            case 7 -> {
                 runner.printHand();
                 gameMenu(false);
             }
+            case 8 -> {
+                endOfTurn();
+                gameMenu(false);
+            }
             default -> gameMenu(false);
+        }
+    }
+
+    private void endOfTurn(){
+
+        MenuRunner.getInstance().setContextAction(GameActions.END_TURN);
+        MenuRunner.getInstance().setCurrentAction(GameActions.WAITING);
+
+        synchronized (MenuRunner.getInstance()) {
+            UIController.getInstance().endTurn();
+            runner.waitResponse();
         }
     }
 

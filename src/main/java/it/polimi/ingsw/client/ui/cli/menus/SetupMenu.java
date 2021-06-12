@@ -74,7 +74,7 @@ public class SetupMenu {
     public void setupMenu(boolean hasBeenRefreshed) {
 
             String[] options = getSetupOptions();
-            switch (cli.getChoice(options, hasBeenRefreshed)) {
+            switch (cli.getChoice(options, hasBeenRefreshed, true)) {
                 case 0 -> setupMenu(true);
                 case 1 -> {
                     cli.printMessage(MARBLE_LEGEND);

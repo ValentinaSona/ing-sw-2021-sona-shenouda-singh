@@ -148,6 +148,8 @@ public class UIController implements LambdaObserver{
 
     public void throwResources(){clientConnection.send(new ClientThrowResourcesMessage());}
 
+    public void endTurn(){clientConnection.send(new ClientEndTurnMessage());}
+
 
 
 

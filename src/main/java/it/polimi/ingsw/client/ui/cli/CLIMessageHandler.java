@@ -151,16 +151,22 @@ public class CLIMessageHandler {
         if ( message.getStartingTurn().getNickName().equals( MatchSettings.getInstance().getClientNickname() )) {
             cli.printMessage("[" + CHECK_MARK + "] It's your turn!");
 
-            synchronized (System.in) {
+            synchronized (CLIMessageHandler.getInstance()) {
                 cli.setInterrupted(true);
-                System.in.notifyAll();
+                CLIMessageHandler.getInstance().notifyAll();
             }
-        } else
-            cli.printMessage("[ ] It's" + message.getStartingTurn().getNickName() + "'s turn! Meanwhile you can observe the board or rearrange your warehouse.");
+
+        } else if (message.getEndingTurn().getNickName().equals( MatchSettings.getInstance().getClientNickname() )){
+            MenuRunner.getInstance().sendResponse(GameActions.END_TURN,"[" + CHECK_MARK + "] Your turn has ended. Meanwhile you can observe the board or rearrange your warehouse.");
+        }
+
+        else
+            cli.printMessage("[ ] It's" + message.getStartingTurn().getNickName() + "'s turn!");
 
         synchronized (MenuRunner.getInstance()) {
             MenuRunner.getInstance().notifyAll();
         }
+
 
     }
 
