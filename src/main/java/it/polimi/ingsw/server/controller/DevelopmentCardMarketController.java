@@ -4,6 +4,7 @@ import it.polimi.ingsw.server.exception.*;
 import it.polimi.ingsw.server.model.*;
 import it.polimi.ingsw.server.model.DevelopmentCardSlot;
 import it.polimi.ingsw.server.model.Player;
+import it.polimi.ingsw.server.view.RealRemoteViewHandler;
 import it.polimi.ingsw.server.view.RemoteViewHandler;
 import it.polimi.ingsw.utils.networking.transmittables.StatusMessage;
 import it.polimi.ingsw.utils.networking.transmittables.clientmessages.game.ClientBuyTargetCardMessage;
@@ -35,7 +36,7 @@ public class DevelopmentCardMarketController{
     /**
      * Called when te player selects a card they wish to buy. Checks whether the card and the slot selected are valid before proceeding to the payment.
      * @param action the ClientMessage containing information about the player's action.
-     * @param view the player's corresponding RemoteViewHandler that will handle status messages to be sent back to the view.
+     * @param view the player's corresponding RealRemoteViewHandler that will handle status messages to be sent back to the view.
      * @param user the User corresponding to the player making the action.
      */
     public void selectDevelopmentCard(ClientSelectDevelopmentCardMessage action, RemoteViewHandler view, User user){
@@ -71,7 +72,7 @@ public class DevelopmentCardMarketController{
     /**
      * Called to actually buy the card and
      * @param action the ClientMessage containing information about the player's action.
-     * @param view the player's corresponding RemoteViewHandler that will handle status messages to be sent back to the view.
+     * @param view the player's corresponding RealRemoteViewHandler that will handle status messages to be sent back to the view.
      * @param user the User corresponding to the player making the action.
      */
     public void buyTargetCard(ClientBuyTargetCardMessage action, RemoteViewHandler view, User user) throws EndOfGameException {

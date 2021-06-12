@@ -4,7 +4,7 @@ import it.polimi.ingsw.server.exception.DevelopmentCardException;
 import it.polimi.ingsw.server.exception.EndOfGameException;
 import it.polimi.ingsw.server.exception.InvalidDepotException;
 import it.polimi.ingsw.server.model.*;
-import it.polimi.ingsw.server.view.RemoteViewHandler;
+import it.polimi.ingsw.server.view.RealRemoteViewHandler;
 import it.polimi.ingsw.utils.networking.Connection;
 import it.polimi.ingsw.utils.networking.transmittables.clientmessages.game.ClientDepositIntoWarehouseMessage;
 import it.polimi.ingsw.utils.networking.transmittables.clientmessages.game.ClientDepositResourceIntoSlotMessage;
@@ -74,7 +74,7 @@ class ResourceControllerTest {
         controller = ResourceController.getInstance(model);
 
         Connection mockConnection = mock(Connection.class);
-        RemoteViewHandler view = new RemoteViewHandler(mockConnection, "Merlin");
+        RealRemoteViewHandler view = new RealRemoteViewHandler(mockConnection, "Merlin");
 
 
         User arthur = new User("Arthur");
@@ -121,7 +121,7 @@ class ResourceControllerTest {
         controller = ResourceController.getInstance(model);
 
         Connection mockConnection = mock(Connection.class);
-        RemoteViewHandler view = new RemoteViewHandler(mockConnection, "Merlin");
+        RealRemoteViewHandler view = new RealRemoteViewHandler(mockConnection, "Merlin");
 
         User arthur = new User("Arthur");
         User merlin = view.getUser();
@@ -177,10 +177,10 @@ class ResourceControllerTest {
         controller = ResourceController.getInstance(model);
 
         Connection mockConnection = mock(Connection.class);
-        RemoteViewHandler view = new RemoteViewHandler(mockConnection, "Merlin");
+        RealRemoteViewHandler view = new RealRemoteViewHandler(mockConnection, "Merlin");
 
         Connection mockConnection2 = mock(Connection.class);
-        RemoteViewHandler view2 = new RemoteViewHandler(mockConnection2, "Arthur");
+        RealRemoteViewHandler view2 = new RealRemoteViewHandler(mockConnection2, "Arthur");
 
 
         User arthur = view2.getUser();
@@ -258,7 +258,7 @@ class ResourceControllerTest {
         controller = ResourceController.getInstance(model);
 
         Connection mockConnection = mock(Connection.class);
-        RemoteViewHandler view = new RemoteViewHandler(mockConnection, "Merlin");
+        RealRemoteViewHandler view = new RealRemoteViewHandler(mockConnection, "Merlin");
 
         User arthur = new User("Arthur");
         User merlin = view.getUser();

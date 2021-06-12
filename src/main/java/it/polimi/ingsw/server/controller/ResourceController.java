@@ -3,6 +3,7 @@ package it.polimi.ingsw.server.controller;
 
 import it.polimi.ingsw.server.exception.*;
 import it.polimi.ingsw.server.model.*;
+import it.polimi.ingsw.server.view.RealRemoteViewHandler;
 import it.polimi.ingsw.server.view.RemoteViewHandler;
 import it.polimi.ingsw.utils.networking.transmittables.StatusMessage;
 import it.polimi.ingsw.utils.networking.transmittables.clientmessages.game.*;
@@ -142,7 +143,7 @@ public class ResourceController{
     /**
      *  Called when the player ends processing the resources gained from the market.
      *  Counts the wasted resources, sets tempResources to null and adds faith points to other players if needed.
-     * @param view the player's corresponding RemoteViewHandler that will handle status messages to be sent back to the view.
+     * @param view the player's corresponding RealRemoteViewHandler that will handle status messages to be sent back to the view.
      * @param user the User corresponding to the player making the action.
      */
     public void throwResources(RemoteViewHandler view, User user) throws EndOfGameException {
@@ -191,7 +192,7 @@ public class ResourceController{
      * Called when a player want to withdraw Resources from a depot in order.
      * to put them in an other depot or if he want to throw them.
      * @param action the ClientMessage containing information about the player's action.
-     * @param view the player's corresponding RemoteViewHandler that will handle status messages to be sent back to the view.
+     * @param view the player's corresponding RealRemoteViewHandler that will handle status messages to be sent back to the view.
      * @param user the User corresponding to the player making the action.
      */
     public void tidyWarehouse(ClientTidyWarehouseMessage action, RemoteViewHandler view, User user){
@@ -259,7 +260,7 @@ public class ResourceController{
      * Called when a player is depositing Resources from the tempResources acquired from the market in one of his depots.
      * Removes the selected resource from tempResources.
      * @param action the ClientMessage containing information about the player's action.
-     * @param view the player's corresponding RemoteViewHandler that will handle status messages to be sent back to the view.
+     * @param view the player's corresponding RealRemoteViewHandler that will handle status messages to be sent back to the view.
      * @param user the User corresponding to the player making the action.
      */
     public void depositIntoWarehouse(ClientDepositIntoWarehouseMessage action, RemoteViewHandler view, User user){
@@ -322,7 +323,7 @@ public class ResourceController{
      * Called when a player is selecting how to pay for either a production or a development card.
      * Leverages the slot and resource closet methods.
      * @param action the ClientMessage containing information about the player's action.
-     * @param view the player's corresponding RemoteViewHandler that will handle status messages to be sent back to the view.
+     * @param view the player's corresponding RealRemoteViewHandler that will handle status messages to be sent back to the view.
      * @param user the User corresponding to the player making the action.
      */
     public void depositResourceIntoSlot(ClientDepositResourceIntoSlotMessage action, RemoteViewHandler view, User user){
@@ -385,7 +386,7 @@ public class ResourceController{
     /**
      * Called when the user has selected and paid for all the production they wish to activate.
      * Toggles the main action from the player.
-     * @param view the player's corresponding RemoteViewHandler that will handle status messages to be sent back to the view.
+     * @param view the player's corresponding RealRemoteViewHandler that will handle status messages to be sent back to the view.
      * @param user the User corresponding to the player making the action.
      */
     public void activateProduction(ClientActivateProductionMessage action, RemoteViewHandler view, User user){

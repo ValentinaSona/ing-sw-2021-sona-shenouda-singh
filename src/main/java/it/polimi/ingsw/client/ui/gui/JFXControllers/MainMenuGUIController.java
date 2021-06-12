@@ -73,7 +73,7 @@ public class MainMenuGUIController extends AbstractGUIController {
             joinButton.setDisable(true);
 
             try {
-                UIController.getInstance().sendNickname(nicknameField.getText(),"127.0.0.1", 10001);
+                UIController.getInstance().sendNickname(nicknameField.getText(),"127.0.0.1", 10002);
             } catch (IOException e) {
                 //fallita l'istanziazione della socket porta o url invalidi
                 e.printStackTrace();

@@ -3,9 +3,8 @@ package it.polimi.ingsw.server.controller;
 import it.polimi.ingsw.server.exception.EndOfGameException;
 import it.polimi.ingsw.server.exception.NotDecoratedException;
 import it.polimi.ingsw.server.model.*;
-import it.polimi.ingsw.server.view.RemoteViewHandler;
+import it.polimi.ingsw.server.view.RealRemoteViewHandler;
 import it.polimi.ingsw.utils.networking.Connection;
-import it.polimi.ingsw.utils.networking.transmittables.clientmessages.game.ClientActivateSpecialAbilityMessage;
 import it.polimi.ingsw.utils.networking.transmittables.clientmessages.game.ClientBuyMarblesMessage;
 import it.polimi.ingsw.utils.networking.transmittables.clientmessages.game.ClientConvertWhiteMarblesMessage;
 import org.junit.jupiter.api.AfterEach;
@@ -16,7 +15,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.mock;
 
 class MarketControllerTest {
@@ -39,10 +37,10 @@ class MarketControllerTest {
         controller = MarketController.getInstance(model);
 
         Connection mockConnection = mock(Connection.class);
-        RemoteViewHandler view = new RemoteViewHandler(mockConnection, "Merlin");
+        RealRemoteViewHandler view = new RealRemoteViewHandler(mockConnection, "Merlin");
 
         Connection mockConnection2 = mock(Connection.class);
-        RemoteViewHandler view2 = new RemoteViewHandler(mockConnection2, "Arthur");
+        RealRemoteViewHandler view2 = new RealRemoteViewHandler(mockConnection2, "Arthur");
 
 
         User arthur = view2.getUser();
@@ -105,10 +103,10 @@ class MarketControllerTest {
         ResourceController con2 = ResourceController.getInstance(model);
         var resCon = ResourceController.getInstance(model);
         Connection mockConnection = mock(Connection.class);
-        RemoteViewHandler view = new RemoteViewHandler(mockConnection, "Merlin");
+        RealRemoteViewHandler view = new RealRemoteViewHandler(mockConnection, "Merlin");
 
         Connection mockConnection2 = mock(Connection.class);
-        RemoteViewHandler view2 = new RemoteViewHandler(mockConnection2, "Arthur");
+        RealRemoteViewHandler view2 = new RealRemoteViewHandler(mockConnection2, "Arthur");
 
 
         User arthur = view2.getUser();
