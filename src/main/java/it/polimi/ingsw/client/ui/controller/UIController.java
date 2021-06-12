@@ -10,6 +10,7 @@ import it.polimi.ingsw.server.model.LeaderCard;
 import it.polimi.ingsw.server.model.Resource;
 import it.polimi.ingsw.server.view.MockRemoteViewHandler;
 import it.polimi.ingsw.server.view.RealRemoteViewHandler;
+import it.polimi.ingsw.server.view.RemoteViewHandler;
 import it.polimi.ingsw.utils.networking.Connection;
 import it.polimi.ingsw.utils.networking.transmittables.clientmessages.game.*;
 import it.polimi.ingsw.utils.networking.transmittables.clientmessages.setup.ClientJoinLobbyMessage;
@@ -32,6 +33,7 @@ import java.util.Map;
 public class UIController implements LambdaObserver{
 
     private static UIController singleton;
+    private Thread dispatcherThread;
     private Connection clientConnection;
     private Thread localGame;
 
@@ -41,7 +43,10 @@ public class UIController implements LambdaObserver{
         return singleton;
     }
 
-    private UIController() {};
+    private UIController() {
+        dispatcherThread = new Thread(DispatcherController.getInstance());
+        dispatcherThread.start();
+    };
 
 
     /**
@@ -64,8 +69,6 @@ public class UIController implements LambdaObserver{
         //mando il messaggio
         Thread t = new Thread(clientConnection);
         t.start();
-        Thread t1 = new Thread(dispatcherController);
-        t1.start();
         clientConnection.send(new ClientSetNicknameMessage(nickname));
     }
 
@@ -81,15 +84,15 @@ public class UIController implements LambdaObserver{
 
                 model.subscribeUser(user);
 
-                MockRemoteViewHandler view = new MockRemoteViewHandler(nickname,
+                RemoteViewHandler view = new MockRemoteViewHandler(nickname,
                         UIController.getInstance(),
                         DispatcherController.getInstance());
 
                 model.addObserver(view, (observer, transmittable)->{
                     if(transmittable instanceof DisconnectionMessage){
-                        ((RealRemoteViewHandler) observer).requestDisconnection();
+                        ((RemoteViewHandler) observer).requestDisconnection();
                     }else {
-                        ((RealRemoteViewHandler) observer).updateFromGame(transmittable);
+                        ((RemoteViewHandler) observer).updateFromGame(transmittable);
                     }
                 });
 
@@ -104,6 +107,7 @@ public class UIController implements LambdaObserver{
 
                 while (model.isActive()){
                     try{
+                        System.out.println("Sono entrato");
                         controller.dispatchViewClientMessage();
                     }catch (Exception e) {
                         e.printStackTrace();
