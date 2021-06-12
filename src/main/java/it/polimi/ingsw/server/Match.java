@@ -6,7 +6,7 @@ import it.polimi.ingsw.server.controller.User;
 import it.polimi.ingsw.server.model.Game;
 import it.polimi.ingsw.server.view.RealRemoteViewHandler;
 import it.polimi.ingsw.utils.networking.Connection;
-import it.polimi.ingsw.utils.networking.transmittables.clientmessages.game.DisconnectionMessage;
+import it.polimi.ingsw.utils.networking.transmittables.DisconnectionMessage;
 
 import java.util.LinkedList;
 import java.util.List;

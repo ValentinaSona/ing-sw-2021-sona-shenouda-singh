@@ -1,13 +1,9 @@
 package it.polimi.ingsw.server.view;
 
-import it.polimi.ingsw.server.controller.User;
 import it.polimi.ingsw.utils.networking.Connection;
 import it.polimi.ingsw.utils.networking.Transmittable;
 import it.polimi.ingsw.utils.networking.transmittables.StatusMessage;
-import it.polimi.ingsw.utils.networking.transmittables.clientmessages.ClientMessage;
-import it.polimi.ingsw.utils.networking.transmittables.clientmessages.game.DisconnectionMessage;
-import it.polimi.ingsw.utils.observer.LambdaObservable;
-import it.polimi.ingsw.utils.observer.LambdaObserver;
+import it.polimi.ingsw.utils.networking.transmittables.DisconnectionMessage;
 
 /**
  * This class is bound to a specific connection and observes both connection in order

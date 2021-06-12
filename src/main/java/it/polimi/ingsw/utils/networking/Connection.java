@@ -1,16 +1,24 @@
 package it.polimi.ingsw.utils.networking;
 
+import it.polimi.ingsw.utils.networking.transmittables.KeepAlive;
+import it.polimi.ingsw.utils.networking.transmittables.DisconnectionMessage;
 import it.polimi.ingsw.utils.observer.LambdaObservable;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
+import java.util.Timer;
+import java.util.TimerTask;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class Connection extends LambdaObservable<Transmittable> implements Runnable {
+    private final Logger LOGGER = Logger.getLogger(Connection.class.getName());
     private final Socket socket;
     private final ObjectInputStream inputStream;
     private final ObjectOutputStream outputStream;
+    private Timer keepAliveTimer;
     private boolean active = true;
 
     public Connection(Socket socket) throws IOException {
@@ -29,32 +37,34 @@ public class Connection extends LambdaObservable<Transmittable> implements Runna
      * we try to close this socket
      */
     public synchronized void closeConnection(){
-        if(!isActive()){
-            //if the connection is already close
+        if (!isActive()) {
             return;
         }
-        active = false;
-        try{
+        LOGGER.log(Level.INFO, "Closing the connection");
+        try {
             outputStream.close();
+        } catch (IOException ignored) {
+            LOGGER.log(Level.INFO, "Unable to close out socket");
+        }
+        try {
             inputStream.close();
+        } catch (IOException ignored) {
+            LOGGER.log(Level.INFO, "Unable to close in socket");
+        }
+        try {
             socket.close();
-        }catch(IOException e){
-            //we encountered a problem while closing
-            e.printStackTrace();
+        } catch (IOException ignored) {
+            LOGGER.log(Level.INFO, "Unable to close socket");
         }
     }
 
-    //TODO need to understand hot to implement the message because it will be handled -->se also the lobby methods and remoteView
-    //in 2 different ways depending if the observer of the connection is the ConnectionSetupHandler
-    //or the observers are the RealRemoteViewHandler and the controller
-/*    private synchronized void notifyDisconnection(){
-        if(active){
+    private void notifyDisconnection() {
+        if (isActive()) {
             active = false;
-            notify(new DisconnectionMessage());
+            notify((Transmittable) new DisconnectionMessage());
         }
     }
 
- */
     /**
      * Send a message to the remote client
      * @param message this message will be handled by the client and so it has to implement the ClientHandleable interface
@@ -67,28 +77,50 @@ public class Connection extends LambdaObservable<Transmittable> implements Runna
                     return;
                 }
                 outputStream.writeObject(message);
-                System.out.println("Ho mandato un messaggio"+ message);
+                LOGGER.log(Level.INFO, "Sending message "+ message.getClass().getName()+"...");
                 outputStream.flush();
                 outputStream.reset();
             }
         }catch (IOException e){
-            e.printStackTrace();
+            //è caduta la connessione da uno dei due lati
+            notifyDisconnection();
         }
     }
 
-    //TODO probably this method is yet to finish
     @Override
     public synchronized void run(){
+        //lancio un thread che gestisca i messaggi di ping in modo tale che se succede qualcosa
+        //viene lanciata l'eccezione e noitifico gli observer di tale connesione dell'accaduto.
+        scheduleKeepAliveTimer();
         while (isActive()){
-            try{
-                System.out.println("InputStream .."+inputStream.available());
+            try {
                 Transmittable inputObject = (Transmittable) inputStream.readObject();
-                System.out.println("Ho ricevuto un messaggio"+ inputObject);
-                this.notify(inputObject);
-            }catch (IOException | ClassNotFoundException e){
-                e.printStackTrace();
+                if (inputObject instanceof KeepAlive) {
+                    LOGGER.log(Level.INFO, "Received keep alive");
+                }
+                else {
+                    LOGGER.log(Level.INFO, "Received message "+inputObject.getClass().getName()+"....");
+                    notify(inputObject);
+                }
+            } catch (IOException e) {
+                notifyDisconnection();
+            } catch (ClassNotFoundException | ClassCastException e) {
+                LOGGER.log(Level.INFO, "Exception in receive thread"+e);
             }
         }
     }
 
+    public void scheduleKeepAliveTimer(){
+        keepAliveTimer = new Timer("KeepAliveTimer");
+        final int INTERVAL_MS = 180_000;
+        keepAliveTimer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                if(isActive())
+                    send(new KeepAlive());
+                else
+                    cancel();
+            }
+        },INTERVAL_MS, INTERVAL_MS);
+    }
 }

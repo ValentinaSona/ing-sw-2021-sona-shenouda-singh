@@ -1,7 +1,6 @@
 package it.polimi.ingsw.client.ui.controller;
 
 import it.polimi.ingsw.client.modelview.MatchSettings;
-import it.polimi.ingsw.client.ui.Ui;
 import it.polimi.ingsw.server.controller.Controller;
 import it.polimi.ingsw.server.controller.User;
 import it.polimi.ingsw.server.model.Game;
@@ -9,10 +8,10 @@ import it.polimi.ingsw.server.model.Id;
 import it.polimi.ingsw.server.model.LeaderCard;
 import it.polimi.ingsw.server.model.Resource;
 import it.polimi.ingsw.server.view.MockRemoteViewHandler;
-import it.polimi.ingsw.server.view.RealRemoteViewHandler;
 import it.polimi.ingsw.server.view.RemoteViewHandler;
 import it.polimi.ingsw.utils.networking.Connection;
 import it.polimi.ingsw.utils.networking.Transmittable;
+import it.polimi.ingsw.utils.networking.transmittables.DisconnectionMessage;
 import it.polimi.ingsw.utils.networking.transmittables.clientmessages.game.*;
 import it.polimi.ingsw.utils.networking.transmittables.clientmessages.setup.ClientJoinLobbyMessage;
 import it.polimi.ingsw.utils.networking.transmittables.clientmessages.setup.ClientSetNicknameMessage;
