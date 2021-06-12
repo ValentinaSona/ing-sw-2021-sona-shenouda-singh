@@ -2,11 +2,16 @@ package it.polimi.ingsw.server.view;
 
 import it.polimi.ingsw.client.ui.controller.DispatcherController;
 import it.polimi.ingsw.client.ui.controller.UIController;
+import it.polimi.ingsw.server.controller.Controller;
 import it.polimi.ingsw.utils.networking.Transmittable;
 import it.polimi.ingsw.utils.networking.transmittables.StatusMessage;
 import it.polimi.ingsw.utils.networking.transmittables.clientmessages.game.DisconnectionMessage;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 public class MockRemoteViewHandler extends RemoteViewHandler{
+    private Logger LOGGER = Logger.getLogger(Controller.class.getName());
     private UIController uiController;
     private DispatcherController dispatcherController;
 
@@ -24,6 +29,7 @@ public class MockRemoteViewHandler extends RemoteViewHandler{
 
     @Override
     public void updateFromGame(Transmittable message) {
+        LOGGER.log(Level.INFO,"Ho ricevuto il messaggio dal controller e lo sto inviando al dispatcher");
         dispatcherController.update(message);
     }
 

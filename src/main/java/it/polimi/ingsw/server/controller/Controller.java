@@ -16,8 +16,11 @@ import java.util.ArrayList;
 import java.util.Map;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingDeque;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class Controller implements LambdaObserver {
+    private Logger LOGGER = Logger.getLogger(Controller.class.getName());
     private static Controller singleton;
     public final DevelopmentCardMarketController developmentCardMarketController;
     public final LeaderCardsController leaderCardsController;
@@ -80,7 +83,7 @@ public class Controller implements LambdaObserver {
         for(Player p: players) {
             users.add(model.getUserFromPlayer(p));
         }
-
+        LOGGER.log(Level.INFO, "Ho mandato il messaggio di setup del game");
         model.notify(new ServerSetupGameMessage(
                 users,
                 model.getMarketInstance().getVisible(),
