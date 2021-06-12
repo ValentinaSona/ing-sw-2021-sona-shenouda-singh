@@ -46,7 +46,7 @@ public class Connection extends LambdaObservable<Transmittable> implements Runna
 
     //TODO need to understand hot to implement the message because it will be handled -->se also the lobby methods and remoteView
     //in 2 different ways depending if the observer of the connection is the ConnectionSetupHandler
-    //or the observers are the RemoteViewHandler and the controller
+    //or the observers are the RealRemoteViewHandler and the controller
 /*    private synchronized void notifyDisconnection(){
         if(active){
             active = false;

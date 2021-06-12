@@ -3,7 +3,6 @@ package it.polimi.ingsw.utils.networking.transmittables.clientmessages.game;
 import it.polimi.ingsw.server.controller.Controller;
 import it.polimi.ingsw.server.controller.User;
 import it.polimi.ingsw.server.model.Id;
-import it.polimi.ingsw.server.model.Resource;
 import it.polimi.ingsw.server.view.RemoteViewHandler;
 import it.polimi.ingsw.utils.networking.ControllerHandleable;
 import it.polimi.ingsw.utils.networking.transmittables.clientmessages.ClientMessage;

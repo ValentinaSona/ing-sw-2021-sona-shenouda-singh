@@ -6,6 +6,7 @@ import it.polimi.ingsw.server.model.Depot;
 import it.polimi.ingsw.server.model.DevelopmentCardSlot;
 import it.polimi.ingsw.server.model.Player;
 import it.polimi.ingsw.server.model.Strongbox;
+import it.polimi.ingsw.server.view.RealRemoteViewHandler;
 import it.polimi.ingsw.server.view.RemoteViewHandler;
 import it.polimi.ingsw.utils.networking.transmittables.StatusMessage;
 import it.polimi.ingsw.utils.networking.transmittables.clientmessages.game.ClientActivateSpecialAbilityMessage;
@@ -13,7 +14,6 @@ import it.polimi.ingsw.utils.networking.transmittables.clientmessages.game.Clien
 import it.polimi.ingsw.utils.networking.transmittables.servermessages.ServerActivateLeaderCardAbilityMessage;
 import it.polimi.ingsw.utils.networking.transmittables.servermessages.ServerThrowLeaderCardMessage;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class LeaderCardsController {
@@ -42,7 +42,7 @@ public class LeaderCardsController {
     /**
      * Called when the player is attempting to activate a Leader Card special ability.
      * @param action the ClientMessage containing information about the player's action.
-     * @param view the player's corresponding RemoteViewHandler that will handle status messages to be sent back to the view.
+     * @param view the player's corresponding RealRemoteViewHandler that will handle status messages to be sent back to the view.
      * @param user the User corresponding to the player making the action.
      */
     public void activateSpecialAbility(ClientActivateSpecialAbilityMessage action, RemoteViewHandler view, User user){
@@ -68,7 +68,7 @@ public class LeaderCardsController {
     /**
      * Called when the player is discarding a leader card from their hand.
      * @param action the ClientMessage containing information about the player's action.
-     * @param view the player's corresponding RemoteViewHandler that will handle status messages to be sent back to the view.
+     * @param view the player's corresponding RealRemoteViewHandler that will handle status messages to be sent back to the view.
      * @param user the User corresponding to the player making the action.
      */
     public void throwLeaderCard(ClientThrowLeaderCardMessage action, RemoteViewHandler view, User user) throws EndOfGameException {

@@ -6,6 +6,7 @@ import it.polimi.ingsw.server.exception.NotDecoratedException;
 import it.polimi.ingsw.server.exception.TwoLeaderCardsException;
 import it.polimi.ingsw.server.model.*;
 import it.polimi.ingsw.server.model.Player;
+import it.polimi.ingsw.server.view.RealRemoteViewHandler;
 import it.polimi.ingsw.server.view.RemoteViewHandler;
 import it.polimi.ingsw.utils.networking.transmittables.StatusMessage;
 import it.polimi.ingsw.utils.networking.transmittables.clientmessages.game.ClientBuyMarblesMessage;
@@ -47,7 +48,7 @@ public class MarketController{
      * Called by ClientBuyMarblesMessage.handleMessage(). Gets the marbles from the market triggering its reconfiguration
      * and handles the TwoLeaderCardsException. If it is not thrown, calls convertMarbles to acquire the gained resources.
      * @param action the ClientMessage containing information about the player's action.
-     * @param view the player's corresponding RemoteViewHandler that will handle status messages to be sent back to the view.
+     * @param view the player's corresponding RealRemoteViewHandler that will handle status messages to be sent back to the view.
      * @param user the User corresponding to the player making the action.
      */
     public void buyMarbles(ClientBuyMarblesMessage action, RemoteViewHandler view, User user) throws EndOfGameException {
@@ -85,7 +86,7 @@ public class MarketController{
      * Takes as an input an array of MarketMarbles that it asks the market to substitute to the white marbles in the previous array.
      * Passes the new array to convertMarbles, returning to the normal control flow.
      * @param action the ClientMessage containing information about the player's action.
-     * @param view the player's corresponding RemoteViewHandler that will handle status messages to be sent back to the view.
+     * @param view the player's corresponding RealRemoteViewHandler that will handle status messages to be sent back to the view.
      * @param user the User corresponding to the player making the action.
      */
     public void convertWhiteMarbles(ClientConvertWhiteMarblesMessage action, RemoteViewHandler view, User user) throws EndOfGameException {

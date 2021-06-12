@@ -3,14 +3,13 @@ package it.polimi.ingsw.server.controller;
 import it.polimi.ingsw.server.exception.EndOfGameException;
 import it.polimi.ingsw.server.exception.VaticanReportException;
 import it.polimi.ingsw.server.model.*;
+import it.polimi.ingsw.server.view.RealRemoteViewHandler;
 import it.polimi.ingsw.server.view.RemoteViewHandler;
 import it.polimi.ingsw.utils.networking.transmittables.StatusMessage;
 import it.polimi.ingsw.utils.networking.transmittables.clientmessages.game.ClientEndTurnMessage;
 import it.polimi.ingsw.utils.networking.transmittables.servermessages.*;
 
 import java.util.*;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 public class TurnController{
     private static TurnController singleton;
@@ -33,7 +32,7 @@ public class TurnController{
 
     /** TODO: should also be called when timeout kicks in in case of disconnection.
      * Called when the user communicates that their turn has ended.
-     * @param view the player's corresponding RemoteViewHandler that will handle status messages to be sent back to the view.
+     * @param view the player's corresponding RealRemoteViewHandler that will handle status messages to be sent back to the view.
      * @param user the User corresponding to the player making the action.
      */
     public void endTurn(ClientEndTurnMessage action, RemoteViewHandler view, User user) throws EndOfGameException {

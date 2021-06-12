@@ -1,10 +1,8 @@
 package it.polimi.ingsw.server.controller;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.typeadapters.RuntimeTypeAdapterFactory;
 import it.polimi.ingsw.server.exception.EndOfGameException;
 import it.polimi.ingsw.server.model.*;
+import it.polimi.ingsw.server.view.RealRemoteViewHandler;
 import it.polimi.ingsw.server.view.RemoteViewHandler;
 import it.polimi.ingsw.utils.networking.Connection;
 import it.polimi.ingsw.utils.networking.transmittables.clientmessages.game.ClientActivateSpecialAbilityMessage;
@@ -12,9 +10,6 @@ import it.polimi.ingsw.utils.networking.transmittables.clientmessages.game.Clien
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-import java.io.FileReader;
-
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.mock;
 
 class LeaderCardsControllerTest {
@@ -26,10 +21,10 @@ class LeaderCardsControllerTest {
         controller = LeaderCardsController.getInstance(model);
 
         Connection mockConnection = mock(Connection.class);
-        RemoteViewHandler view = new RemoteViewHandler(mockConnection, "Merlin");
+        RemoteViewHandler view = new RealRemoteViewHandler(mockConnection, "Merlin");
 
         Connection mockConnection2 = mock(Connection.class);
-        RemoteViewHandler view2 = new RemoteViewHandler(mockConnection2, "Arthur");
+        RealRemoteViewHandler view2 = new RealRemoteViewHandler(mockConnection2, "Arthur");
 
         User arthur = view2.getUser();
         User merlin = view.getUser();

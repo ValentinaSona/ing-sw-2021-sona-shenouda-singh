@@ -4,7 +4,7 @@ package it.polimi.ingsw.server;
 import it.polimi.ingsw.server.controller.Controller;
 import it.polimi.ingsw.server.controller.User;
 import it.polimi.ingsw.server.model.Game;
-import it.polimi.ingsw.server.view.RemoteViewHandler;
+import it.polimi.ingsw.server.view.RealRemoteViewHandler;
 import it.polimi.ingsw.utils.networking.Connection;
 import it.polimi.ingsw.utils.networking.transmittables.clientmessages.game.DisconnectionMessage;
 
@@ -17,7 +17,7 @@ public class Match implements Runnable{
     private Game model;
     private Controller controller;
     private final Map<String, Connection> participantMap;
-    private final List<RemoteViewHandler> remoteViewList;
+    private final List<RealRemoteViewHandler> remoteViewList;
     private final Server server;
     private boolean active;
 
@@ -31,7 +31,7 @@ public class Match implements Runnable{
 
     public void addParticipant(String nickname, Connection connection) {
         participantMap.put(nickname, connection);
-        remoteViewList.add(new RemoteViewHandler(connection, nickname));
+        remoteViewList.add(new RealRemoteViewHandler(connection, nickname));
     }
 
     /**
@@ -52,7 +52,7 @@ public class Match implements Runnable{
 
         //this list is already populated but we have yet to decide what the remoteView should do
         //when notified by the model with the notify() method
-        for(RemoteViewHandler view : remoteViewList){
+        for(RealRemoteViewHandler view : remoteViewList){
 
             User user = view.getUser();
 
@@ -60,9 +60,9 @@ public class Match implements Runnable{
 
             model.addObserver(view, (observer, transmittable)->{
                 if(transmittable instanceof DisconnectionMessage){
-                    ((RemoteViewHandler)observer).requestDisconnection();
+                    ((RealRemoteViewHandler)observer).requestDisconnection();
                 }else {
-                    ((RemoteViewHandler) observer).updateFromGame(transmittable);
+                    ((RealRemoteViewHandler) observer).updateFromGame(transmittable);
                 }
             });
 
