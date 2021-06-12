@@ -40,6 +40,7 @@ public class MainMenu {
 
         switch (cli.getChoice(options)){
             case 1 -> {
+                // TODO blocking on confirmation. for when nick is taken. CLIENT ERROR.
                 String nickname = cli.getString("^[a-zA-Z0-9 _.-]{1,20}$", "Choose a nickname (Max 20 characters)");
                 if (nickname.equals("a nickname")) System.out.println("You're a funny one, aren't you?");
                 try {
@@ -59,8 +60,24 @@ public class MainMenu {
         String[] options = {"Local game", "Remote game","Back to main menu"};
 
         switch (cli.getChoice(options)){
-            case 1 -> {}
-            case 2 -> {}
+            case 1 -> {
+                String nickname = cli.getString("^[a-zA-Z0-9 _.-]{1,20}$", "Choose a nickname (Max 20 characters)");
+                if (nickname.equals("a nickname")) System.out.println("You're a funny one, aren't you?");
+                UIController.getInstance().startLocalSinglePlayerGame(nickname);
+
+            }
+            case 2 -> {
+                String nickname = cli.getString("^[a-zA-Z0-9 _.-]{1,20}$", "Choose a nickname (Max 20 characters)");
+                if (nickname.equals("a nickname")) System.out.println("You're a funny one, aren't you?");
+                try {
+                    UIController.getInstance().sendNickname(nickname, "127.0.0.1", 10002);
+                    UIController.getInstance().joinLobby();
+                    UIController.getInstance().setCreation(1);
+                } catch (IOException e) {
+                    cli.printMessage("[X] Unable to connect to server. Returning to main menu.");
+                    mainMenu();
+                }
+            }
             case 3 -> mainMenu();
         }
     }

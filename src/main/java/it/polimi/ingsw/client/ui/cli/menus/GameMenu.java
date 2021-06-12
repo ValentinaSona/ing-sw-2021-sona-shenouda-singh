@@ -29,7 +29,7 @@ public class GameMenu {
 
     public void run(){
         this.runner = MenuRunner.getInstance(cli);
-        gameMenu();
+        gameMenu(false);
     }
 
     private String[] getGameOptions(){
@@ -38,46 +38,48 @@ public class GameMenu {
 
                 return new String[] {"See market / buy marbles", "See development card market / buy cards ", "See your board / activate productions", "See other players boards", "See faith tracks",  "Arrange warehouse", "Leader Action", "End Turn"};
             } else {
-                return new String[] {"See market", "See development card market", "See other players boards",  "See faith tracks", "See your board", "Arrange warehouse", "Leader Action", "End Turn"};
+                return new String[] {"See market", "See development card market", "See your board", "See other players boards",  "See faith tracks", "See your board", "Arrange warehouse", "Leader Action", "End Turn"};
             }
 
         } else {
-            return new String[] {"See market", "See development card market", "See faith tracks", "See your board", "See other players boards", "Arrange warehouse"};
+            return new String[] {"See market", "See development card market", "See your board", "See other players boards", "See faith tracks",  "Arrange warehouse"};
         }
     }
 
 
-    private void gameMenu() {
+    private void gameMenu(boolean hasBeenRefreshed) {
         String[] options = getGameOptions();
 
-        switch (cli.getChoice(options)){
+        switch (cli.getChoice(options, hasBeenRefreshed)){
+            case 0 -> gameMenu(true);
             case 1 -> {
                 marketBuy();
-                gameMenu();
+                gameMenu(false);
             }
             case 2 -> {
                 cli.printMessage(GameView.getInstance().getDevelopmentCardsMarket());
-                gameMenu();
+                gameMenu(false);
             }
             case 3 -> {
                 runner.printDepots();
                 runner.printPlayedLeaders();
-                gameMenu();
+                gameMenu(false);
             }
-            case 4 -> {
+
+            case 5 -> {
                 runner.printFaithTracks();
-                gameMenu();
+                gameMenu(false);
             }
 
             case 6 -> {
                 tidyWarehouse();
-                gameMenu();
+                gameMenu(false);
             }
             case 10 -> {
                 runner.printHand();
-                gameMenu();
+                gameMenu(false);
             }
-            default -> gameMenu();
+            default -> gameMenu(false);
         }
     }
 
