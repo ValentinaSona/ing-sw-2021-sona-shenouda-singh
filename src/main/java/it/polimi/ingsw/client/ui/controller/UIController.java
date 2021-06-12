@@ -12,6 +12,7 @@ import it.polimi.ingsw.server.view.MockRemoteViewHandler;
 import it.polimi.ingsw.server.view.RealRemoteViewHandler;
 import it.polimi.ingsw.server.view.RemoteViewHandler;
 import it.polimi.ingsw.utils.networking.Connection;
+import it.polimi.ingsw.utils.networking.Transmittable;
 import it.polimi.ingsw.utils.networking.transmittables.clientmessages.game.*;
 import it.polimi.ingsw.utils.networking.transmittables.clientmessages.setup.ClientJoinLobbyMessage;
 import it.polimi.ingsw.utils.networking.transmittables.clientmessages.setup.ClientSetNicknameMessage;
@@ -36,6 +37,8 @@ public class UIController implements LambdaObserver{
     private Thread dispatcherThread;
     private Connection clientConnection;
     private Thread localGame;
+    private MockRemoteViewHandler view;
+    private boolean local = false;
 
 
     public static UIController getInstance() {
@@ -48,33 +51,10 @@ public class UIController implements LambdaObserver{
         dispatcherThread.start();
     };
 
-
-    /**
-     * Invoked by cli and gui after nickname selection to make first contact with server.
-     * Creates a ClientSetNicknameMessage and establishes connection.
-     * @param nickname user's chosen nickname.
-     * @param host hostname of the server.
-     * @param port port on which server is running.
-     * @throws IOException If there are problems with the socket.
-     */
-    public void sendNickname(String nickname, String host, int port) throws IOException {
-        MatchSettings.getInstance().setClientNickname(nickname);
-        DispatcherController dispatcherController = DispatcherController.getInstance();
-
-        Socket clientSocket = new Socket(host, port);
-        clientConnection = new Connection(clientSocket);
-        clientConnection.addObserver(dispatcherController, (observer, transmittable)->{
-            ((DispatcherController) observer).update(transmittable);
-        });
-        //mando il messaggio
-        Thread t = new Thread(clientConnection);
-        t.start();
-        clientConnection.send(new ClientSetNicknameMessage(nickname));
-    }
-
     public void startLocalSinglePlayerGame(String nickname){
 
         MatchSettings.getInstance().setClientNickname(nickname);
+        local = true;
         Runnable runnable = new Runnable() {
             @Override
             public void run() {
@@ -86,7 +66,7 @@ public class UIController implements LambdaObserver{
 
                 model.subscribeUser(user);
 
-                RemoteViewHandler view = new MockRemoteViewHandler(nickname,
+                view = new MockRemoteViewHandler(nickname,
                         UIController.getInstance(),
                         DispatcherController.getInstance());
 
@@ -122,12 +102,45 @@ public class UIController implements LambdaObserver{
         localGame.start();
     }
 
+    private void send(Transmittable message){
+        if(local){
+            view.updateFromClient(message);
+        }else{
+            clientConnection.send(message);
+        }
+    }
+
+    /**
+     * Invoked by cli and gui after nickname selection to make first contact with server.
+     * Creates a ClientSetNicknameMessage and establishes connection.
+     * @param nickname user's chosen nickname.
+     * @param host hostname of the server.
+     * @param port port on which server is running.
+     * @throws IOException If there are problems with the socket.
+     */
+    public void sendNickname(String nickname, String host, int port) throws IOException {
+        local = false;
+        MatchSettings.getInstance().setClientNickname(nickname);
+        DispatcherController dispatcherController = DispatcherController.getInstance();
+
+        Socket clientSocket = new Socket(host, port);
+        clientConnection = new Connection(clientSocket);
+        clientConnection.addObserver(dispatcherController, (observer, transmittable) -> {
+            ((DispatcherController) observer).update(transmittable);
+        });
+        //mando il messaggio
+        Thread t = new Thread(clientConnection);
+        t.start();
+        Transmittable message = (Transmittable) new ClientSetNicknameMessage(nickname);
+        send(message);
+    }
+
     public void joinLobby() {
-        clientConnection.send(new ClientJoinLobbyMessage());
+        send((Transmittable) new ClientJoinLobbyMessage());
     }
 
     public void setCreation(int playersNum) {
-        clientConnection.send(new ClientSetPlayersCountMessage(playersNum));
+        send((Transmittable) new ClientSetPlayersCountMessage(playersNum));
         MatchSettings.getInstance().setTotalUsers(playersNum);
 
     }
@@ -137,26 +150,26 @@ public class UIController implements LambdaObserver{
         if(idResourceMap == null){
             idResourceMap = new HashMap<>();
         }
-        clientConnection.send(new ClientSetupActionMessage(idResourceMap,
+        send((Transmittable) new ClientSetupActionMessage(idResourceMap,
                 chosen,
                 new User(nickname)));
     }
 
     public void tidyWarehouse(Id from, Id to){
-        clientConnection.send(new ClientTidyWarehouseMessage(from,to));
+        send((Transmittable) new ClientTidyWarehouseMessage(from,to));
     }
 
     public void buyMarbles(int rowCol){
-        clientConnection.send(new ClientBuyMarblesMessage(rowCol));
+        send((Transmittable) new ClientBuyMarblesMessage(rowCol));
     }
 
-    public void depositIntoWarehouse(Id id, Resource resource){clientConnection.send(new ClientDepositIntoWarehouseMessage(id, resource));}
+    public void depositIntoWarehouse(Id id, Resource resource){
+        send((Transmittable) new ClientDepositIntoWarehouseMessage(id, resource));}
 
-    public void throwResources(){clientConnection.send(new ClientThrowResourcesMessage());}
+    public void throwResources(){
+        send((Transmittable) new ClientThrowResourcesMessage());}
 
-    public void endTurn(){clientConnection.send(new ClientEndTurnMessage());}
-
-
-
-
+    public void endTurn(){
+        send((Transmittable) new ClientEndTurnMessage());
+    }
 }
