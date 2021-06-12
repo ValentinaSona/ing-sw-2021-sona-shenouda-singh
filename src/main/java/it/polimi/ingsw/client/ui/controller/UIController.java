@@ -49,7 +49,7 @@ public class UIController implements LambdaObserver{
     private UIController() {
         dispatcherThread = new Thread(DispatcherController.getInstance());
         dispatcherThread.start();
-    };
+    }
 
     public void startLocalSinglePlayerGame(String nickname){
 
@@ -172,4 +172,9 @@ public class UIController implements LambdaObserver{
     public void endTurn(){
         send((Transmittable) new ClientEndTurnMessage());
     }
+
+    public void activateSpecialAbility(Id id){ send((Transmittable) new ClientActivateSpecialAbilityMessage(id));}
+
+
+    public void throwLeaderCard(Id id){ send((Transmittable) new ClientThrowLeaderCardMessage(id));}
 }

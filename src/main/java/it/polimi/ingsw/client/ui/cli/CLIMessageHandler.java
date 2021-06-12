@@ -6,6 +6,7 @@ import it.polimi.ingsw.client.ui.cli.menus.MenuRunner;
 import it.polimi.ingsw.client.ui.cli.menus.MenuStates;
 import it.polimi.ingsw.client.ui.controller.UIController;
 import it.polimi.ingsw.server.Match;
+import it.polimi.ingsw.server.model.Resource;
 import it.polimi.ingsw.utils.networking.transmittables.StatusMessage;
 import it.polimi.ingsw.utils.networking.transmittables.servermessages.*;
 
@@ -190,16 +191,43 @@ public class CLIMessageHandler {
     public void handleServerBoughtMarblesMessage(ServerBoughtMarblesMessage message) {
         if ( message.getUser().getNickName().equals( MatchSettings.getInstance().getClientNickname() ))
             MenuRunner.getInstance().sendResponse(GameActions.BUY_MARBLES, GameActions.DEPOSIT_RESOURCES, "[" + CHECK_MARK + "] You have acquired resources from the market. You can now proceed to deposit them.");
+        else
+            cli.printMessage( "[ ] "+ message.getUser().getNickName() + " is buying resources from the market.");
+
     }
 
     public void handleServerFaithTrackMessage(ServerFaithTrackMessage message) {
         if ( message.getUser().getNickName().equals( MatchSettings.getInstance().getClientNickname() ))
             cli.printMessage( "[" + CHECK_MARK + "] You have received "+ message.getFaith()+ " faith points.");
-
+        else
+            cli.printMessage( "[" + CHECK_MARK + "] "+ message.getUser().getNickName() + " has received "+ message.getFaith()+ " faith points.");
     }
 
     public void handleServerDepositActionMessage(ServerDepositActionMessage message) {
         if ( message.getUser().getNickName().equals( MatchSettings.getInstance().getClientNickname() ))
             MenuRunner.getInstance().sendResponse(GameActions.DEPOSIT_RESOURCES,"[" + CHECK_MARK + "] The resources have been deposited.");
+    }
+
+    public void handleServerThrowResourceMessage(ServerThrowResourceMessage message) {
+
+        if ( message.getUser().getNickName().equals( MatchSettings.getInstance().getClientNickname() ))
+            cli.printMessage( "[" + CHECK_MARK + "] You have thrown "+ message.getThrownResources()+ " resources. Other player will receive an equal number of faith points.");
+        else
+            cli.printMessage( "[" + CHECK_MARK + "] "+ message.getUser().getNickName() + " has thrown away "+ message.getThrownResources()+ " resources.");
+    }
+
+    public void handleServerActivateLeaderCardAbilityMessage(ServerActivateLeaderCardAbilityMessage message) {
+        if (message.getUser().getNickName().equals(MatchSettings.getInstance().getClientNickname()))
+            MenuRunner.getInstance().sendResponse(GameActions.ACTIVATE_LEADER,"[" + CHECK_MARK + "] You have activated the selected leader card. Its special ability is now at your disposal. ");
+        else
+            cli.printMessage( "[" + CHECK_MARK + "] "+ message.getUser().getNickName() + " has activated a leader card! Check their board to see its ability.");
+    }
+
+    public void handleServerThrowLeaderCardAbilityMessage(ServerThrowLeaderCardMessage message) {
+        if (message.getUser().getNickName().equals(MatchSettings.getInstance().getClientNickname()))
+            MenuRunner.getInstance().sendResponse(GameActions.ACTIVATE_LEADER,"[" + CHECK_MARK + "] You have thrown away the selected leader card.");
+        else
+            cli.printMessage( "[" + CHECK_MARK + "] "+ message.getUser().getNickName() + " has thrown away a leader card.");
+
     }
 }

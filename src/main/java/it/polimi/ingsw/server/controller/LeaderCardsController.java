@@ -169,6 +169,7 @@ public class LeaderCardsController {
             throw new RuntimeException("Unrecognized special ability type.");
         }
 
+
         model.notify(new ServerActivateLeaderCardAbilityMessage(
                 targetCard,
                 model.getUserFromPlayer(player)

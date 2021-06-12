@@ -6,11 +6,14 @@ import it.polimi.ingsw.client.ui.cli.CLIMessageHandler;
 import it.polimi.ingsw.client.ui.cli.menus.MenuRunner;
 import it.polimi.ingsw.client.ui.gui.GUIHelper;
 import it.polimi.ingsw.client.ui.gui.JFXControllers.ScreenName;
+import it.polimi.ingsw.server.model.LeaderCard;
 import it.polimi.ingsw.utils.networking.ClientHandleable;
 import it.polimi.ingsw.utils.networking.Transmittable;
 import it.polimi.ingsw.utils.networking.transmittables.StatusMessage;
 import it.polimi.ingsw.utils.networking.transmittables.servermessages.*;
 import it.polimi.ingsw.utils.observer.LambdaObserver;
+
+import java.util.ArrayList;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingDeque;
 
@@ -72,12 +75,6 @@ public class DispatcherController implements Runnable, LambdaObserver {
 
 
     //TODO
-    public void handleThrowResource(ServerThrowResourceMessage message){}
-    //TODO
-    public void handleThrowLeaderCard(ServerThrowLeaderCardMessage message){}
-
-
-    //TODO
     public void handleDepositIntoSlot(ServerDepositIntoSlotMessage message){}
 
     //TODO
@@ -87,8 +84,6 @@ public class DispatcherController implements Runnable, LambdaObserver {
 
     //TODO
     public void handleActivateProduction(ServerActivateProductionMessage message){}
-    //TODO
-    public void handleActivateLeaderCardAbility(ServerActivateLeaderCardAbilityMessage message){}
 
     //TODO for end of game.
     public void handleFinalScore(ServerFinalScoreMessage message){}
@@ -219,6 +214,16 @@ public class DispatcherController implements Runnable, LambdaObserver {
 
     }
 
+
+    public void handleThrowResource(ServerThrowResourceMessage message){
+        if(gui){
+
+        }else {
+            CLIMessageHandler.getInstance().handleServerThrowResourceMessage(message);
+        }
+    }
+
+
     /**
      * Notifies of changes to any players faith track.
      * @param message the message to be handled.
@@ -242,6 +247,41 @@ public class DispatcherController implements Runnable, LambdaObserver {
 
         }else {
             CLIMessageHandler.getInstance().handleServerDepositActionMessage(message);
+        }
+    }
+
+
+    public void handleActivateLeaderCardAbility(ServerActivateLeaderCardAbilityMessage message){
+        if(message.getUser().getNickName().equals(MatchSettings.getInstance().getClientNickname())) {
+            // Other players don't know the leader cards in a player's hand.
+            int i = GameView.getInstance().getPlayerFromUser(message.getUser()).getLeaderCards().indexOf(message.getAbility());
+            GameView.getInstance().getPlayerFromUser(message.getUser()).getLeaderCards().get(i).setActive(true);
+        } else {
+            // But they know them once activated.
+            if (GameView.getInstance().getPlayerFromUser(message.getUser()).getLeaderCards() == null) {
+                GameView.getInstance().getPlayerFromUser(message.getUser()).setLeaderCards(new ArrayList<LeaderCard>());
+            }
+            GameView.getInstance().getPlayerFromUser(message.getUser()).getLeaderCards().add(message.getAbility());
+        }
+
+
+        if(gui){
+
+        }else{
+            CLIMessageHandler.getInstance().handleServerActivateLeaderCardAbilityMessage(message);
+        }
+    }
+
+    public void handleThrowLeaderCard(ServerThrowLeaderCardMessage message){
+        if(message.getUser().getNickName().equals(MatchSettings.getInstance().getClientNickname())) {
+            // Other players don't know the leader cards
+            GameView.getInstance().getPlayerFromUser(message.getUser()).getLeaderCards().remove(message.getLeaderCard());
+        }
+
+        if(gui){
+
+        }else{
+            CLIMessageHandler.getInstance().handleServerThrowLeaderCardAbilityMessage(message);
         }
     }
 

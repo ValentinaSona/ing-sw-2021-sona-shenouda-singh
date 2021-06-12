@@ -119,11 +119,13 @@ public class DevelopmentCardsMarket implements  DevMarket {
 		for (int i = 0; i < 3; i++){
 			if  (decks[i][type].cardsLeft()!= 0){
 				decks[i][type].pickCard();
+				// If no cards are left of that type, the game has been lost.
+				if (decks[i][type].isEmpty()) throw new EndOfGameException(true);
 				return;
 			}
 		}
-		// If no cards are left of that type, the game has been lost.
-		throw new EndOfGameException(true);
+
+
 
 	}
 

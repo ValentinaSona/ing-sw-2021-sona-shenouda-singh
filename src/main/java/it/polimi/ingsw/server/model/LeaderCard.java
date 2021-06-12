@@ -2,6 +2,7 @@ package it.polimi.ingsw.server.model;
 
 import java.io.Serializable;
 import java.util.Arrays;
+import java.util.Objects;
 
 public class LeaderCard extends SpecialAbility implements Serializable {
 
@@ -61,5 +62,18 @@ public class LeaderCard extends SpecialAbility implements Serializable {
 
 				"\tSpecial ability: " + specialAbility.toString() + "\n"+
 				"\tVictory points: " + victoryPoints + "\n";
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+		LeaderCard that = (LeaderCard) o;
+		return id == that.id;
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(id);
 	}
 }

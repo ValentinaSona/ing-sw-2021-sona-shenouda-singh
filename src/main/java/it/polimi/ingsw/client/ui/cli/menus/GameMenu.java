@@ -6,9 +6,11 @@ import it.polimi.ingsw.client.ui.cli.CLI;
 import it.polimi.ingsw.client.ui.controller.UIController;
 import it.polimi.ingsw.server.model.Depot;
 import it.polimi.ingsw.server.model.Id;
+import it.polimi.ingsw.server.model.LeaderCard;
 import it.polimi.ingsw.server.model.Resource;
 import javafx.util.Pair;
 
+import java.awt.*;
 import java.util.stream.Collectors;
 
 import static it.polimi.ingsw.client.ui.cli.CLIHelper.CHECK_MARK;
@@ -76,7 +78,7 @@ public class GameMenu {
                 gameMenu(false);
             }
             case 7 -> {
-                runner.printHand();
+                leaderAction();
                 gameMenu(false);
             }
             case 8 -> {
@@ -85,6 +87,58 @@ public class GameMenu {
             }
             default -> gameMenu(false);
         }
+    }
+
+    private void leaderAction() {
+
+        var cards = cli.getView().getLeaderCards();
+        var inactiveCards = cards.stream().filter(leaderCard -> !leaderCard.isActive()).collect(Collectors.toList());
+
+        if (inactiveCards.size() != 0)
+            cli.printMessage("These are the leader cards still in your hand:");
+
+        runner.printHand();
+        if (inactiveCards.size() == 0) return;
+
+        String[] options = {"Activate leader card", "Throw away leader card", "Back to menu"};
+
+        int choice = cli.getChoice(options);
+
+        if (choice == 3) return;
+
+        Id chosen;
+        int chosen_index;
+        if (inactiveCards.size()==2) {
+            cli.printMessage("[ ] Which card? (1 or 2)");
+            chosen_index = cli.getInt(1, 2);
+
+        } else {
+            chosen_index = cards.indexOf(inactiveCards.get(0));
+
+        }
+
+        if (chosen_index==1) {
+            chosen = Id.LEADER_CARD_1;
+        } else {
+            chosen = Id.LEADER_CARD_2;
+        }
+        runner.setContextAction(GameActions.ACTIVATE_LEADER);
+        runner.setCurrentAction(GameActions.WAITING);
+
+
+        synchronized (MenuRunner.getInstance()) {
+            if (choice == 1) {
+                cli.printMessage("[ ] Activating :\n"+cards.get(chosen_index-1));
+                UIController.getInstance().activateSpecialAbility(chosen);
+            } else {
+                cli.printMessage("[ ] Throwing away :\n"+cards.get(chosen_index-1));
+                UIController.getInstance().throwLeaderCard(chosen);
+            }
+            runner.waitResponse();
+        }
+
+
+
     }
 
     private void endOfTurn(){
@@ -103,21 +157,24 @@ public class GameMenu {
         cli.printMessage(MARBLE_LEGEND);
         cli.printMessage(GameView.getInstance().getMarketInstance());
 
-
+        // Set the player's choice or return if they can only observe.
         if (cli.getView().isMyTurn() && cli.getView().isMainAction()){
             options = new String[]{"Row 1", "Row 2", "Row 3", "Column 1", "Column 2", "Column 3", "Column 4", "No, Return to game menu"};
         } else return;
 
+        // Get the choice.
+        cli.printMessage("[ ] Do you wish to take resources from the market?");
         int choice = cli.getChoice(options);
 
+        // Stop if they don't wish to buy.
         if (choice == options.length) return;
-        cli.printMessage("[ ] Do you wish to take resources from the market?");
+
+        cli.printMessage("[ ] Buying marbles from "+ options[choice-1]);
 
         runner.setContextAction(GameActions.BUY_MARBLES);
         runner.setCurrentAction(GameActions.WAITING);
 
-        cli.printMessage("[ ] Buying marbles from "+ options[choice-1]);
-
+        // Send server the buy message and await the brought message or the 2 leader cards one.
         synchronized (MenuRunner.getInstance()) {
             UIController.getInstance().buyMarbles(choice-1);
             runner.waitResponse();
@@ -137,6 +194,7 @@ public class GameMenu {
         int special_num =0;
         boolean special = false;
 
+        String[] options = {"Deposit resource", "Rearrange warehouse", "Throw away remaining resources"};
         for (DepotView depot: warehouse){
             if (depot.getId() == Id.S_DEPOT_1 || depot.getId() == Id.S_DEPOT_2 ) {
                 special_num++;
@@ -144,10 +202,10 @@ public class GameMenu {
             }
         }
 
-        //TODO Need menu -> rearrange, throw, deposit. Not giving option to rearrange rn.
         var tempResources = cli.getView().getTempResources();
 
         while (!tempResources.isEmpty()){
+
 
 
             String resourcePrint = tempResources.stream()
@@ -156,13 +214,22 @@ public class GameMenu {
 
 
             cli.printMessage("["+CHECK_MARK+"] You have received the following resources: "+ resourcePrint);
+            cli.printMessage("["+CHECK_MARK+"] This is the state of your depots: ");
+            runner.printDepots();
 
-            if (!cli.getYesOrNo("Do you wish to proceed to deposit them? They will be thrown away otherwise. ")){
+            int choice = cli.getChoice(options);
+
+            if (choice == 2 ) {
+                tidyWarehouse();
+                continue;
+            }
+
+            if (choice == 3){
                 UIController.getInstance().throwResources();
                 return;
             }
 
-            runner.printDepots();
+
             cli.printMessage("[ ] Select the resources and the depot you wish to deposit into (e.g. 1 coin @ D1 or 2 servants @ S1 for special depots)");
             Pair<Id, Resource> values = cli.getIdResourcePair(true, special, special_num);
 

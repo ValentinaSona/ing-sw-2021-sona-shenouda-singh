@@ -55,7 +55,10 @@ public class Requirement implements Serializable {
             if (level !=0)  levels = "(Lv. " + level +")";
             return number + " " + type + levels;
         } else {
+            assert resource != null;
             return resource.toString();
         }
     }
+
+
 }

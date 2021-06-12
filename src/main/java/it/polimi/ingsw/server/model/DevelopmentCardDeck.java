@@ -63,4 +63,6 @@ public class DevelopmentCardDeck {
 		return color;
 	}
 
+	public boolean isEmpty(){return deck.isEmpty();}
+
 }
