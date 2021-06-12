@@ -5,13 +5,9 @@ import it.polimi.ingsw.client.modelview.MatchSettings;
 import it.polimi.ingsw.client.modelview.PlayerView;
 import it.polimi.ingsw.client.ui.Ui;
 import it.polimi.ingsw.client.ui.cli.menus.MenuRunner;
-import it.polimi.ingsw.server.controller.User;
 import it.polimi.ingsw.server.model.Id;
 import it.polimi.ingsw.server.model.Resource;
 import it.polimi.ingsw.server.model.ResourceType;
-import it.polimi.ingsw.utils.networking.transmittables.servermessages.ServerMessage;
-import it.polimi.ingsw.utils.networking.transmittables.servermessages.ServerStartTurnMessage;
-import it.polimi.ingsw.utils.networking.transmittables.servermessages.ServerWarehouseMessage;
 import javafx.util.Pair;
 
 import java.io.*;
@@ -25,7 +21,7 @@ public class CLI implements Ui {
     private final Scanner input;
 
     private PlayerView view;
-
+    private boolean interrupted;
 
 
     static String banner = " __  __           _                         __   ____                  _                              \n" +
@@ -41,6 +37,11 @@ public class CLI implements Ui {
 
     }
 
+
+
+    public void setInterrupted(boolean interrupted) {
+        this.interrupted = interrupted;
+    }
 
     public void setView(){
         String nick = MatchSettings.getInstance().getClientNickname();
@@ -58,7 +59,7 @@ public class CLI implements Ui {
     }
 
     public Pair<Id, Resource> getIdResourcePair(boolean isDepot, boolean special, int special_num){
-        // TODO: add boolean if for devslots
+        // TODO: add boolean if for devSlots
         String regex = "";
         String[] choice;
 
@@ -110,7 +111,7 @@ public class CLI implements Ui {
         return null;
     }
 
-    public int getChoice(String[] options, boolean enableHidden){
+    public int getChoice(String[] options, boolean enableRefresh){
         int optNum = 1;
         int choice;
         output.println("[ ] Choose an option:");
@@ -120,27 +121,64 @@ public class CLI implements Ui {
             output.printf("\t%d) %s \n", optNum, option);
             optNum++;
         }
-
+        boolean refreshed = false;
         while(true) {
-            if(input.hasNextInt()) {
-                choice = input.nextInt();
+            try {
+                if ((!enableRefresh || refreshed ) && System.in.available()!=0) {
+                    // Normal program execution. Enters here only if hasNextInt() won't be blocking.
+                    if (input.hasNextInt()) {
+                        choice = input.nextInt();
 
-            } else {
-                output.println("Input must be the number of a menu item");
-                input.next();
-                continue;
+                    } else {
+                        output.println("Input must be the number of a menu item");
+                        input.next();
+                        continue;
+                    }
+                    if (choice > 0 && choice < optNum) break;
+                    //if (enableHidden && choice == 0) break;
+                    else output.println("Input must be the number of a menu item");
+                } else {
+                    // Sets the interrupt flag to false. This is how I distinguish between normal
+                    // and interrupting wake ups.
+                    interrupted = false;
+                    // Synchronize on a singleton so even the new thread can access it.
+                    synchronized (CLIMessageHandler.getInstance()) {
+
+                        if (!enableRefresh) {
+                            System.in.mark(500);
+                            Thread t = new Thread(() -> {
+                                var input = new Scanner(System.in);
+                                input.hasNextInt();
+                                try {
+                                    System.in.reset();
+                                } catch (IOException e) {
+                                    e.printStackTrace();
+                                }
+                                synchronized (CLIMessageHandler.getInstance()) {
+                                    CLIMessageHandler.getInstance().notify();
+                                }
+                            });
+                            t.start();
+                        } else refreshed = true;
+                        CLIMessageHandler.getInstance().wait();
+
+                        //if (!interrupted) t.join();
+                    }
+                    if (interrupted) return 0;
+                }
+            } catch (IOException | InterruptedException e) {
+                e.printStackTrace();
+
             }
-            if (choice > 0 && choice < optNum) break;
-            if (enableHidden && choice == 0) break;
-            else output.println("Input must be the number of a menu item");
         }
 
 
-        if (choice !=0) output.println("["+CHECK_MARK+"] Chosen: " + options[choice-1]);
+        output.println("["+CHECK_MARK+"] Chosen: " + options[choice-1]);
         output.flush();
         input.nextLine();
         return choice;
     }
+
     public int getChoice(String[] options){
         return getChoice(options, false);
     }

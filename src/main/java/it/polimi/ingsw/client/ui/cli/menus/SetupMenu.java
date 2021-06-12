@@ -34,7 +34,7 @@ public class SetupMenu {
 
     public void run(){
         this.runner = MenuRunner.getInstance(cli);
-        if (!done) setupMenu();
+        if (!done) setupMenu(false);
         done = true;
     }
 
@@ -71,34 +71,35 @@ public class SetupMenu {
 
     }
 
-    public void setupMenu() {
+    public void setupMenu(boolean hasBeenRefreshed) {
 
             String[] options = getSetupOptions();
-            switch (cli.getChoice(options)) {
+            switch (cli.getChoice(options, hasBeenRefreshed)) {
+                case 0 -> setupMenu(true);
                 case 1 -> {
                     cli.printMessage(MARBLE_LEGEND);
                     cli.printMessage(GameView.getInstance().getMarketInstance());
-                    setupMenu();
+                    setupMenu(false);
                 }
                 case 2 -> {
                     cli.printMessage(GameView.getInstance().getDevelopmentCardsMarket());
-                    setupMenu();
+                    setupMenu(false);
                 }
                 case 3 -> {
                     runner.printFaithTracks();
-                    setupMenu();
+                    setupMenu(false);
                 }
                 case 4 -> {
 
                     // If the resources have already been picked and the cards haven't, send the message and exit setup.
                     if (pickLeaders() && map != null) UIController.getInstance().chosenStartingResources(map, chosen);
-                    else setupMenu();
+                    else setupMenu(false);
                 }
                 case 5 -> {
 
                     // If the cards have already been picked and the resources haven't, send the message and exit setup.
                     if (pickResources() && chosen != null) UIController.getInstance().chosenStartingResources(map, chosen);
-                    else setupMenu();
+                    else setupMenu(false);
                 }
 
             }

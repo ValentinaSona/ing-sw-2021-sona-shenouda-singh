@@ -104,6 +104,11 @@ public class CLIMessageHandler {
         if ( message.getUser().getNickName().equals( MatchSettings.getInstance().getClientNickname() )) {
             cli.printMessage("["+CHECK_MARK+"] It's your turn! If you don't see new options in the menu, pick any one option to refresh it.");
 
+            synchronized (CLIMessageHandler.getInstance()) {
+                cli.setInterrupted(true);
+                CLIMessageHandler.getInstance().notifyAll();
+            }
+
             if (message.getFaithTrackView() != null && message.getFaithTrackView().getFaithMarker() > 0)
                 cli.printMessage("["+CHECK_MARK+"] You have received " + message.getFaithTrackView().getFaithMarker() + " faith points.");
         } else {
@@ -115,6 +120,13 @@ public class CLIMessageHandler {
         MenuRunner.getInstance().setState(MenuStates.SETUP, message);
         synchronized (MenuRunner.getInstance()) {
             MenuRunner.getInstance().notifyAll();
+        }
+
+        if ( message.getUser().getNickName().equals( MatchSettings.getInstance().getClientNickname() )) {
+            synchronized (CLIMessageHandler.getInstance()) {
+                cli.setInterrupted(true);
+                CLIMessageHandler.getInstance().notifyAll();
+            }
         }
     }
 
@@ -136,9 +148,14 @@ public class CLIMessageHandler {
             cli.printMessage("["+CHECK_MARK+"] The game is starting!");
 
         MenuRunner.getInstance().setState(MenuStates.GAME, message);
-        if ( message.getStartingTurn().getNickName().equals( MatchSettings.getInstance().getClientNickname() ))
-            cli.printMessage("["+CHECK_MARK+"] It's your turn!");
-        else
+        if ( message.getStartingTurn().getNickName().equals( MatchSettings.getInstance().getClientNickname() )) {
+            cli.printMessage("[" + CHECK_MARK + "] It's your turn!");
+
+            synchronized (System.in) {
+                cli.setInterrupted(true);
+                System.in.notifyAll();
+            }
+        } else
             cli.printMessage("[ ] It's" + message.getStartingTurn().getNickName() + "'s turn! Meanwhile you can observe the board or rearrange your warehouse.");
 
         synchronized (MenuRunner.getInstance()) {
