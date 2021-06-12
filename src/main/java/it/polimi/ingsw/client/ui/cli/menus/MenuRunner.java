@@ -28,7 +28,8 @@ public class MenuRunner {
     private final SetupMenu setupMenu;
 
     private ServerMessage inMsg;
-    volatile boolean wait = false;
+    private boolean solo;
+    private boolean wait = false;
 
 
     public MenuStates getState() {
@@ -45,6 +46,15 @@ public class MenuRunner {
         this.wait = false;
         this.inMsg = msg;
     }
+
+    public boolean isSolo() {
+        return solo;
+    }
+
+    public void setSolo(boolean solo) {
+        this.solo = solo;
+    }
+
     public GameActions getContextAction() {
         return contextAction;
     }
@@ -71,6 +81,7 @@ public class MenuRunner {
         this.gameMenu = new GameMenu(cli);
         this.mainMenu = new MainMenu(cli);
         this.setupMenu = new SetupMenu(cli);
+        this.solo = false;
     }
 
 
@@ -146,7 +157,8 @@ public class MenuRunner {
      */
     public void sendResponse(GameActions action, GameActions newAction, String msg){
         sendResponse(action, msg);
-        while (wait == true) {
+        // TODO: fix;
+        while (wait) {
         }
         setCurrentAction(newAction);
     }

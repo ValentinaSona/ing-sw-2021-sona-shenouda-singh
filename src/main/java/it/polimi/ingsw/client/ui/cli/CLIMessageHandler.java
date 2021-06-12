@@ -5,6 +5,7 @@ import it.polimi.ingsw.client.ui.cli.menus.GameActions;
 import it.polimi.ingsw.client.ui.cli.menus.MenuRunner;
 import it.polimi.ingsw.client.ui.cli.menus.MenuStates;
 import it.polimi.ingsw.client.ui.controller.UIController;
+import it.polimi.ingsw.server.Match;
 import it.polimi.ingsw.utils.networking.transmittables.StatusMessage;
 import it.polimi.ingsw.utils.networking.transmittables.servermessages.*;
 
@@ -41,11 +42,16 @@ public class CLIMessageHandler {
             case OK_NICK ->  cli.printMessage("["+CHECK_MARK+"] The server has received your nickname ");
 
             case SET_COUNT -> {
-                cli.printMessage("[ ] You are the first player! Select the size of the lobby (2-4 players): ");
-                UIController.getInstance().setCreation( cli.getInt(2,4));
+                if(!MenuRunner.getInstance().isSolo()) {
+                    cli.printMessage("[ ] You are the first player! Select the size of the lobby (2-4 players): ");
+                    UIController.getInstance().setCreation(cli.getInt(2, 4));
+                }
             }
-            case OK_COUNT -> cli.printMessage("["+CHECK_MARK+"] The server has created the lobby! Wait for other players to join! ");
-
+            case OK_COUNT -> {
+                if (!MenuRunner.getInstance().isSolo()) {
+                    cli.printMessage("[" + CHECK_MARK + "] The server has created the lobby! Wait for other players to join! ");
+                }
+            }
             case JOIN_LOBBY -> cli.printMessage("["+CHECK_MARK+"] Found an already existing lobby to join.");
 
             case CLIENT_ERROR -> handleClientError();
@@ -87,8 +93,11 @@ public class CLIMessageHandler {
 
     public void handleServerSetupGameMessage(ServerSetupGameMessage message){
 
-        cli.printMessage("["+CHECK_MARK+"] The lobby is full! The game is starting!");
-
+        if(!MenuRunner.getInstance().isSolo()) {
+            cli.printMessage("[" + CHECK_MARK + "] The lobby is full! The game is starting!");
+        } else {
+            cli.printMessage("[" + CHECK_MARK + "] The game is starting! You're up against Lorenzo il Magnifico!");
+        }
         // Saves the user's playerView for ease of access.
         cli.setView();
 
@@ -102,7 +111,7 @@ public class CLIMessageHandler {
     public void handleServerSetupUserMessage(ServerSetupUserMessage message){
 
         if ( message.getUser().getNickName().equals( MatchSettings.getInstance().getClientNickname() )) {
-            cli.printMessage("["+CHECK_MARK+"] It's your turn! If you don't see new options in the menu, pick any one option to refresh it.");
+            cli.printMessage("["+CHECK_MARK+"] It's your turn!");
 
             synchronized (CLIMessageHandler.getInstance()) {
                 cli.setInterrupted(true);

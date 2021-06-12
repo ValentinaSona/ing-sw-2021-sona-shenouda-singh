@@ -3,6 +3,7 @@ package it.polimi.ingsw.client.ui.controller;
 import it.polimi.ingsw.client.modelview.GameView;
 import it.polimi.ingsw.client.modelview.MatchSettings;
 import it.polimi.ingsw.client.ui.cli.CLIMessageHandler;
+import it.polimi.ingsw.client.ui.cli.menus.MenuRunner;
 import it.polimi.ingsw.client.ui.gui.GUIHelper;
 import it.polimi.ingsw.client.ui.gui.JFXControllers.ScreenName;
 import it.polimi.ingsw.utils.networking.ClientHandleable;
@@ -178,8 +179,10 @@ public class DispatcherController implements Runnable, LambdaObserver {
         GameView.getInstance().getPlayerFromUser(message.getStartingTurn()).setMyTurn(true);
         GameView.getInstance().getPlayerFromUser(message.getStartingTurn()).setMainAction(true);
         // Make sure the ending player turn ends.
-        GameView.getInstance().getPlayerFromUser(message.getEndingTurn()).setMyTurn(false);
-        GameView.getInstance().getPlayerFromUser(message.getEndingTurn()).setMainAction(false);
+        if (!MenuRunner.getInstance().isSolo()) {
+            GameView.getInstance().getPlayerFromUser(message.getEndingTurn()).setMyTurn(false);
+            GameView.getInstance().getPlayerFromUser(message.getEndingTurn()).setMainAction(false);
+        }
 
         if(gui){
 

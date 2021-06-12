@@ -63,6 +63,7 @@ public class MainMenu {
             case 1 -> {
                 String nickname = cli.getString("^[a-zA-Z0-9 _.-]{1,20}$", "Choose a nickname (Max 20 characters)");
                 if (nickname.equals("a nickname")) System.out.println("You're a funny one, aren't you?");
+                MenuRunner.getInstance().setSolo(true);
                 UIController.getInstance().startLocalSinglePlayerGame(nickname);
 
             }
@@ -71,6 +72,7 @@ public class MainMenu {
                 if (nickname.equals("a nickname")) System.out.println("You're a funny one, aren't you?");
                 try {
                     UIController.getInstance().sendNickname(nickname, "127.0.0.1", 10002);
+                    MenuRunner.getInstance().setSolo(true);
                     UIController.getInstance().joinLobby();
                     UIController.getInstance().setCreation(1);
                 } catch (IOException e) {

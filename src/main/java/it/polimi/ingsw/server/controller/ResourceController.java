@@ -51,7 +51,7 @@ public class ResourceController{
      */
     public void addFaithPoints(Player player, Resource faithPoints) throws EndOfGameException {
         try{
-            if (!model.isSolo()) {
+
                 FaithTrack faithTrack = player.getFaithTrack();
                 faithTrack.addFaithPoints(faithPoints);
                 model.notify(new ServerFaithTrackMessage(
@@ -59,9 +59,7 @@ public class ResourceController{
                         faithPoints.getQuantity(),
                         model.getUserFromPlayer(player)
                 ));
-            } else {
-                model.getLorenzo().getFaithTrack().addFaithPoints(faithPoints);
-            }
+
         }catch (VaticanReportException vaticanReportException){
 
             // Run the validatePopeFavor for all the players in the game.
