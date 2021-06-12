@@ -73,6 +73,8 @@ public class UIController implements LambdaObserver{
     }
 
     public void startLocalSinglePlayerGame(String nickname){
+
+        MatchSettings.getInstance().setClientNickname(nickname);
         Runnable runnable = new Runnable() {
             @Override
             public void run() {
