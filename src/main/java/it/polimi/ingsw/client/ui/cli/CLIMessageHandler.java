@@ -77,12 +77,16 @@ public class CLIMessageHandler {
     private void handleRequirementsError() {
         if(MenuRunner.getInstance().getContextAction()==GameActions.TIDY_WAREHOUSE)
            MenuRunner.getInstance().sendResponse(GameActions.TIDY_WAREHOUSE,"[X] These two depots cannot be swapped.");
+        else if (MenuRunner.getInstance().getContextAction()==GameActions.ACTIVATE_LEADER)
+            MenuRunner.getInstance().sendResponse(GameActions.ACTIVATE_LEADER,"[X] You do not meet the requirements to activate this card.");
 
     }
 
     private void handleClientError() {
         if(MenuRunner.getInstance().getContextAction()==GameActions.TIDY_WAREHOUSE || MenuRunner.getInstance().getContextAction()==GameActions.BUY_MARBLES)
             MenuRunner.getInstance().sendResponse(GameActions.TIDY_WAREHOUSE,"[X] This operation is unavailable right now.");
+        if(MenuRunner.getInstance().getContextAction()==GameActions.ACTIVATE_LEADER || MenuRunner.getInstance().getContextAction()==GameActions.BUY_MARBLES)
+            MenuRunner.getInstance().sendResponse(GameActions.ACTIVATE_LEADER,"[X] This operation is unavailable right now.");
 
     }
 

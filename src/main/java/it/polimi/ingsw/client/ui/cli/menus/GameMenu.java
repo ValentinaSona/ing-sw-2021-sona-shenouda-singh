@@ -1,6 +1,7 @@
 package it.polimi.ingsw.client.ui.cli.menus;
 
 import it.polimi.ingsw.client.modelview.DepotView;
+import it.polimi.ingsw.client.modelview.DevelopmentCardSlotView;
 import it.polimi.ingsw.client.modelview.GameView;
 import it.polimi.ingsw.client.ui.cli.CLI;
 import it.polimi.ingsw.client.ui.controller.UIController;
@@ -11,6 +12,10 @@ import it.polimi.ingsw.server.model.Resource;
 import javafx.util.Pair;
 
 import java.awt.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import static it.polimi.ingsw.client.ui.cli.CLIHelper.CHECK_MARK;
@@ -60,6 +65,7 @@ public class GameMenu {
             }
             case 2 -> {
                 cli.printMessage(GameView.getInstance().getDevelopmentCardsMarket());
+                //cardBuy();
                 gameMenu(false);
             }
             case 3 -> {
@@ -88,6 +94,106 @@ public class GameMenu {
             default -> gameMenu(false);
         }
     }
+
+    private void cardBuy() {
+        String[] options;
+        cli.printMessage(GameView.getInstance().getDevelopmentCardsMarket());
+
+        // Set the player's choice or return if they can only observe.
+        if (cli.getView().isMyTurn() && cli.getView().isMainAction()) {
+            if (!cli.getYesOrNo("Do you wish to buy a card?")) return;
+        } else return;
+
+        int[] choice = cli.getDevelopmentRowCol();
+
+        //On top of which slot?
+        options = new String[3];
+        for (int i = 0 ; i <3; i++){
+            options[i]=(i+1)+") \n"+((DevelopmentCardSlotView)cli.getView().getSlots().get(0)).peek().toString();
+        }
+
+        Id id = null;
+        cli.printMessage("On top of which slot do you wish to place it?");
+        switch (cli.getChoice(options)){
+            case 1 -> id = Id.SLOT_1;
+            case 2 -> id = Id.SLOT_2;
+            case 3 -> id = Id.SLOT_3;
+        }
+
+        runner.setContextAction(GameActions.BUY_CARD);
+        runner.setCurrentAction(GameActions.WAITING);
+        synchronized (MenuRunner.getInstance()) {
+            UIController.getInstance().selectDevelopmentCard(choice[0],choice[1],id);
+            runner.waitResponse();
+        }
+// TODO: return value of sendresponse = menu for clienterrors or requirements.
+        if (runner.getCurrentAction()==GameActions.MENU) return;
+
+
+        var card = GameView.getInstance().getDevelopmentCardsMarket().getTray()[choice[0]][choice[1]];
+        Map<Id, Resource> map = new HashMap<>();
+
+        boolean special = false;
+
+        int special_num = 0;
+
+        for (DepotView depot: cli.getView().getWarehouse()){
+            if (depot.getId() == Id.S_DEPOT_1 || depot.getId() == Id.S_DEPOT_2 ) {
+                special_num++;
+                special = true;
+            }
+        }
+        var cost = new ArrayList<Resource>(Arrays.asList(card.getCost()));
+        while (!cost.isEmpty()) {
+            boolean exit = false;
+            runner.printDepots();
+            //TODO print strongbox.
+            cli.printMessage("[ ] Select the resources to pay and their source (e.g. 1 coin @ D1 - D for Depots, S for Special depots, B for strongBox)");
+            Pair<Id, Resource> idResourcePair = cli.getIdResourcePair(true, special, special_num);
+            int quantity = 0;
+            switch (idResourcePair.getKey()){
+                case STRONGBOX_COIN ->  quantity = cli.getView().getStrongboxView().getCoin().getQuantity();
+                case STRONGBOX_SERVANT ->  quantity = cli.getView().getStrongboxView().getServant().getQuantity();
+                case STRONGBOX_SHIELD ->  quantity = cli.getView().getStrongboxView().getShield().getQuantity();
+                case STRONGBOX_STONE ->  quantity = cli.getView().getStrongboxView().getStone().getQuantity();
+                case DEPOT_1 -> quantity = cli.getView().getWarehouse().get(0).getResource().getQuantity();
+                case DEPOT_2 -> quantity = cli.getView().getWarehouse().get(1).getResource().getQuantity();
+                case DEPOT_3 -> quantity = cli.getView().getWarehouse().get(2).getResource().getQuantity();
+                case S_DEPOT_2 -> quantity = cli.getView().getWarehouse().get(4).getResource().getQuantity();
+                case S_DEPOT_1 -> quantity = cli.getView().getWarehouse().get(3).getResource().getQuantity();
+            }
+            if (quantity<idResourcePair.getValue().getQuantity()){
+                cli.printMessage("[X] The selected quantity is greater than what is contained in the source.");
+                continue;
+            }
+
+            for (Resource res : cost){
+                if (res.getResourceType()==idResourcePair.getValue().getResourceType()){
+                    if (res.getQuantity()>=idResourcePair.getValue().getQuantity()){
+                        res.sub(idResourcePair.getValue());
+                        if(res.getQuantity()==0) cost.remove(res);
+                    } else {
+                        cli.printMessage("[X] The selected quantity is greater than needed to pay for the card.");
+                        exit = true;
+                    }
+                    break;
+                }
+            }
+            if (exit) continue;
+
+            map.put(idResourcePair.getKey(), idResourcePair.getValue());
+
+        }
+        runner.setContextAction(GameActions.BUY_CARD);
+        runner.setCurrentAction(GameActions.WAITING);
+        synchronized (MenuRunner.getInstance()) {
+            UIController.getInstance().depositResourcesIntoSlot(id, map);
+            runner.waitResponse();
+
+        }
+
+    }
+
 
     private void leaderAction() {
 

@@ -374,9 +374,17 @@ public class Player extends LambdaObservable<Transmittable> {
 		return new StrongboxView(strongbox);
 	}
 
-	//TODO
+
 	public ArrayList<SlotView> getVisibleSlots() {
-		return null;
+		ArrayList<SlotView> list = new ArrayList<>();
+		for (Slot slot: slots){
+			if (slot.getId()==Id.SLOT_1||slot.getId()==Id.SLOT_2||slot.getId()==Id.SLOT_3)
+				list.add(new DevelopmentCardSlotView(slot.getId()));
+			else
+				list.add(new SpecialProductionView(slot.getId(), slot.isConfirmed()));
+		}
+
+		return list;
 	}
 
 	/**
