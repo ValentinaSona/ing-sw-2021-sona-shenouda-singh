@@ -6,6 +6,8 @@ import java.util.List;
 
 public class MatchSettings {
 
+    private boolean solo;
+
     private int totalUsers;
     private String clientNickname;
     private List<User> joiningPlayers;
@@ -18,6 +20,7 @@ public class MatchSettings {
     }
 
     private MatchSettings(){
+        solo = false;
     }
 
     public void setClientNickname(String clientNickname) {
@@ -51,5 +54,13 @@ public class MatchSettings {
 
     public List<User> getJoiningUsers() {
         return joiningPlayers;
+    }
+
+    public void setSolo(boolean solo) {
+        this.solo = solo;
+    }
+
+    public boolean isSolo() {
+        return solo;
     }
 }

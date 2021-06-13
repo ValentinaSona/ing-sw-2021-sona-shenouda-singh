@@ -16,16 +16,20 @@ import javafx.animation.Timeline;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.shape.Rectangle;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class LeaderSelectionGUIController extends AbstractGUIController implements LeaderCardSelectionController {
 
@@ -37,6 +41,12 @@ public class LeaderSelectionGUIController extends AbstractGUIController implemen
 
     Timeline timeline;
 
+    @FXML
+    public ImageView resChoice1, resChoice2, choiceDialog1, choiceDialog2;
+    @FXML
+    public HBox choiceBox1;
+    @FXML
+    public HBox choiceBox2;
     @FXML
     private GridPane leaderGrid, devGrid;
     @FXML
@@ -53,8 +63,13 @@ public class LeaderSelectionGUIController extends AbstractGUIController implemen
     private Label choiceLabel;
     @FXML
     private Button marketButton, devButton, setupButton, confirm1, confirm2, confirm;
+    @FXML
+    private Label res;
 
     private Button[] buttons;
+    private Map<Node, Integer> choiceMap;
+    boolean choiceShowing1, choiceShowing2, clicked1, clicked2;
+    private Image baseChoice;
 
     @FXML
     public void initialize() {
@@ -90,7 +105,27 @@ public class LeaderSelectionGUIController extends AbstractGUIController implemen
         confirm.setDisable(true);
         confirm.setOpacity(0);
 
+        choiceMap = Map.of(
+                resChoice1, 2,
+                resChoice2, 4
+        );
+
+        choiceMap.forEach((key, value) -> {
+            key.setDisable(true);
+            key.setOpacity(0);
+        });
+
+        showChoice1(false);
+        showChoice2(false);
+
+        choiceShowing1 = false;
+        choiceShowing2 = false;
+        clicked1 = false;
+        clicked2 = false;
+
         isChoosing = false;
+
+        baseChoice = resChoice1.getImage();
     }
 
     public void handleSetupUserMessage(ServerSetupUserMessage message) {
@@ -106,11 +141,21 @@ public class LeaderSelectionGUIController extends AbstractGUIController implemen
             if ( GUIHelper.getInstance().clientIndex() == 0)
                 choiceLabel.setText("Select two leader cards");
 
-            else if ( GUIHelper.getInstance().clientIndex() == 3 )
+            else if ( GUIHelper.getInstance().clientIndex() == 3 ) {
                 choiceLabel.setText("Select two leader cards and two resources");
+                choiceMap.forEach((key, value) -> {
+                    key.setDisable(false);
+                    key.setOpacity(1);
+                });
+            }
 
-            else
+            else {
                 choiceLabel.setText("Select two leader cards and one resource");
+                choiceMap.entrySet().stream().filter(e -> e.getValue()==2).forEach(e -> {
+                    e.getKey().setDisable(false);
+                    e.getKey().setOpacity(1);
+                });
+            }
 
             LeaderCard[] cards = message.getLeaderCards();
 
@@ -122,19 +167,7 @@ public class LeaderSelectionGUIController extends AbstractGUIController implemen
             confirm.setDisable(false);
 
             fillLeaderCards(cards);
-
-            //TODO devo anche gestire la scelte delle risorse message.getResource()
         });
-
-    }
-
-    public void confirmLeader(ActionEvent actionEvent) {
-        if (selectedCards == 2){}
-            //UIController.getInstance().chosenLeader(
-               // cardList.stream().filter(LeaderCardSelection::isSelected).map(LeaderCardSelection::getCard).collect(Collectors.toList()));
-        //TODO dopo che ha scelto le leaderCards gli faccio scegliere le risorse
-        //cambio scena e gli faccio scegliere le risorse prima però mi salvo temporaneamente le carte selezionata
-        //TODO una volta scelte risorse e carte --> //TODO chiamata al metodo del UiController chosenStartingResources(Map<Id,Resource> idResourceMap, LeaderCard[] chosen, User);
 
     }
 
@@ -146,12 +179,13 @@ public class LeaderSelectionGUIController extends AbstractGUIController implemen
 
             isChoosing = false;
             waitLabel.setText("Choice registered");
+            showChoice();
 
         });
 
     }
 
-    //TODO
+    //TODO cosa dovrebbe fare questo?
     @Override
     public void handleStatusMessage(StatusMessage message) {
 
@@ -172,7 +206,7 @@ public class LeaderSelectionGUIController extends AbstractGUIController implemen
 
     }
 
-    public void showDevelopment(ActionEvent actionEvent) {
+    public void showDevelopment() {
 
         adjustButtons();
         devButton.setMaxWidth(420);
@@ -191,17 +225,39 @@ public class LeaderSelectionGUIController extends AbstractGUIController implemen
             b.setMaxWidth(380);
     }
 
-    public void showChoice(ActionEvent actionEvent) {
+    public void showChoice() {
 
         if (!isChoosing) {
             waitLabel.setOpacity(1);
             choosingLabel.setOpacity(1);
             loading.setOpacity(1);
+            leaderGrid.setOpacity(0);
+            confirm.setDisable(true);
+            confirm.setOpacity(0);
+            showChoice1(false);
+            showChoice2(false);
+
+            if (clicked1) resChoice1.setImage(baseChoice);
+            if (clicked2) resChoice2.setImage(baseChoice);
+
         }
         else {
             leaderGrid.setOpacity(1);
             confirm.setOpacity(1);
             confirm.setDisable(false);
+            if ( GUIHelper.getInstance().clientIndex() == 3 ) {
+                choiceMap.forEach((key, value) -> {
+                    key.setDisable(false);
+                    key.setOpacity(1);
+                });
+            }
+
+            else if (GUIHelper.getInstance().clientIndex()==1 || GUIHelper.getInstance().clientIndex()==2){
+                choiceMap.entrySet().stream().filter(e -> e.getValue()==2).forEach(e -> {
+                    e.getKey().setDisable(false);
+                    e.getKey().setOpacity(1);
+                });
+            }
         }
 
 
@@ -244,6 +300,19 @@ public class LeaderSelectionGUIController extends AbstractGUIController implemen
         waitLabel.setOpacity(0);
         choosingLabel.setOpacity(0);
         loading.setOpacity(0);
+
+        choiceMap.forEach((key, value) -> {
+            key.setDisable(true);
+            key.setOpacity(0);
+        });
+
+        choiceBox1.setOpacity(0);
+        choiceBox1.setDisable(true);
+        choiceBox2.setOpacity(0);
+        choiceBox2.setDisable(true);
+        choiceDialog1.setOpacity(0);
+        choiceDialog2.setOpacity(0);
+        res.setOpacity(0);
     }
 
     public void hideMarket() {
@@ -257,8 +326,114 @@ public class LeaderSelectionGUIController extends AbstractGUIController implemen
 
     public void confirmChoice(ActionEvent actionEvent) {
 
-        UIController.getInstance().chosenStartingResources(resourceMap,
-                cardList.stream().filter(LeaderCardSelection::isSelected).map(LeaderCardSelection::getCard).toArray(LeaderCard[]::new));
+        if (selectedCards < 2) {
+            choiceLabel.setText("You must choose two leader cards!");
+        }
+
+        else if ((GUIHelper.getInstance().clientIndex() == 1 || GUIHelper.getInstance().clientIndex() == 2) && !clicked1) {
+            res.setText("You must choose one resource!");
+            res.setOpacity(1);
+        }
+        else if (GUIHelper.getInstance().clientIndex() == 3 && (!clicked1 || !clicked2)) {
+            res.setText("You must choose two resources!");
+            res.setOpacity(1);
+        }
+
+        else {
+
+            resourceMap = new HashMap<>();
+
+            if (GUIHelper.getInstance().clientIndex() == 1 || GUIHelper.getInstance().clientIndex() == 2) {
+                resourceMap.put(Id.SLOT_2, GUIHelper.getInstance().getResFromImage(resChoice1.getImage()));
+            }
+            else if (GUIHelper.getInstance().clientIndex() == 3 ) {
+                resourceMap.put(Id.SLOT_2, GUIHelper.getInstance().getResFromImage(resChoice1.getImage()));
+                resourceMap.put(Id.SLOT_3, GUIHelper.getInstance().getResFromImage(resChoice2.getImage()));
+            }
+            UIController.getInstance().chosenStartingResources(resourceMap,
+                    cardList.stream().filter(LeaderCardSelection::isSelected).map(LeaderCardSelection::getCard).toArray(LeaderCard[]::new));
+        }
+    }
+
+    public void chooseRes1(MouseEvent mouseEvent) {
+        if (choiceShowing1) {
+            choiceDialog1.setDisable(true);
+            choiceDialog1.setOpacity(0);
+            choiceBox1.setDisable(true);
+            choiceBox1.setOpacity(0);
+        }
+        else {
+            choiceDialog1.setDisable(false);
+            choiceDialog1.setOpacity(1);
+            choiceBox1.setDisable(false);
+            choiceBox1.setOpacity(1);
+        }
+
+        choiceShowing1 = !choiceShowing1;
+    }
+
+    public void chooseRes2(MouseEvent mouseEvent) {
+        if (choiceShowing2) {
+            choiceDialog2.setDisable(true);
+            choiceDialog2.setOpacity(0);
+            choiceBox2.setDisable(true);
+            choiceBox2.setOpacity(0);
+        }
+        else {
+            choiceDialog2.setDisable(false);
+            choiceDialog2.setOpacity(1);
+            choiceBox2.setDisable(false);
+            choiceBox2.setOpacity(1);
+        }
+    }
+
+    public void choiceHover1(MouseEvent mouseEvent) {
+        if (!clicked1) resChoice1.setImage(((ImageView) mouseEvent.getSource()).getImage());
+    }
+
+    public void choiceHover2(MouseEvent mouseEvent) {
+        if (!clicked2) resChoice2.setImage(((ImageView) mouseEvent.getSource()).getImage());
+    }
+
+    public void resClick2(MouseEvent mouseEvent) {
+        resChoice2.setImage(((ImageView) mouseEvent.getSource()).getImage());
+        clicked2 = true;
+    }
+
+    public void resClick(MouseEvent mouseEvent) {
+        resChoice1.setImage(((ImageView) mouseEvent.getSource()).getImage());
+        clicked1 = true;
+    }
+
+    private void showChoice1(boolean show) {
+        show(show, choiceDialog1, choiceBox1, resChoice1);
+    }
+
+    private void showChoice2(boolean show) {
+        show(show, choiceDialog2, choiceBox2, resChoice2);
+    }
+
+    private void show(boolean show, ImageView choiceDialog, HBox choiceBox, ImageView resChoice) {
+        if (show) {
+            choiceDialog.setDisable(false);
+            choiceDialog.setOpacity(1);
+            choiceBox.setDisable(false);
+            choiceBox.setOpacity(1);
+            resChoice.setDisable(false);
+            resChoice.setOpacity(1);
+        }
+        else {
+            choiceDialog.setDisable(true);
+            choiceDialog.setOpacity(0);
+            choiceBox.setDisable(true);
+            choiceBox.setOpacity(0);
+            resChoice.setDisable(true);
+            resChoice.setOpacity(0);
+        }
+    }
+
+    public void handleStartTurn() {
+        change(ScreenName.PERSONAL_BOARD);
     }
 }
 

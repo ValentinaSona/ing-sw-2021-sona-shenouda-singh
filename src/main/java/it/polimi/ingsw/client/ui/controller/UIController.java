@@ -55,6 +55,8 @@ public class UIController implements LambdaObserver{
 
         MatchSettings.getInstance().setClientNickname(nickname);
         local = true;
+        MatchSettings.getInstance().setSolo(true);
+
         Runnable runnable = new Runnable() {
             @Override
             public void run() {
@@ -150,7 +152,7 @@ public class UIController implements LambdaObserver{
     public void setCreation(int playersNum) {
         send((Transmittable) new ClientSetPlayersCountMessage(playersNum));
         MatchSettings.getInstance().setTotalUsers(playersNum);
-
+        MatchSettings.getInstance().setSolo(true);
     }
 
     /**

@@ -8,6 +8,7 @@
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
@@ -118,6 +119,97 @@
                   <Insets right="130.0" top="600.0" />
                </StackPane.margin>
             </Button>
+            <ImageView fx:id="choiceDialog1" fitHeight="201.0" fitWidth="455.0" opacity="0.75" pickOnBounds="true" preserveRatio="true" StackPane.alignment="BOTTOM_LEFT">
+               <image>
+                  <Image url="@../assets/game/Selection.png" />
+               </image>
+               <StackPane.margin>
+                  <Insets bottom="190.0" left="420.0" />
+               </StackPane.margin>
+            </ImageView>
+            <ImageView fx:id="choiceDialog2" fitHeight="201.0" fitWidth="455.0" opacity="0.75" pickOnBounds="true" preserveRatio="true" StackPane.alignment="BOTTOM_LEFT">
+               <image>
+                  <Image url="@../assets/game/Selection.png" />
+               </image>
+               <StackPane.margin>
+                  <Insets bottom="30.0" left="420.0" />
+               </StackPane.margin>
+            </ImageView>
+            <HBox fx:id="choiceBox2" alignment="CENTER" maxHeight="100.0" maxWidth="350.0" prefHeight="100.0" prefWidth="200.0" spacing="20.0" StackPane.alignment="BOTTOM_LEFT">
+               <StackPane.margin>
+                  <Insets bottom="50.0" left="490.0" />
+               </StackPane.margin>
+               <children>
+                  <ImageView fitHeight="66.0" fitWidth="77.0" onMouseEntered="#choiceHover2" onMousePressed="#resClick2" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../assets/game/resources/coin.png" />
+                     </image>
+                  </ImageView>
+                  <ImageView fitHeight="66.0" fitWidth="77.0" onMouseEntered="#choiceHover2" onMousePressed="#resClick2" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../assets/game/resources/servant.png" />
+                     </image>
+                  </ImageView>
+                  <ImageView fitHeight="66.0" fitWidth="77.0" onMouseEntered="#choiceHover2" onMousePressed="#resClick2" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../assets/game/resources/shield.png" />
+                     </image>
+                  </ImageView>
+                  <ImageView fitHeight="66.0" fitWidth="77.0" onMouseEntered="#choiceHover2" onMousePressed="#resClick2" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../assets/game/resources/stone.png" />
+                     </image>
+                  </ImageView>
+               </children>
+            </HBox>
+            <HBox fx:id="choiceBox1" alignment="CENTER" maxHeight="100.0" maxWidth="350.0" prefHeight="100.0" prefWidth="200.0" spacing="20.0" StackPane.alignment="BOTTOM_LEFT">
+               <children>
+                  <ImageView fitHeight="66.0" fitWidth="77.0" onMouseEntered="#choiceHover1" onMousePressed="#resClick" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../assets/game/resources/coin.png" />
+                     </image>
+                  </ImageView>
+                  <ImageView fitHeight="66.0" fitWidth="77.0" onMouseEntered="#choiceHover1" onMousePressed="#resClick" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../assets/game/resources/servant.png" />
+                     </image>
+                  </ImageView>
+                  <ImageView fitHeight="66.0" fitWidth="77.0" onMouseEntered="#choiceHover1" onMousePressed="#resClick" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../assets/game/resources/shield.png" />
+                     </image>
+                  </ImageView>
+                  <ImageView fitHeight="66.0" fitWidth="77.0" onMouseEntered="#choiceHover1" onMousePressed="#resClick" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../assets/game/resources/stone.png" />
+                     </image>
+                  </ImageView>
+               </children>
+               <StackPane.margin>
+                  <Insets bottom="210.0" left="490.0" />
+               </StackPane.margin>
+            </HBox>
+            <ImageView fx:id="resChoice1" fitHeight="150.0" fitWidth="120.0" onMousePressed="#chooseRes1" pickOnBounds="true" preserveRatio="true" StackPane.alignment="BOTTOM_LEFT">
+               <image>
+                  <Image url="@../assets/game/Choose.png" />
+               </image>
+               <StackPane.margin>
+                  <Insets bottom="200.0" left="300.0" />
+               </StackPane.margin>
+            </ImageView>
+            <ImageView fx:id="resChoice2" fitHeight="150.0" fitWidth="120.0" layoutX="310.0" layoutY="770.0" onMousePressed="#chooseRes2" pickOnBounds="true" preserveRatio="true" StackPane.alignment="BOTTOM_LEFT">
+               <image>
+                  <Image url="@../assets/game/Choose.png" />
+               </image>
+               <StackPane.margin>
+                  <Insets bottom="40.0" left="300.0" />
+               </StackPane.margin>
+            </ImageView>
+            <Label fx:id="res" opacity="0.0" styleClass="normalLabel" text="You must choose the starting resources!" StackPane.alignment="BOTTOM_CENTER">
+               <StackPane.margin>
+                  <Insets bottom="350.0" />
+               </StackPane.margin>
+            </Label>
          </children>
         </StackPane>
     </center>
