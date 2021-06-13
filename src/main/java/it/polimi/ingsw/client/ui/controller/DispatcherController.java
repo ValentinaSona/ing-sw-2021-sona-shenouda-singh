@@ -5,6 +5,7 @@ import it.polimi.ingsw.client.modelview.MatchSettings;
 import it.polimi.ingsw.client.ui.cli.CLIMessageHandler;
 import it.polimi.ingsw.client.ui.cli.menus.MenuRunner;
 import it.polimi.ingsw.client.ui.gui.GUIHelper;
+import it.polimi.ingsw.client.ui.gui.JFXControllers.LeaderSelectionGUIController;
 import it.polimi.ingsw.client.ui.gui.JFXControllers.ScreenName;
 import it.polimi.ingsw.server.model.LeaderCard;
 import it.polimi.ingsw.utils.networking.ClientHandleable;
@@ -74,13 +75,9 @@ public class DispatcherController implements Runnable, LambdaObserver {
     }
 
 
-    //TODO
-    public void handleDepositIntoSlot(ServerDepositIntoSlotMessage message){}
 
     //TODO
     public void handleChooseWhiteMarbles(ServerChooseWhiteMarblesMessage message){}
-    //TODO
-    public void handleBuyDevelopmentCard(ServerBuyDevelopmentCardMessage message){}
 
     //TODO
     public void handleActivateProduction(ServerActivateProductionMessage message){}
@@ -174,13 +171,13 @@ public class DispatcherController implements Runnable, LambdaObserver {
         GameView.getInstance().getPlayerFromUser(message.getStartingTurn()).setMyTurn(true);
         GameView.getInstance().getPlayerFromUser(message.getStartingTurn()).setMainAction(true);
         // Make sure the ending player turn ends.
-        if (!MenuRunner.getInstance().isSolo()) {
+        if (!MatchSettings.getInstance().isSolo()) {
             GameView.getInstance().getPlayerFromUser(message.getEndingTurn()).setMyTurn(false);
             GameView.getInstance().getPlayerFromUser(message.getEndingTurn()).setMainAction(false);
         }
 
         if(gui){
-
+            ((LeaderSelectionGUIController)currentController).handleStartTurn();
         }else {
             CLIMessageHandler.getInstance().handleServerStartTurnMessage(message);
         }
@@ -247,6 +244,32 @@ public class DispatcherController implements Runnable, LambdaObserver {
 
         }else {
             CLIMessageHandler.getInstance().handleServerDepositActionMessage(message);
+        }
+    }
+
+
+    public void handleDepositIntoSlot(ServerDepositIntoSlotMessage message){
+
+        GameView.getInstance().getPlayerFromUser(message.getUser()).setStrongboxView(message.getStrongBoxView());
+        GameView.getInstance().getPlayerFromUser(message.getUser()).setWarehouse(message.getWarehouseView());
+        GameView.getInstance().getPlayerFromUser(message.getUser()).setSlots(message.getSlotViews());
+
+        if(gui){
+
+        }else {
+            CLIMessageHandler.getInstance().handleServerDepositIntoSlotMessage(message);
+        }
+    }
+
+    public void handleBuyDevelopmentCard(ServerBuyDevelopmentCardMessage message){
+        GameView.getInstance().setDevelopmentCardsMarket(message.getView());
+        GameView.getInstance().getPlayerFromUser(message.getUser()).setSlots(message.getSlots());
+        GameView.getInstance().getCurrentPlayer().setMainAction(false);
+
+        if(gui){
+
+        }else {
+            CLIMessageHandler.getInstance().handleServerBuyDevelopmentCardMessage(message);
         }
     }
 

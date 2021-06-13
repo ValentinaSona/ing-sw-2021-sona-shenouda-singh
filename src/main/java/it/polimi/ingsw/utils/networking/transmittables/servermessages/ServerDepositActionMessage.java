@@ -12,11 +12,13 @@ import java.util.List;
 public class ServerDepositActionMessage implements ServerMessage, ClientHandleable {
     private final List<Resource> tempResources;
     private final List<DepotView> warehouseView;
+    private final Resource bought;
     private final User user;
 
-    public ServerDepositActionMessage(List<Resource> tempResources, ArrayList<DepotView> warehouseView, User user){
+    public ServerDepositActionMessage(List<Resource> tempResources, ArrayList<DepotView> warehouseView,Resource bought, User user){
         this.tempResources = tempResources;
         this.warehouseView = warehouseView;
+        this.bought = bought;
         this.user = user;
     }
 
@@ -26,6 +28,10 @@ public class ServerDepositActionMessage implements ServerMessage, ClientHandleab
 
     public User getUser() {
         return user;
+    }
+
+    public Resource getBought() {
+        return bought;
     }
 
     public List<Resource> getTempResources() {

@@ -166,7 +166,7 @@ public class Player extends LambdaObservable<Transmittable> {
 		total.add(strongbox.getAvailableResources(type));
 
 		for(Depot depot : warehouse){
-			if (depot.getResource().getResourceType() == type){
+			if (depot.getResource()!=null && depot.getResource().getResourceType() == type){
 				total.add(depot.getResource());
 			}
 		}
@@ -374,9 +374,18 @@ public class Player extends LambdaObservable<Transmittable> {
 		return new StrongboxView(strongbox);
 	}
 
-	//TODO
+
 	public ArrayList<SlotView> getVisibleSlots() {
-		return null;
+		ArrayList<SlotView> list = new ArrayList<>();
+		list.add(new BoardProductionView(getBoardProduction().getId(),getBoardProduction().isConfirmed()));
+		for (Slot slot: slots){
+			if (slot.getId()==Id.SLOT_1||slot.getId()==Id.SLOT_2||slot.getId()==Id.SLOT_3)
+				list.add(new DevelopmentCardSlotView(slot.getId(), ((DevelopmentCardSlot)slot).getSlot()));
+			else if (slot.getId()==Id.S_SLOT_1||slot.getId()==Id.S_SLOT_2)
+				list.add(new SpecialProductionView(slot.getId(), slot.isConfirmed()));
+		}
+
+		return list;
 	}
 
 	/**

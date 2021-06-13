@@ -4,6 +4,7 @@ import it.polimi.ingsw.server.exception.DevelopmentCardException;
 import it.polimi.ingsw.server.exception.NotSufficientResourceException;
 
 
+import java.util.EmptyStackException;
 import java.util.HashMap;
 import java.util.Stack;
 
@@ -27,7 +28,13 @@ public class DevelopmentCardSlot extends Slot {
 
     public void push(DevelopmentCard developmentCard){
         int newLevel = developmentCard.getLevel();
-        int oldLevel = slot.peek().getLevel();
+        int oldLevel;
+        try {
+            oldLevel = slot.peek().getLevel();
+        } catch (EmptyStackException e){
+            oldLevel = 0;
+        }
+
 
         if(slot.size() < MAX_LENGTH && newLevel == oldLevel+1)
             slot.push(developmentCard);

@@ -5,6 +5,7 @@ import it.polimi.ingsw.client.modelview.MatchSettings;
 import it.polimi.ingsw.client.modelview.PlayerView;
 import it.polimi.ingsw.client.ui.Ui;
 import it.polimi.ingsw.client.ui.cli.menus.MenuRunner;
+import it.polimi.ingsw.server.model.DevelopmentCard;
 import it.polimi.ingsw.server.model.Id;
 import it.polimi.ingsw.server.model.Resource;
 import it.polimi.ingsw.server.model.ResourceType;
@@ -58,22 +59,32 @@ public class CLI implements Ui {
         output.println(msg);
     }
 
-    public Pair<Id, Resource> getIdResourcePair(boolean isDepot, boolean special, int special_num){
+    public Pair<Id, Resource> getIdResourcePair(boolean strongbox, boolean special, int special_num){
         // TODO: add boolean if for devSlots
         String regex = "";
+        String desc = "";
         String[] choice;
 
         if (special) {
-            if (special_num == 1) regex = "[0-9]+[ ](stone|coin|servant|shield)[s]?( @ )([D][1-3]|[S][1])$";
-            if (special_num == 1) regex = "[0-9]+[ ](stone|coin|servant|shield)[s]?( @ )([D][1-3]|[S][1-2])$";
-        } else regex = "[0-9]+[ ](stone|coin|servant|shield)[s]?( @ )[D][1-3]$";
-
+            if (strongbox){
+                desc = "Format: <number> <resource type> @ <D or S or B><number>";
+                if (special_num == 1) regex = "[0-9]+[ ](stone|coin|servant|shield)[s]?( @ )([D][1-3]|[S][1]|[B][1-4])$";
+                if (special_num == 1) regex = "[0-9]+[ ](stone|coin|servant|shield)[s]?( @ )([D][1-3]|[S][1-2]|[B])$";
+            } else {
+                desc = "Format: <number> <resource type> @ <D or S><number>";
+                if (special_num == 1) regex = "[0-9]+[ ](stone|coin|servant|shield)[s]?( @ )([D][1-3]|[S][1])$";
+                if (special_num == 1) regex = "[0-9]+[ ](stone|coin|servant|shield)[s]?( @ )([D][1-3]|[S][1-2])$";
+            }
+        } else {
+            desc = "Format: <number> <resource type> @ <D><number>";
+            regex = "[0-9]+[ ](stone|coin|servant|shield)[s]?( @ )[D][1-3]$";
+        }
         do {
-            choice = getString(regex, "Format: <number> <resource type> @ <D or S><number>").split(" ", 4);
+            choice = getString(regex, desc).split(" ", 4);
 
         } while (Integer.parseInt(choice[0]) <= 0 );
 
-        return new Pair<>(parseId(choice[3]), parseResource(choice[0],choice[1]));
+        return new Pair<>(parseId(choice[3], parseResource(choice[0],choice[1])), parseResource(choice[0],choice[1]));
 
     }
 
@@ -95,7 +106,7 @@ public class CLI implements Ui {
         return new Resource(Integer.parseInt(number) , ResourceType.parseInput(type));
     }
 
-    private Id parseId(String id){
+    private Id parseId(String id, Resource type){
         if (id.charAt(0)=='D'){
             switch (id.charAt(1)){
                 case '1' -> { return Id.DEPOT_1; }
@@ -107,8 +118,31 @@ public class CLI implements Ui {
                 case '1' -> { return Id.S_DEPOT_1; }
                 case '2' -> { return Id.S_DEPOT_2; }
             }
+        }else if (id.charAt(0)=='B'){
+            switch (type.getResourceType()) {
+                case COIN -> { return Id.STRONGBOX_COIN; }
+                case SHIELD-> { return Id.STRONGBOX_SHIELD; }
+                case STONE -> {return  Id.STRONGBOX_STONE;}
+                case SERVANT -> {return Id.STRONGBOX_SERVANT;}
+            }
         }
         return null;
+    }
+
+    public int[] getDevelopmentRowCol(){
+        String[] choice;
+        do {
+            choice = getString("[1-3] (green|blue|purple|yellow)$", "Choose a card by level and colour (e.g. '1 green|purple|blue|yellow')").split(" ", 2);
+
+        } while (Integer.parseInt(choice[0]) > 3 || Integer.parseInt(choice[0]) < 1);
+        int type = 0;
+        switch (choice[1]){
+            case "green" -> type = 0;
+            case "blue" -> type = 1;
+            case "yellow" -> type = 2;
+            case "purple" -> type = 3;
+        }
+        return new int[]{Integer.parseInt(choice[0])-1,type};
     }
 
     public int getChoice(String[] options, boolean enableRefresh, boolean isMenu){

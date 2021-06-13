@@ -10,7 +10,7 @@ public enum ScreenName {
     CREATION("gameCreation.fxml", new String[]{"mainText.css", "standardBackground.css", "buttons.css"}),
     LOBBY("lobby.fxml", new String[]{"mainText.css", "standardBackground.css", "buttons.css", "list.css"}),
     STARTING_CHOICE("startingChoice.fxml", new String[]{"mainText.css", "standardBackground.css", "buttons.css", "gameTabs.css"}),
-    PERSONAL_BOARD("playerBoard.fxml", new String[]{"standardBackground.css", "board.css", "gameTabs.css"}),
+    PERSONAL_BOARD("personalBoardScreen.fxml", new String[]{"standardBackground.css", "gameTabs.css"}),
     MARKET("marketScreen.fxml", new String[]{"standardBackground.css", "gameTabs.css"});
 
     private String fxml;

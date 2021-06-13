@@ -6,6 +6,8 @@ import it.polimi.ingsw.client.modelview.MatchSettings;
 import it.polimi.ingsw.client.ui.gui.JFXControllers.ScreenName;
 import it.polimi.ingsw.server.controller.User;
 import it.polimi.ingsw.server.model.DevelopmentCard;
+import it.polimi.ingsw.server.model.Resource;
+import it.polimi.ingsw.server.model.ResourceType;
 import javafx.animation.*;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
@@ -110,5 +112,11 @@ public class GUIHelper {
 
     public void setCurrentScreen(ScreenName currentScreen) {
         this.currentScreen = currentScreen;
+    }
+
+    public Resource getResFromImage(Image image) {
+        String[] path = image.getUrl().split("/");
+        String[] name = path[path.length-1].split("\\.");
+        return new Resource(1, ResourceType.valueOf(name[0].toUpperCase()));
     }
 }

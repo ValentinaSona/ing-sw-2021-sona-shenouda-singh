@@ -90,14 +90,16 @@ public class DevelopmentCardMarketController{
                 //in this case i don't have to separate the two action as opposed to the production process of validation because i can buy only one card every turn
                 player.toggleMainAction();
                 slot.buyDevelopmentCard();
-
+                model.getDevelopmentCardsMarket().buyDevelopmentCard(slot.getRow(), slot.getCol());
 
 
                 //now i can remove the card from the market
                 model.notify(new ServerBuyDevelopmentCardMessage(
-                        model.getDevelopmentCardsMarket().buyDevelopmentCard(slot.getRow(), slot.getCol()),
+                        model.getDevelopmentCardsMarket().getVisible(),
+                        model.getCurrentPlayer().getVisibleSlots(),
                         model.getUserFromPlayer(player)
                 ));
+
                 int cards = 0;
                 for (DevelopmentCardSlot devSlot : player.getDevelopmentCardSlots()){
                     cards += devSlot.getSlot().size();

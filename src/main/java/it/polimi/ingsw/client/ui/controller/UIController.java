@@ -54,6 +54,8 @@ public class UIController implements LambdaObserver{
 
         MatchSettings.getInstance().setClientNickname(nickname);
         local = true;
+        MatchSettings.getInstance().setSolo(true);
+
         Runnable runnable = new Runnable() {
             @Override
             public void run() {
@@ -101,6 +103,10 @@ public class UIController implements LambdaObserver{
         localGame.start();
     }
 
+    /**
+     * Acts as wrapper around the send function so the methods invoke this whether game is local or remote.
+     * @param message the message being transmitted to the server/view.
+     */
     private void send(Transmittable message){
         if(local){
             view.updateFromClient(message);
@@ -108,6 +114,10 @@ public class UIController implements LambdaObserver{
             clientConnection.send(message);
         }
     }
+
+    /* ********************************************************************
+     * Methods invoked by the UIs to send various messages to the server. *
+     **********************************************************************/
 
     /**
      * Invoked by cli and gui after nickname selection to make first contact with server.
@@ -141,9 +151,14 @@ public class UIController implements LambdaObserver{
     public void setCreation(int playersNum) {
         send((Transmittable) new ClientSetPlayersCountMessage(playersNum));
         MatchSettings.getInstance().setTotalUsers(playersNum);
-
+        if (playersNum ==1) MatchSettings.getInstance().setSolo(true);
     }
-    // Metodo che viene chiamato dalla UI quando il giocatore ha scelto le 2 leader cards da tenere
+
+    /**
+     * Method called by UI after choosing the two leader cards and the resources from initial selection.
+     * @param idResourceMap Maps resources to deposits.
+     * @param chosen contains the two leader cards.
+     */
     public void chosenStartingResources(Map<Id, Resource> idResourceMap, LeaderCard[] chosen) {
         String nickname = MatchSettings.getInstance().getClientNickname();
         if(idResourceMap == null){
@@ -174,6 +189,12 @@ public class UIController implements LambdaObserver{
 
     public void activateSpecialAbility(Id id){ send((Transmittable) new ClientActivateSpecialAbilityMessage(id));}
 
-
     public void throwLeaderCard(Id id){ send((Transmittable) new ClientThrowLeaderCardMessage(id));}
+
+    public void selectDevelopmentCard(int row, int col, Id slot){send((Transmittable) new ClientSelectDevelopmentCardMessage(row, col,slot));}
+
+    public void depositResourcesIntoSlot(Id slot,  Map<Id, Resource> map){send((Transmittable) new ClientDepositResourceIntoSlotMessage(slot, map));}
+
+    public void buyTargetCard(Id id){send((Transmittable)new ClientBuyTargetCardMessage(id));}
+
 }
