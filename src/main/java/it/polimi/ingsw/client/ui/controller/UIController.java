@@ -152,7 +152,7 @@ public class UIController implements LambdaObserver{
     public void setCreation(int playersNum) {
         send((Transmittable) new ClientSetPlayersCountMessage(playersNum));
         MatchSettings.getInstance().setTotalUsers(playersNum);
-        MatchSettings.getInstance().setSolo(true);
+        if (playersNum ==1) MatchSettings.getInstance().setSolo(true);
     }
 
     /**
@@ -196,5 +196,6 @@ public class UIController implements LambdaObserver{
 
     public void depositResourcesIntoSlot(Id slot,  Map<Id, Resource> map){send((Transmittable) new ClientDepositResourceIntoSlotMessage(slot, map));}
 
+    public void buyTargetCard(Id id){send((Transmittable)new ClientBuyTargetCardMessage(id));}
 
 }

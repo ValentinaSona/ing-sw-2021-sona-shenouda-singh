@@ -75,13 +75,9 @@ public class DispatcherController implements Runnable, LambdaObserver {
     }
 
 
-    //TODO
-    public void handleDepositIntoSlot(ServerDepositIntoSlotMessage message){}
 
     //TODO
     public void handleChooseWhiteMarbles(ServerChooseWhiteMarblesMessage message){}
-    //TODO
-    public void handleBuyDevelopmentCard(ServerBuyDevelopmentCardMessage message){}
 
     //TODO
     public void handleActivateProduction(ServerActivateProductionMessage message){}
@@ -248,6 +244,32 @@ public class DispatcherController implements Runnable, LambdaObserver {
 
         }else {
             CLIMessageHandler.getInstance().handleServerDepositActionMessage(message);
+        }
+    }
+
+
+    public void handleDepositIntoSlot(ServerDepositIntoSlotMessage message){
+
+        GameView.getInstance().getPlayerFromUser(message.getUser()).setStrongboxView(message.getStrongBoxView());
+        GameView.getInstance().getPlayerFromUser(message.getUser()).setWarehouse(message.getWarehouseView());
+        GameView.getInstance().getPlayerFromUser(message.getUser()).setSlots(message.getSlotViews());
+
+        if(gui){
+
+        }else {
+            CLIMessageHandler.getInstance().handleServerDepositIntoSlotMessage(message);
+        }
+    }
+
+    public void handleBuyDevelopmentCard(ServerBuyDevelopmentCardMessage message){
+        GameView.getInstance().setDevelopmentCardsMarket(message.getView());
+        GameView.getInstance().getPlayerFromUser(message.getUser()).setSlots(message.getSlots());
+        GameView.getInstance().getCurrentPlayer().setMainAction(false);
+
+        if(gui){
+
+        }else {
+            CLIMessageHandler.getInstance().handleServerBuyDevelopmentCardMessage(message);
         }
     }
 

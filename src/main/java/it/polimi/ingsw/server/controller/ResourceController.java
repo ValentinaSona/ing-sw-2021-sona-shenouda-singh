@@ -306,12 +306,13 @@ public class ResourceController{
                 model.notify(new ServerDepositActionMessage(
                         player.getTempResources(),
                         player.getVisibleWarehouse(),
+                        action.getResource(),
                         model.getUserFromPlayer(player)
                 ));
 
 
             } catch (InvalidDepotException invalidDepotException) {
-                view.handleStatusMessage(StatusMessage.CLIENT_ERROR);
+                view.handleStatusMessage(StatusMessage.REQUIREMENTS_ERROR);
             }
         }
     }
@@ -353,6 +354,7 @@ public class ResourceController{
                 }else if(slot instanceof SpecialProduction){
                     ((SpecialProduction)slot).chooseJolly(action.getJollyType());
                 }
+
                 //if no exception is thrown this production or card is ready to be activated or bought
                 model.notify(new ServerDepositIntoSlotMessage(
                         player.getVisibleWarehouse(),

@@ -132,9 +132,9 @@ public class CLI implements Ui {
     public int[] getDevelopmentRowCol(){
         String[] choice;
         do {
-            choice = getString("[1-3] (green|blue|purple|yellow)$", "[ ] Choose a card by level and colour (e.g. '1 green|purple|blue|yellow')").split(" ", 2);
+            choice = getString("[1-3] (green|blue|purple|yellow)$", "Choose a card by level and colour (e.g. '1 green|purple|blue|yellow')").split(" ", 2);
 
-        } while (Integer.parseInt(choice[0]) <= 3 || Integer.parseInt(choice[0]) >= 1);
+        } while (Integer.parseInt(choice[0]) > 3 || Integer.parseInt(choice[0]) < 1);
         int type = 0;
         switch (choice[1]){
             case "green" -> type = 0;
@@ -142,7 +142,7 @@ public class CLI implements Ui {
             case "yellow" -> type = 2;
             case "purple" -> type = 3;
         }
-        return new int[]{Integer.parseInt(choice[0]),type};
+        return new int[]{Integer.parseInt(choice[0])-1,type};
     }
 
     public int getChoice(String[] options, boolean enableRefresh, boolean isMenu){

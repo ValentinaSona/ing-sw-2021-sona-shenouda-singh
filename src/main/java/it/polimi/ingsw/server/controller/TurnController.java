@@ -129,6 +129,7 @@ public class TurnController{
             model.setGameState(GameState.PLAY);
             startingPlayer.toggleTurn();
             startingPlayer.toggleMainAction();
+            model.setCurrentPlayer(startingPlayer);
             model.notify(new ServerStartTurnMessage(
                     model.getUserFromPlayer(startingPlayer),
                     model.getUserFromPlayer(endingPlayer)
