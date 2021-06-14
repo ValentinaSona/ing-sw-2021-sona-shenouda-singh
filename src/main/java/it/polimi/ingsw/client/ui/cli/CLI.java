@@ -145,7 +145,7 @@ public class CLI implements Ui {
         return new int[]{Integer.parseInt(choice[0])-1,type};
     }
 
-    public int getChoice(String[] options, boolean enableRefresh, boolean isMenu){
+    public int getChoice(String[] options, boolean enableRefresh, boolean isMenu, boolean interruptible){
         int optNum = 1;
         int choice;
         output.println("[ ] Choose an option:");
@@ -156,9 +156,10 @@ public class CLI implements Ui {
             optNum++;
         }
         boolean refreshed = false;
+        // Getting blocked because it tries system.inavailable while a thread is still running.
         while(true) {
             try {
-                if ((!enableRefresh || refreshed ) && System.in.available()!=0) {
+                if ((((!enableRefresh || refreshed ) && System.in.available()!=0)) || !interruptible) {
                     // Normal program execution. Enters here only if hasNextInt() won't be blocking.
                     if (input.hasNextInt()) {
                         choice = input.nextInt();
@@ -214,8 +215,13 @@ public class CLI implements Ui {
     }
 
     public int getChoice(String[] options){
-        return getChoice(options, false, false);
+        return getChoice(options, false, false, false);
     }
+
+    public int getChoice(String[] options, boolean enableRefresh, boolean isMenu){
+        return getChoice(options, enableRefresh, isMenu, true);
+    }
+
 
     public String getString(String regex, String desc){
 
