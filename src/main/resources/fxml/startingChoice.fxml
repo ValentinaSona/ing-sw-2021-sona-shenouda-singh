@@ -18,9 +18,9 @@
     <right>
         <StackPane minWidth="150.0" prefHeight="1080.0" prefWidth="420.0" BorderPane.alignment="CENTER">
             <children>
-                <VBox alignment="TOP_RIGHT" prefHeight="200.0" prefWidth="100.0" spacing="20.0">
+                <VBox alignment="TOP_RIGHT" maxHeight="350.0" prefHeight="200.0" prefWidth="100.0" spacing="20.0" StackPane.alignment="BOTTOM_RIGHT">
                     <StackPane.margin>
-                        <Insets top="800.0" />
+                        <Insets />
                     </StackPane.margin>
                     <children>
                         <Button fx:id="marketButton" mnemonicParsing="false" onAction="#showMarket" prefHeight="68.0" prefWidth="380.0" styleClass="gameTab" text="Resource market" />

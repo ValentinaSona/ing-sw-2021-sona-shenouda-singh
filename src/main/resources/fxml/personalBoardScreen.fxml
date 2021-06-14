@@ -15,18 +15,7 @@
 
 <BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="768.0" minWidth="1366.0" prefHeight="1080.0" prefWidth="1920.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.client.ui.gui.JFXControllers.BoardGUIController">
     <right>
-        <StackPane fx:id="leftPane" prefHeight="1080.0" prefWidth="420.0" BorderPane.alignment="CENTER">
-         <children>
-            <VBox alignment="TOP_RIGHT" prefHeight="200.0" prefWidth="100.0" spacing="20.0" StackPane.alignment="TOP_RIGHT">
-               <StackPane.margin>
-                  <Insets top="800.0" />
-               </StackPane.margin>
-               <children>
-                  <Button fx:id="marketButton" mnemonicParsing="false" onAction="#goToMarket" prefHeight="68.0" prefWidth="380.0" styleClass="gameTab" text="Resource market" />
-                  <Button fx:id="devButton" mnemonicParsing="false" prefWidth="380.0" styleClass="gameTab" text="Development market" />
-               </children>
-            </VBox>
-         </children></StackPane>
+        <StackPane fx:id="rightPane" prefHeight="1080.0" prefWidth="420.0" BorderPane.alignment="CENTER" />
     </right>
    <center>
       <StackPane minWidth="1280.0" prefHeight="1080.0" prefWidth="1495.0" BorderPane.alignment="CENTER">
@@ -39,19 +28,19 @@
                   <Insets left="30.0" top="115.0" />
                </StackPane.margin>
             </ImageView>
-            <HBox maxHeight="120.0" maxWidth="1300.0" prefHeight="100.0" prefWidth="200.0" spacing="15.0" StackPane.alignment="TOP_LEFT">
+            <HBox maxHeight="90.0" maxWidth="1300.0" prefHeight="100.0" prefWidth="200.0" spacing="15.0" StackPane.alignment="TOP_LEFT">
                <StackPane.margin>
-                  <Insets left="30.0" top="15.0" />
+                  <Insets left="30.0" top="30.0" />
                </StackPane.margin>
                <children>
                   <Button mnemonicParsing="false" prefHeight="127.0" prefWidth="150.0" styleClass="basicButton" text="Menu">
                      <HBox.margin>
                         <Insets right="55.0" />
                      </HBox.margin></Button>
-                  <TextFlow prefHeight="120.0" prefWidth="404.0" styleClass="textLog" />
+                  <TextFlow fx:id="log" prefHeight="120.0" prefWidth="404.0" styleClass="textLog" />
                   <Button alignment="CENTER" mnemonicParsing="false" prefHeight="120.0" prefWidth="170.0" styleClass="darkButton" text="Leader&#10;Cards" textAlignment="CENTER" />
-                  <Button alignment="CENTER" mnemonicParsing="false" prefHeight="120.0" prefWidth="240.0" styleClass="darkButton" text="Activate&#10;Production" textAlignment="CENTER" />
-                  <Button fx:id="end" alignment="CENTER" mnemonicParsing="false" nodeOrientation="LEFT_TO_RIGHT" prefHeight="120.0" prefWidth="170.0" styleClass="darkButton" text="End&#10;Turn" textAlignment="CENTER" />
+                  <Button alignment="CENTER" disable="true" mnemonicParsing="false" prefHeight="120.0" prefWidth="240.0" styleClass="darkButton" text="Activate&#10;Production" textAlignment="CENTER" />
+                  <Button fx:id="end" alignment="CENTER" disable="true" mnemonicParsing="false" nodeOrientation="LEFT_TO_RIGHT" prefHeight="120.0" prefWidth="170.0" styleClass="darkButton" text="End&#10;Turn" textAlignment="CENTER" />
                </children>
             </HBox>
             <GridPane fx:id="faithGrid" maxHeight="185.0" maxWidth="1165.0" StackPane.alignment="CENTER_LEFT">

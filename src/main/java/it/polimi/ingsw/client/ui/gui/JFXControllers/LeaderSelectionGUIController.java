@@ -194,7 +194,7 @@ public class LeaderSelectionGUIController extends AbstractGUIController implemen
 
     }
 
-    //TODO cosa dovrebbe fare questo?
+    //TODO
     @Override
     public void handleStatusMessage(StatusMessage message) {
 
@@ -441,8 +441,8 @@ public class LeaderSelectionGUIController extends AbstractGUIController implemen
         }
     }
 
-    public void handleStartTurn() {
-        change(ScreenName.PERSONAL_BOARD);
+    public void goToGame() {
+        Platform.runLater(() -> change(ScreenName.PERSONAL_BOARD));
     }
 
     private void setSize() {

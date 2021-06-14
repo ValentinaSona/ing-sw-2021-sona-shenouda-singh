@@ -3,6 +3,7 @@ package it.polimi.ingsw.client.ui.gui.JFXControllers;
 import it.polimi.ingsw.client.ui.controller.DispatcherController;
 import it.polimi.ingsw.client.ui.controller.UiControllerInterface;
 import it.polimi.ingsw.client.ui.gui.GUIHelper;
+import it.polimi.ingsw.client.ui.gui.GUIMessageHandler;
 import javafx.animation.*;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
@@ -20,7 +21,7 @@ import java.sql.Time;
 public abstract class AbstractGUIController implements UiControllerInterface {
 
     public AbstractGUIController(){
-        DispatcherController.getInstance().setCurrentController(this);
+        GUIMessageHandler.getInstance().setCurrentController(this);
     }
 
     public void change (ScreenName screen) {

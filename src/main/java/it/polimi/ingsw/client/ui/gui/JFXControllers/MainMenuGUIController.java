@@ -79,7 +79,7 @@ public class MainMenuGUIController extends AbstractGUIController {
                 try {
                     UIController.getInstance().sendNickname(nicknameField.getText(),"127.0.0.1", 10002);
                 } catch (IOException e) {
-                    //fallita l'istanziazione della socket porta o url invalidi
+                    chooseNick.setText("Failed to connect...");
                     e.printStackTrace();
                 }
             }
@@ -87,35 +87,29 @@ public class MainMenuGUIController extends AbstractGUIController {
     }
 
     public void handleNicknameConfirmation(boolean success){
-        Platform.runLater(() -> {
-            System.out.println("ho ricevuto il messagio");
-            if(!success) {
-                // TODO mostrare messaggio di errore
-                joining.setOpacity(0);
-                chooseNick.setOpacity(1);
-                joinButton.setOpacity(1);
-                joinButton.setDisable(false);
-                nicknameField.setEditable(true);
-            }
-            else {
-                String nickname = nicknameField.getText();
-                MatchSettings.getInstance().setClientNickname(nicknameField.getText());
-                if(nickname.equals("a nickname") || nickname.equals("a Nickname") ||
-                        nickname.equals("Nickname") || nickname.equals("nickname"))
-                    party.setOpacity(1);
-                UIController.getInstance().joinLobby();
+        System.out.println("ho ricevuto il messagio");
+        if(!success) {
+            // TODO mostrare messaggio di errore
+            joining.setOpacity(0);
+            chooseNick.setOpacity(1);
+            joinButton.setOpacity(1);
+            joinButton.setDisable(false);
+            nicknameField.setEditable(true);
+        }
+        else {
+            String nickname = nicknameField.getText();
+            MatchSettings.getInstance().setClientNickname(nicknameField.getText());
+            UIController.getInstance().joinLobby();
 
-            }
-        });
+        }
+
     }
 
     public void handleJoinLobbyConfirmation(boolean isFirst){
-        Platform.runLater(() -> {
-            if (isFirst) {
-                setGameCreation();}
-            else
-                setJoiningGame();
-        });
+        if (isFirst) {
+            setGameCreation();}
+        else
+            setJoiningGame();
     }
 
     public void setGameCreation() {
@@ -163,7 +157,6 @@ public class MainMenuGUIController extends AbstractGUIController {
     }
 
     public void handleStatusMessage(StatusMessage message) {
-
         Platform.runLater(() -> {
             if(message.equals(StatusMessage.OK_NICK)){
                 //posso validare il nickname

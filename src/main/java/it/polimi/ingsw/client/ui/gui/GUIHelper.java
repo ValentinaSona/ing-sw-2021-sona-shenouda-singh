@@ -4,6 +4,8 @@ import it.polimi.ingsw.client.modelview.GameView;
 import it.polimi.ingsw.client.modelview.MarketView;
 import it.polimi.ingsw.client.modelview.MatchSettings;
 import it.polimi.ingsw.client.modelview.PlayerView;
+import it.polimi.ingsw.client.ui.controller.UiControllerInterface;
+import it.polimi.ingsw.client.ui.gui.JFXControllers.GameGUIControllerInterface;
 import it.polimi.ingsw.client.ui.gui.JFXControllers.ScreenName;
 import it.polimi.ingsw.server.controller.User;
 import it.polimi.ingsw.server.model.DevelopmentCard;
@@ -35,6 +37,8 @@ public class GUIHelper {
     private int clientIndex;
     private ScreenName currentScreen;
     private PlayerView clientView;
+    private UiControllerInterface currentController;
+    private GameGUIControllerInterface currentGameController;
 
     private static GUIHelper singleton;
 
@@ -43,6 +47,18 @@ public class GUIHelper {
     public static GUIHelper getInstance() {
         if (singleton == null) singleton = new GUIHelper();
         return singleton;
+    }
+
+    public void setCurrentController(UiControllerInterface currentController) {
+        this.currentController = currentController;
+    }
+
+    public void setCurrentGameController(GameGUIControllerInterface controller) {
+        currentGameController = controller;
+    }
+
+    public GameGUIControllerInterface getCurrentGameController() {
+        return currentGameController;
     }
 
     public void setCurrentScene(Scene currentScene) {

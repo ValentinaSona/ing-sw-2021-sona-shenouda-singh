@@ -1,27 +1,21 @@
 package it.polimi.ingsw.client.ui.gui.JFXControllers;
 
 import it.polimi.ingsw.client.modelview.DepotView;
-import it.polimi.ingsw.client.modelview.MatchSettings;
-import it.polimi.ingsw.client.ui.controller.MainGameController;
 import it.polimi.ingsw.client.ui.gui.GUIHelper;
+import it.polimi.ingsw.client.ui.gui.GameLog;
 import it.polimi.ingsw.server.model.ResourceType;
 import it.polimi.ingsw.utils.networking.transmittables.StatusMessage;
-import javafx.beans.binding.Bindings;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.Node;
-import javafx.scene.control.Button;
-import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.text.TextFlow;
 
-import java.util.List;
-
-public class BoardGUIController extends AbstractGUIController implements MainGameController {
+public class BoardGUIController extends AbstractGUIController implements GameGUIControllerInterface {
 
     @FXML
     private ImageView strongBoxHover;
@@ -32,11 +26,19 @@ public class BoardGUIController extends AbstractGUIController implements MainGam
     @FXML
     private VBox depotBox;
     @FXML
-    private StackPane leftPane;
+    private StackPane rightPane;
+    @FXML
+    private TextFlow log;
 
     @FXML
     public void initialize() {
-        leftPane.getChildren().add(GameTemplate.getInstance().getTabs(ScreenName.PERSONAL_BOARD));
+
+        GUIHelper.getInstance().setCurrentGameController(this);
+        //GameLog.getInstance().update(log);
+
+        GameTemplate.getInstance().setTabs(ScreenName.PERSONAL_BOARD);
+        rightPane.getChildren().add(GameTemplate.getInstance().getPlayersTabs());
+        rightPane.getChildren().add(GameTemplate.getInstance().getMarketsTabs());
         updateFaithTrack();
         updateDepot();
     }
@@ -94,5 +96,18 @@ public class BoardGUIController extends AbstractGUIController implements MainGam
 
     public void strBoxHighlightExit(MouseEvent mouseEvent) {
         strongBoxHover.setOpacity(0);
+    }
+
+    @Override
+    public void goToMarket() {
+        change(ScreenName.MARKET);
+    }
+
+    @Override
+    public void goToClientBoard() { }
+
+    @Override
+    public void goToDev() {
+        change(ScreenName.DEV_MARKET);
     }
 }
