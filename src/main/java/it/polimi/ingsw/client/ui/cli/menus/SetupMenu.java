@@ -122,8 +122,8 @@ public class SetupMenu {
             // Only two cases: the player chooses max 2 resources.
             if (maxResources == 2)
                 resIdMap.put(Id.DEPOT_2, resource);
-            else if (resource.getResourceType()== resIdMap.get(Id.DEPOT_1).getResourceType())
-                resIdMap.get(Id.DEPOT_1).add(resource);
+            else if (resIdMap.get(Id.DEPOT_2)!= null && resource.getResourceType()== resIdMap.get(Id.DEPOT_2).getResourceType())
+                resIdMap.get(Id.DEPOT_2).add(resource);
             else
                 resIdMap.put(Id.DEPOT_3, resource);
 

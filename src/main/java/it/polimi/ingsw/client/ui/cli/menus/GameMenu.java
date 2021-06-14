@@ -64,6 +64,9 @@ public class GameMenu {
             }
             case 3 -> {
                 runner.printDepots();
+                runner.printStrongbox();
+                //TODO change with prodslots.
+                runner.printSlots();
                 runner.printPlayedLeaders();
                 gameMenu(false);
             }
@@ -146,6 +149,7 @@ public class GameMenu {
                     .map(String::valueOf)
                     .collect(Collectors.joining(" , ", "", ""));
             cli.printMessage("["+CHECK_MARK+"] Selected card: \n"+ card.toString());
+            //TODO: new arrat list of depots + strbx temp change methods?
             runner.printDepots();
             runner.printStrongbox();
             cli.printMessage("[ ] Cost left to pay: " + costPrint);
