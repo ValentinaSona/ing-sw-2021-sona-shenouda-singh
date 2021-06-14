@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.shape.Rectangle?>
+<?import javafx.scene.shape.SVGPath?>
+<?import javafx.scene.text.TextFlow?>
+
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="768.0" minWidth="1366.0" prefHeight="1080.0" prefWidth="1920.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.client.ui.gui.JFXControllers.MarketGUIController">
+    <right>
+        <StackPane fx:id="leftPane" prefHeight="1080.0" prefWidth="420.0" BorderPane.alignment="CENTER">
+            <children>
+                <VBox alignment="TOP_RIGHT" prefHeight="200.0" prefWidth="100.0" spacing="20.0">
+                    <StackPane.margin>
+                        <Insets top="800.0" />
+                    </StackPane.margin>
+                    <children>
+                        <Button fx:id="marketButton" mnemonicParsing="false" prefHeight="68.0" prefWidth="420.0" styleClass="gameTab" text="Resource market" />
+                        <Button fx:id="devButton" mnemonicParsing="false" prefWidth="380.0" styleClass="gameTab" text="Development market" />
+                    </children>
+                </VBox>
+            </children></StackPane>
+    </right>
+    <center>
+        <StackPane minWidth="1280.0" prefHeight="1080.0" prefWidth="1495.0" BorderPane.alignment="CENTER">
+            <children>
+            <Rectangle fx:id="marketTray" arcHeight="40.0" arcWidth="40.0" fill="#000000bf" height="600.0" stroke="TRANSPARENT" strokeType="INSIDE" width="600.0">
+               <StackPane.margin>
+                  <Insets right="200.0" />
+               </StackPane.margin>
+            </Rectangle>
+                <HBox maxHeight="120.0" maxWidth="1300.0" prefHeight="100.0" prefWidth="200.0" spacing="15.0" StackPane.alignment="TOP_LEFT">
+                    <StackPane.margin>
+                        <Insets left="30.0" top="15.0" />
+                    </StackPane.margin>
+                    <children>
+                        <Button mnemonicParsing="false" prefHeight="127.0" prefWidth="150.0" styleClass="basicButton" text="Menu">
+                            <HBox.margin>
+                                <Insets right="55.0" />
+                            </HBox.margin></Button>
+                        <TextFlow prefHeight="120.0" prefWidth="404.0" styleClass="textLog" />
+                        <Button alignment="CENTER" mnemonicParsing="false" prefHeight="120.0" prefWidth="170.0" styleClass="darkButton" text="Leader&#10;Cards" textAlignment="CENTER" />
+                        <Button alignment="CENTER" mnemonicParsing="false" prefHeight="120.0" prefWidth="240.0" styleClass="darkButton" text="Activate&#10;Production" textAlignment="CENTER" />
+                        <Button fx:id="end" alignment="CENTER" mnemonicParsing="false" nodeOrientation="LEFT_TO_RIGHT" prefHeight="120.0" prefWidth="170.0" styleClass="darkButton" text="End&#10;Turn" textAlignment="CENTER" />
+                    </children>
+                </HBox>
+            <GridPane fx:id="marketGrid" alignment="CENTER" maxHeight="440.0" maxWidth="530.0" prefHeight="486.0" prefWidth="550.0">
+               <columnConstraints>
+                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+               </columnConstraints>
+               <rowConstraints>
+                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+               </rowConstraints>
+               <StackPane.margin>
+                  <Insets bottom="100.0" right="200.0" />
+               </StackPane.margin>
+            </GridPane>
+            <HBox alignment="CENTER_LEFT" maxHeight="100.0" maxWidth="500.0" prefHeight="100.0" prefWidth="200.0" spacing="65.0">
+               <StackPane.margin>
+                  <Insets right="160.0" top="450.0" />
+               </StackPane.margin>
+               <children>
+                  <SVGPath fx:id="ar3" content="M20,0,40,20,30,20,30,45,10,45,10,20,0,20" fill="#f58a42" />
+                  <SVGPath fx:id="ar4" content="M20,0,40,20,30,20,30,45,10,45,10,20,0,20" fill="#f58a42" />
+                  <SVGPath fx:id="ar5" content="M20,0,40,20,30,20,30,45,10,45,10,20,0,20" fill="#f58a42" />
+                  <SVGPath fx:id="ar6" content="M20,0,40,20,30,20,30,45,10,45,10,20,0,20" fill="#f58a42" />
+               </children>
+            </HBox>
+            <VBox alignment="TOP_CENTER" maxHeight="275.0" maxWidth="100.0" prefHeight="200.0" prefWidth="100.0" spacing="65.0">
+               <StackPane.margin>
+                  <Insets left="230.0" top="30.0" />
+               </StackPane.margin>
+               <children>
+                  <SVGPath fx:id="ar0" content="M0,20,20,0,20,10,45,10,45,30,20,30,20,40" fill="#f58a42" />
+                  <SVGPath fx:id="ar1" content="M0,20,20,0,20,10,45,10,45,30,20,30,20,40" fill="#f58a42" />
+                  <SVGPath fx:id="ar2" content="M0,20,20,0,20,10,45,10,45,30,20,30,20,40" fill="#f58a42" />
+               </children>
+            </VBox>
+            <HBox fx:id="recHbox" alignment="CENTER_LEFT" maxHeight="529.0" maxWidth="500.0" prefHeight="517.0" prefWidth="500.0" spacing="14.0">
+               <StackPane.margin>
+                  <Insets left="12.0" right="220.0" top="105.0" />
+               </StackPane.margin>
+               <children>
+                  <Rectangle fx:id="rc3" arcHeight="5.0" arcWidth="5.0" fill="#1f93ff00" height="420.0" onMouseEntered="#marbleEnter" onMouseExited="#marbleExit" opacity="0.0" stroke="#f58a42" strokeType="INSIDE" strokeWidth="7.0" width="90.0" />
+                  <Rectangle fx:id="rc4" arcHeight="5.0" arcWidth="5.0" fill="#1f93ff00" height="420.0" onMouseEntered="#marbleEnter" onMouseExited="#marbleExit" opacity="0.0" stroke="#f58a42" strokeType="INSIDE" strokeWidth="7.0" width="90.0" />
+                  <Rectangle fx:id="rc5" arcHeight="5.0" arcWidth="5.0" fill="#1f93ff00" height="420.0" onMouseEntered="#marbleEnter" onMouseExited="#marbleExit" opacity="0.0" stroke="#f58a42" strokeType="INSIDE" strokeWidth="7.0" width="90.0" />
+                  <Rectangle fx:id="rc6" arcHeight="5.0" arcWidth="5.0" fill="#1f93ff00" height="420.0" onMouseEntered="#marbleEnter" onMouseExited="#marbleExit" opacity="0.0" stroke="#f58a42" strokeType="INSIDE" strokeWidth="7.0" width="90.0" />
+               </children>
+            </HBox>
+            <VBox fx:id="recVbox" alignment="TOP_CENTER" maxHeight="332.0" maxWidth="500.0" prefHeight="316.0" prefWidth="500.0" spacing="15.0">
+               <StackPane.margin>
+                  <Insets right="210.0" top="40.0" />
+               </StackPane.margin>
+               <children>
+                  <Rectangle fx:id="rc0" arcHeight="5.0" arcWidth="5.0" fill="#1f497000" height="90.0" onMouseEntered="#marbleEnter" onMouseExited="#marbleExit" opacity="0.0" stroke="#f58a42" strokeType="INSIDE" strokeWidth="7.0" width="515.0" />
+                  <Rectangle fx:id="rc1" arcHeight="5.0" arcWidth="5.0" fill="#1f497000" height="90.0" onMouseEntered="#marbleEnter" onMouseExited="#marbleExit" opacity="0.0" stroke="#f58a42" strokeType="INSIDE" strokeWidth="7.0" width="515.0" />
+                  <Rectangle fx:id="rc2" arcHeight="5.0" arcWidth="5.0" fill="#1f497000" height="90.0" onMouseEntered="#marbleEnter" onMouseExited="#marbleExit" opacity="0.0" stroke="#f58a42" strokeType="INSIDE" strokeWidth="7.0" width="515.0" />
+               </children>
+            </VBox>
+            </children>
+        </StackPane>
+    </center>
+</BorderPane>

@@ -5,44 +5,102 @@
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.TextFlow?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="1080.0" minWidth="1920.0" prefHeight="1080.0" prefWidth="1920.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.client.ui.gui.JFXControllers.MainGameGUIController">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="768.0" minWidth="1366.0" prefHeight="1080.0" prefWidth="1920.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.client.ui.gui.JFXControllers.BoardGUIController">
     <right>
-        <StackPane minWidth="150.0" prefHeight="1080.0" prefWidth="420.0" BorderPane.alignment="CENTER">
+        <StackPane fx:id="leftPane" prefHeight="1080.0" prefWidth="420.0" BorderPane.alignment="CENTER">
          <children>
-            <VBox alignment="TOP_RIGHT" prefHeight="1000.0" prefWidth="410.0" spacing="20.0">
-               <children>
-                  <Button maxWidth="420.0" mnemonicParsing="false" styleClass="gameTab" text="Your board" />
-                  <Button maxWidth="380.0" mnemonicParsing="false" styleClass="gameTab" text="Player 1" />
-                  <Button maxWidth="380.0" mnemonicParsing="false" styleClass="gameTab" text="Player 2" />
-                  <Button maxWidth="380.0" mnemonicParsing="false" styleClass="gameTab" text="Player 3" />
-               </children>
-               <StackPane.margin>
-                  <Insets top="80.0" />
-               </StackPane.margin>
-            </VBox>
-            <VBox alignment="TOP_RIGHT" prefHeight="200.0" prefWidth="100.0" spacing="20.0">
+            <VBox alignment="TOP_RIGHT" prefHeight="200.0" prefWidth="100.0" spacing="20.0" StackPane.alignment="TOP_RIGHT">
                <StackPane.margin>
                   <Insets top="800.0" />
                </StackPane.margin>
                <children>
-                  <Button fx:id="marketButton" mnemonicParsing="false" prefHeight="68.0" prefWidth="380.0" styleClass="gameTab" text="Resource market" />
+                  <Button fx:id="marketButton" mnemonicParsing="false" onAction="#goToMarket" prefHeight="68.0" prefWidth="380.0" styleClass="gameTab" text="Resource market" />
                   <Button fx:id="devButton" mnemonicParsing="false" prefWidth="380.0" styleClass="gameTab" text="Development market" />
                </children>
             </VBox>
          </children></StackPane>
     </right>
    <center>
-      <StackPane prefHeight="1080.0" prefWidth="1405.0" BorderPane.alignment="CENTER">
+      <StackPane minWidth="1280.0" prefHeight="1080.0" prefWidth="1495.0" BorderPane.alignment="CENTER">
          <children>
-            <ImageView fitHeight="919.0" fitWidth="1417.0" pickOnBounds="true" preserveRatio="true" StackPane.alignment="CENTER_LEFT">
+            <ImageView fitHeight="898.0" fitWidth="1249.0" pickOnBounds="true" preserveRatio="true" StackPane.alignment="CENTER_LEFT">
                <image>
                   <Image url="@../assets/game/board.png" />
                </image>
                <StackPane.margin>
-                  <Insets left="50.0" />
+                  <Insets left="30.0" top="115.0" />
+               </StackPane.margin>
+            </ImageView>
+            <HBox maxHeight="120.0" maxWidth="1300.0" prefHeight="100.0" prefWidth="200.0" spacing="15.0" StackPane.alignment="TOP_LEFT">
+               <StackPane.margin>
+                  <Insets left="30.0" top="15.0" />
+               </StackPane.margin>
+               <children>
+                  <Button mnemonicParsing="false" prefHeight="127.0" prefWidth="150.0" styleClass="basicButton" text="Menu">
+                     <HBox.margin>
+                        <Insets right="55.0" />
+                     </HBox.margin></Button>
+                  <TextFlow prefHeight="120.0" prefWidth="404.0" styleClass="textLog" />
+                  <Button alignment="CENTER" mnemonicParsing="false" prefHeight="120.0" prefWidth="170.0" styleClass="darkButton" text="Leader&#10;Cards" textAlignment="CENTER" />
+                  <Button alignment="CENTER" mnemonicParsing="false" prefHeight="120.0" prefWidth="240.0" styleClass="darkButton" text="Activate&#10;Production" textAlignment="CENTER" />
+                  <Button fx:id="end" alignment="CENTER" mnemonicParsing="false" nodeOrientation="LEFT_TO_RIGHT" prefHeight="120.0" prefWidth="170.0" styleClass="darkButton" text="End&#10;Turn" textAlignment="CENTER" />
+               </children>
+            </HBox>
+            <GridPane fx:id="faithGrid" maxHeight="185.0" maxWidth="1165.0" StackPane.alignment="CENTER_LEFT">
+              <columnConstraints>
+                <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+              </columnConstraints>
+              <rowConstraints>
+                <RowConstraints minHeight="10.0" prefHeight="30.0" valignment="CENTER" vgrow="SOMETIMES" />
+                <RowConstraints minHeight="10.0" prefHeight="30.0" valignment="CENTER" vgrow="SOMETIMES" />
+                <RowConstraints minHeight="10.0" prefHeight="30.0" valignment="CENTER" vgrow="SOMETIMES" />
+              </rowConstraints>
+               <StackPane.margin>
+                  <Insets bottom="500.0" left="75.0" />
+               </StackPane.margin>
+            </GridPane>
+            <VBox fx:id="depotBox" maxHeight="240.0" maxWidth="200.0" prefHeight="200.0" prefWidth="100.0" StackPane.alignment="CENTER_LEFT">
+               <StackPane.margin>
+                  <Insets left="90.0" top="180.0" />
+               </StackPane.margin>
+               <children>
+                  <HBox fx:id="depot1" alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="10.0" />
+                  <HBox fx:id="depot2" alignment="CENTER" prefHeight="100.0" prefWidth="200.0" />
+                  <HBox fx:id="depot3" alignment="CENTER" prefHeight="100.0" prefWidth="200.0" />
+               </children>
+            </VBox>
+            <ImageView fx:id="strongBoxHover" fitHeight="209.0" fitWidth="254.0" onMouseEntered="#strBoxHighlight" onMouseExited="#strBoxHighlightExit" opacity="0.0" pickOnBounds="true" preserveRatio="true" StackPane.alignment="CENTER_LEFT">
+               <image>
+                  <Image url="@../assets/game/focus_strongbox.png" />
+               </image>
+               <StackPane.margin>
+                  <Insets left="61.0" top="677.0" />
                </StackPane.margin>
             </ImageView>
          </children>

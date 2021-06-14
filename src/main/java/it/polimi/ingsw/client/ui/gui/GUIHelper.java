@@ -3,12 +3,16 @@ package it.polimi.ingsw.client.ui.gui;
 import it.polimi.ingsw.client.modelview.GameView;
 import it.polimi.ingsw.client.modelview.MarketView;
 import it.polimi.ingsw.client.modelview.MatchSettings;
+import it.polimi.ingsw.client.modelview.PlayerView;
 import it.polimi.ingsw.client.ui.gui.JFXControllers.ScreenName;
 import it.polimi.ingsw.server.controller.User;
 import it.polimi.ingsw.server.model.DevelopmentCard;
+import it.polimi.ingsw.server.model.MarketMarble;
 import it.polimi.ingsw.server.model.Resource;
 import it.polimi.ingsw.server.model.ResourceType;
 import javafx.animation.*;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -16,6 +20,9 @@ import javafx.scene.layout.*;
 import javafx.scene.transform.Rotate;
 import javafx.util.Duration;
 
+import java.io.File;
+import java.io.IOException;
+import java.net.URL;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -24,8 +31,10 @@ public class GUIHelper {
     private Background background;
     private Scene currentScene;
     private List<String> nickList;
-    int clientIndex;
-    ScreenName currentScreen;
+    private List<String> others;
+    private int clientIndex;
+    private ScreenName currentScreen;
+    private PlayerView clientView;
 
     private static GUIHelper singleton;
 
@@ -96,10 +105,15 @@ public class GUIHelper {
     public void buildNickList(List<User> users) {
         nickList = users.stream().map(User::getNickName).collect(Collectors.toList());
         clientIndex = nickList.indexOf(MatchSettings.getInstance().getClientNickname());
+        others = nickList.stream().filter(e -> !e.equals(MatchSettings.getInstance().getClientNickname())).collect(Collectors.toList());
     }
 
     public List<String> getNickList() {
         return nickList;
+    }
+
+    public List<String> getOthers() {
+        return others;
     }
 
     public int clientIndex() {
@@ -118,5 +132,41 @@ public class GUIHelper {
         String[] path = image.getUrl().split("/");
         String[] name = path[path.length-1].split("\\.");
         return new Resource(1, ResourceType.valueOf(name[0].toUpperCase()));
+    }
+
+    public void setClientView(PlayerView p) {
+        clientView = p;
+    }
+
+    public PlayerView getClientView() {
+        return clientView;
+    }
+
+    public Image getImage(ResourceType res, int x, int y) {
+        return new Image("assets/game/resources/" + res.toString().toLowerCase() + ".png", x, y, false, false);
+    }
+
+    public Image getImage(MarketMarble marble, int x, int y) {
+        return new Image("assets/game/marbles/" + marble.toString().toLowerCase() + ".png", x, y, false, false);
+    }
+
+    public void setScreen(ScreenName screen) {
+        Scene scene = GUIHelper.getInstance().getCurrentScene();
+
+        try {
+            URL url = new File("src/main/resources/fxml/" + screen.fxml()).toURI().toURL();
+            Parent root = FXMLLoader.load(url);
+            scene.setRoot(root);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        String[] stylesheets = screen.css();
+
+        for (String css : stylesheets) {
+            scene.getStylesheets().add("css/" + css);
+        }
+
+        GUIHelper.getInstance().setCurrentScreen(screen);
     }
 }
