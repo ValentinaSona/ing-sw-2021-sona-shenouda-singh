@@ -138,7 +138,7 @@ public class DispatcherController implements Runnable, LambdaObserver {
      * @param message contains resource number, 4 leader cards, a faith track and the addressed user.
      */
     public void handleSetupUser(ServerSetupUserMessage message){
-        GameView.getInstance().getPlayerFromUser(message.getUser()).setFaithTrackView(message.getFaithTrackView());
+       GameView.getInstance().getPlayerFromUser(message.getUser()).setFaithTrackView(message.getFaithTrackView());
 
         if(gui){
 

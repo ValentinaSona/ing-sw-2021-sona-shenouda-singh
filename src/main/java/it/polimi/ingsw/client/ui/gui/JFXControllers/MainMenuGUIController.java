@@ -63,20 +63,25 @@ public class MainMenuGUIController extends AbstractGUIController {
     public void goToJoin(ActionEvent actionEvent) {
         if (nicknameField.getText().isEmpty()) emptyNickname.setOpacity(1);
         else {
-            emptyNickname.setOpacity(0);
-            chooseNick.setOpacity(0);
-            nicknameField.setEditable(false);
-            backArrow.setDisable(true);
+            if (nicknameField.getText().length() > 20) {
+                chooseNick.setText("Nickname cannot be longer than 20 characters!");
+            }
+            else {
+                emptyNickname.setOpacity(0);
+                chooseNick.setOpacity(0);
+                nicknameField.setEditable(false);
+                backArrow.setDisable(true);
 
-            joining.setOpacity(1);
-            joinButton.setOpacity(0);
-            joinButton.setDisable(true);
+                joining.setOpacity(1);
+                joinButton.setOpacity(0);
+                joinButton.setDisable(true);
 
-            try {
-                UIController.getInstance().sendNickname(nicknameField.getText(),"127.0.0.1", 10002);
-            } catch (IOException e) {
-                //fallita l'istanziazione della socket porta o url invalidi
-                e.printStackTrace();
+                try {
+                    UIController.getInstance().sendNickname(nicknameField.getText(),"127.0.0.1", 10002);
+                } catch (IOException e) {
+                    //fallita l'istanziazione della socket porta o url invalidi
+                    e.printStackTrace();
+                }
             }
         }
     }

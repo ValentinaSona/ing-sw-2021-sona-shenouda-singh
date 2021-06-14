@@ -5,6 +5,7 @@ import it.polimi.ingsw.client.ui.controller.UiControllerInterface;
 import it.polimi.ingsw.client.ui.gui.GUIHelper;
 import javafx.animation.*;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.image.ImageView;
@@ -23,21 +24,11 @@ public abstract class AbstractGUIController implements UiControllerInterface {
     }
 
     public void change (ScreenName screen) {
+        GUIHelper.getInstance().setScreen(screen);
+    }
 
-        Scene scene = GUIHelper.getInstance().getCurrentScene();
-
-        try {
-            URL url = new File("src/main/resources/fxml/" + screen.fxml()).toURI().toURL();
-            Parent root = FXMLLoader.load(url);
-            scene.setRoot(root);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        String[] stylesheets = screen.css();
-
-        for (String css : stylesheets) {
-            scene.getStylesheets().add("css/" + css);
-        }
+    public void disableNode(Node node) {
+        node.setOpacity(0);
+        node.setDisable(true);
     }
 }

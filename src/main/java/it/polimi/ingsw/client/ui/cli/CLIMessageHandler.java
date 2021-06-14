@@ -58,7 +58,6 @@ public class CLIMessageHandler {
             case CLIENT_ERROR -> handleClientError();
 
             case REQUIREMENTS_ERROR -> handleRequirementsError();
-            case SELECTION_ERROR -> handleSelectionError();
 
             case CONTINUE -> handleContinue();
 
@@ -66,11 +65,6 @@ public class CLIMessageHandler {
         }
 
 
-    }
-
-    private void handleSelectionError() {
-        if (MenuRunner.getInstance().getContextAction()==GameActions.SELECT_CARD)
-            MenuRunner.getInstance().sendResponse(GameActions.SELECT_CARD,GameActions.MENU,"[X] This card cannot be placed onto this slot.");
     }
 
     private void handleContinue() {
@@ -140,18 +134,20 @@ public class CLIMessageHandler {
         } else {
             cli.printMessage("[ ] " + message.getUser().getNickName() + " is selecting their leader cards.");
         }
+
+
+
         MenuRunner.getInstance().setState(MenuStates.SETUP, message);
         synchronized (MenuRunner.getInstance()) {
             MenuRunner.getInstance().notifyAll();
         }
 
-
-        if ( message.getUser().getNickName().equals( MatchSettings.getInstance().getClientNickname() )) {
+      /*  if ( message.getUser().getNickName().equals( MatchSettings.getInstance().getClientNickname() )) {
             synchronized (CLIMessageHandler.getInstance()) {
                 cli.setInterrupted(true);
                 CLIMessageHandler.getInstance().notifyAll();
             }
-        }
+        }*/
     }
 
     public void handleServerSetupActionMessage(ServerSetupActionMessage message){
