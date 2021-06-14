@@ -59,7 +59,6 @@ public class GameMenu {
                 gameMenu(false);
             }
             case 2 -> {
-                cli.printMessage(GameView.getInstance().getDevelopmentCardsMarket());
                 cardBuy();
                 gameMenu(false);
             }
@@ -105,10 +104,11 @@ public class GameMenu {
         options = new String[3];
         for (int i = 0 ; i <3; i++){
             DevelopmentCard card = ((DevelopmentCardSlotView)cli.getView().getSlots().get(i+1)).peek();
-            options[i]=((card!= null) ? card.toString() : "Empty slot");
+            options[i]=((card!= null) ? "\n" + card.toString() : "Empty slot");
         }
 
         Id id = null;
+
         cli.printMessage("[ ] On top of which slot do you wish to place it?");
         switch (cli.getChoice(options)){
             case 1 -> id = Id.SLOT_1;
@@ -139,11 +139,16 @@ public class GameMenu {
                 special = true;
             }
         }
-        var cost = new ArrayList<Resource>(Arrays.asList(card.getCost()));
+        var cost = new ArrayList<>(Arrays.asList(card.getCost()));
         while (!cost.isEmpty()) {
+
+            String costPrint = cost.stream()
+                    .map(String::valueOf)
+                    .collect(Collectors.joining(" , ", "", ""));
+            cli.printMessage("["+CHECK_MARK+"] Selected card: \n"+ card.toString());
             runner.printDepots();
-            //TODO print strongbox.
-            //TODO print card and cost.
+            runner.printStrongbox();
+            cli.printMessage("[ ] Cost left to pay: " + costPrint);
             cli.printMessage("[ ] Select the resources to pay and their source (e.g. 1 coin @ D1 - D for Depots, S for Special depots, B for strongBox)");
             Pair<Id, Resource> idResourcePair = cli.getIdResourcePair(true, special, special_num);
 
@@ -171,6 +176,8 @@ public class GameMenu {
             UIController.getInstance().buyTargetCard(id);
             runner.waitResponse();
         }
+
+        // Say something im giving up on cli
 
     }
 
@@ -316,8 +323,7 @@ public class GameMenu {
         }
     }
 
-    // TODO: Handle clienterror AND make sure clientside the selected resource is into tempres.
-    // TODO: can you switch with resources in your deposits?
+
     private void depositResources() {
 
         var warehouse = cli.getView().getWarehouse();

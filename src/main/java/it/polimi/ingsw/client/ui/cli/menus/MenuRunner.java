@@ -1,13 +1,12 @@
 package it.polimi.ingsw.client.ui.cli.menus;
 
 
-import it.polimi.ingsw.client.modelview.DepotView;
-import it.polimi.ingsw.client.modelview.GameView;
-import it.polimi.ingsw.client.modelview.MatchSettings;
-import it.polimi.ingsw.client.modelview.PlayerView;
+import it.polimi.ingsw.client.modelview.*;
 import it.polimi.ingsw.client.ui.cli.CLI;
 import it.polimi.ingsw.server.model.*;
 import it.polimi.ingsw.utils.networking.transmittables.servermessages.ServerMessage;
+
+import java.util.EmptyStackException;
 
 import static it.polimi.ingsw.client.ui.cli.CLIHelper.*;
 import static it.polimi.ingsw.client.ui.cli.menus.MenuStates.MAIN;
@@ -158,8 +157,7 @@ public class MenuRunner {
     public void sendResponse(GameActions action, GameActions newAction, String msg){
         sendResponse(action, msg);
         // TODO: fix;
-        while (wait) {
-        }
+        if (contextAction == currentAction) wait = false;
         setCurrentAction(newAction);
     }
 
@@ -246,5 +244,50 @@ public class MenuRunner {
         cli.printMessage(output);
 
     }
+    //TODO change getoptions to getint for leadercard select.
+
+    public void printStrongbox(){
+        var box = cli.getView().getStrongboxView();
+        String output = "";
+
+        output += "\t\t      "+ SQUARE+ " " + box.getCoin() + "    "+ SQUARE ;
+        output += "\t\t      "+ SQUARE+ " " + box.getStone() + "   "+ SQUARE ;
+        output += "\t\t      "+ SQUARE+ " " + box.getServant() + " "+ SQUARE ;
+        output += "\t\t      "+ SQUARE+ " " + box.getShield() + "  "+ SQUARE ;
+
+    }
+
+    public void printSlots(){
+        //TODO victory points?
+        var slots = cli.getView().getSlots();
+
+        DevelopmentCardSlotView slot = (DevelopmentCardSlotView) slots.get(1);
+        cli.printMessage("Slot 1: ");
+        try {
+            cli.printMessage("\n" + slot.peek().toString());
+        } catch (EmptyStackException e){
+            cli.printMessage("empty \n");
+        }
+
+        slot = (DevelopmentCardSlotView) slots.get(2);
+        cli.printMessage("Slot 2: ");
+        try {
+            cli.printMessage("\n" + slot.peek().toString());
+        } catch (EmptyStackException e){
+            cli.printMessage("empty \n");
+        }
+
+        slot = (DevelopmentCardSlotView) slots.get(3);
+        cli.printMessage("Slot 3: ");
+        try {
+            cli.printMessage("\n" + slot.peek().toString());
+
+        } catch (EmptyStackException e){
+            cli.printMessage("empty \n");
+        }
+
+    }
+
+    public void printProductions(){}
 
 }

@@ -62,7 +62,7 @@ public class DevelopmentCardMarketController{
 
 
             } catch (DevelopmentCardException e) {
-                view.handleStatusMessage(StatusMessage.REQUIREMENTS_ERROR);
+                view.handleStatusMessage(StatusMessage.SELECTION_ERROR);
             } catch (NotSufficientResourceException e) {
                 view.handleStatusMessage(StatusMessage.REQUIREMENTS_ERROR);
             }
