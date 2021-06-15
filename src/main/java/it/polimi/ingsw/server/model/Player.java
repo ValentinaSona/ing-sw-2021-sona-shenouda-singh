@@ -396,8 +396,10 @@ public class Player extends LambdaObservable<Transmittable> {
 		int vp = 0;
 
 		for (Slot slot : slots) {
-			for (DevelopmentCard card : ((DevelopmentCardSlot) slot).getSlot()){
-				vp += card.getVictoryPoints();
+			if (slot.getId() == Id.SLOT_1 || slot.getId() == Id.SLOT_2 || slot.getId() == Id.SLOT_3) {
+				for (DevelopmentCard card : ((DevelopmentCardSlot) slot).getSlot()) {
+					vp += card.getVictoryPoints();
+				}
 			}
 		}
 

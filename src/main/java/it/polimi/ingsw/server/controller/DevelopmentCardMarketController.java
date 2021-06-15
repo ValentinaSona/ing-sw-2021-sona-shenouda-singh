@@ -100,6 +100,7 @@ public class DevelopmentCardMarketController{
                         model.getUserFromPlayer(player)
                 ));
 
+                // Check if the win condition has been reached (player has acquired 7 dev cards).
                 int cards = 0;
                 for (DevelopmentCardSlot devSlot : player.getDevelopmentCardSlots()){
                     cards += devSlot.getSlot().size();
@@ -114,8 +115,9 @@ public class DevelopmentCardMarketController{
                 } catch (InvalidDepotException invalidDepotException) {
                     //if i enter this catch there is a problem in the way i am restoring the resources
                     invalidDepotException.printStackTrace();
+                    view.handleStatusMessage(StatusMessage.SERVER_ERROR);
                 }
-                view.handleStatusMessage(StatusMessage.CLIENT_ERROR);
+                view.handleStatusMessage(StatusMessage.REQUIREMENTS_ERROR);
             }
         }
     }

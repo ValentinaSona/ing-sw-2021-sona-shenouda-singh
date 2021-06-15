@@ -367,15 +367,16 @@ public class ResourceController{
             } catch (InvalidDepotException invalidDepotException) {
                 //if i am trying to subtract more resources than the ones in a depot
                 //this should never happen
-                view.handleStatusMessage(StatusMessage.CLIENT_ERROR);
+                view.handleStatusMessage(StatusMessage.REQUIREMENTS_ERROR);
             } catch (NotSufficientResourceException e) {
                 //if the check fails
                 try{
                     resetResources(player, e.getTempResources());
-                    view.handleStatusMessage(StatusMessage.CLIENT_ERROR);
+                    view.handleStatusMessage(StatusMessage.SELECTION_ERROR);
                 }catch(InvalidDepotException invalidDepotException){
                     //if i enter this catch there is a problem in the way i am restoring the resources
                     invalidDepotException.printStackTrace();
+                    view.handleStatusMessage(StatusMessage.SERVER_ERROR);
                 }
 
             }

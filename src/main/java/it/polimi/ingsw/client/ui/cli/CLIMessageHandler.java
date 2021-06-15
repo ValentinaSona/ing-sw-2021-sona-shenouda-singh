@@ -59,12 +59,21 @@ public class CLIMessageHandler {
 
             case REQUIREMENTS_ERROR -> handleRequirementsError();
 
+            case SELECTION_ERROR -> handleSelectionError();
+
             case CONTINUE -> handleContinue();
 
             default ->  cli.printMessage("Server Says: "+ msg);
         }
 
 
+    }
+
+    private void handleSelectionError() {
+          if (MenuRunner.getInstance().getContextAction()==GameActions.SELECT_CARD)
+            MenuRunner.getInstance().sendResponse(GameActions.SELECT_CARD,GameActions.MENU,"[X] This card cannot be placed on top of this slot.");
+          else if (MenuRunner.getInstance().getContextAction()==GameActions.BUY_CARD)
+              MenuRunner.getInstance().sendResponse(GameActions.BUY_CARD,GameActions.MENU,"[X] The resources selected are not sufficient to buy this card.");
     }
 
     private void handleContinue() {
@@ -80,8 +89,12 @@ public class CLIMessageHandler {
            MenuRunner.getInstance().sendResponse(GameActions.TIDY_WAREHOUSE,"[X] These two depots cannot be swapped.");
         else if (MenuRunner.getInstance().getContextAction()==GameActions.ACTIVATE_LEADER)
             MenuRunner.getInstance().sendResponse(GameActions.ACTIVATE_LEADER,"[X] You do not meet the requirements to activate this card.");
+        else if (MenuRunner.getInstance().getContextAction()==GameActions.THROW_LEADER)
+            MenuRunner.getInstance().sendResponse(GameActions.THROW_LEADER,"[X] Cannot throw away an active leader card.");
         else if (MenuRunner.getInstance().getContextAction()==GameActions.SELECT_CARD)
             MenuRunner.getInstance().sendResponse(GameActions.SELECT_CARD,GameActions.MENU,"[X] You do not have the resources needed to buy this card.");
+        else if (MenuRunner.getInstance().getContextAction()==GameActions.BUY_CARD)
+            MenuRunner.getInstance().sendResponse(GameActions.BUY_CARD,GameActions.MENU,"[X] You have tried to subtract from a depot more resources than it contains.");
         else if(MenuRunner.getInstance().getContextAction()==GameActions.DEPOSIT_RESOURCES)
             MenuRunner.getInstance().sendResponse(GameActions.DEPOSIT_RESOURCES,"[X] This resource cannot be deposited there.");
 
@@ -90,9 +103,15 @@ public class CLIMessageHandler {
     private void handleClientError() {
         if(MenuRunner.getInstance().getContextAction()==GameActions.TIDY_WAREHOUSE || MenuRunner.getInstance().getContextAction()==GameActions.BUY_MARBLES)
             MenuRunner.getInstance().sendResponse(GameActions.TIDY_WAREHOUSE,"[X] This operation is unavailable right now.");
-        if(MenuRunner.getInstance().getContextAction()==GameActions.ACTIVATE_LEADER)
+        else if(MenuRunner.getInstance().getContextAction()==GameActions.ACTIVATE_LEADER)
             MenuRunner.getInstance().sendResponse(GameActions.ACTIVATE_LEADER,"[X] This operation is unavailable right now.");
-        if(MenuRunner.getInstance().getContextAction()==GameActions.DEPOSIT_RESOURCES)
+        else if(MenuRunner.getInstance().getContextAction()==GameActions.BUY_CARD)
+            MenuRunner.getInstance().sendResponse(GameActions.BUY_CARD, GameActions.MENU, "[X] This operation is unavailable right now.");
+        else if(MenuRunner.getInstance().getContextAction()==GameActions.SELECT_CARD)
+            MenuRunner.getInstance().sendResponse(GameActions.SELECT_CARD, GameActions.MENU, "[X] This operation is unavailable right now.");
+        else if(MenuRunner.getInstance().getContextAction()==GameActions.ACQUIRE_CARD)
+            MenuRunner.getInstance().sendResponse(GameActions.ACQUIRE_CARD, GameActions.MENU, "[X] This operation is unavailable right now.");
+        else if(MenuRunner.getInstance().getContextAction()==GameActions.DEPOSIT_RESOURCES)
             MenuRunner.getInstance().sendResponse(GameActions.DEPOSIT_RESOURCES,"[X] This resource is not amongst the obtained ones.");
     }
 
@@ -121,6 +140,8 @@ public class CLIMessageHandler {
      */
     public void handleServerSetupUserMessage(ServerSetupUserMessage message){
 
+        MenuRunner.getInstance().setState(MenuStates.SETUP, message);
+
         if ( message.getUser().getNickName().equals( MatchSettings.getInstance().getClientNickname() )) {
             cli.printMessage("["+CHECK_MARK+"] It's your turn!");
 
@@ -135,19 +156,10 @@ public class CLIMessageHandler {
             cli.printMessage("[ ] " + message.getUser().getNickName() + " is selecting their leader cards.");
         }
 
-
-
-        MenuRunner.getInstance().setState(MenuStates.SETUP, message);
         synchronized (MenuRunner.getInstance()) {
             MenuRunner.getInstance().notifyAll();
         }
 
-      /*  if ( message.getUser().getNickName().equals( MatchSettings.getInstance().getClientNickname() )) {
-            synchronized (CLIMessageHandler.getInstance()) {
-                cli.setInterrupted(true);
-                CLIMessageHandler.getInstance().notifyAll();
-            }
-        }*/
     }
 
     public void handleServerSetupActionMessage(ServerSetupActionMessage message){
@@ -237,7 +249,7 @@ public class CLIMessageHandler {
 
     public void handleServerThrowLeaderCardAbilityMessage(ServerThrowLeaderCardMessage message) {
         if (message.getUser().getNickName().equals(MatchSettings.getInstance().getClientNickname()))
-            MenuRunner.getInstance().sendResponse(GameActions.ACTIVATE_LEADER,"[" + CHECK_MARK + "] You have thrown away the selected leader card.");
+            MenuRunner.getInstance().sendResponse(GameActions.THROW_LEADER,"[" + CHECK_MARK + "] You have thrown away the selected leader card.");
         else
             cli.printMessage( "[" + CHECK_MARK + "] "+ message.getUser().getNickName() + " has thrown away a leader card.");
 
@@ -250,6 +262,6 @@ public class CLIMessageHandler {
 
     public void handleServerBuyDevelopmentCardMessage(ServerBuyDevelopmentCardMessage message) {
         if (message.getUser().getNickName().equals(MatchSettings.getInstance().getClientNickname()))
-            MenuRunner.getInstance().sendResponse(GameActions.ACQUIRE_CARD,"[" + CHECK_MARK + "] Your resources have been spent to buy the card.");
+            MenuRunner.getInstance().sendResponse(GameActions.ACQUIRE_CARD,"[" + CHECK_MARK + "] You have acquired the following card: ");
     }
 }

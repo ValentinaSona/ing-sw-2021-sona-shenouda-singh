@@ -113,7 +113,8 @@ public class GameMenu {
         Id id = null;
 
         cli.printMessage("[ ] On top of which slot do you wish to place it?");
-        switch (cli.getChoice(options)){
+        int chosen_id = cli.getChoice(options);
+        switch (chosen_id){
             case 1 -> id = Id.SLOT_1;
             case 2 -> id = Id.SLOT_2;
             case 3 -> id = Id.SLOT_3;
@@ -128,51 +129,54 @@ public class GameMenu {
 
         if (runner.getCurrentAction()==GameActions.MENU) return;
 
+        do {
+            var card = GameView.getInstance().getDevelopmentCardsMarket().getTray()[choice[0]][choice[1]];
+            Map<Id, Resource> map = new HashMap<>();
 
-        var card = GameView.getInstance().getDevelopmentCardsMarket().getTray()[choice[0]][choice[1]];
-        Map<Id, Resource> map = new HashMap<>();
+            boolean special = false;
 
-        boolean special = false;
+            int special_num = 0;
 
-        int special_num = 0;
-
-        for (DepotView depot: cli.getView().getWarehouse()){
-            if (depot.getId() == Id.S_DEPOT_1 || depot.getId() == Id.S_DEPOT_2 ) {
-                special_num++;
-                special = true;
+            for (DepotView depot : cli.getView().getWarehouse()) {
+                if (depot.getId() == Id.S_DEPOT_1 || depot.getId() == Id.S_DEPOT_2) {
+                    special_num++;
+                    special = true;
+                }
             }
-        }
-        var cost = new ArrayList<>(Arrays.asList(card.getCost()));
-        while (!cost.isEmpty()) {
+            var cost = new ArrayList<>(Arrays.asList(card.getCost()));
+            while (!cost.isEmpty()) {
 
-            String costPrint = cost.stream()
-                    .map(String::valueOf)
-                    .collect(Collectors.joining(" , ", "", ""));
-            cli.printMessage("["+CHECK_MARK+"] Selected card: \n"+ card.toString());
-            //TODO: new arrat list of depots + strbx temp change methods?
-            runner.printDepots();
-            runner.printStrongbox();
-            cli.printMessage("[ ] Cost left to pay: " + costPrint);
-            cli.printMessage("[ ] Select the resources to pay and their source (e.g. 1 coin @ D1 - D for Depots, S for Special depots, B for strongBox)");
-            Pair<Id, Resource> idResourcePair = cli.getIdResourcePair(true, special, special_num);
-
+                String costPrint = cost.stream()
+                        .map(String::valueOf)
+                        .collect(Collectors.joining(" , ", "", ""));
+                cli.printMessage("[" + CHECK_MARK + "] Selected card: \n" + card.toString());
+                //TODO: new arrat list of depots + strbx temp change methods?
+                runner.printDepots();
+                runner.printStrongbox();
+                cli.printMessage("[ ] Cost left to pay: " + costPrint);
+                cli.printMessage("[ ] Select the resources to pay and their source (e.g. 1 coin @ D1 - D for Depots, S for Special depots, B for strongBox)");
+                Pair<Id, Resource> idResourcePair = cli.getIdResourcePair(true, special, special_num);
 
 
-            if (!checkSourceContains(idResourcePair,map,cost)) continue;
+                if (!checkSourceContains(idResourcePair, map, cost)) continue;
 
-            if (map.containsKey(idResourcePair.getKey())){map.get(idResourcePair.getKey()).add(idResourcePair.getValue());}
-            else map.put(idResourcePair.getKey(), idResourcePair.getValue());
+                if (map.containsKey(idResourcePair.getKey())) {
+                    map.get(idResourcePair.getKey()).add(idResourcePair.getValue());
+                } else map.put(idResourcePair.getKey(), idResourcePair.getValue());
 
-        }
-        runner.setContextAction(GameActions.BUY_CARD);
-        runner.setCurrentAction(GameActions.WAITING);
-        synchronized (MenuRunner.getInstance()) {
-            UIController.getInstance().depositResourcesIntoSlot(id, map);
-            runner.waitResponse();
+            }
 
-        }
+            runner.setContextAction(GameActions.BUY_CARD);
+            runner.setCurrentAction(GameActions.WAITING);
+            synchronized (MenuRunner.getInstance()) {
+                UIController.getInstance().depositResourcesIntoSlot(id, map);
+                runner.waitResponse();
 
-        // TODO: here be error handling.
+            }
+
+        } while(runner.getCurrentAction()==GameActions.MENU);
+
+
 
         runner.setContextAction(GameActions.ACQUIRE_CARD);
         runner.setCurrentAction(GameActions.WAITING);
@@ -180,6 +184,8 @@ public class GameMenu {
             UIController.getInstance().buyTargetCard(id);
             runner.waitResponse();
         }
+
+        cli.printMessage(((DevelopmentCardSlotView)cli.getView().getSlots().get(chosen_id)).peek().toString());
 
         // Say something im giving up on cli
 
@@ -231,7 +237,7 @@ public class GameMenu {
     private void leaderAction() {
 
         var cards = cli.getView().getLeaderCards();
-        var inactiveCards = cards.stream().filter(leaderCard -> !leaderCard.isActive()).collect(Collectors.toList());
+        var inactiveCards = cards.stream().filter(leaderCard -> leaderCard!=null && !leaderCard.isActive()).collect(Collectors.toList());
 
         if (inactiveCards.size() != 0)
             cli.printMessage("These are the leader cards still in your hand:");
@@ -252,7 +258,8 @@ public class GameMenu {
             chosen_index = cli.getInt(1, 2);
 
         } else {
-            chosen_index = cards.indexOf(inactiveCards.get(0));
+
+            chosen_index = 1 + cards.indexOf(inactiveCards.get(0));
 
         }
 
@@ -261,15 +268,17 @@ public class GameMenu {
         } else {
             chosen = Id.LEADER_CARD_2;
         }
-        runner.setContextAction(GameActions.ACTIVATE_LEADER);
+
         runner.setCurrentAction(GameActions.WAITING);
 
 
         synchronized (MenuRunner.getInstance()) {
             if (choice == 1) {
+                runner.setContextAction(GameActions.ACTIVATE_LEADER);
                 cli.printMessage("[ ] Activating :\n"+cards.get(chosen_index-1));
                 UIController.getInstance().activateSpecialAbility(chosen);
             } else {
+                runner.setContextAction(GameActions.THROW_LEADER);
                 cli.printMessage("[ ] Throwing away :\n"+cards.get(chosen_index-1));
                 UIController.getInstance().throwLeaderCard(chosen);
             }

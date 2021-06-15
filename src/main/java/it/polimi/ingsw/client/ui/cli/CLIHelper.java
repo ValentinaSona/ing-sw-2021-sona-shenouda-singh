@@ -10,8 +10,8 @@ public class CLIHelper {
     public static final String ANSI_WHITE = "\033[37m";
     public static final String ANSI_RESET = "\033[0m";
     public static final String CHECK_MARK = "\u2713";
-    public static final String CIRCLE = "\u26AB";
-    public static final String WHITE_CIRCLE = "\u26AA";
+    public static final String CIRCLE = "\u25CF";
+    public static final String WHITE_CIRCLE = "\u25CB";
     public static final String SQUARE = "\u25A0";
     public static final String CROSS = "\u2671";
     public static final String LINE = "\u203E";

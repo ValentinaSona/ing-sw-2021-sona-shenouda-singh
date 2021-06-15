@@ -8,6 +8,7 @@ import it.polimi.ingsw.client.ui.gui.GUIHelper;
 import it.polimi.ingsw.client.ui.gui.GUIMessageHandler;
 import it.polimi.ingsw.client.ui.gui.JFXControllers.LeaderSelectionGUIController;
 import it.polimi.ingsw.client.ui.gui.JFXControllers.ScreenName;
+import it.polimi.ingsw.server.model.Game;
 import it.polimi.ingsw.server.model.LeaderCard;
 import it.polimi.ingsw.utils.networking.ClientHandleable;
 import it.polimi.ingsw.utils.networking.Transmittable;
@@ -299,7 +300,10 @@ public class DispatcherController implements Runnable, LambdaObserver {
     public void handleThrowLeaderCard(ServerThrowLeaderCardMessage message){
         if(message.getUser().getNickName().equals(MatchSettings.getInstance().getClientNickname())) {
             // Other players don't know the leader cards
-            GameView.getInstance().getPlayerFromUser(message.getUser()).getLeaderCards().remove(message.getLeaderCard());
+
+                int index = GameView.getInstance().getPlayerFromUser(message.getUser()).getLeaderCards().indexOf(message.getLeaderCard());
+                if (index != -1) GameView.getInstance().getPlayerFromUser(message.getUser()).getLeaderCards().set(index, null);
+
         }
 
         if(gui){

@@ -144,7 +144,7 @@ public class CLI implements Ui {
         }
         return new int[]{Integer.parseInt(choice[0])-1,type};
     }
-
+// TODO Test on the four player thingy cuz not working yet
     public int getChoice(String[] options, boolean enableRefresh, boolean isMenu, boolean interruptible){
         int optNum = 1;
         int choice;
