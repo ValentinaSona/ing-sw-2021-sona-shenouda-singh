@@ -48,7 +48,7 @@ public class Match implements Runnable{
     public void run(){
         this.model = Game.getInstance(participantMap.size());
 
-        this.controller = Controller.getInstance(model);
+        this.controller = Controller.getInstance(model, this);
 
         //this list is already populated but we have yet to decide what the remoteView should do
         //when notified by the model with the notify() method
@@ -98,5 +98,32 @@ public class Match implements Runnable{
 
     public void setActive(boolean active) {
         this.active = active;
+    }
+
+    public void handleReconnection(String nickname, Connection connection){
+        participantMap.put(nickname, connection);
+        RealRemoteViewHandler view = new RealRemoteViewHandler(connection, nickname);
+        remoteViewList.add(view);
+
+        model.addObserver(view, (observer, transmittable)->{
+            if(transmittable instanceof DisconnectionMessage){
+                ((RealRemoteViewHandler)observer).requestDisconnection();
+            }else {
+                ((RealRemoteViewHandler) observer).updateFromGame(transmittable);
+            }
+        });
+
+
+        view.addObserver(controller, (observer, viewClientMessage) ->
+                ((Controller) observer).update(viewClientMessage) );
+
+        //TODO avvisare il controller che si è riconnesso un altro giocatore??
+        //TODO controller.reconnectPlayer(nickname); deve essere thread safe l'accesso alla lista di player!!
+    }
+
+    public void handleDisconnection(User user){
+        model.disconnectPlayer(user.getNickName());
+        participantMap.remove(user.getNickName());
+        remoteViewList.removeIf(view-> view.getUser().equals(user));
     }
 }

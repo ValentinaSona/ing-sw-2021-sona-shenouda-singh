@@ -7,6 +7,7 @@ import it.polimi.ingsw.utils.observer.LambdaObservable;
 import java.util.ArrayList;
 import java.util.EmptyStackException;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 //TODO does player really need to be observable??
@@ -417,4 +418,19 @@ public class Player extends LambdaObservable<Transmittable> {
 	}
 
 
+	public boolean isDisconnected() {
+		return isDisconnected;
+	}
+
+	public void setDisconnected(boolean disconnected) {
+		isDisconnected = disconnected;
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+		Player player = (Player) o;
+		return nickname.equals(player.nickname);
+	}
 }

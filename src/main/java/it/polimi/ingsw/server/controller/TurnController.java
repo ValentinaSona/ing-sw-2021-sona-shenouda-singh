@@ -42,6 +42,7 @@ public class TurnController{
         if( !(endingPlayer.getTurn())  ){
             view.handleStatusMessage(StatusMessage.CLIENT_ERROR);
         }else{
+            //TODO nell'else volendo potrei mettere semplicemente la chiamata a forceEndTurn
             endingPlayer.toggleTurn();
 
             ArrayList<Player> players = model.getPlayers();
@@ -68,6 +69,40 @@ public class TurnController{
             ));
 
         }
+
+    }
+
+    public void forceEndTurn(Player player) throws EndOfGameException {
+
+        player.toggleTurn();
+
+        ArrayList<Player> players = model.getPlayers();
+        int startingIdx = players.indexOf(player);
+
+        //TODO devo ancora gestire il caso in cui tutti i giocatori sono disconnessi
+        for(int idx = startingIdx; idx < players.size()-1; idx++){
+            idx =(idx == players.size()-1)? 0: idx+1;
+            Player p = model.getPlayers().get(idx);
+
+            if(!p.isDisconnected()){
+                model.setCurrentPlayer(players.get(idx));
+                break;
+            }
+
+        }
+
+        if (model.isSolo()) {
+            LorenzoAction();
+        }
+
+
+        Player startingPlayer = model.getCurrentPlayer();
+        startingPlayer.toggleTurn();
+        startingPlayer.toggleMainAction();
+        model.notify(new ServerStartTurnMessage(
+                model.getUserFromPlayer(startingPlayer),
+                model.getUserFromPlayer(player)
+        ));
 
     }
 

@@ -1,13 +1,16 @@
 package it.polimi.ingsw.server;
 
 import it.polimi.ingsw.server.controller.User;
+import it.polimi.ingsw.server.model.Game;
 import it.polimi.ingsw.utils.networking.Connection;
 import it.polimi.ingsw.utils.networking.transmittables.StatusMessage;
+import it.polimi.ingsw.utils.networking.transmittables.clientmessages.game.ClientGameReconnectionMessage;
 import it.polimi.ingsw.utils.networking.transmittables.servermessages.ServerSetupUserMessage;
 import it.polimi.ingsw.utils.networking.transmittables.servermessages.ServerUpdateLobbyMessage;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.LinkedBlockingDeque;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -35,11 +38,14 @@ public class Lobby {
     //connection that are in the registeredNicknamesMap but in order of arrive
     private final LinkedList<Connection> lobbyRequestingConnections;
 
+    private final LinkedBlockingDeque<Connection> disconnectedPlayers;
     //the first connection to arrive that has the control on the player count
     private Connection firstConnection;
 
 
     private final Server server;
+
+    private Match match;
 
     //maximum number of player
     private int currentLobbyPlayerCount;
@@ -58,6 +64,7 @@ public class Lobby {
     private Lobby(Server server) {
         this.server = server;
         this.lobbyRequestingConnections = new LinkedList<>();
+        this.disconnectedPlayers = new LinkedBlockingDeque<>();
         this.registeredNicknamesMap = new ConcurrentHashMap<>();
         this.playerCountLock = new Object();
         this.active = true;
@@ -180,7 +187,7 @@ public class Lobby {
             //if the first player is still connected
             if(!participants.isEmpty()){
 
-                Match match= new Match(server);
+                this.match= new Match(server);
                 List<Connection> connectionList = new ArrayList<>();
                 for(Connection c : participants.keySet()){
                     connectionList.add(c);
@@ -191,6 +198,7 @@ public class Lobby {
                     match.addParticipant(participants.get(c), c);
                 }
                 server.submitMatch(match);
+                waitForDisconnectedPlayers();
                 stop();
             }
             //if the first player disconnected while no one was in the lobby what will happen is
@@ -200,6 +208,37 @@ public class Lobby {
 
     }
 
+    public boolean handleGameReconnection(String nickname, Connection connection){
+        synchronized (disconnectedPlayers){
+            try{
+                disconnectedPlayers.put(connection);
+                disconnectedPlayers.notifyAll();
+                return true;
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+                return false;
+            }
+        }
+    }
+
+    private void waitForDisconnectedPlayers(){
+        while(isActive()){
+            try{
+                Connection connection = disconnectedPlayers.take();
+                Game model = Game.getInstance();
+                List<User> disconnected = model.getDisconnectedPlayers();
+                ConnectionSetupHandler handler = server.getHandlerMap().get(connection);
+                if(disconnected.contains(new User(handler.getNickname()))){
+                    //devo gestire la riconnessione
+                    server.removeHandlerForReconnection(connection);
+                }else{
+                    //gestisco disconnessione
+                }
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+            }
+        }
+    }
     private void waitForFirstConnection(){
         synchronized (lobbyRequestingConnections){
             //waiting for the first player to call handleLobbyJoiningRequest method to populate map and LinkedList
@@ -258,6 +297,16 @@ public class Lobby {
 
                 for(int i=0; i<currentLobbyPlayerCount; i++){
                     lobbyRequestingConnections.removeFirst();
+                }
+            }else{
+                //the first player disconnected we need to choose again the lobby count
+
+                //erase itself from records in the server, if it is not the firstConnection
+                for(Connection c: lobbyRequestingConnections){
+                    lobbyRequestingConnections.remove(c);
+                    registeredNicknamesMap.remove(c);
+                    server.removeHandler(c);
+                    c.closeConnection();
                 }
             }
         }

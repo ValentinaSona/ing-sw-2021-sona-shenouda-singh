@@ -36,6 +36,10 @@ public class Game extends LambdaObservable<Transmittable> {
         return singleton;
     }
 
+    public static Game getInstance() {
+        return singleton;
+    }
+
     public static void restore(SavedState savedState) {
 
         if (singleton != null)
@@ -140,6 +144,23 @@ public class Game extends LambdaObservable<Transmittable> {
         players.add(player);
     }
 
+    public void disconnectPlayer(String nickname){
+        getPlayers().forEach(player -> {
+            if(player.getNickname().equals(nickname))
+                player.setDisconnected(true);
+        });
+    }
+
+    public List<User> getDisconnectedPlayers(){
+        List<User> users = new ArrayList<>();
+        getPlayers().forEach(player -> {
+            if(player.isDisconnected()){
+                users.add(getUserFromPlayer(player));
+            }
+        });
+
+        return users;
+    }
     public Player getPlayerFromUser(User user){
         return userPlayerHashMap.get(user);
     }

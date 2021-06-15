@@ -1,6 +1,7 @@
 package it.polimi.ingsw.server.controller;
 
 
+import it.polimi.ingsw.server.Match;
 import it.polimi.ingsw.server.exception.InvalidDepotException;
 import it.polimi.ingsw.server.model.*;
 import it.polimi.ingsw.server.model.Player;
@@ -8,7 +9,10 @@ import it.polimi.ingsw.server.view.RealRemoteViewHandler;
 import it.polimi.ingsw.server.view.RemoteViewHandler;
 import it.polimi.ingsw.server.view.ViewClientMessage;
 import it.polimi.ingsw.utils.networking.ControllerHandleable;
+import it.polimi.ingsw.utils.networking.transmittables.DisconnectionMessage;
 import it.polimi.ingsw.utils.networking.transmittables.StatusMessage;
+import it.polimi.ingsw.utils.networking.transmittables.clientmessages.game.ClientEndTurnMessage;
+import it.polimi.ingsw.utils.networking.transmittables.clientmessages.game.ClientGameReconnectionMessage;
 import it.polimi.ingsw.utils.networking.transmittables.clientmessages.game.ClientSetupActionMessage;
 import it.polimi.ingsw.utils.networking.transmittables.servermessages.*;
 import it.polimi.ingsw.utils.observer.LambdaObserver;
@@ -28,17 +32,19 @@ public class Controller implements LambdaObserver {
     public final ResourceController resourceController;
     public final TurnController turnController;
     private final Game model;
+    private final Match match;
     private final BlockingQueue<ViewClientMessage> actionToProcess = new LinkedBlockingDeque<>();
 
-    public static Controller getInstance(Game model){
+    public static Controller getInstance(Game model,Match matchInstance){
         if(singleton == null){
-            singleton = new Controller(model);
+            singleton = new Controller(model, matchInstance);
         }
 
         return singleton;
     }
 
-    private Controller(Game modelInstance){
+    private Controller(Game modelInstance, Match matchInstance){
+        match = matchInstance;
         model = modelInstance;
         developmentCardMarketController = DevelopmentCardMarketController.getInstance(model);
         leaderCardsController = LeaderCardsController.getInstance(model);
@@ -123,4 +129,20 @@ public class Controller implements LambdaObserver {
             turnController.endSetupTurn();
         }
     }
+
+    //TODO
+    public void handleDisconnection(DisconnectionMessage action, RemoteViewHandler view, User user){
+        match.handleDisconnection(user);
+        if(model.getCurrentPlayer().equals(model.getPlayerFromUser(user)){
+            turnController.forceEndTurn(model.getCurrentPlayer());
+        }
+
+    }
+
+    //TODO
+    public void handleReconnection(ClientGameReconnectionMessage action, RemoteViewHandler view, User user){
+        match.handleReconnection();
+
+    }
+
 }

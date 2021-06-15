@@ -87,6 +87,14 @@ public class Server {
         }
     }
 
+    public void removeHandlerForReconnection(Connection connection){
+        synchronized (handlerMap){
+            connection.removeObserver(handlerMap.get(connection));
+            handlerMap.remove(connection);
+        }
+    }
+
+
     public void shutDown(){
         try{
             serverSocket.close();
