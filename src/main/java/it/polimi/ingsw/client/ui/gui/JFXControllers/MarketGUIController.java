@@ -54,4 +54,10 @@ public class MarketGUIController extends AbstractGUIController implements GameGU
     public void goToDev() {
         change(ScreenName.DEV_MARKET);
     }
+
+    @Override
+    public void goToOtherBoard(ActionEvent e) {
+        GUIHelper.getInstance().setSelectedPlayer(e.getSource());
+        change(ScreenName.OTHER_BOARD);
+    }
 }

@@ -2,8 +2,7 @@ package it.polimi.ingsw.server.model;
 
 import com.google.gson.Gson;
 
-import java.io.FileNotFoundException;
-import java.io.FileReader;
+import java.io.*;
 import java.util.List;
 import java.util.Map;
 
@@ -20,12 +19,17 @@ public class DevelopmentBuilder {
         DevelopmentCardDeck[][] decks = new DevelopmentCardDeck[3][4];
 
         Gson gson = new Gson();
+
         try {
 
-            decks =  gson.fromJson(new FileReader(path), DevelopmentCardDeck[][].class);
+            var file = new FileReader(path);
+            decks =  gson.fromJson(file, DevelopmentCardDeck[][].class);
 
         } catch (FileNotFoundException e) {
-            e.printStackTrace();
+
+            var input = new BufferedReader(new InputStreamReader(DevelopmentBuilder.class.getClassLoader().getResourceAsStream(path)));
+            decks =  gson.fromJson(input, DevelopmentCardDeck[][].class);
+
         }
 
         DevelopmentCardsMarket market = new DevelopmentCardsMarket(decks);

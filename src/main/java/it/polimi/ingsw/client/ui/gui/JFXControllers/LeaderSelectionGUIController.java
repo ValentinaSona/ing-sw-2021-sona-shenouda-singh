@@ -356,8 +356,18 @@ public class LeaderSelectionGUIController extends AbstractGUIController implemen
                 resourceMap.put(Id.DEPOT_2, GUIHelper.getInstance().getResFromImage(resChoice1.getImage()));
             }
             else if (GUIHelper.getInstance().clientIndex() == 3 ) {
-                resourceMap.put(Id.DEPOT_2, GUIHelper.getInstance().getResFromImage(resChoice1.getImage()));
-                resourceMap.put(Id.DEPOT_3, GUIHelper.getInstance().getResFromImage(resChoice2.getImage()));
+
+                var res1 = GUIHelper.getInstance().getResFromImage(resChoice1.getImage());
+                var res2 = GUIHelper.getInstance().getResFromImage(resChoice2.getImage());
+
+                if (res1.equals(res2)) {
+                    res1.add(res2);
+                    resourceMap.put(Id.DEPOT_2, res1);
+                }
+                else{
+                    resourceMap.put(Id.DEPOT_2, res1);
+                    resourceMap.put(Id.DEPOT_3, res2);
+                }
             }
             UIController.getInstance().chosenStartingResources(resourceMap,
                     cardList.stream().filter(LeaderCardSelection::isSelected).map(LeaderCardSelection::getCard).toArray(LeaderCard[]::new));

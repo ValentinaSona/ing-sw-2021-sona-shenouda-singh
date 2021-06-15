@@ -1,12 +1,15 @@
 package it.polimi.ingsw.client.ui.gui.JFXControllers;
 
 import it.polimi.ingsw.client.modelview.DepotView;
+import it.polimi.ingsw.client.modelview.PlayerView;
 import it.polimi.ingsw.client.ui.gui.GUIHelper;
 import it.polimi.ingsw.client.ui.gui.GameLog;
 import it.polimi.ingsw.server.model.ResourceType;
 import it.polimi.ingsw.utils.networking.transmittables.StatusMessage;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.SnapshotParameters;
+import javafx.scene.control.Button;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
@@ -30,17 +33,28 @@ public class BoardGUIController extends AbstractGUIController implements GameGUI
     @FXML
     private TextFlow log;
 
+    private PlayerView playerView;
+
     @FXML
     public void initialize() {
 
         GUIHelper.getInstance().setCurrentGameController(this);
-        //GameLog.getInstance().update(log);
-
         GameTemplate.getInstance().setTabs(ScreenName.PERSONAL_BOARD);
         rightPane.getChildren().add(GameTemplate.getInstance().getPlayersTabs());
         rightPane.getChildren().add(GameTemplate.getInstance().getMarketsTabs());
+
+        setPlayerView(GUIHelper.getInstance().getClientView());
+
         updateFaithTrack();
         updateDepot();
+
+        screenStart();
+    }
+
+    public void screenStart() { }
+
+    public void setPlayerView(PlayerView playerView) {
+        this.playerView = playerView;
     }
 
     public void goToMarket(ActionEvent actionEvent) {
@@ -53,11 +67,11 @@ public class BoardGUIController extends AbstractGUIController implements GameGUI
 
     }
 
-    private void updateFaithTrack() {
+    public void updateFaithTrack() {
 
         var faithImage = new ImageView(GUIHelper.getInstance().getImage(ResourceType.FAITH, 62, 62));
 
-        var faith = GUIHelper.getInstance().getClientView().getFaithTrackView().getFaithMarker();
+        var faith = playerView.getFaithTrackView().getFaithMarker();
         faithGrid.getChildren().clear();
 
         if (faith <= 2) faithGrid.add(faithImage, faith, 2);
@@ -70,10 +84,10 @@ public class BoardGUIController extends AbstractGUIController implements GameGUI
         else throw new RuntimeException("Faith out of bounds");
     }
 
-    private void updateDepot() {
+    public void updateDepot() {
 
         depotBox.getChildren().stream().map(e -> (HBox)e).forEach(e -> e.getChildren().clear());
-        var warehouse = GUIHelper.getInstance().getClientView().getWarehouse();
+        var warehouse = playerView.getWarehouse();
 
         for (DepotView d : warehouse) {
 
@@ -109,5 +123,16 @@ public class BoardGUIController extends AbstractGUIController implements GameGUI
     @Override
     public void goToDev() {
         change(ScreenName.DEV_MARKET);
+    }
+
+    @Override
+    public void goToOtherBoard(ActionEvent e) {
+        GUIHelper.getInstance().setSelectedPlayer(e.getSource());
+        change(ScreenName.OTHER_BOARD);
+    }
+
+    public void goToLeader(ActionEvent actionEvent) {
+        GUIHelper.getInstance().setScreenshot(GUIHelper.getInstance().getCurrentScene().snapshot(null));
+        change(ScreenName.LEADER);
     }
 }

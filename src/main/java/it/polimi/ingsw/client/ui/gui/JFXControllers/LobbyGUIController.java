@@ -73,8 +73,16 @@ public class LobbyGUIController extends AbstractGUIController implements UiContr
             timeline.stop();
             loading.setOpacity(0);
             starting.setOpacity(1);
+
             Stage stage = (Stage) mainPane.getScene().getWindow();
-            stage.setMaximized(true);
+
+            if (GUIHelper.getInstance().getResolution() > 1080) {
+                stage.setWidth(1920);
+                stage.setHeight(1080);
+            }
+
+            else stage.setMaximized(true);
+
         }
     }
 

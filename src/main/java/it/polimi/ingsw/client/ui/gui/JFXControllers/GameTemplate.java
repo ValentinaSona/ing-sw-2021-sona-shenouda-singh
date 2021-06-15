@@ -1,5 +1,6 @@
 package it.polimi.ingsw.client.ui.gui.JFXControllers;
 
+import it.polimi.ingsw.client.modelview.GameView;
 import it.polimi.ingsw.client.ui.gui.GUIHelper;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -34,6 +35,9 @@ public class GameTemplate {
             tab.getStyleClass().add("gameTab");
             tab.setMaxWidth(380);
             tabsPlayer.getChildren().add(tab);
+
+            tab.setOnAction(e -> GUIHelper.getInstance().getCurrentGameController().goToOtherBoard(e));
+
         }
         tabsPlayer.setAlignment(Pos.TOP_RIGHT);
         tabsPlayer.setMaxHeight(600);
@@ -81,6 +85,7 @@ public class GameTemplate {
             case PERSONAL_BOARD -> ((Button) tabsPlayer.getChildren().get(0)).setMaxWidth(420);
             case MARKET -> ((Button) tabsMarket.getChildren().get(0)).setMaxWidth(420);
             case DEV_MARKET -> ((Button) tabsMarket.getChildren().get(1)).setMaxWidth(420);
+            case OTHER_BOARD -> ((Button) tabsPlayer.getChildren().get(GUIHelper.getInstance().getOthers().indexOf(GUIHelper.getInstance().getSelectedPlayer().getNickname())+1)).setMaxWidth(420);
             default -> {}
         }
 

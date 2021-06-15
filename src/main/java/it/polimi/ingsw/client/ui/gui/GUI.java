@@ -24,8 +24,7 @@ public class GUI extends Application implements Ui {
     public void start(Stage primaryStage) throws Exception{
 
         Rectangle2D screenBounds = Screen.getPrimary().getBounds();
-        System.out.println(screenBounds);
-
+        GUIHelper.getInstance().setResolution(screenBounds.getHeight());
         URL url = new File("src/main/resources/fxml/mainScreen.fxml").toURI().toURL();
         Parent root = FXMLLoader.load(url);
         primaryStage.setTitle("Client");
