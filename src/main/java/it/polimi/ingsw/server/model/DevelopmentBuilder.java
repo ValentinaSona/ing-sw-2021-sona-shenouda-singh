@@ -8,7 +8,8 @@ import java.util.Map;
 
 public class DevelopmentBuilder {
 
-    final private static String path = "./src/main/resources/config/devcards.json";
+    final private static String path = "config/devcards.json";
+    final private static String completePath = "./src/main/resources/" + path;
 
     /**
      * Builds the standard DevelopmentCardsMarket importing it from file in the correct order and shuffles all the decks
@@ -16,13 +17,13 @@ public class DevelopmentBuilder {
      */
     public static DevelopmentCardsMarket build() {
 
-        DevelopmentCardDeck[][] decks = new DevelopmentCardDeck[3][4];
+        DevelopmentCardDeck[][] decks;
 
         Gson gson = new Gson();
 
         try {
 
-            var file = new FileReader(path);
+            var file = new FileReader(completePath);
             decks =  gson.fromJson(file, DevelopmentCardDeck[][].class);
 
         } catch (FileNotFoundException e) {

@@ -18,7 +18,8 @@ import java.util.stream.Stream;
 
 public class LeaderCardsKeeper {
 
-    final private static String path = "./src/main/resources/config/leadercards.json";
+    final private static String path = "config/leadercards.json";
+    final private static String completePath = "./src/main/resources/" + path;
 
     List<LeaderCard> leaderCards;
 
@@ -37,7 +38,7 @@ public class LeaderCardsKeeper {
         //Gson gson = new Gson();
         try {
 
-            var file = new FileReader(path);
+            var file = new FileReader(completePath);
             leaderCards =  Stream.of(gson.fromJson(file, LeaderCard[].class)).collect(Collectors.toList());
 
         } catch (FileNotFoundException e) {
