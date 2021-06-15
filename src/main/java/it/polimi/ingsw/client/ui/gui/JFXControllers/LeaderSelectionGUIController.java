@@ -2,12 +2,15 @@ package it.polimi.ingsw.client.ui.gui.JFXControllers;
 
 import it.polimi.ingsw.client.modelview.GameView;
 import it.polimi.ingsw.client.modelview.MatchSettings;
+import it.polimi.ingsw.client.modelview.PlayerView;
 import it.polimi.ingsw.client.ui.controller.LeaderCardSelectionController;
 import it.polimi.ingsw.client.ui.controller.UIController;
 import it.polimi.ingsw.client.ui.gui.GUIHelper;
 import it.polimi.ingsw.client.ui.gui.LeaderCardSelection;
+import it.polimi.ingsw.server.controller.User;
 import it.polimi.ingsw.server.model.Id;
 import it.polimi.ingsw.server.model.LeaderCard;
+import it.polimi.ingsw.server.model.Player;
 import it.polimi.ingsw.server.model.Resource;
 import it.polimi.ingsw.utils.networking.transmittables.StatusMessage;
 import it.polimi.ingsw.utils.networking.transmittables.servermessages.ServerSetupActionMessage;
@@ -22,9 +25,11 @@ import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.shape.Rectangle;
+import javafx.stage.Stage;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -65,6 +70,8 @@ public class LeaderSelectionGUIController extends AbstractGUIController implemen
     private Button marketButton, devButton, setupButton, confirm1, confirm2, confirm;
     @FXML
     private Label res;
+    @FXML
+    private BorderPane mainPane;
 
     private Button[] buttons;
     private Map<Node, Integer> choiceMap;
@@ -73,8 +80,6 @@ public class LeaderSelectionGUIController extends AbstractGUIController implemen
 
     @FXML
     public void initialize() {
-
-        GUIHelper.getInstance().setCurrentScreen(ScreenName.STARTING_CHOICE);
 
         selectedCards = 0;
         cardList = new ArrayList<>();
@@ -105,14 +110,12 @@ public class LeaderSelectionGUIController extends AbstractGUIController implemen
         confirm.setDisable(true);
         confirm.setOpacity(0);
 
-        choiceMap = Map.of(
-                resChoice1, 2,
-                resChoice2, 4
-        );
+        choiceMap = new HashMap<>();
+        choiceMap.put(resChoice1, 2);
+        choiceMap.put(resChoice2, 4);
 
         choiceMap.forEach((key, value) -> {
-            key.setDisable(true);
-            key.setOpacity(0);
+            disableNode(key);
         });
 
         showChoice1(false);
@@ -167,6 +170,8 @@ public class LeaderSelectionGUIController extends AbstractGUIController implemen
             confirm.setDisable(false);
 
             fillLeaderCards(cards);
+
+            setSize();
         });
 
     }
@@ -181,11 +186,15 @@ public class LeaderSelectionGUIController extends AbstractGUIController implemen
             waitLabel.setText("Choice registered");
             showChoice();
 
+            for(PlayerView p : GameView.getInstance().getPlayers()) {
+                if (p.getNickname().equals(MatchSettings.getInstance().getClientNickname()))
+                    GUIHelper.getInstance().setClientView(p);
+            }
         });
 
     }
 
-    //TODO cosa dovrebbe fare questo?
+    //TODO
     @Override
     public void handleStatusMessage(StatusMessage message) {
 
@@ -344,11 +353,11 @@ public class LeaderSelectionGUIController extends AbstractGUIController implemen
             resourceMap = new HashMap<>();
 
             if (GUIHelper.getInstance().clientIndex() == 1 || GUIHelper.getInstance().clientIndex() == 2) {
-                resourceMap.put(Id.SLOT_2, GUIHelper.getInstance().getResFromImage(resChoice1.getImage()));
+                resourceMap.put(Id.DEPOT_2, GUIHelper.getInstance().getResFromImage(resChoice1.getImage()));
             }
             else if (GUIHelper.getInstance().clientIndex() == 3 ) {
-                resourceMap.put(Id.SLOT_2, GUIHelper.getInstance().getResFromImage(resChoice1.getImage()));
-                resourceMap.put(Id.SLOT_3, GUIHelper.getInstance().getResFromImage(resChoice2.getImage()));
+                resourceMap.put(Id.DEPOT_2, GUIHelper.getInstance().getResFromImage(resChoice1.getImage()));
+                resourceMap.put(Id.DEPOT_3, GUIHelper.getInstance().getResFromImage(resChoice2.getImage()));
             }
             UIController.getInstance().chosenStartingResources(resourceMap,
                     cardList.stream().filter(LeaderCardSelection::isSelected).map(LeaderCardSelection::getCard).toArray(LeaderCard[]::new));
@@ -432,8 +441,14 @@ public class LeaderSelectionGUIController extends AbstractGUIController implemen
         }
     }
 
-    public void handleStartTurn() {
-        change(ScreenName.PERSONAL_BOARD);
+    public void goToGame() {
+        Platform.runLater(() -> change(ScreenName.PERSONAL_BOARD));
+    }
+
+    private void setSize() {
+        Stage stage = (Stage) mainPane.getScene().getWindow();
+        stage.setMinWidth(1920);
+        stage.setMinHeight(1080);
     }
 }
 

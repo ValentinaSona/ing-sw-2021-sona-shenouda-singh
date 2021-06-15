@@ -11,9 +11,13 @@ public enum StatusMessage implements Transmittable {
      */
     CLIENT_ERROR,
     /**
-     * Response message if the command could not be executed due to a bad request from the client.
+     * Response message if the command could not be executed due to an unmet requirement.
      */
     REQUIREMENTS_ERROR,
+    /**
+     * Response message if the command could not be executed but a different selection might remove the error.
+     */
+    SELECTION_ERROR,
     /**
      * Response message if the command succeeded, but the other party needs additional information to complete it.
      */

@@ -1,13 +1,12 @@
 package it.polimi.ingsw.client.ui.cli.menus;
 
 
-import it.polimi.ingsw.client.modelview.DepotView;
-import it.polimi.ingsw.client.modelview.GameView;
-import it.polimi.ingsw.client.modelview.MatchSettings;
-import it.polimi.ingsw.client.modelview.PlayerView;
+import it.polimi.ingsw.client.modelview.*;
 import it.polimi.ingsw.client.ui.cli.CLI;
 import it.polimi.ingsw.server.model.*;
 import it.polimi.ingsw.utils.networking.transmittables.servermessages.ServerMessage;
+
+import java.util.EmptyStackException;
 
 import static it.polimi.ingsw.client.ui.cli.CLIHelper.*;
 import static it.polimi.ingsw.client.ui.cli.menus.MenuStates.MAIN;
@@ -148,7 +147,7 @@ public class MenuRunner {
             cli.printMessage(msg);
         }
     }
-
+//TODO: TEST
     /**
      * Used to unlock from waitResponse() when there's multiple possible outcomes for an action.
      * @param action action being unlocked.
@@ -156,11 +155,9 @@ public class MenuRunner {
      * @param msg informational message that will be printed.
      */
     public void sendResponse(GameActions action, GameActions newAction, String msg){
-        sendResponse(action, msg);
-        // TODO: fix;
-        while (wait) {
-        }
+        if (contextAction == action) wait = false;
         setCurrentAction(newAction);
+        sendResponse(action, msg);
     }
 
 
@@ -246,5 +243,49 @@ public class MenuRunner {
         cli.printMessage(output);
 
     }
+    //TODO change getoptions to getint for leadercard select.
+
+    public void printStrongbox(){
+        var box = cli.getView().getStrongboxView();
+        String output = "";
+
+        output += "\t\t      "+ SQUARE+ " " + box.getCoin() + "    "+ SQUARE ;
+        output += "\t\t      "+ SQUARE+ " " + box.getStone() + "   "+ SQUARE ;
+        output += "\t\t      "+ SQUARE+ " " + box.getServant() + " "+ SQUARE ;
+        output += "\t\t      "+ SQUARE+ " " + box.getShield() + "  "+ SQUARE ;
+
+        cli.printMessage(output);
+    }
+
+    public void printSlots(){
+        var slots = cli.getView().getSlots();
+
+        DevelopmentCardSlotView slot = (DevelopmentCardSlotView) slots.get(1);
+        cli.printMessage("Slot 1: ");
+        if (slot.peek() != null)
+            cli.printMessage("\n" + slot.peek().toString() + "Hidden cards value: " + slot.hiddenVP()+" VP.");
+        else
+            cli.printMessage("empty \n");
+
+        slot = (DevelopmentCardSlotView) slots.get(2);
+        cli.printMessage("Slot 2: ");
+        if (slot.peek() != null)
+            cli.printMessage("\n" + slot.peek().toString()+ "Hidden cards value: " + slot.hiddenVP()+" VP.");
+        else
+            cli.printMessage("empty \n");
+
+
+        slot = (DevelopmentCardSlotView) slots.get(3);
+        cli.printMessage("Slot 3: ");
+        if (slot.peek() != null)
+            cli.printMessage("\n" + slot.peek().toString()+ "Hidden cards value: " + slot.hiddenVP()+" VP.");
+
+        else
+            cli.printMessage("empty \n");
+
+
+    }
+
+    public void printProductions(){}
 
 }

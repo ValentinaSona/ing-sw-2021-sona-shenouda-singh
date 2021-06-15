@@ -142,12 +142,12 @@ public class CLIMessageHandler {
             MenuRunner.getInstance().notifyAll();
         }
 
-        if ( message.getUser().getNickName().equals( MatchSettings.getInstance().getClientNickname() )) {
+      /*  if ( message.getUser().getNickName().equals( MatchSettings.getInstance().getClientNickname() )) {
             synchronized (CLIMessageHandler.getInstance()) {
                 cli.setInterrupted(true);
                 CLIMessageHandler.getInstance().notifyAll();
             }
-        }
+        }*/
     }
 
     public void handleServerSetupActionMessage(ServerSetupActionMessage message){

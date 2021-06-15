@@ -5,6 +5,7 @@ import it.polimi.ingsw.client.modelview.MatchSettings;
 import it.polimi.ingsw.client.ui.cli.CLIMessageHandler;
 import it.polimi.ingsw.client.ui.cli.menus.MenuRunner;
 import it.polimi.ingsw.client.ui.gui.GUIHelper;
+import it.polimi.ingsw.client.ui.gui.GUIMessageHandler;
 import it.polimi.ingsw.client.ui.gui.JFXControllers.LeaderSelectionGUIController;
 import it.polimi.ingsw.client.ui.gui.JFXControllers.ScreenName;
 import it.polimi.ingsw.server.model.LeaderCard;
@@ -98,7 +99,7 @@ public class DispatcherController implements Runnable, LambdaObserver {
         GameView.getInstance().setDevelopmentCardsMarket(message.getDevMarketView());
 
         if(gui){
-            ((LobbyMenuController)currentController).handleSetupGameMessage(message);
+            GUIMessageHandler.getInstance().handleSetupGameMessage(message);
         }else{
             CLIMessageHandler.getInstance().handleServerSetupGameMessage(message);
         }
@@ -106,7 +107,7 @@ public class DispatcherController implements Runnable, LambdaObserver {
 
     public void handleUpdateLobby(ServerUpdateLobbyMessage message){
         if(gui){
-            ((LobbyMenuController)currentController).handleUpdateLobbyMessage(message);
+            GUIMessageHandler.getInstance().handleUpdateLobbyMessage(message);
         }else{
             CLIMessageHandler.getInstance().handleUpdateLobbyMessage(message);
         }
@@ -126,7 +127,7 @@ public class DispatcherController implements Runnable, LambdaObserver {
         }
 
         if(gui){
-            ((LeaderCardSelectionController)currentController).handleSetupActionMessage(message);
+            GUIMessageHandler.getInstance().handleSetupActionMessage(message);
         }else {
             CLIMessageHandler.getInstance().handleServerSetupActionMessage(message);
         }
@@ -138,7 +139,7 @@ public class DispatcherController implements Runnable, LambdaObserver {
      * @param message contains resource number, 4 leader cards, a faith track and the addressed user.
      */
     public void handleSetupUser(ServerSetupUserMessage message){
-        GameView.getInstance().getPlayerFromUser(message.getUser()).setFaithTrackView(message.getFaithTrackView());
+       GameView.getInstance().getPlayerFromUser(message.getUser()).setFaithTrackView(message.getFaithTrackView());
 
         if(gui){
 
@@ -152,7 +153,7 @@ public class DispatcherController implements Runnable, LambdaObserver {
                     }
                 }
 
-                ((LeaderCardSelectionController)currentController).handleSetupUserMessage(message);
+                GUIMessageHandler.getInstance().handleServerSetupUserMessage(message);
             }
         }else {
             CLIMessageHandler.getInstance().handleServerSetupUserMessage(message);
@@ -177,7 +178,7 @@ public class DispatcherController implements Runnable, LambdaObserver {
         }
 
         if(gui){
-            ((LeaderSelectionGUIController)currentController).handleStartTurn();
+            GUIMessageHandler.getInstance().handleStartTurn();
         }else {
             CLIMessageHandler.getInstance().handleServerStartTurnMessage(message);
         }
@@ -311,7 +312,7 @@ public class DispatcherController implements Runnable, LambdaObserver {
 
     public void handleStatus(StatusMessage message){
         if(gui){
-            currentController.handleStatusMessage(message);
+            GUIMessageHandler.getInstance().handleStatusMessage(message);
         }else{
             CLIMessageHandler.getInstance().handleStatusMessage(message);
         }

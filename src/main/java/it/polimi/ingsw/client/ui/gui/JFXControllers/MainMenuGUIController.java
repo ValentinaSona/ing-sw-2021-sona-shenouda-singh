@@ -63,54 +63,53 @@ public class MainMenuGUIController extends AbstractGUIController {
     public void goToJoin(ActionEvent actionEvent) {
         if (nicknameField.getText().isEmpty()) emptyNickname.setOpacity(1);
         else {
-            emptyNickname.setOpacity(0);
-            chooseNick.setOpacity(0);
-            nicknameField.setEditable(false);
-            backArrow.setDisable(true);
+            if (nicknameField.getText().length() > 20) {
+                chooseNick.setText("Nickname cannot be longer than 20 characters!");
+            }
+            else {
+                emptyNickname.setOpacity(0);
+                chooseNick.setOpacity(0);
+                nicknameField.setEditable(false);
+                backArrow.setDisable(true);
 
-            joining.setOpacity(1);
-            joinButton.setOpacity(0);
-            joinButton.setDisable(true);
+                joining.setOpacity(1);
+                joinButton.setOpacity(0);
+                joinButton.setDisable(true);
 
-            try {
-                UIController.getInstance().sendNickname(nicknameField.getText(),"127.0.0.1", 10002);
-            } catch (IOException e) {
-                //fallita l'istanziazione della socket porta o url invalidi
-                e.printStackTrace();
+                try {
+                    UIController.getInstance().sendNickname(nicknameField.getText(),"127.0.0.1", 10002);
+                } catch (IOException e) {
+                    chooseNick.setText("Failed to connect...");
+                    e.printStackTrace();
+                }
             }
         }
     }
 
     public void handleNicknameConfirmation(boolean success){
-        Platform.runLater(() -> {
-            System.out.println("ho ricevuto il messagio");
-            if(!success) {
-                // TODO mostrare messaggio di errore
-                joining.setOpacity(0);
-                chooseNick.setOpacity(1);
-                joinButton.setOpacity(1);
-                joinButton.setDisable(false);
-                nicknameField.setEditable(true);
-            }
-            else {
-                String nickname = nicknameField.getText();
-                MatchSettings.getInstance().setClientNickname(nicknameField.getText());
-                if(nickname.equals("a nickname") || nickname.equals("a Nickname") ||
-                        nickname.equals("Nickname") || nickname.equals("nickname"))
-                    party.setOpacity(1);
-                UIController.getInstance().joinLobby();
+        System.out.println("ho ricevuto il messagio");
+        if(!success) {
+            // TODO mostrare messaggio di errore
+            joining.setOpacity(0);
+            chooseNick.setOpacity(1);
+            joinButton.setOpacity(1);
+            joinButton.setDisable(false);
+            nicknameField.setEditable(true);
+        }
+        else {
+            String nickname = nicknameField.getText();
+            MatchSettings.getInstance().setClientNickname(nicknameField.getText());
+            UIController.getInstance().joinLobby();
 
-            }
-        });
+        }
+
     }
 
     public void handleJoinLobbyConfirmation(boolean isFirst){
-        Platform.runLater(() -> {
-            if (isFirst) {
-                setGameCreation();}
-            else
-                setJoiningGame();
-        });
+        if (isFirst) {
+            setGameCreation();}
+        else
+            setJoiningGame();
     }
 
     public void setGameCreation() {
@@ -158,7 +157,6 @@ public class MainMenuGUIController extends AbstractGUIController {
     }
 
     public void handleStatusMessage(StatusMessage message) {
-
         Platform.runLater(() -> {
             if(message.equals(StatusMessage.OK_NICK)){
                 //posso validare il nickname

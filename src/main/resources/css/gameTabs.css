@@ -45,3 +45,7 @@
     -fx-font-size: 60px;
     -fx-text-fill: white;
 }
+
+#end {
+    -fx-background-color: rgba(199, 113, 70, 0.5);
+}

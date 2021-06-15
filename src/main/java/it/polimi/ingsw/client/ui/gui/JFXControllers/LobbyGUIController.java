@@ -4,6 +4,7 @@ package it.polimi.ingsw.client.ui.gui.JFXControllers;
 import it.polimi.ingsw.client.modelview.MatchSettings;
 import it.polimi.ingsw.client.ui.controller.DispatcherController;
 import it.polimi.ingsw.client.ui.controller.LobbyMenuController;
+import it.polimi.ingsw.client.ui.controller.UiControllerInterface;
 import it.polimi.ingsw.client.ui.gui.GUIHelper;
 import it.polimi.ingsw.server.controller.User;
 
@@ -21,7 +22,7 @@ import javafx.stage.Stage;
 
 import java.util.List;
 
-public class LobbyGUIController extends AbstractGUIController implements LobbyMenuController {
+public class LobbyGUIController extends AbstractGUIController implements UiControllerInterface {
 
     Timeline timeline;
 
@@ -55,40 +56,31 @@ public class LobbyGUIController extends AbstractGUIController implements LobbyMe
                 + " players");
     }
 
-    public void handleUpdateLobbyMessage(ServerUpdateLobbyMessage message) {
-        Platform.runLater(() -> {
-            List<User> lobbyUsers = message.getLobbyUsers();
-            MatchSettings.getInstance().setTotalUsers(message.getNumOfPlayer());
+    public void lobbyUpdate (ServerUpdateLobbyMessage message) {
+        List<User> lobbyUsers = message.getLobbyUsers();
+        MatchSettings.getInstance().setTotalUsers(message.getNumOfPlayer());
 
-            players.getItems().clear();
-            MatchSettings.getInstance().setJoiningUsers(lobbyUsers);
+        players.getItems().clear();
+        MatchSettings.getInstance().setJoiningUsers(lobbyUsers);
 
-            for(User u : lobbyUsers){
-                players.getItems().add(u.getNickName());
-            }
+        for(User u : lobbyUsers){
+            players.getItems().add(u.getNickName());
+        }
 
-            updatePlayersHeader();
+        updatePlayersHeader();
 
-            if (MatchSettings.getInstance().getCurrentUsersNum() == MatchSettings.getInstance().getTotalUsers()) {
-                timeline.stop();
-                loading.setOpacity(0);
-                starting.setOpacity(1);
-                Stage stage = (Stage) mainPane.getScene().getWindow();
-                stage.setMaximized(true);
-            }
-        });
+        if (MatchSettings.getInstance().getCurrentUsersNum() == MatchSettings.getInstance().getTotalUsers()) {
+            timeline.stop();
+            loading.setOpacity(0);
+            starting.setOpacity(1);
+            Stage stage = (Stage) mainPane.getScene().getWindow();
+            stage.setMaximized(true);
+        }
     }
 
-    public void handleSetupGameMessage(ServerSetupGameMessage message){
-
-        Platform.runLater(() -> {
-            GUIHelper.getInstance().buildNickList(message.getUsers());
-
-            synchronized (DispatcherController.getInstance()) {
-                change(ScreenName.STARTING_CHOICE);
-                DispatcherController.getInstance().notifyAll();
-            }
-        });
+    public void goToGame(){
+        change(ScreenName.STARTING_CHOICE);
+        DispatcherController.getInstance().notifyAll();
     }
 
     //TODO

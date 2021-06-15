@@ -127,7 +127,7 @@ public class TurnController{
             faithPoints = 1;
         }else if(currentPlayerIdx == 3){
             resources = 2;
-            faithPoints = 2;
+            faithPoints = 1;
         }else{
             new RuntimeException("This should never happen");
         }

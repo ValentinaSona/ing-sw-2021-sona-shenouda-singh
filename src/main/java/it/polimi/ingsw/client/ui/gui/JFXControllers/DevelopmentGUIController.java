@@ -3,39 +3,33 @@ package it.polimi.ingsw.client.ui.gui.JFXControllers;
 import it.polimi.ingsw.client.ui.gui.GUIHelper;
 import it.polimi.ingsw.client.ui.gui.GameLog;
 import it.polimi.ingsw.utils.networking.transmittables.StatusMessage;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.text.TextFlow;
 
-public class MarketGUIController extends AbstractGUIController implements GameGUIControllerInterface {
+public class DevelopmentGUIController extends AbstractGUIController implements GameGUIControllerInterface{
 
     @FXML
-    private StackPane rightPane;
-    @FXML
-    private StackPane centerPane;
+    private GridPane devGrid;
     @FXML
     private TextFlow log;
+    @FXML
+    private StackPane rightPane;
 
     @FXML
     public void initialize() {
-
         GUIHelper.getInstance().setCurrentGameController(this);
         //GameLog.getInstance().update(log);
 
-        GameTemplate.getInstance().setTabs(ScreenName.MARKET);
+        GameTemplate.getInstance().setTabs(ScreenName.DEV_MARKET);
         rightPane.getChildren().add(GameTemplate.getInstance().getPlayersTabs());
         rightPane.getChildren().add(GameTemplate.getInstance().getMarketsTabs());
-        centerPane.getChildren().add(MarketTemplate.getInstance().updateMarket());
-        centerPane.getChildren().add(MarketTemplate.getInstance().getVHighlight());
-        centerPane.getChildren().add(MarketTemplate.getInstance().getHHighlight());
-    }
 
-    public void goToBoard(ActionEvent actionEvent) {
-        change(ScreenName.PERSONAL_BOARD);
-    }
+        updateDevelopment();
 
-    //TODO
+
+    }
 
     @Override
     public void handleStatusMessage(StatusMessage message) {
@@ -43,7 +37,9 @@ public class MarketGUIController extends AbstractGUIController implements GameGU
     }
 
     @Override
-    public void goToMarket() { }
+    public void goToMarket() {
+        change(ScreenName.MARKET);
+    }
 
     @Override
     public void goToClientBoard() {
@@ -51,7 +47,11 @@ public class MarketGUIController extends AbstractGUIController implements GameGU
     }
 
     @Override
-    public void goToDev() {
-        change(ScreenName.DEV_MARKET);
+    public void goToDev() { }
+
+    public void updateDevelopment() {
+
+        GUIHelper.fillDevGrid(devGrid);
+
     }
 }

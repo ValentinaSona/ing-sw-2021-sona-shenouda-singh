@@ -120,8 +120,10 @@ public class SetupMenu {
 
             // Fixing the depots. The user is able to rearrange them as soon as the game starts.
             // Only two cases: the player chooses max 2 resources.
-            if (maxResources == ((ServerSetupUserMessage) runner.getInMsg()).getResources())
+            if (maxResources == 2)
                 resIdMap.put(Id.DEPOT_2, resource);
+            else if (resIdMap.get(Id.DEPOT_2)!= null && resource.getResourceType()== resIdMap.get(Id.DEPOT_2).getResourceType())
+                resIdMap.get(Id.DEPOT_2).add(resource);
             else
                 resIdMap.put(Id.DEPOT_3, resource);
 

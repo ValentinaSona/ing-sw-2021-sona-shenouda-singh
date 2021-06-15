@@ -22,4 +22,13 @@ public class DevelopmentCardSlotView extends SlotView implements Serializable {
         if (!slot.empty()) return slot.peek();
         else return null;
     }
+
+    public int hiddenVP(){
+        int vp = 0;
+        if (slot == null || slot.isEmpty()) return 0;
+        for (DevelopmentCard card : slot){
+            if (card != slot.peek()) vp += card.getVictoryPoints();
+        }
+        return vp;
+    }
 }
