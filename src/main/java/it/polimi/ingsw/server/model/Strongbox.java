@@ -113,21 +113,14 @@ public class Strongbox{
      */
     public void addResources(Resource[] resources){
         for (Resource resource : resources) {
+            if (resource==null) continue;
+
             switch (resource.getResourceType()) {
-                case SHIELD:
-                    this.shield.add(resource);
-                    break;
-                case COIN:
-                    this.coin.add(resource);
-                    break;
-                case STONE:
-                    this.stone.add(resource);
-                    break;
-                case SERVANT:
-                    this.servant.add(resource);
-                    break;
-                default:
-                    throw new RuntimeException("This type of resource is not available in the strongbox");
+                case SHIELD -> this.shield.add(resource);
+                case COIN -> this.coin.add(resource);
+                case STONE -> this.stone.add(resource);
+                case SERVANT -> this.servant.add(resource);
+                default -> throw new RuntimeException("This type of resource is not available in the strongbox");
             }
         }
     }

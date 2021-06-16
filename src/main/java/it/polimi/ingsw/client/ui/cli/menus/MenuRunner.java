@@ -147,7 +147,7 @@ public class MenuRunner {
             cli.printMessage(msg);
         }
     }
-//TODO: TEST
+
     /**
      * Used to unlock from waitResponse() when there's multiple possible outcomes for an action.
      * @param action action being unlocked.
@@ -156,8 +156,7 @@ public class MenuRunner {
      */
     public void sendResponse(GameActions action, GameActions newAction, String msg){
         if (contextAction == action) wait = false;
-        setCurrentAction(newAction);
-        sendResponse(action, msg);
+        sendResponse(newAction, msg);
     }
 
 
@@ -177,7 +176,7 @@ public class MenuRunner {
         int i = 0;
 
         for (LeaderCard card : cards){
-            if (!card.isActive()) {
+            if (card!=null && !card.isActive()) {
                 cli.printMessage(card);
                 i++;
             }
@@ -190,7 +189,7 @@ public class MenuRunner {
         var cards = cli.getView().getLeaderCards();
         int i = 0;
         for (LeaderCard card : cards){
-            if (card.isActive()) {
+            if (card != null && card.isActive()) {
                 cli.printMessage(card);
                 i++;
             }
@@ -219,40 +218,39 @@ public class MenuRunner {
 
 
             if(depot.getId()== Id.DEPOT_1){
-                output += "\t\t      "+ SQUARE+ " " + content+filler + " " + SQUARE + "\t Depot 1, capacity: 1\n";
+                output += "\t\t"+ SQUARE+ " " + content+filler + " " + SQUARE + "         Depot 1, capacity: 1\n";
             }
 
             if(depot.getId()== Id.DEPOT_2){
-                output += "\t\t    "+ SQUARE+ " " + SQUARE+ " " +content+filler +" " + SQUARE + " " + SQUARE + "\t Depot 2, capacity: 2\n";
+                output += "\t\t" + SQUARE+ " " +content+filler +" " + SQUARE + " " + SQUARE + "       Depot 2, capacity: 2\n";
             }
 
             if(depot.getId()== Id.DEPOT_3){
 
-                output += "\t\t  "+ SQUARE+ " " + SQUARE+ " " + SQUARE+ " "+ content+filler + " " +SQUARE+ " " + SQUARE+ " " + SQUARE+ " \t Depot 3, capacity: 3\n";
+                output += "\t\t"+ SQUARE+ " "+ content+filler + " " +SQUARE+ " " + SQUARE+ " " + SQUARE+ "     Depot 3, capacity: 3\n";
             }
 
             if(depot.getId()== Id.S_DEPOT_1){
-                output += "\t\t    "+ SQUARE+ " " + SQUARE+ " " +content+filler +" " + SQUARE + " " + SQUARE + "\t Special depot 1, capacity: 2, type: " + depot.getResource().getResourceType() +"\n";
+                output += "\t\t" + SQUARE+ " " +content+filler +" " + SQUARE + " " + SQUARE + "\t Special depot 1, capacity: 2, type: " + depot.getResource().getResourceType() +"\n";
             }
 
             if(depot.getId()== Id.S_DEPOT_2){
-                output += "\t\t    "+ SQUARE+ " " + SQUARE+ " " +content+filler +" " + SQUARE + " " + SQUARE + "\t Special depot 2, capacity: 2, type: " + depot.getResource().getResourceType() +"\n";
+                output += "\t\t "+ SQUARE+ " " +content+filler +" " + SQUARE + " " + SQUARE + "\t Special depot 2, capacity: 2, type: " + depot.getResource().getResourceType() +"\n";
             }
 
         }
         cli.printMessage(output);
 
     }
-    //TODO change getoptions to getint for leadercard select.
 
     public void printStrongbox(){
         var box = cli.getView().getStrongboxView();
         String output = "";
 
-        output += "\t\t      "+ SQUARE+ " " + box.getCoin() + "    "+ SQUARE ;
-        output += "\t\t      "+ SQUARE+ " " + box.getStone() + "   "+ SQUARE ;
-        output += "\t\t      "+ SQUARE+ " " + box.getServant() + " "+ SQUARE ;
-        output += "\t\t      "+ SQUARE+ " " + box.getShield() + "  "+ SQUARE ;
+        output += "\t\t"+ SQUARE+ " " + box.getCoin() + "    "+ SQUARE +"\n";
+        output += "\t\t"+ SQUARE+ " " + box.getStone() + "   "+ SQUARE +"\n";
+        output += "\t\t"+ SQUARE+ " " + box.getServant() + " "+ SQUARE +"\n";
+        output += "\t\t"+ SQUARE+ " " + box.getShield() + "  "+ SQUARE +"\n";
 
         cli.printMessage(output);
     }
@@ -283,9 +281,48 @@ public class MenuRunner {
         else
             cli.printMessage("empty \n");
 
-
+//TODO hiddenVP should print colors of cards.
     }
 
-    public void printProductions(){}
+    public void printProductions(){
+
+        var slots = cli.getView().getSlots();
+
+        cli.printMessage("Board Production: 1 JOLLY + 1 JOLLY -> 1 JOLLY");
+
+        DevelopmentCardSlotView slot = (DevelopmentCardSlotView) slots.get(1);
+        cli.printMessage("Slot 1: ");
+        if (slot.peek() != null)
+            cli.printMessage("\n" + slot.peek().toString() + "Hidden cards value: " + slot.hiddenVP()+" VP.");
+        else
+            cli.printMessage("empty \n");
+
+        slot = (DevelopmentCardSlotView) slots.get(2);
+        cli.printMessage("Slot 2: ");
+        if (slot.peek() != null)
+            cli.printMessage("\n" + slot.peek().toString()+ "Hidden cards value: " + slot.hiddenVP()+" VP.");
+        else
+            cli.printMessage("empty \n");
+
+
+        slot = (DevelopmentCardSlotView) slots.get(3);
+        cli.printMessage("Slot 3: ");
+        if (slot.peek() != null)
+            cli.printMessage("\n" + slot.peek().toString()+ "Hidden cards value: " + slot.hiddenVP()+" VP.");
+
+        else
+            cli.printMessage("empty \n");
+
+        SpecialProductionView special;
+        if (slots.size() >= 5) {
+            special = (SpecialProductionView) slots.get(4);
+            cli.printMessage("Special slot 1:\n " + special.getSpecialProduction());
+        }
+        if (slots.size() >= 6) {
+            special = (SpecialProductionView) slots.get(5);
+            cli.printMessage("Special slot 2:\n " + special.getSpecialProduction());
+        }
+
+    }
 
 }

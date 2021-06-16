@@ -45,6 +45,8 @@ public abstract class Slot {
     }
 
     public abstract Resource[] activateProduction();
+    public abstract Resource[] productionCost();
+
 
     public Id getId() { return id;}
 }

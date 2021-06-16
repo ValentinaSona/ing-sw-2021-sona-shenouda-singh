@@ -5,8 +5,10 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.typeadapters.RuntimeTypeAdapterFactory;
 
+import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.InputStreamReader;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -16,7 +18,8 @@ import java.util.stream.Stream;
 
 public class LeaderCardsKeeper {
 
-    final private static String path = "./src/main/resources/config/leadercards.json";
+    final private static String path = "config/leadercards.json";
+    final private static String completePath = "./src/main/resources/" + path;
 
     List<LeaderCard> leaderCards;
 
@@ -35,14 +38,17 @@ public class LeaderCardsKeeper {
         //Gson gson = new Gson();
         try {
 
-
-
-            leaderCards =  Stream.of(gson.fromJson(new FileReader(path), LeaderCard[].class)).collect(Collectors.toList());
-            // Json file added, still has to be tested
+            var file = new FileReader(completePath);
+            leaderCards =  Stream.of(gson.fromJson(file, LeaderCard[].class)).collect(Collectors.toList());
 
         } catch (FileNotFoundException e) {
-            e.printStackTrace();
+
+            var input = new BufferedReader(new InputStreamReader(LeaderCardsKeeper.class.getClassLoader().getResourceAsStream(path)));
+            leaderCards =  Stream.of(gson.fromJson(input, LeaderCard[].class)).collect(Collectors.toList());
+
         }
+            // Json file added, still has to be tested
+
         Collections.shuffle(leaderCards);
     }
 

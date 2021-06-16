@@ -8,14 +8,14 @@ import it.polimi.ingsw.client.ui.controller.UiControllerInterface;
 import it.polimi.ingsw.client.ui.gui.JFXControllers.GameGUIControllerInterface;
 import it.polimi.ingsw.client.ui.gui.JFXControllers.ScreenName;
 import it.polimi.ingsw.server.controller.User;
-import it.polimi.ingsw.server.model.DevelopmentCard;
-import it.polimi.ingsw.server.model.MarketMarble;
-import it.polimi.ingsw.server.model.Resource;
-import it.polimi.ingsw.server.model.ResourceType;
+import it.polimi.ingsw.server.model.*;
 import javafx.animation.*;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Insets;
+import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
@@ -39,10 +39,20 @@ public class GUIHelper {
     private PlayerView clientView;
     private UiControllerInterface currentController;
     private GameGUIControllerInterface currentGameController;
+    private ImageView devVisualizer;
+    private String selectedPlayer;
+    private Image screenshot;
 
     private static GUIHelper singleton;
+    private double screenHeight;
+    private ScreenName prevScreen;
 
-    private GUIHelper() {}
+    private GUIHelper() {
+        devVisualizer = new ImageView();
+        devVisualizer.setFitWidth(400);
+        devVisualizer.setPreserveRatio(true);
+        StackPane.setMargin(devVisualizer, new Insets(0, 0, 0, 1000));
+    }
 
     public static GUIHelper getInstance() {
         if (singleton == null) singleton = new GUIHelper();
@@ -110,11 +120,40 @@ public class GUIHelper {
         for(int i = 2; i >= 0; i--) {
             for(int j = 0; j < 4; j++) {
 
-                if (cards[i][j] != null)
-                    grid.add(new ImageView(new Image("assets/game/development_cards/" + cards[i][j].getId() + ".png", 187, 281, false, false)), j, i);
+                if (cards[i][j] != null) {
+                    grid.add(new ImageView(getInstance().getImage(cards[i][j], 187, 281)), j, i);
+                }
 
             }
         }
+
+    }
+
+    public void updateDevGrid (GridPane grid) {
+
+        DevelopmentCard[][] cards = GameView.getInstance().getDevelopmentCardsMarket().getTray();
+
+        grid.getChildren().clear();
+
+        for(int i = 2; i >= 0; i--) {
+            for(int j = 0; j < 4; j++) {
+
+                var tempIm = getInstance().getImage(cards[i][j]);
+                var tempView = new ImageView(tempIm);
+
+                tempView.setFitWidth(187);
+                tempView.setPreserveRatio(true);
+
+                tempView.setOnMouseEntered(e -> devVisualizer.setImage(tempIm));
+
+                if (cards[i][j] != null) {
+                    grid.add(tempView, j, i);
+                }
+
+            }
+        }
+
+        grid.setOnMouseExited(e -> devVisualizer.setImage(null));
 
     }
 
@@ -166,6 +205,18 @@ public class GUIHelper {
         return new Image("assets/game/marbles/" + marble.toString().toLowerCase() + ".png", x, y, false, false);
     }
 
+    public Image getImage(DevelopmentCard card, int x, int y) {
+        return new Image("assets/game/development_cards/" + card.getId() + ".png", x, y, false, false);
+    }
+
+    public Image getImage(DevelopmentCard card) {
+        return new Image("assets/game/development_cards/" + card.getId() + ".png");
+    }
+
+    public Image getImage(LeaderCard card, int x, int y) {
+        return new Image("assets/game/leader_cards/" + card.getId() + ".png", x, y, false, false);
+    }
+
     public void setScreen(ScreenName screen) {
         Scene scene = GUIHelper.getInstance().getCurrentScene();
 
@@ -182,7 +233,49 @@ public class GUIHelper {
         for (String css : stylesheets) {
             scene.getStylesheets().add("css/" + css);
         }
+        setPrevScreen(getCurrentScreen());
+        setCurrentScreen(screen);
+    }
 
-        GUIHelper.getInstance().setCurrentScreen(screen);
+    private void setPrevScreen(ScreenName prevScreen) {
+        this.prevScreen = prevScreen;
+    }
+
+    public ImageView getDevVisualizer() {
+        return devVisualizer;
+    }
+
+    public PlayerView getSelectedPlayer() {
+
+        var players = GameView.getInstance().getPlayers();
+        PlayerView selected = getInstance().getClientView();
+        for(PlayerView p : players) {
+            if(p.getNickname().equals(selectedPlayer)) selected = p;
+        }
+        return selected;
+    }
+
+    public void setSelectedPlayer(Object source) {
+        this.selectedPlayer = ((Button)source).getText();
+    }
+
+    public void setResolution(double height) {
+        this.screenHeight = height;
+    }
+
+    public double getResolution () {
+        return screenHeight;
+    }
+
+    public void setScreenshot(Image image) {
+        screenshot = image;
+    }
+
+    public Image getScreenShot() {
+        return screenshot;
+    }
+
+    public ScreenName getPrevScreen() {
+        return prevScreen;
     }
 }

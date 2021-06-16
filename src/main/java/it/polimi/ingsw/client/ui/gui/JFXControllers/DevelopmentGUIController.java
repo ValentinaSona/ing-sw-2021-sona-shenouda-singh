@@ -3,6 +3,7 @@ package it.polimi.ingsw.client.ui.gui.JFXControllers;
 import it.polimi.ingsw.client.ui.gui.GUIHelper;
 import it.polimi.ingsw.client.ui.gui.GameLog;
 import it.polimi.ingsw.utils.networking.transmittables.StatusMessage;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.StackPane;
@@ -15,16 +16,16 @@ public class DevelopmentGUIController extends AbstractGUIController implements G
     @FXML
     private TextFlow log;
     @FXML
-    private StackPane rightPane;
+    private StackPane rightPane, centerPane;
 
     @FXML
     public void initialize() {
         GUIHelper.getInstance().setCurrentGameController(this);
-        //GameLog.getInstance().update(log);
-
         GameTemplate.getInstance().setTabs(ScreenName.DEV_MARKET);
         rightPane.getChildren().add(GameTemplate.getInstance().getPlayersTabs());
         rightPane.getChildren().add(GameTemplate.getInstance().getMarketsTabs());
+
+        centerPane.getChildren().add(GUIHelper.getInstance().getDevVisualizer());
 
         updateDevelopment();
 
@@ -49,9 +50,15 @@ public class DevelopmentGUIController extends AbstractGUIController implements G
     @Override
     public void goToDev() { }
 
+    @Override
+    public void goToOtherBoard(ActionEvent e) {
+        GUIHelper.getInstance().setSelectedPlayer(e.getSource());
+        change(ScreenName.OTHER_BOARD);
+    }
+
     public void updateDevelopment() {
 
-        GUIHelper.fillDevGrid(devGrid);
+        GUIHelper.getInstance().updateDevGrid(devGrid);
 
     }
 }

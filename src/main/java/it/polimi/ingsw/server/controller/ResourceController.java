@@ -3,16 +3,12 @@ package it.polimi.ingsw.server.controller;
 
 import it.polimi.ingsw.server.exception.*;
 import it.polimi.ingsw.server.model.*;
-import it.polimi.ingsw.server.view.RealRemoteViewHandler;
 import it.polimi.ingsw.server.view.RemoteViewHandler;
 import it.polimi.ingsw.utils.networking.transmittables.StatusMessage;
 import it.polimi.ingsw.utils.networking.transmittables.clientmessages.game.*;
 import it.polimi.ingsw.utils.networking.transmittables.servermessages.*;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class ResourceController{
     private static ResourceController singleton;
@@ -367,15 +363,16 @@ public class ResourceController{
             } catch (InvalidDepotException invalidDepotException) {
                 //if i am trying to subtract more resources than the ones in a depot
                 //this should never happen
-                view.handleStatusMessage(StatusMessage.CLIENT_ERROR);
+                view.handleStatusMessage(StatusMessage.REQUIREMENTS_ERROR);
             } catch (NotSufficientResourceException e) {
                 //if the check fails
                 try{
                     resetResources(player, e.getTempResources());
-                    view.handleStatusMessage(StatusMessage.CLIENT_ERROR);
+                    view.handleStatusMessage(StatusMessage.SELECTION_ERROR);
                 }catch(InvalidDepotException invalidDepotException){
                     //if i enter this catch there is a problem in the way i am restoring the resources
                     invalidDepotException.printStackTrace();
+                    view.handleStatusMessage(StatusMessage.SERVER_ERROR);
                 }
 
             }
@@ -389,7 +386,7 @@ public class ResourceController{
      * @param view the player's corresponding RealRemoteViewHandler that will handle status messages to be sent back to the view.
      * @param user the User corresponding to the player making the action.
      */
-    public void activateProduction(ClientActivateProductionMessage action, RemoteViewHandler view, User user){
+    public void activateProduction(ClientActivateProductionMessage action, RemoteViewHandler view, User user) throws EndOfGameException {
 
         Player player = model.getPlayerFromUser(user);
 
@@ -399,17 +396,42 @@ public class ResourceController{
         } else {
             player.toggleMainAction();
             List<Slot> slots = player.getSlots();
+            HashMap<ResourceType, Resource> spent = new HashMap<>();
+            HashMap<ResourceType, Resource> gained = new HashMap<>();
 
             for (Slot dev : slots) {
                 if (dev.isConfirmed()) {
-                    player.getStrongbox().addResources(dev.activateProduction());
+
+                    for (Resource resource: dev.productionCost()){
+                        if (spent.containsKey(resource.getResourceType())) {
+                            spent.get(resource.getResourceType()).add(resource);
+                        } else spent.put(resource.getResourceType(), resource);
+                    }
+
+                    Resource[] productionOut = dev.activateProduction();
+
+                    for (Resource resource: productionOut){
+                        if (gained.containsKey(resource.getResourceType())) {
+                            gained.get(resource.getResourceType()).add(resource);
+                        } else gained.put(resource.getResourceType(), resource);
+
+                        if (resource.getResourceType()== ResourceType.FAITH){
+                            addFaithPoints(player, resource);
+                        } else {
+                            player.getStrongbox().addResources(resource);
+                        }
+                    }
+
+
+
                 }
             }
 
+
             model.notify(new ServerActivateProductionMessage(
                     player.getVisibleStrongbox(),
-                    model.getUserFromPlayer(player)
-            ));
+                    model.getUserFromPlayer(player),
+                    new ArrayList<Resource>(gained.values()), new ArrayList<Resource>(spent.values())));
 
         }
     }

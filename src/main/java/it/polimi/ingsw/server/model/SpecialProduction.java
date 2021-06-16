@@ -53,13 +53,22 @@ public class SpecialProduction extends Slot {
     @Override
     public Resource[] activateProduction() {
         if(confirmed){
+            Resource[] gained = new Resource[]{new Resource(1, chosenType), new Resource(1, ResourceType.FAITH)};
             confirmed = false;
             chosenType = null;
             resourceCloset.clear();
             originResourceHashMap.clear();
-            return new Resource[]{new Resource(1, chosenType), new Resource(1, ResourceType.FAITH)};
+            return gained;
         }else {
             return null;
         }
+    }
+    @Override
+    public Resource[] productionCost(){
+        return new Resource[]{new Resource(1, chosenType), new Resource(1, ResourceType.FAITH)};
+    }
+
+    public ResourceType getChosenType() {
+        return chosenType;
     }
 }

@@ -123,6 +123,11 @@ public class DevelopmentCardSlot extends Slot {
     }
 
     @Override
+    public Resource[] productionCost(){
+        return slot.peek().getProduction().getProductionCost();
+    }
+
+    @Override
     public Resource[] activateProduction(){
         if(confirmed){
             DevelopmentCard activateDev = slot.peek();

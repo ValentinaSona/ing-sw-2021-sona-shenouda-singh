@@ -1,5 +1,6 @@
 package it.polimi.ingsw.client.ui.cli;
 
+import it.polimi.ingsw.client.modelview.DepotView;
 import it.polimi.ingsw.client.modelview.GameView;
 import it.polimi.ingsw.client.modelview.MatchSettings;
 import it.polimi.ingsw.client.modelview.PlayerView;
@@ -59,25 +60,38 @@ public class CLI implements Ui {
         output.println(msg);
     }
 
-    public Pair<Id, Resource> getIdResourcePair(boolean strongbox, boolean special, int special_num){
-        // TODO: add boolean if for devSlots
+    public Pair<Id, Resource> getIdResourcePair(boolean strongbox){
+        boolean special = false;
+        int special_num = 0;
+        for (DepotView depot: view.getWarehouse()){
+            if (depot.getId() == Id.S_DEPOT_1 || depot.getId() == Id.S_DEPOT_2 ) {
+                special_num++;
+                special = true;
+            }
+        }
+
         String regex = "";
         String desc = "";
         String[] choice;
 
         if (special) {
             if (strongbox){
-                desc = "Format: <number> <resource type> @ <D or S or B><number>";
-                if (special_num == 1) regex = "[0-9]+[ ](stone|coin|servant|shield)[s]?( @ )([D][1-3]|[S][1]|[B][1-4])$";
-                if (special_num == 1) regex = "[0-9]+[ ](stone|coin|servant|shield)[s]?( @ )([D][1-3]|[S][1-2]|[B])$";
+                desc = "Format: <number> <resource type> @ <D or S><number> or <B>";
+                if (special_num == 1) regex = "[0-9]+[ ](stone|coin|servant|shield)[s]?( @ )([D][1-3]|[S][1]|[B])$";
+                if (special_num == 2) regex = "[0-9]+[ ](stone|coin|servant|shield)[s]?( @ )([D][1-3]|[S][1-2]|[B])$";
             } else {
                 desc = "Format: <number> <resource type> @ <D or S><number>";
                 if (special_num == 1) regex = "[0-9]+[ ](stone|coin|servant|shield)[s]?( @ )([D][1-3]|[S][1])$";
-                if (special_num == 1) regex = "[0-9]+[ ](stone|coin|servant|shield)[s]?( @ )([D][1-3]|[S][1-2])$";
+                if (special_num == 2) regex = "[0-9]+[ ](stone|coin|servant|shield)[s]?( @ )([D][1-3]|[S][1-2])$";
             }
         } else {
-            desc = "Format: <number> <resource type> @ <D><number>";
-            regex = "[0-9]+[ ](stone|coin|servant|shield)[s]?( @ )[D][1-3]$";
+            if (strongbox){
+                desc = "Format: <number> <resource type> @ <D><number> or <B>";
+                regex = "[0-9]+[ ](stone|coin|servant|shield)[s]?( @ )([D][1-3]|[B])$";
+            } else {
+                desc = "Format: <number> <resource type> @ <D><number>";
+                regex = "[0-9]+[ ](stone|coin|servant|shield)[s]?( @ )[D][1-3]$";
+            }
         }
         do {
             choice = getString(regex, desc).split(" ", 4);
@@ -144,7 +158,7 @@ public class CLI implements Ui {
         }
         return new int[]{Integer.parseInt(choice[0])-1,type};
     }
-
+// TODO Test on the four player thingy cuz not working yet
     public int getChoice(String[] options, boolean enableRefresh, boolean isMenu, boolean interruptible){
         int optNum = 1;
         int choice;
@@ -161,6 +175,8 @@ public class CLI implements Ui {
             try {
                 if ((((!enableRefresh || refreshed ) && System.in.available()!=0)) || !interruptible) {
                     // Normal program execution. Enters here only if hasNextInt() won't be blocking.
+                    refreshed = false;
+                    enableRefresh = false;
                     if (input.hasNextInt()) {
                         choice = input.nextInt();
 
