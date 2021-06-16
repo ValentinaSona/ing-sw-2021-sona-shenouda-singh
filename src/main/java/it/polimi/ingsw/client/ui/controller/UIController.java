@@ -4,10 +4,7 @@ import it.polimi.ingsw.client.modelview.MatchSettings;
 import it.polimi.ingsw.client.ui.Ui;
 import it.polimi.ingsw.server.controller.Controller;
 import it.polimi.ingsw.server.controller.User;
-import it.polimi.ingsw.server.model.Game;
-import it.polimi.ingsw.server.model.Id;
-import it.polimi.ingsw.server.model.LeaderCard;
-import it.polimi.ingsw.server.model.Resource;
+import it.polimi.ingsw.server.model.*;
 import it.polimi.ingsw.server.view.MockRemoteViewHandler;
 import it.polimi.ingsw.server.view.RealRemoteViewHandler;
 import it.polimi.ingsw.server.view.RemoteViewHandler;
@@ -196,6 +193,10 @@ public class UIController implements LambdaObserver{
 
     public void depositResourcesIntoSlot(Id slot,  Map<Id, Resource> map){send((Transmittable) new ClientDepositResourceIntoSlotMessage(slot, map));}
 
+    public void depositResourcesIntoSlot(Id slot, Map<Id, Resource> map, ResourceType resourceType, Boolean card){send((Transmittable) new ClientDepositResourceIntoSlotMessage(slot, map, resourceType, card));}
+
     public void buyTargetCard(Id id){send((Transmittable)new ClientBuyTargetCardMessage(id));}
+
+    public void activateProduction(){send((Transmittable)new ClientActivateProductionMessage());}
 
 }

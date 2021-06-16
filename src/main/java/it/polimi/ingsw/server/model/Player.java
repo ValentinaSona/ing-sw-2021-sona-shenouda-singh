@@ -382,7 +382,7 @@ public class Player extends LambdaObservable<Transmittable> {
 			if (slot.getId()==Id.SLOT_1||slot.getId()==Id.SLOT_2||slot.getId()==Id.SLOT_3)
 				list.add(new DevelopmentCardSlotView(slot.getId(), ((DevelopmentCardSlot)slot).getSlot()));
 			else if (slot.getId()==Id.S_SLOT_1||slot.getId()==Id.S_SLOT_2)
-				list.add(new SpecialProductionView(slot.getId(), slot.isConfirmed()));
+				list.add(new SpecialProductionView(slot.getId(), slot.isConfirmed(), ((SpecialProduction)slot).getChosenType()));
 		}
 
 		return list;

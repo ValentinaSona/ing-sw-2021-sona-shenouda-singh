@@ -10,6 +10,8 @@ import it.polimi.ingsw.server.model.Resource;
 import it.polimi.ingsw.utils.networking.transmittables.StatusMessage;
 import it.polimi.ingsw.utils.networking.transmittables.servermessages.*;
 
+import java.util.stream.Collectors;
+
 import static it.polimi.ingsw.client.ui.cli.CLIHelper.CHECK_MARK;
 
 public class CLIMessageHandler {
@@ -74,6 +76,8 @@ public class CLIMessageHandler {
             MenuRunner.getInstance().sendResponse(GameActions.SELECT_CARD,GameActions.MENU,"[X] This card cannot be placed on top of this slot.");
           else if (MenuRunner.getInstance().getContextAction()==GameActions.BUY_CARD)
               MenuRunner.getInstance().sendResponse(GameActions.BUY_CARD,GameActions.MENU,"[X] The resources selected are not sufficient to buy this card.");
+          else if (MenuRunner.getInstance().getContextAction()==GameActions.SELECT_PRODUCTION)
+              MenuRunner.getInstance().sendResponse(GameActions.SELECT_PRODUCTION,GameActions.MENU,"[X] The resources selected are not sufficient to activate this production.");
     }
 
     private void handleContinue() {
@@ -97,6 +101,9 @@ public class CLIMessageHandler {
             MenuRunner.getInstance().sendResponse(GameActions.BUY_CARD,GameActions.MENU,"[X] You have tried to subtract from a depot more resources than it contains.");
         else if(MenuRunner.getInstance().getContextAction()==GameActions.DEPOSIT_RESOURCES)
             MenuRunner.getInstance().sendResponse(GameActions.DEPOSIT_RESOURCES,"[X] This resource cannot be deposited there.");
+        else if (MenuRunner.getInstance().getContextAction()==GameActions.SELECT_PRODUCTION)
+            MenuRunner.getInstance().sendResponse(GameActions.SELECT_PRODUCTION,GameActions.MENU,"[X] The sources selected do not contain the resources selected.");
+
 
     }
 
@@ -257,11 +264,31 @@ public class CLIMessageHandler {
 
     public void handleServerDepositIntoSlotMessage(ServerDepositIntoSlotMessage message) {
         if (message.getUser().getNickName().equals(MatchSettings.getInstance().getClientNickname()))
-            MenuRunner.getInstance().sendResponse(GameActions.BUY_CARD,"[" + CHECK_MARK + "] Your resources have been spent to buy the card.");
+            if(MenuRunner.getInstance().getContextAction()==GameActions.BUY_CARD)
+                MenuRunner.getInstance().sendResponse(GameActions.BUY_CARD,"[" + CHECK_MARK + "] Your resources have been spent to buy the card.");
+            else if(MenuRunner.getInstance().getContextAction()==GameActions.SELECT_PRODUCTION)
+                MenuRunner.getInstance().sendResponse(GameActions.SELECT_PRODUCTION,"[" + CHECK_MARK + "] Your resources have been spent to pay the production cost.");
     }
 
     public void handleServerBuyDevelopmentCardMessage(ServerBuyDevelopmentCardMessage message) {
         if (message.getUser().getNickName().equals(MatchSettings.getInstance().getClientNickname()))
             MenuRunner.getInstance().sendResponse(GameActions.ACQUIRE_CARD,"[" + CHECK_MARK + "] You have acquired the following card: ");
+    }
+
+    public void handleServerActivateProductionMessage(ServerActivateProductionMessage message) {
+        String costPrint = message.getSpent().stream()
+                .map(String::valueOf)
+                .collect(Collectors.joining(" , ", "", ""));
+        String gainPrint = message.getGained().stream()
+                .map(String::valueOf)
+                .collect(Collectors.joining(" , ", "", ""));
+        if (message.getUser().getNickName().equals(MatchSettings.getInstance().getClientNickname())){
+            MenuRunner.getInstance().sendResponse(GameActions.ACTIVATE_PRODUCTION,"[" + CHECK_MARK + "] You have spent " + costPrint + " and received "+ gainPrint + ".");
+
+    }
+        else {
+
+            cli.printMessage("[" + CHECK_MARK + "] " + message.getUser().getNickName() + " has spent " + costPrint + " to activate their productions and received "+ gainPrint + ".");
+        }
     }
 }

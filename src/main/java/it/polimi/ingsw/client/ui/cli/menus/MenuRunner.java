@@ -242,7 +242,6 @@ public class MenuRunner {
         cli.printMessage(output);
 
     }
-    //TODO change getoptions to getint for leadercard select.
 
     public void printStrongbox(){
         var box = cli.getView().getStrongboxView();
@@ -282,9 +281,48 @@ public class MenuRunner {
         else
             cli.printMessage("empty \n");
 
-
+//TODO hiddenVP should print colors of cards.
     }
 
-    public void printProductions(){}
+    public void printProductions(){
+
+        var slots = cli.getView().getSlots();
+
+        cli.printMessage("Board Production: 1 JOLLY + 1 JOLLY -> 1 JOLLY");
+
+        DevelopmentCardSlotView slot = (DevelopmentCardSlotView) slots.get(1);
+        cli.printMessage("Slot 1: ");
+        if (slot.peek() != null)
+            cli.printMessage("\n" + slot.peek().toString() + "Hidden cards value: " + slot.hiddenVP()+" VP.");
+        else
+            cli.printMessage("empty \n");
+
+        slot = (DevelopmentCardSlotView) slots.get(2);
+        cli.printMessage("Slot 2: ");
+        if (slot.peek() != null)
+            cli.printMessage("\n" + slot.peek().toString()+ "Hidden cards value: " + slot.hiddenVP()+" VP.");
+        else
+            cli.printMessage("empty \n");
+
+
+        slot = (DevelopmentCardSlotView) slots.get(3);
+        cli.printMessage("Slot 3: ");
+        if (slot.peek() != null)
+            cli.printMessage("\n" + slot.peek().toString()+ "Hidden cards value: " + slot.hiddenVP()+" VP.");
+
+        else
+            cli.printMessage("empty \n");
+
+        SpecialProductionView special;
+        if (slots.size() >= 5) {
+            special = (SpecialProductionView) slots.get(4);
+            cli.printMessage("Special slot 1:\n " + special.getSpecialProduction());
+        }
+        if (slots.size() >= 6) {
+            special = (SpecialProductionView) slots.get(5);
+            cli.printMessage("Special slot 2:\n " + special.getSpecialProduction());
+        }
+
+    }
 
 }

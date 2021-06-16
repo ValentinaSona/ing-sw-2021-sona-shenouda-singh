@@ -3,14 +3,13 @@ package it.polimi.ingsw.client.ui.cli.menus;
 import it.polimi.ingsw.client.modelview.DepotView;
 import it.polimi.ingsw.client.modelview.DevelopmentCardSlotView;
 import it.polimi.ingsw.client.modelview.GameView;
+import it.polimi.ingsw.client.modelview.SpecialProductionView;
 import it.polimi.ingsw.client.ui.cli.CLI;
 import it.polimi.ingsw.client.ui.controller.UIController;
 import it.polimi.ingsw.server.model.*;
 import javafx.util.Pair;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
+
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static it.polimi.ingsw.client.ui.cli.CLIHelper.CHECK_MARK;
@@ -31,7 +30,7 @@ public class GameMenu {
 
     public void run(){
         this.runner = MenuRunner.getInstance(cli);
-        gameMenu(false);
+        gameMenu();
     }
 
     private String[] getGameOptions(){
@@ -49,47 +48,210 @@ public class GameMenu {
     }
 
 
-    private void gameMenu(boolean hasBeenRefreshed) {
-        String[] options = getGameOptions();
+    private void gameMenu() {
+        boolean hasBeenRefreshed = false;
 
-        switch (cli.getChoice(options, hasBeenRefreshed, true)){
-            case 0 -> gameMenu(true);
-            case 1 -> {
-                marketBuy();
-                gameMenu(false);
-            }
-            case 2 -> {
-                cardBuy();
-                gameMenu(false);
-            }
-            case 3 -> {
-                runner.printDepots();
-                runner.printStrongbox();
-                //TODO change with prodslots.
-                runner.printSlots();
-                runner.printPlayedLeaders();
-                gameMenu(false);
-            }
+        do {
+            String[] options = getGameOptions();
 
-            case 5 -> {
-                runner.printFaithTracks();
-                gameMenu(false);
-            }
+            switch (cli.getChoice(options, hasBeenRefreshed, true)) {
+                case 0 -> hasBeenRefreshed = true;
+                case 1 -> {
+                    marketBuy();
+                    hasBeenRefreshed = false;
+                }
+                case 2 -> {
+                    cardBuy();
+                    hasBeenRefreshed = false;
+                }
+                case 3 -> {
+                    activateProductions();
+                    hasBeenRefreshed = false;
+                }
 
-            case 6 -> {
-                tidyWarehouse();
-                gameMenu(false);
+                case 5 -> {
+                    runner.printFaithTracks();
+                    hasBeenRefreshed = false;
+                }
+
+                case 6 -> {
+                    tidyWarehouse();
+                    hasBeenRefreshed = false;
+                }
+                case 7 -> {
+                    leaderAction();
+                    hasBeenRefreshed = false;
+                }
+                case 8 -> {
+                    endOfTurn();
+                    hasBeenRefreshed = false;
+                }
+                default -> {hasBeenRefreshed = false;}
             }
-            case 7 -> {
-                leaderAction();
-                gameMenu(false);
-            }
-            case 8 -> {
-                endOfTurn();
-                gameMenu(false);
-            }
-            default -> gameMenu(false);
+        } while (runner.getState()== MenuStates.GAME);
+    }
+
+    private void activateProductions() {
+        runner.printDepots();
+        runner.printStrongbox();
+        runner.printPlayedLeaders();
+        runner.printProductions();
+
+        // Set the player's choice or return if they can only observe.
+        if (cli.getView().isMyTurn() && cli.getView().isMainAction()) {
+            if (!cli.getYesOrNo("Do you wish to activate your productions?")) return;
+        } else return;
+
+            Id[] slots = new Id[]{Id.BOARD_PRODUCTION, Id.SLOT_1, Id.SLOT_2, Id.SLOT_2, Id.S_SLOT_1, Id.S_SLOT_2};
+
+            // TODO REFACTOR so that resources are asked per productions as they be selected.
+        String[] options;
+        if (cli.getView().getSlots().size() == 4) options = new String[]{"Board production","Slot 1", "Slot 2", "Slot 3", "Activate the selected productions"};
+        else if (cli.getView().getWarehouse().size() == 5) options = new String[]{"Board production","Slot 1", "Slot 2", "Slot 3", "Special production 1", "Activate the selected productions"};
+        else options = new String[]{"Board production","Slot 1", "Slot 2", "Slot 3", "Special production 1", "Special production 2", "Activate the selected productions"};
+
+
+        int choice;
+        int empty = 0;
+
+
+        for (int i = 1; i < 4; i++){
+          if(((DevelopmentCardSlotView)cli.getView().getSlots().get(i)).peek() == null){
+              options[i] = options [i] + " - Empty";
+              empty++;
+              slots[i] = null;
+          }
         }
+
+
+        List<Id> productions = new ArrayList<>();
+        Id prodId = null;
+        Map<Id, Resource> resIdMap = new HashMap<>();
+        Resource resource = null;
+        // Loop start
+        do {
+            cli.printMessage("[ ] Choose the productions you want to activate : ");
+             choice = cli.getChoice(options);
+
+            // If the player is done selecting.
+            if (choice == options.length) break;
+
+            if(slots[choice-1]==null) {
+                cli.printMessage("[X] This slot does not contain productions. ");
+                continue;
+            }
+
+            options[choice - 1] = options[choice - 1] + " - selected";
+            prodId = null;
+            if (!productions.contains(slots[choice-1])){
+                productions.add(slots[choice-1]);
+                prodId = slots[choice-1];
+            } else {
+                cli.printMessage("[X] Production already selected.");
+                continue;
+            }
+
+
+            if (prodId == null) continue;
+
+            resIdMap = new HashMap<>();
+            resource = null;
+            runner.printDepots();
+            runner.printStrongbox();
+
+            if (prodId == Id.BOARD_PRODUCTION){
+                cli.printMessage("[ ] The board production converts two resources of your choice into one of your choice.");
+                int costResources = 2;
+                while (costResources > 0 ){
+                    cli.printMessage("[ ] Select the resources to spend ("+ costResources+" more to select):");
+                    Pair<Id, Resource> values = cli.getIdResourcePair(true);
+
+                    if(values.getValue().getQuantity() > costResources){
+                        cli.printMessage("[X] More resources than needed have been selected");
+                        continue;
+                    }
+                    if (!checkSourceContains(values, resIdMap,  new ArrayList<>(Arrays.asList(new Resource(costResources, ResourceType.JOLLY))))) continue;
+
+                    if (!resIdMap.containsKey(values.getKey())){
+                        resIdMap.put(values.getKey(), values.getValue());
+                    } else {
+                        resIdMap.get(values.getKey()).add(values.getValue());
+                    }
+
+                    costResources -= values.getValue().getQuantity();
+                }
+
+                cli.printMessage("[ ] Select the resources to obtain (1 more to select):");
+                resource = cli.getResource(1);
+
+            }
+            else if (prodId == Id.S_SLOT_1 || prodId == Id.S_SLOT_2 ){
+
+                var special_production = (SpecialProductionView) cli.getView().getSlots().get(prodId.getValue());
+                cli.printMessage("[ ] This special production converts "+ special_production.getSpecialProduction().getProductionCost()[0].toString() + " into a faith point and a resource of your choice.");
+                cli.printMessage("[ ] Select the output resource:");
+                resource = cli.getResource(1);
+
+
+                Pair<Id, Resource> values = cli.getIdResourcePair(true);
+
+                if(values.getValue().getQuantity() > 1){
+                    cli.printMessage("[X] More resources than needed have been selected");
+                    continue;
+                }
+                if (!checkSourceContains(values, resIdMap,  new ArrayList<>(Arrays.asList(special_production.getSpecialProduction().getProductionCost())))) continue;
+
+                resIdMap.put(values.getKey(), values.getValue());
+
+
+            }  else if (prodId == Id.SLOT_1 || prodId == Id.SLOT_2 || prodId == Id.SLOT_3 ) {
+                var production = (DevelopmentCardSlotView) cli.getView().getSlots().get(prodId.getValue());
+                cli.printMessage("[ ] This  production converts "+ production.peek().getProduction().toString() + ".");
+                var cost = new ArrayList<>(Arrays.asList(production.peek().getProduction().getProductionCost()));
+                // Only so not null fix later.
+                resource = new Resource(1, ResourceType.JOLLY);
+                while (!cost.isEmpty()) {
+                    String costPrint = cost.stream()
+                            .map(String::valueOf)
+                            .collect(Collectors.joining(" , ", "", ""));
+                    cli.printMessage("[ ] Cost left to pay: " + costPrint);
+                    cli.printMessage("[ ] Select the resources to pay and their source (e.g. 1 coin @ D1 - D for Depots, S for Special depots, B for strongBox)");
+                    Pair<Id, Resource> idResourcePair = cli.getIdResourcePair(true);
+
+
+                    if (!checkSourceContains(idResourcePair, resIdMap, cost)) continue;
+
+                    if (resIdMap.containsKey(idResourcePair.getKey())) {
+                        resIdMap.get(idResourcePair.getKey()).add(idResourcePair.getValue());
+                    } else resIdMap.put(idResourcePair.getKey(), idResourcePair.getValue());
+
+                }
+            }
+
+            assert resource != null;
+            runner.setContextAction(GameActions.SELECT_PRODUCTION);
+            runner.setCurrentAction(GameActions.WAITING);
+            synchronized (MenuRunner.getInstance()) {
+
+                UIController.getInstance().depositResourcesIntoSlot(prodId, resIdMap, resource.getResourceType(), false);
+                runner.waitResponse();
+            }
+
+            if (productions.size() == (options.length - empty - 1)) break;
+
+        } while(true);
+
+
+
+
+        runner.setContextAction(GameActions.ACTIVATE_PRODUCTION);
+        runner.setCurrentAction(GameActions.WAITING);
+        synchronized (MenuRunner.getInstance()) {
+
+            UIController.getInstance().activateProduction();
+            runner.waitResponse();
+        }
+
     }
 
     private void cardBuy() {
@@ -129,33 +291,26 @@ public class GameMenu {
 
         if (runner.getCurrentAction()==GameActions.MENU) return;
 
+        // Loop for resources.
         do {
             var card = GameView.getInstance().getDevelopmentCardsMarket().getTray()[choice[0]][choice[1]];
             Map<Id, Resource> map = new HashMap<>();
 
-            boolean special = false;
-
-            int special_num = 0;
-
-            for (DepotView depot : cli.getView().getWarehouse()) {
-                if (depot.getId() == Id.S_DEPOT_1 || depot.getId() == Id.S_DEPOT_2) {
-                    special_num++;
-                    special = true;
-                }
-            }
             var cost = new ArrayList<>(Arrays.asList(card.getCost()));
             while (!cost.isEmpty()) {
 
                 String costPrint = cost.stream()
                         .map(String::valueOf)
                         .collect(Collectors.joining(" , ", "", ""));
+
+                // Various print to deliver info to the player.
                 cli.printMessage("[" + CHECK_MARK + "] Selected card: \n" + card.toString());
-                //TODO: new arrat list of depots + strbx temp change methods?
                 runner.printDepots();
                 runner.printStrongbox();
                 cli.printMessage("[ ] Cost left to pay: " + costPrint);
                 cli.printMessage("[ ] Select the resources to pay and their source (e.g. 1 coin @ D1 - D for Depots, S for Special depots, B for strongBox)");
-                Pair<Id, Resource> idResourcePair = cli.getIdResourcePair(true, special, special_num);
+
+                Pair<Id, Resource> idResourcePair = cli.getIdResourcePair(true);
 
 
                 if (!checkSourceContains(idResourcePair, map, cost)) continue;
@@ -187,34 +342,40 @@ public class GameMenu {
 
         cli.printMessage(((DevelopmentCardSlotView)cli.getView().getSlots().get(chosen_id)).peek().toString());
 
-        // Say something im giving up on cli
 
     }
 
     private boolean checkSourceContains( Pair<Id, Resource> idResourcePair, Map<Id, Resource> map,ArrayList<Resource> cost){
         int quantity = 0;
         // Gets quantity contained in each source.
-        switch (idResourcePair.getKey()){
-            case STRONGBOX_COIN ->  quantity = cli.getView().getStrongboxView().getCoin().getQuantity();
-            case STRONGBOX_SERVANT ->  quantity = cli.getView().getStrongboxView().getServant().getQuantity();
-            case STRONGBOX_SHIELD ->  quantity = cli.getView().getStrongboxView().getShield().getQuantity();
-            case STRONGBOX_STONE ->  quantity = cli.getView().getStrongboxView().getStone().getQuantity();
-            case DEPOT_1 -> quantity = cli.getView().getWarehouse().get(0).getResource().getQuantity();
-            case DEPOT_2 -> quantity = cli.getView().getWarehouse().get(1).getResource().getQuantity();
-            case DEPOT_3 -> quantity = cli.getView().getWarehouse().get(2).getResource().getQuantity();
-            case S_DEPOT_2 -> quantity = cli.getView().getWarehouse().get(4).getResource().getQuantity();
-            case S_DEPOT_1 -> quantity = cli.getView().getWarehouse().get(3).getResource().getQuantity();
+        try {
+            switch (idResourcePair.getKey()) {
+                case STRONGBOX_COIN -> quantity = cli.getView().getStrongboxView().getCoin().getQuantity();
+                case STRONGBOX_SERVANT -> quantity = cli.getView().getStrongboxView().getServant().getQuantity();
+                case STRONGBOX_SHIELD -> quantity = cli.getView().getStrongboxView().getShield().getQuantity();
+                case STRONGBOX_STONE -> quantity = cli.getView().getStrongboxView().getStone().getQuantity();
+                case DEPOT_1 -> quantity = cli.getView().getWarehouse().get(0).getResource().getQuantity();
+                case DEPOT_2 -> quantity = cli.getView().getWarehouse().get(1).getResource().getQuantity();
+                case DEPOT_3 -> quantity = cli.getView().getWarehouse().get(2).getResource().getQuantity();
+                case S_DEPOT_2 -> quantity = cli.getView().getWarehouse().get(4).getResource().getQuantity();
+                case S_DEPOT_1 -> quantity = cli.getView().getWarehouse().get(3).getResource().getQuantity();
+            }
+        } catch (NullPointerException e){
+            quantity = 0;
         }
-
         // If the player already extracted resources from there, subtract them.
         if (map.containsKey(idResourcePair.getKey())){ quantity = quantity- idResourcePair.getValue().getQuantity();
         }
+
+        //TODO TEST
 
         // Check that they not taking more than available.
         if (quantity<idResourcePair.getValue().getQuantity()){
             cli.printMessage("[X] The selected quantity is greater than what is contained in the source.");
             return false;
         }
+
+
 
         // Update the cost
         for (Resource res : cost){
@@ -227,12 +388,20 @@ public class GameMenu {
                     cli.printMessage("[X] The selected quantity is greater than needed to pay for the card.");
                     return false;
                 }
+            } else if (res.getResourceType() == ResourceType.JOLLY){
+                if (res.getQuantity()>=idResourcePair.getValue().getQuantity()) {
+                    res.sub(new Resource(idResourcePair.getValue().getQuantity(), ResourceType.JOLLY));
+                    if (res.getQuantity() == 0) cost.remove(res);
+                    return true;
+                } else {
+                    cli.printMessage("[X] The selected quantity is greater than needed to pay for the card.");
+                    return false;
+                }
             }
         }
         cli.printMessage("[X] The selected resource is not needed to pay for the card.");
         return false;
     }
-
 
     private void leaderAction() {
 
@@ -336,20 +505,11 @@ public class GameMenu {
         }
     }
 
-
     private void depositResources() {
 
         var warehouse = cli.getView().getWarehouse();
-        int special_num =0;
-        boolean special = false;
 
         String[] options = {"Deposit resource", "Rearrange warehouse", "Throw away remaining resources"};
-        for (DepotView depot: warehouse){
-            if (depot.getId() == Id.S_DEPOT_1 || depot.getId() == Id.S_DEPOT_2 ) {
-                special_num++;
-                special = true;
-            }
-        }
 
         var tempResources = cli.getView().getTempResources();
 
@@ -380,7 +540,7 @@ public class GameMenu {
 
 
             cli.printMessage("[ ] Select the resources and the depot you wish to deposit into (e.g. 1 coin @ D1 or 2 servants @ S1 for special depots)");
-            Pair<Id, Resource> values = cli.getIdResourcePair(true, special, special_num);
+            Pair<Id, Resource> values = cli.getIdResourcePair(true);
 
             runner.setContextAction(GameActions.DEPOSIT_RESOURCES);
             runner.setCurrentAction(GameActions.WAITING);

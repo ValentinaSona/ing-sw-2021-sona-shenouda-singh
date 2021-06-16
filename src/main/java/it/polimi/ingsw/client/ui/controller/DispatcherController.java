@@ -81,8 +81,6 @@ public class DispatcherController implements Runnable, LambdaObserver {
     //TODO
     public void handleChooseWhiteMarbles(ServerChooseWhiteMarblesMessage message){}
 
-    //TODO
-    public void handleActivateProduction(ServerActivateProductionMessage message){}
 
     //TODO for end of game.
     public void handleFinalScore(ServerFinalScoreMessage message){}
@@ -312,6 +310,20 @@ public class DispatcherController implements Runnable, LambdaObserver {
             CLIMessageHandler.getInstance().handleServerThrowLeaderCardAbilityMessage(message);
         }
     }
+
+
+    public void handleActivateProduction(ServerActivateProductionMessage message){
+        if(message.getUser().getNickName().equals(MatchSettings.getInstance().getClientNickname()))
+            GameView.getInstance().getPlayerFromUser(message.getUser()).setStrongboxView(message.getStrongboxView());
+
+        GameView.getInstance().getCurrentPlayer().setMainAction(false);
+        if(gui){
+
+        }else{
+            CLIMessageHandler.getInstance().handleServerActivateProductionMessage(message);
+        }
+    }
+
 
 
     public void handleStatus(StatusMessage message){

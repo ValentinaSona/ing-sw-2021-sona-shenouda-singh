@@ -19,8 +19,8 @@ public class BoardProduction extends Slot {
     @Override
     public void check(boolean card) throws NotSufficientResourceException {
         if(card){
-            //this method should never be called with card = true
-            //throw new RuntimeException("Super error");
+            // SERVER ERROR?
+            return;
         }
 
         Resource cost = boardProduction.getProductionCost()[0];
@@ -38,6 +38,8 @@ public class BoardProduction extends Slot {
             throw new NotSufficientResourceException(copy);
         }
 
+        else confirmed = true;
+
         //if the player can activate the production but the output
         //resourcetype is a jolly before activating the power we have to ask
         //how the player wants to convert the jolly type
@@ -53,14 +55,21 @@ public class BoardProduction extends Slot {
     public void chooseJolly(ResourceType resource){
         this.chosenType = resource;
     }
+
+    @Override
+    public Resource[] productionCost(){
+        return resourceCloset.toArray(new Resource[0]);
+    }
+
     @Override
     public Resource[] activateProduction() {
         if(confirmed){
+            Resource[] gained = new Resource[]{new Resource(1, chosenType)};
             confirmed = false;
             chosenType = null;
             resourceCloset.clear();
             originResourceHashMap.clear();
-            return new Resource[]{new Resource(1, chosenType)};
+            return gained;
         }else {
             return null;
         }
