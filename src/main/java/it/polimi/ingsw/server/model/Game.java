@@ -146,8 +146,9 @@ public class Game extends LambdaObservable<Transmittable> {
 
     public void disconnectPlayer(String nickname){
         getPlayers().forEach(player -> {
-            if(player.getNickname().equals(nickname))
+            if(player.getNickname().equals(nickname)){
                 player.setDisconnected(true);
+            }
         });
     }
 

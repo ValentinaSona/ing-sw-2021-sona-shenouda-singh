@@ -22,6 +22,7 @@ import it.polimi.ingsw.utils.observer.LambdaObserver;
 import java.io.IOException;
 import java.net.Socket;
 
+import java.rmi.ConnectException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -132,16 +133,20 @@ public class UIController implements LambdaObserver{
         MatchSettings.getInstance().setClientNickname(nickname);
         DispatcherController dispatcherController = DispatcherController.getInstance();
 
-        Socket clientSocket = new Socket(host, port);
-        clientConnection = new Connection(clientSocket);
-        clientConnection.addObserver(dispatcherController, (observer, transmittable) -> {
-            ((DispatcherController) observer).update(transmittable);
-        });
-        //mando il messaggio
-        Thread t = new Thread(clientConnection);
-        t.start();
-        Transmittable message = (Transmittable) new ClientSetNicknameMessage(nickname);
-        send(message);
+        try {
+            Socket clientSocket = new Socket(host, port);
+            clientConnection = new Connection(clientSocket);
+            clientConnection.addObserver(dispatcherController, (observer, transmittable) -> {
+                ((DispatcherController) observer).update(transmittable);
+            });
+            //mando il messaggio
+            Thread t = new Thread(clientConnection);
+            t.start();
+            Transmittable message = (Transmittable) new ClientSetNicknameMessage(nickname);
+            send(message);
+        }catch (ConnectException exception){
+
+        }
     }
 
     public void joinLobby() {

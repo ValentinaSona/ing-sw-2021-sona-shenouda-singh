@@ -53,6 +53,13 @@ public class Controller implements LambdaObserver {
         turnController = TurnController.getInstance(model);
     }
 
+    public static Controller getInstance(Game model){
+        if(singleton == null){
+            singleton = new Controller(model, null);
+        }
+
+        return singleton;
+    }
     /**
      * This method is called by the views and adds the action to the processing queue
      *
@@ -72,15 +79,13 @@ public class Controller implements LambdaObserver {
             ControllerHandleable handleable = (ControllerHandleable) action.clientMessage;
             handleable.handleMessage(this, action.view, action.user);
 
-
-
         }catch (InterruptedException e){
             Thread.currentThread().interrupt();
+        }catch(ClassCastException classCastException){
+            LOGGER.log(Level.SEVERE, classCastException.getMessage());
         }
 
     }
-
-
 
     public void setup(){
         ArrayList<User> users = new ArrayList<>();
@@ -133,15 +138,11 @@ public class Controller implements LambdaObserver {
     //TODO
     public void handleDisconnection(DisconnectionMessage action, RemoteViewHandler view, User user){
         match.handleDisconnection(user);
-        if(model.getCurrentPlayer().equals(model.getPlayerFromUser(user)){
-            turnController.forceEndTurn(model.getCurrentPlayer());
-        }
-
     }
 
     //TODO
     public void handleReconnection(ClientGameReconnectionMessage action, RemoteViewHandler view, User user){
-        match.handleReconnection();
+        //match.handleReconnection();
 
     }
 

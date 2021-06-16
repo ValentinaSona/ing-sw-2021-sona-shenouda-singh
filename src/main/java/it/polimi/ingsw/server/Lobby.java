@@ -4,8 +4,6 @@ import it.polimi.ingsw.server.controller.User;
 import it.polimi.ingsw.server.model.Game;
 import it.polimi.ingsw.utils.networking.Connection;
 import it.polimi.ingsw.utils.networking.transmittables.StatusMessage;
-import it.polimi.ingsw.utils.networking.transmittables.clientmessages.game.ClientGameReconnectionMessage;
-import it.polimi.ingsw.utils.networking.transmittables.servermessages.ServerSetupUserMessage;
 import it.polimi.ingsw.utils.networking.transmittables.servermessages.ServerUpdateLobbyMessage;
 
 import java.util.*;
@@ -46,6 +44,8 @@ public class Lobby {
     private final Server server;
 
     private Match match;
+    private MatchStatus lobbyStatus;
+    private Object statusLock;
 
     //maximum number of player
     private int currentLobbyPlayerCount;
@@ -67,7 +67,9 @@ public class Lobby {
         this.disconnectedPlayers = new LinkedBlockingDeque<>();
         this.registeredNicknamesMap = new ConcurrentHashMap<>();
         this.playerCountLock = new Object();
+        this.statusLock = new Object();
         this.active = true;
+        this.lobbyStatus = MatchStatus.LOBBY_SETUP;
     }
 
     public boolean handleNicknameRegistration(String nickname, Connection connection) {
@@ -81,15 +83,6 @@ public class Lobby {
                 registeredNicknamesMap.put(connection, nickname);
                 return true;
             }
-        }
-    }
-
-    public void removeNickname(String nickname) {
-        synchronized (registeredNicknamesMap){
-            registeredNicknamesMap.entrySet().stream()
-                    .filter(entry -> entry.getValue().equals(nickname))
-                    .forEach(entry -> registeredNicknamesMap.remove(entry.getKey(), entry.getValue()));
-
         }
     }
 
@@ -137,6 +130,17 @@ public class Lobby {
                 return false;
             }
         }
+
+        boolean validOp = true;
+        synchronized (statusLock){
+            if(!lobbyStatus.equals(MatchStatus.LOBBY_SETUP))
+                validOp = false;
+        }
+
+        if(!validOp) {
+            handleInGameLobbyDisconnection(connection);
+        }
+
         synchronized (lobbyRequestingConnections){
             lobbyRequestingConnections.add(connection);
             LOGGER.log(Level.INFO, nickname+" joined successfully the lobby");
@@ -208,12 +212,29 @@ public class Lobby {
 
     }
 
+    public boolean handleInGameLobbyDisconnection(Connection connection){
+        synchronized (registeredNicknamesMap) {
+            registeredNicknamesMap.remove(connection);
+            server.removeHandler(connection);
+            connection.closeConnection();
+        }
+        return true;
+    }
+
     public boolean handleGameReconnection(String nickname, Connection connection){
+
+        boolean status = handleNicknameRegistration(nickname, connection);
+
         synchronized (disconnectedPlayers){
             try{
-                disconnectedPlayers.put(connection);
-                disconnectedPlayers.notifyAll();
-                return true;
+                if(status && lobbyStatus.equals(MatchStatus.IN_GAME)){
+                    disconnectedPlayers.put(connection);
+                    disconnectedPlayers.notifyAll();
+                    return true;
+                }else{
+                    //qualcuno sta provando a riconnettersi con lo stesso nickname oppure in una fase in cui non c'è una partita
+                    return handleInGameLobbyDisconnection(connection);
+                }
             } catch (InterruptedException e) {
                 Thread.currentThread().interrupt();
                 return false;
@@ -231,14 +252,18 @@ public class Lobby {
                 if(disconnected.contains(new User(handler.getNickname()))){
                     //devo gestire la riconnessione
                     server.removeHandlerForReconnection(connection);
+                    match.handleReconnection(handler.getNickname(), connection);
                 }else{
                     //gestisco disconnessione
+                    handleInGameLobbyDisconnection(connection);
+
                 }
             } catch (InterruptedException e) {
                 Thread.currentThread().interrupt();
             }
         }
     }
+
     private void waitForFirstConnection(){
         synchronized (lobbyRequestingConnections){
             //waiting for the first player to call handleLobbyJoiningRequest method to populate map and LinkedList
@@ -344,5 +369,11 @@ public class Lobby {
     public boolean isActive() {
         return active;
     }
+}
+
+enum MatchStatus{
+    LOBBY_SETUP,
+    LOAD_GAME,
+    IN_GAME;
 }
 

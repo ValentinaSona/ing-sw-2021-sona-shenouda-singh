@@ -41,7 +41,7 @@ public class Match implements Runnable{
      * @return the participants to the match
      */
     public Map<String, Connection> getParticipantMap() {
-        return new ConcurrentHashMap<>(participantMap);
+        return participantMap;
     }
 
     @Override
