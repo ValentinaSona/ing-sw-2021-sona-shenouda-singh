@@ -3,7 +3,6 @@ package it.polimi.ingsw.server.controller;
 import it.polimi.ingsw.server.exception.EndOfGameException;
 import it.polimi.ingsw.server.exception.VaticanReportException;
 import it.polimi.ingsw.server.model.*;
-import it.polimi.ingsw.server.view.RealRemoteViewHandler;
 import it.polimi.ingsw.server.view.RemoteViewHandler;
 import it.polimi.ingsw.utils.networking.transmittables.StatusMessage;
 import it.polimi.ingsw.utils.networking.transmittables.clientmessages.game.ClientEndTurnMessage;
@@ -72,29 +71,31 @@ public class TurnController{
 
     }
 
-    public void forceEndTurn(Player player) throws EndOfGameException {
+    public void forceEndTurn(Player player){
 
         player.toggleTurn();
 
-        ArrayList<Player> players = model.getPlayers();
-        int startingIdx = players.indexOf(player);
 
-        //TODO devo ancora gestire il caso in cui tutti i giocatori sono disconnessi
-        for(int idx = startingIdx; idx < players.size()-1; idx++){
-            idx =(idx == players.size()-1)? 0: idx+1;
-            Player p = model.getPlayers().get(idx);
+        if(model.isSolo()){
+            //TODO cosa devo fare se si disconnette il player?
+        }else if(model.getPlayers().stream().anyMatch(p-> !p.isDisconnected())){
+            ArrayList<Player> players = model.getPlayers();
+            int startingIdx = players.indexOf(player);
 
-            if(!p.isDisconnected()){
-                model.setCurrentPlayer(players.get(idx));
-                break;
+            for(int idx = startingIdx; idx < players.size(); idx++){
+                idx =(idx == players.size()-1)? 0: idx+1;
+                Player p = model.getPlayers().get(idx);
+
+                if(!p.isDisconnected()){
+                    model.setCurrentPlayer(players.get(idx));
+                    break;
+                }
+
             }
-
+        }else{
+            //multiplayer game e tutti sono disconnessi
+            //TODO come la gestisco
         }
-
-        if (model.isSolo()) {
-            LorenzoAction();
-        }
-
 
         Player startingPlayer = model.getCurrentPlayer();
         startingPlayer.toggleTurn();

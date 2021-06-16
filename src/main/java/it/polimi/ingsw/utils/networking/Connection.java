@@ -61,7 +61,7 @@ public class Connection extends LambdaObservable<Transmittable> implements Runna
     private void notifyDisconnection() {
         if (isActive()) {
             active = false;
-            notify((Transmittable) new DisconnectionMessage());
+            notify( new DisconnectionMessage());
         }
     }
 

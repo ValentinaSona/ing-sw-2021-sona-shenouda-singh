@@ -22,6 +22,8 @@ import java.net.Socket;
 import java.rmi.ConnectException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * This is the class through which bot cli and gui interact with the server.
@@ -29,9 +31,9 @@ import java.util.Map;
  */
 
 public class UIController implements LambdaObserver{
-
+    private final Logger LOGGER = Logger.getLogger(UIController.class.getName());
     private static UIController singleton;
-    private Thread dispatcherThread;
+    private final Thread dispatcherThread;
     private Connection clientConnection;
     private Thread localGame;
     private MockRemoteViewHandler view;
@@ -54,46 +56,43 @@ public class UIController implements LambdaObserver{
         local = true;
         MatchSettings.getInstance().setSolo(true);
 
-        Runnable runnable = new Runnable() {
-            @Override
-            public void run() {
-                Game model = Game.getInstance(1);
+        Runnable runnable = ()-> {
+            Game model = Game.getInstance(1);
 
-                Controller controller = Controller.getInstance(model);
+            Controller controller = Controller.getInstance(model);
 
-                User user = new User(nickname);
+            User user = new User(nickname);
 
-                model.subscribeUser(user);
+            model.subscribeUser(user);
 
-                view = new MockRemoteViewHandler(nickname,
-                        UIController.getInstance(),
-                        DispatcherController.getInstance());
+            view = new MockRemoteViewHandler(nickname,
+                    UIController.getInstance(),
+                    DispatcherController.getInstance());
 
-                model.addObserver(view, (observer, transmittable)->{
-                    if(transmittable instanceof DisconnectionMessage){
-                        ((RemoteViewHandler) observer).requestDisconnection();
-                    }else {
-                        ((RemoteViewHandler) observer).updateFromGame(transmittable);
-                    }
-                });
+            model.addObserver(view, (observer, transmittable)->{
+                if(transmittable instanceof DisconnectionMessage){
+                    ((RemoteViewHandler) observer).requestDisconnection();
+                }else {
+                    ((RemoteViewHandler) observer).updateFromGame(transmittable);
+                }
+            });
 
 
-                view.addObserver(controller, (observer, viewClientMessage) ->
-                        ((Controller) observer).update(viewClientMessage) );
+            view.addObserver(controller, (observer, viewClientMessage) ->
+                    ((Controller) observer).update(viewClientMessage) );
 
-                controller.setup();
+            controller.setup();
 
-                //TODO: this as an alternate method to EndOfGame?
-                model.setActive(true);
+            //TODO: this as an alternate method to EndOfGame?
+            model.setActive(true);
 
-                while (model.isActive()){
-                    try{
-                        System.out.println("Sono entrato");
-                        controller.dispatchViewClientMessage();
-                    }catch (Exception e) {
-                        e.printStackTrace();
-                        //devo gestire l'errore disconnettendo tutti i giocatori
-                    }
+            while (model.isActive()){
+                try{
+                    System.out.println("Sono entrato");
+                    controller.dispatchViewClientMessage();
+                }catch (Exception e) {
+                    e.printStackTrace();
+                    //devo gestire l'errore disconnettendo tutti i giocatori
                 }
             }
         };
@@ -139,19 +138,20 @@ public class UIController implements LambdaObserver{
             //mando il messaggio
             Thread t = new Thread(clientConnection);
             t.start();
-            Transmittable message = (Transmittable) new ClientSetNicknameMessage(nickname);
+            Transmittable message = new ClientSetNicknameMessage(nickname);
             send(message);
-        }catch (ConnectException exception){
-
+        }catch (IOException exception){
+            LOGGER.log(Level.SEVERE, "Apertura socket fallita "+exception.getMessage());
+            throw exception;
         }
     }
 
     public void joinLobby() {
-        send((Transmittable) new ClientJoinLobbyMessage());
+        send(new ClientJoinLobbyMessage());
     }
 
     public void setCreation(int playersNum) {
-        send((Transmittable) new ClientSetPlayersCountMessage(playersNum));
+        send(new ClientSetPlayersCountMessage(playersNum));
         MatchSettings.getInstance().setTotalUsers(playersNum);
         if (playersNum ==1) MatchSettings.getInstance().setSolo(true);
     }
@@ -166,41 +166,48 @@ public class UIController implements LambdaObserver{
         if(idResourceMap == null){
             idResourceMap = new HashMap<>();
         }
-        send((Transmittable) new ClientSetupActionMessage(idResourceMap,
+        send(new ClientSetupActionMessage(idResourceMap,
                 chosen,
                 new User(nickname)));
     }
 
     public void tidyWarehouse(Id from, Id to){
-        send((Transmittable) new ClientTidyWarehouseMessage(from,to));
+        send(new ClientTidyWarehouseMessage(from,to));
     }
 
     public void buyMarbles(int rowCol){
-        send((Transmittable) new ClientBuyMarblesMessage(rowCol));
+        send(new ClientBuyMarblesMessage(rowCol));
     }
 
     public void depositIntoWarehouse(Id id, Resource resource){
-        send((Transmittable) new ClientDepositIntoWarehouseMessage(id, resource));}
+        send( new ClientDepositIntoWarehouseMessage(id, resource));}
 
     public void throwResources(){
-        send((Transmittable) new ClientThrowResourcesMessage());}
+        send( new ClientThrowResourcesMessage());}
 
     public void endTurn(){
-        send((Transmittable) new ClientEndTurnMessage());
+        send(new ClientEndTurnMessage());
     }
 
-    public void activateSpecialAbility(Id id){ send((Transmittable) new ClientActivateSpecialAbilityMessage(id));}
+    public void activateSpecialAbility(Id id){ send(new ClientActivateSpecialAbilityMessage(id));}
 
-    public void throwLeaderCard(Id id){ send((Transmittable) new ClientThrowLeaderCardMessage(id));}
+    public void throwLeaderCard(Id id){ send(new ClientThrowLeaderCardMessage(id));}
 
-    public void selectDevelopmentCard(int row, int col, Id slot){send((Transmittable) new ClientSelectDevelopmentCardMessage(row, col,slot));}
+    public void selectDevelopmentCard(int row, int col, Id slot){send(new ClientSelectDevelopmentCardMessage(row, col,slot));}
 
-    public void depositResourcesIntoSlot(Id slot,  Map<Id, Resource> map){send((Transmittable) new ClientDepositResourceIntoSlotMessage(slot, map));}
+    public void depositResourcesIntoSlot(Id slot,  Map<Id, Resource> map){send(new ClientDepositResourceIntoSlotMessage(slot, map));}
 
-    public void depositResourcesIntoSlot(Id slot, Map<Id, Resource> map, ResourceType resourceType, Boolean card){send((Transmittable) new ClientDepositResourceIntoSlotMessage(slot, map, resourceType, card));}
+    public void depositResourcesIntoSlot(Id slot, Map<Id, Resource> map, ResourceType resourceType, Boolean card){send(new ClientDepositResourceIntoSlotMessage(slot, map, resourceType, card));}
 
-    public void buyTargetCard(Id id){send((Transmittable)new ClientBuyTargetCardMessage(id));}
+    public void buyTargetCard(Id id){send(new ClientBuyTargetCardMessage(id));}
 
-    public void activateProduction(){send((Transmittable)new ClientActivateProductionMessage());}
+    public void activateProduction(){send(new ClientActivateProductionMessage());}
 
+    public void disconnectFromServer(){
+        send(new DisconnectionMessage());
+    }
+
+    public Connection getClientConnection() {
+        return clientConnection;
+    }
 }

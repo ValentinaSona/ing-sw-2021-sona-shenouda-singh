@@ -2,6 +2,7 @@ package it.polimi.ingsw.server.controller;
 
 
 import it.polimi.ingsw.server.Match;
+import it.polimi.ingsw.server.exception.EndOfGameException;
 import it.polimi.ingsw.server.exception.InvalidDepotException;
 import it.polimi.ingsw.server.model.*;
 import it.polimi.ingsw.server.model.Player;
@@ -135,9 +136,11 @@ public class Controller implements LambdaObserver {
         }
     }
 
-    //TODO
     public void handleDisconnection(DisconnectionMessage action, RemoteViewHandler view, User user){
         match.handleDisconnection(user);
+
+        turnController.forceEndTurn(model.getPlayerFromUser(user));
+
     }
 
     //TODO

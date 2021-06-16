@@ -12,6 +12,7 @@ import it.polimi.ingsw.server.model.Game;
 import it.polimi.ingsw.server.model.LeaderCard;
 import it.polimi.ingsw.utils.networking.ClientHandleable;
 import it.polimi.ingsw.utils.networking.Transmittable;
+import it.polimi.ingsw.utils.networking.transmittables.DisconnectionMessage;
 import it.polimi.ingsw.utils.networking.transmittables.StatusMessage;
 import it.polimi.ingsw.utils.networking.transmittables.servermessages.*;
 import it.polimi.ingsw.utils.observer.LambdaObserver;
@@ -324,7 +325,15 @@ public class DispatcherController implements Runnable, LambdaObserver {
         }
     }
 
-
+    public void handleDisconnectionMessage(DisconnectionMessage message){
+        //METODO solo per partita in multiplayer
+        UIController.getInstance().getClientConnection().closeConnection();
+        if(gui){
+            //decido cosa fare una volta disconnesso
+        }else{
+            //decido cosa fare una volta disconnesso
+        }
+    }
 
     public void handleStatus(StatusMessage message){
         if(gui){

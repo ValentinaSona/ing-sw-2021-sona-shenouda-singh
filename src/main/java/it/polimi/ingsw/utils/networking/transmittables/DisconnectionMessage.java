@@ -20,13 +20,14 @@ public class DisconnectionMessage implements ClientHandleable, ControllerHandlea
         return false;
     }
 
-    //TODO
+
     @Override
     public boolean handleMessage(Controller handler, RemoteViewHandler view, User user) {
-        return false;
+        handler.handleDisconnection(this, view, user);
+        return true;
     }
 
-    //TODO
+
     @Override
     public boolean handleMessage(ConnectionSetupHandler handler) {
         handler.getLobby().handleLobbyDisconnection(handler.getConnection());

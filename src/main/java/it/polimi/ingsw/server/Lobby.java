@@ -102,7 +102,7 @@ public class Lobby {
             }
 
             LOGGER.log(Level.INFO, registeredNicknamesMap.get(connection)
-                    +"has set the playerCount to "+ playerCount);
+                    +" has set the playerCount to "+ playerCount);
             currentLobbyPlayerCount = playerCount;
             playerCountLock.notifyAll();
         }
@@ -315,6 +315,7 @@ public class Lobby {
             boolean firstPlayerDisconnected =/*the first player disconnected while no one was in the lobby --> playerCount == -1 */
                     currentLobbyPlayerCount == -1 || !firstConnection.equals(lobbyRequestingConnections.get(0));
 
+            updateMessage();
             if(!firstPlayerDisconnected){
                 for(Connection connection : lobbyRequestingConnections){
                     participants.put(connection, registeredNicknamesMap.get(connection));
