@@ -179,6 +179,8 @@ public class UIController implements LambdaObserver{
         send(new ClientBuyMarblesMessage(rowCol));
     }
 
+    public void convertWhiteMarbles(MarketMarble[] choices){send(new ClientConvertWhiteMarblesMessage(choices));}
+
     public void depositIntoWarehouse(Id id, Resource resource){
         send( new ClientDepositIntoWarehouseMessage(id, resource));}
 

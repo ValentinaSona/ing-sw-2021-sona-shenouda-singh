@@ -9,11 +9,19 @@ public class ServerFaithTrackMessage  implements ServerMessage, ClientHandleable
     private final FaithTrackView faithTrackView;
     private final User user;
     private final int faith;
+    private final boolean report;
 
     public ServerFaithTrackMessage(FaithTrackView faithTrackView, int faith, User user){
         this.faithTrackView = faithTrackView;
         this.user = user;
         this.faith = faith;
+        this.report = false;
+    }
+    public ServerFaithTrackMessage(boolean report, FaithTrackView faithTrackView, int faith, User user){
+        this.faithTrackView = faithTrackView;
+        this.user = user;
+        this.faith = faith;
+        this.report = report;
     }
 
     @Override
@@ -32,5 +40,9 @@ public class ServerFaithTrackMessage  implements ServerMessage, ClientHandleable
 
     public int getFaith() {
         return faith;
+    }
+
+    public boolean isReport() {
+        return report;
     }
 }

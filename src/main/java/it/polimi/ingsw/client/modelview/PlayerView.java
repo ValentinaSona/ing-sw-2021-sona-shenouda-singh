@@ -153,4 +153,49 @@ public class PlayerView {
     public void setTempResources(List<Resource> tempResources) {
         this.tempResources = tempResources;
     }
+
+    /**
+     * Returns the total resources one player possesses for one type.
+     * @param type the ResourceType to get the total of.
+     * @return Resource that represents the total the player possesses.
+     */
+    public Resource getTotalResources(ResourceType type){
+        Resource total = new Resource(0,type);
+        switch (type){
+            case STONE -> total.add(strongboxView.getStone());
+            case COIN -> total.add(strongboxView.getCoin());
+            case SHIELD -> total.add(strongboxView.getShield());
+            case SERVANT -> total.add(strongboxView.getServant());
+        }
+
+        for(DepotView depot : warehouse){
+            if (depot.getResource()!=null && depot.getResource().getResourceType() == type){
+                total.add(depot.getResource());
+            }
+        }
+
+        return total;
+    }
+
+    /**
+     * Getter for the sum of all player resources.
+     * @return Resource array with the total of all resources the player possesses.
+     */
+    public Resource[] getTotalResources(){
+        return new Resource[]{getTotalResources(ResourceType.SHIELD), getTotalResources(ResourceType.STONE), getTotalResources(ResourceType.SERVANT), getTotalResources(ResourceType.COIN)};
+    }
+
+    /**
+     * Checks whether the player has enough resources to pay.
+     * @param cost Resource array of the required resources.
+     * @return true if player has enough, false otherwise.
+     */
+    public boolean canPay(Resource[] cost){
+        for (Resource resource : cost){
+            if (resource.getQuantity() > getTotalResources(resource.getResourceType()).getQuantity()){return false;}
+        }
+        return true;
+    }
+
+
 }

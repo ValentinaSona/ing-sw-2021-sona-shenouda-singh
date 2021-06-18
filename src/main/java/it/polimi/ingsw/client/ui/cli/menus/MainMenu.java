@@ -40,11 +40,17 @@ public class MainMenu {
 
         switch (cli.getChoice(options)){
             case 1 -> {
-                // TODO blocking on confirmation. for when nick is taken. CLIENT ERROR.
-                String nickname = cli.getString("^[a-zA-Z0-9 _.-]{1,20}$", "Choose a nickname (Max 20 characters)");
-                if (nickname.equals("a nickname")) System.out.println("You're a funny one, aren't you?");
                 try {
-                    UIController.getInstance().sendNickname(nickname, "127.0.0.1", 10002);
+                    do {
+                        String nickname = cli.getString("^[a-zA-Z0-9 _.-]{1,20}$", "Choose a nickname (Max 20 characters)");
+                        if (nickname.equals("a nickname")) System.out.println("You're a funny one, aren't you?");
+                        MenuRunner.getInstance().setContextAction(GameActions.MENU);
+                        MenuRunner.getInstance().setCurrentAction(GameActions.WAITING);
+                        synchronized (MenuRunner.getInstance()) {
+                            UIController.getInstance().sendNickname(nickname, "127.0.0.1", 10002);
+                            MenuRunner.getInstance().waitResponse();
+                        }
+                    } while (MenuRunner.getInstance().getCurrentAction() == GameActions.END_TURN);
                     UIController.getInstance().joinLobby();
                 } catch (IOException e) {
                     cli.printMessage("[X] Unable to connect to server. Returning to main menu.");

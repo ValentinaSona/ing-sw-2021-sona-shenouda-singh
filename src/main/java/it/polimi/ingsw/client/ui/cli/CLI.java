@@ -158,6 +158,7 @@ public class CLI implements Ui {
         }
         return new int[]{Integer.parseInt(choice[0])-1,type};
     }
+
 // TODO Test on the four player thingy cuz not working yet
     public int getChoice(String[] options, boolean enableRefresh, boolean isMenu, boolean interruptible){
         int optNum = 1;
@@ -170,7 +171,7 @@ public class CLI implements Ui {
             optNum++;
         }
         boolean refreshed = false;
-        // Getting blocked because it tries system.inavailable while a thread is still running.
+        // Getting blocked because it tries system. Unavailable while a thread is still running.
         while(true) {
             try {
                 if ((((!enableRefresh || refreshed ) && System.in.available()!=0)) || !interruptible) {

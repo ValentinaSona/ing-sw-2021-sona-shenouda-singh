@@ -1,5 +1,7 @@
 package it.polimi.ingsw.server.controller;
 
+import it.polimi.ingsw.client.modelview.DepotView;
+import it.polimi.ingsw.client.modelview.SlotView;
 import it.polimi.ingsw.server.exception.EndOfGameException;
 import it.polimi.ingsw.server.model.*;
 import it.polimi.ingsw.server.model.Depot;
@@ -14,6 +16,7 @@ import it.polimi.ingsw.utils.networking.transmittables.clientmessages.game.Clien
 import it.polimi.ingsw.utils.networking.transmittables.servermessages.ServerActivateLeaderCardAbilityMessage;
 import it.polimi.ingsw.utils.networking.transmittables.servermessages.ServerThrowLeaderCardMessage;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class LeaderCardsController {
@@ -117,7 +120,7 @@ public class LeaderCardsController {
                 // Requirement is checking the development card level.
                 required = req.getNumber();
                 for (DevelopmentCardSlot slot : developmentCardSlots) {
-                    possessed = (int) slot.getSlot().stream().filter(c -> c.getType() == req.getType() && (req.getLevel() == c.getLevel() || req.getLevel() == 0)).count();
+                    possessed += (int) slot.getSlot().stream().filter(c -> c.getType() == req.getType() && (req.getLevel() == c.getLevel() || req.getLevel() == 0)).count();
 
                 }
 
@@ -146,6 +149,8 @@ public class LeaderCardsController {
      */
     private void useAbility(Player player, LeaderCard targetCard){
         SpecialAbility ability = targetCard.getSpecialAbility();
+        ArrayList<DepotView> warehouse = null;
+        ArrayList<SlotView> slots = null;
 
         if( ability instanceof WhiteMarbleAbility){
 
@@ -156,10 +161,14 @@ public class LeaderCardsController {
 
             ProductionAbility productionAbility = (ProductionAbility) ability;
             player.addSpecialSlot(productionAbility.getCost());
+            slots = player.getVisibleSlots();
+
         }else if( ability instanceof ExtraDepotAbility){
 
             ExtraDepotAbility depotAbility = (ExtraDepotAbility) ability;
             player.addSpecialDepot(depotAbility.getCapacity(),depotAbility.getType());
+
+            warehouse = player.getVisibleWarehouse();
 
         }else if( ability instanceof DiscountAbility){
 
@@ -170,8 +179,11 @@ public class LeaderCardsController {
         }
 
 
+        // TODO SEND BACK WAREHOUSE FOR DEPOT ABILITY AND SLOTS FOR PRODUCTION ABILITY.
         model.notify(new ServerActivateLeaderCardAbilityMessage(
                 targetCard,
+                warehouse,
+                slots,
                 model.getUserFromPlayer(player)
         ));
         targetCard.setActive(true);

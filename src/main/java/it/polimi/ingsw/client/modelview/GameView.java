@@ -9,15 +9,16 @@ import java.util.Map;
 
 public class GameView implements Serializable {
     private static GameView singleton;
-    //TODO: removed because unused.
 
-    // private final ArrayList<PlayerView> players = new ArrayList<>();
     private final ArrayList<User> users;
     private MarketView marketInstance;
     private DevMarketView developmentCardsMarket;
+    private int blackCross;
     //da sostituire al più presto con mappa bidirezionale
     private final Map<User, PlayerView> userPlayerHashMap = new HashMap<>();
     private PlayerView currentPlayer;
+
+
 
 
     public static GameView getInstance(ArrayList<User> users){
@@ -52,8 +53,16 @@ public class GameView implements Serializable {
         for(User user : users){
             userPlayerHashMap.put(user, new PlayerView(user.getNickName()));
         }
+        blackCross = 0;
     }
 
+    public int getBlackCross() {
+        return blackCross;
+    }
+
+    public void setBlackCross(int blackCross) {
+        this.blackCross = blackCross;
+    }
 
     public MarketView getMarketInstance(){
         return marketInstance;

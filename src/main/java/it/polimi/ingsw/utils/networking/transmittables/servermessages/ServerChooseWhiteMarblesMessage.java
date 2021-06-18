@@ -18,4 +18,12 @@ public class ServerChooseWhiteMarblesMessage implements ServerMessage, ClientHan
         handler.handleChooseWhiteMarbles(this);
         return false;
     }
+
+    public Integer getWhiteMarbles() {
+        return whiteMarbles;
+    }
+
+    public User getUser() {
+        return user;
+    }
 }

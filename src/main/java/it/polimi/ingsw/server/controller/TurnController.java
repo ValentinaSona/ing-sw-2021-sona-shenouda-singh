@@ -190,8 +190,7 @@ public class TurnController{
                     Player player = model.getPlayers().get(0);
                     player.getFaithTrack().validatePopeFavor(e.getReport());
 
-                    // This null needs to be handled client side but shouldn't be a problem as it's expected of singleplayer.
-                    model.notify( new ServerFaithTrackMessage( player.getVisibleFaithTrack(), 2, null ) );
+                    model.notify( new ServerFaithTrackMessage(true, player.getVisibleFaithTrack(), 0, model.getUserFromPlayer(player) ) );
 
                     if (e.getReport()==3) throw new EndOfGameException(true);
 

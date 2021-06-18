@@ -83,6 +83,7 @@ public class Controller implements LambdaObserver {
         }catch (InterruptedException e){
             Thread.currentThread().interrupt();
         }catch(ClassCastException classCastException){
+            classCastException.printStackTrace();
             LOGGER.log(Level.SEVERE, classCastException.getMessage());
         }
 

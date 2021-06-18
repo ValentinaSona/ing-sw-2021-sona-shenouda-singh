@@ -3,12 +3,9 @@ package it.polimi.ingsw.client.ui.controller;
 import it.polimi.ingsw.client.modelview.GameView;
 import it.polimi.ingsw.client.modelview.MatchSettings;
 import it.polimi.ingsw.client.ui.cli.CLIMessageHandler;
-import it.polimi.ingsw.client.ui.cli.menus.MenuRunner;
 import it.polimi.ingsw.client.ui.gui.GUIHelper;
 import it.polimi.ingsw.client.ui.gui.GUIMessageHandler;
-import it.polimi.ingsw.client.ui.gui.JFXControllers.LeaderSelectionGUIController;
 import it.polimi.ingsw.client.ui.gui.JFXControllers.ScreenName;
-import it.polimi.ingsw.server.model.Game;
 import it.polimi.ingsw.server.model.LeaderCard;
 import it.polimi.ingsw.utils.networking.ClientHandleable;
 import it.polimi.ingsw.utils.networking.Transmittable;
@@ -79,17 +76,32 @@ public class DispatcherController implements Runnable, LambdaObserver {
 
 
 
-    //TODO
-    public void handleChooseWhiteMarbles(ServerChooseWhiteMarblesMessage message){}
+    public void handleFinalScore(ServerFinalScoreMessage message){
+        if(gui){
 
+        }else{
+            CLIMessageHandler.getInstance().handleServerFinalScoreMessage(message);
+        }
+    }
 
-    //TODO for end of game.
-    public void handleFinalScore(ServerFinalScoreMessage message){}
+    public void handleSoloDiscard(ServerSoloDiscardMessage message){
+        GameView.getInstance().setDevelopmentCardsMarket(message.getDevView());
+        if(gui){
 
-    //TODO for SOLO game
-    public void handleSoloDiscard(ServerSoloDiscardMessage message){}
-    //TODO for SOLO game
-    public void handleSoloMove(ServerSoloMoveMessage message){}
+        }else{
+            CLIMessageHandler.getInstance().handleServerServerSoloDiscardMessage(message);
+        }
+    }
+
+    public void handleSoloMove(ServerSoloMoveMessage message){
+        GameView.getInstance().setBlackCross(message.getBlackCross());
+
+        if(gui){
+
+        }else{
+            CLIMessageHandler.getInstance().handleServerSoloMoveMessage(message);
+        }
+    }
 
 
 
@@ -227,7 +239,9 @@ public class DispatcherController implements Runnable, LambdaObserver {
      * @param message the message to be handled.
      */
     public void handleFaithTrackMessage(ServerFaithTrackMessage message){
-        GameView.getInstance().getPlayerFromUser(message.getUser()).setFaithTrackView(message.getFaithTrackView());
+        if (message.getUser()==null)
+            GameView.getInstance().setBlackCross(message.getFaith());
+        else GameView.getInstance().getPlayerFromUser(message.getUser()).setFaithTrackView(message.getFaithTrackView());
 
         if(gui){
 
@@ -276,6 +290,12 @@ public class DispatcherController implements Runnable, LambdaObserver {
 
 
     public void handleActivateLeaderCardAbility(ServerActivateLeaderCardAbilityMessage message){
+        // If production or depot ability have been activated, need to update.
+        if (message.getSlots()!= null){
+            GameView.getInstance().getPlayerFromUser(message.getUser()).setSlots(message.getSlots());}
+        if (message.getWarehouse()!=null) {
+            GameView.getInstance().getPlayerFromUser(message.getUser()).setWarehouse(message.getWarehouse());}
+
         if(message.getUser().getNickName().equals(MatchSettings.getInstance().getClientNickname())) {
             // Other players don't know the leader cards in a player's hand.
             int i = GameView.getInstance().getPlayerFromUser(message.getUser()).getLeaderCards().indexOf(message.getAbility());
@@ -334,6 +354,16 @@ public class DispatcherController implements Runnable, LambdaObserver {
             //decido cosa fare una volta disconnesso
         }
     }
+
+
+    public void handleChooseWhiteMarbles(ServerChooseWhiteMarblesMessage message){
+        if(gui){
+
+        }else{
+            CLIMessageHandler.getInstance().handleServerChooseWhiteMarblesMessage(message);
+        }
+    }
+
 
     public void handleStatus(StatusMessage message){
         if(gui){

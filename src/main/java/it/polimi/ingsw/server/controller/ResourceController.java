@@ -9,6 +9,7 @@ import it.polimi.ingsw.utils.networking.transmittables.clientmessages.game.*;
 import it.polimi.ingsw.utils.networking.transmittables.servermessages.*;
 
 import java.util.*;
+import java.util.concurrent.locks.Lock;
 
 public class ResourceController{
     private static ResourceController singleton;
@@ -47,27 +48,60 @@ public class ResourceController{
      */
     public void addFaithPoints(Player player, Resource faithPoints) throws EndOfGameException {
         try{
+            FaithTrack faithTrack;
+                if (player!= null) {
+                    faithTrack = player.getFaithTrack();
+                    faithTrack.addFaithPoints(faithPoints);
+                    model.notify(new ServerFaithTrackMessage(
+                            player.getVisibleFaithTrack(),
+                            faithPoints.getQuantity(),
+                            model.getUserFromPlayer(player)
+                    ));
+                } else {
+                    faithTrack = model.getLorenzo().getFaithTrack();
+                    faithTrack.addFaithPoints(faithPoints);
+                    model.notify(new ServerFaithTrackMessage(
+                            null,
+                            faithPoints.getQuantity(),
+                            null
+                    ));
+                }
 
-                FaithTrack faithTrack = player.getFaithTrack();
-                faithTrack.addFaithPoints(faithPoints);
-                model.notify(new ServerFaithTrackMessage(
-                        player.getVisibleFaithTrack(),
-                        faithPoints.getQuantity(),
-                        model.getUserFromPlayer(player)
-                ));
 
         }catch (VaticanReportException vaticanReportException){
 
             // Run the validatePopeFavor for all the players in the game.
             ArrayList<Player> players = model.getPlayers();
 
+
             for(Player p : players){
                 FaithTrack faithTrack = p.getFaithTrack();
                 faithTrack.validatePopeFavor(vaticanReportException.getReport());
+
+                if (p == player){
+                    model.notify(new ServerFaithTrackMessage(
+                            true,
+                            player.getVisibleFaithTrack(),
+                            faithPoints.getQuantity(),
+                            model.getUserFromPlayer(p)
+                    ));
+                } else {
+                    model.notify(new ServerFaithTrackMessage(
+                            true,
+                            p.getVisibleFaithTrack(),
+                            0,
+                            model.getUserFromPlayer(p)
+                    ));
+                }
+            }
+
+            if (model.isSolo()){
+                model.getLorenzo().getFaithTrack().validatePopeFavor(vaticanReportException.getReport());
                 model.notify(new ServerFaithTrackMessage(
-                        player.getVisibleFaithTrack(),
+                        true,
+                        null,
                         faithPoints.getQuantity(),
-                        model.getUserFromPlayer(p)
+                        null
                 ));
             }
 
@@ -113,7 +147,7 @@ public class ResourceController{
     public void resetResources(Player player, Map<Id, Resource> resourceHashMap) throws InvalidDepotException {
         List<Depot> warehouse = player.getWarehouse();
 
-        ArrayList<Id> warehouseIds = (ArrayList<Id>) Arrays.asList(Id.DEPOT_1, Id.DEPOT_2, Id.DEPOT_3, Id.S_DEPOT_1, Id.S_DEPOT_2);
+        ArrayList<Id> warehouseIds =  new ArrayList<>(Arrays.asList(Id.DEPOT_1, Id.DEPOT_2, Id.DEPOT_3, Id.S_DEPOT_1, Id.S_DEPOT_2));
 
         for(Id id : resourceHashMap.keySet()){
             if(warehouseIds.contains(id)){
@@ -208,6 +242,7 @@ public class ResourceController{
                 if ((toResource == null || toResource.getQuantity() == 0)&&(fromResource== null || fromResource.getQuantity() == 0)) {
 
                     view.handleStatusMessage(StatusMessage.CONTINUE);
+                    return;
 
                 }  else if (toResource == null || toResource.getQuantity() == 0) {
                     //if i am trying to move resources to an empty specialDepot or a empty normal depot

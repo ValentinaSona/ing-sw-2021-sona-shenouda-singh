@@ -9,6 +9,7 @@ import it.polimi.ingsw.utils.networking.transmittables.servermessages.ServerMess
 import java.util.EmptyStackException;
 
 import static it.polimi.ingsw.client.ui.cli.CLIHelper.*;
+import static it.polimi.ingsw.client.ui.cli.menus.MenuStates.END;
 import static it.polimi.ingsw.client.ui.cli.menus.MenuStates.MAIN;
 
 
@@ -46,6 +47,10 @@ public class MenuRunner {
         this.inMsg = msg;
     }
 
+    public void setInMsg(ServerMessage inMsg) {
+        this.inMsg = inMsg;
+    }
+
     public boolean isSolo() {
         return solo;
     }
@@ -70,9 +75,6 @@ public class MenuRunner {
         return inMsg;
     }
 
-    public GameMenu getGameMenu() {
-        return gameMenu;
-    }
 
     public MenuRunner(CLI cli) {
         this.cli = cli;
@@ -103,8 +105,10 @@ public class MenuRunner {
                 case SETUP -> setupMenu.run();
                 case GAME -> gameMenu.run();
             }
+
             // If a menu arrives naturally to its end, wait for a state change to print the next one.
-            waitStateChange();
+            if (state != END) waitStateChange();
+            else state = MAIN;
         }
     }
 
@@ -128,7 +132,7 @@ public class MenuRunner {
         while (wait) {
             try {
                 MenuRunner.getInstance().wait();
-                if (contextAction == currentAction) wait = false;
+                if (contextAction == currentAction || MenuRunner.getInstance().getState()==END) wait = false;
             } catch (InterruptedException e) {
 
             }
@@ -203,7 +207,7 @@ public class MenuRunner {
         String output = "";
         String content;
         String padding =  new Resource(1, ResourceType.SERVANT).toString();
-        String filler = " ";
+        String filler;
 
         for (DepotView depot : warehouse){
 
@@ -231,11 +235,11 @@ public class MenuRunner {
             }
 
             if(depot.getId()== Id.S_DEPOT_1){
-                output += "\t\t" + SQUARE+ " " +content+filler +" " + SQUARE + " " + SQUARE + "\t Special depot 1, capacity: 2, type: " + depot.getResource().getResourceType() +"\n";
+                output += "\n\t\t" + SQUARE+ " " +content+filler +" " + SQUARE + " " + SQUARE + "       Special depot 1, capacity: 2, type: " + depot.getResource().getResourceType() +"\n";
             }
 
             if(depot.getId()== Id.S_DEPOT_2){
-                output += "\t\t "+ SQUARE+ " " +content+filler +" " + SQUARE + " " + SQUARE + "\t Special depot 2, capacity: 2, type: " + depot.getResource().getResourceType() +"\n";
+                output += "\t\t "+ SQUARE+ " " +content+filler +" " + SQUARE + " " + SQUARE + "        Special depot 2, capacity: 2, type: " + depot.getResource().getResourceType() +"\n";
             }
 
         }
@@ -247,9 +251,9 @@ public class MenuRunner {
         var box = cli.getView().getStrongboxView();
         String output = "";
 
-        output += "\t\t"+ SQUARE+ " " + box.getCoin() + "    "+ SQUARE +"\n";
-        output += "\t\t"+ SQUARE+ " " + box.getStone() + "   "+ SQUARE +"\n";
-        output += "\t\t"+ SQUARE+ " " + box.getServant() + " "+ SQUARE +"\n";
+        output += "\t\t"+ SQUARE+ " " + box.getCoin() + "    "+ SQUARE +" ";
+        output += "\t\t"+ SQUARE+ " " + box.getStone() + "   "+ SQUARE +" ";
+        output += "\t\t"+ SQUARE+ " " + box.getServant() + " "+ SQUARE +" ";
         output += "\t\t"+ SQUARE+ " " + box.getShield() + "  "+ SQUARE +"\n";
 
         cli.printMessage(output);

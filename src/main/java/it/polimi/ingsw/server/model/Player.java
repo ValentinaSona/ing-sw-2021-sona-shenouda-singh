@@ -282,9 +282,9 @@ public class Player extends LambdaObservable<Transmittable> {
 	 */
 	public void addSpecialSlot(Resource cost){
 		Id id;
-		if (slots.size()==3) {
+		if (slots.size()==4) {
 			id = Id.S_SLOT_1;
-		} else  if (slots.size()==4) {
+		} else  if (slots.size()==5) {
 			id = Id.S_SLOT_2;
 		} else {
 			throw new RuntimeException("Having more than two special productions should be impossible");
