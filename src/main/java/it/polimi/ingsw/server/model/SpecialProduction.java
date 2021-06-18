@@ -12,6 +12,7 @@ public class SpecialProduction extends Slot {
 
     public SpecialProduction(Id id, Resource productionCost){
         super(id);
+        this.chosenType = productionCost.getResourceType();
         Resource[] cost = new Resource[]{productionCost};
         Resource[] out = new Resource[]{new Resource(1, ResourceType.JOLLY), new Resource(1, ResourceType.FAITH)};
         this.specialProduction = new Production(cost, out);
