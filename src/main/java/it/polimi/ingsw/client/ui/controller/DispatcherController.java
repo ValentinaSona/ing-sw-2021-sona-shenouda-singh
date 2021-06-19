@@ -9,8 +9,11 @@ import it.polimi.ingsw.client.ui.gui.JFXControllers.ScreenName;
 import it.polimi.ingsw.server.model.LeaderCard;
 import it.polimi.ingsw.utils.networking.ClientHandleable;
 import it.polimi.ingsw.utils.networking.Transmittable;
-import it.polimi.ingsw.utils.networking.transmittables.DisconnectionMessage;
+import it.polimi.ingsw.utils.networking.transmittables.resilienza.DisconnectionGameSetupMessage;
+import it.polimi.ingsw.utils.networking.transmittables.resilienza.DisconnectionMessage;
 import it.polimi.ingsw.utils.networking.transmittables.StatusMessage;
+import it.polimi.ingsw.utils.networking.transmittables.resilienza.ServerForceEndTurnMessage;
+import it.polimi.ingsw.utils.networking.transmittables.resilienza.ServerGameReconnectionMessage;
 import it.polimi.ingsw.utils.networking.transmittables.servermessages.*;
 import it.polimi.ingsw.utils.observer.LambdaObserver;
 
@@ -364,7 +367,24 @@ public class DispatcherController implements Runnable, LambdaObserver {
         }
     }
 
+    //TODO messaaggio di disconnessione
+    //TODO durante la fase di setup viene chiusa la partita e bisogna riniziarne un altra
+    public void handleDisconnectionGameSetup(DisconnectionGameSetupMessage message){
 
+        if(gui){
+
+        }else {
+
+        }
+    }
+
+    //TODO messaggio che si riceve quando il current player si disconnete durante il suo turno
+    public void handleForceEndTurnMessage(ServerForceEndTurnMessage message){}
+
+    //TODO messaggio che ricevo dopo che mi riconnetto ad una partita
+    public void handleGameReconnectionMessage(ServerGameReconnectionMessage message){
+
+    }
     public void handleStatus(StatusMessage message){
         if(gui){
             GUIMessageHandler.getInstance().handleStatusMessage(message);

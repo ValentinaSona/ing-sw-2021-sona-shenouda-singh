@@ -21,7 +21,6 @@ public class Game extends LambdaObservable<Transmittable> {
     private final Map<User, Player> userPlayerHashMap = new HashMap<>();
     private final Map<Player, User> playerUserHashMap = new HashMap<>();
     private Player currentPlayer;
-    private boolean active;
     private GameState gameState;
     private final boolean solo;
     private Lorenzo Lorenzo;
@@ -180,14 +179,6 @@ public class Game extends LambdaObservable<Transmittable> {
         this.currentPlayer = currentPlayer;
     }
 
-    public void setActive(boolean active) {
-        this.active = active;
-    }
-
-    public boolean isActive() {
-        return active;
-    }
-
     public void setGameState(GameState gameState) {
         this.gameState = gameState;
     }
@@ -195,5 +186,5 @@ public class Game extends LambdaObservable<Transmittable> {
     public GameState getGameState() {
         return gameState;
     }
-}
 
+}

@@ -13,6 +13,7 @@ import java.util.stream.Collectors;
 //TODO does player really need to be observable??
 public class Player extends LambdaObservable<Transmittable> {
 
+	private GameAction gameAction;
 	/**
 	 * Set to true if the connection with the player fails and their turn is to be skipped.
 	 */
@@ -389,6 +390,10 @@ public class Player extends LambdaObservable<Transmittable> {
 		return list;
 	}
 
+	//TODO
+	public PlayerView getVisible(){
+		return null;
+	}
 	/**
 	 * Calculates the player total victory points.
 	 * @return the total victory points.
@@ -428,6 +433,14 @@ public class Player extends LambdaObservable<Transmittable> {
 		isDisconnected = disconnected;
 	}
 
+	public GameAction getGameAction() {
+		return gameAction;
+	}
+
+	public void setGameAction(GameAction gameAction) {
+		this.gameAction = gameAction;
+	}
+
 	@Override
 	public boolean equals(Object o) {
 		if (this == o) return true;
@@ -435,4 +448,5 @@ public class Player extends LambdaObservable<Transmittable> {
 		Player player = (Player) o;
 		return nickname.equals(player.nickname);
 	}
+
 }

@@ -5,7 +5,7 @@ import it.polimi.ingsw.server.controller.User;
 import it.polimi.ingsw.utils.networking.Transmittable;
 import it.polimi.ingsw.utils.networking.transmittables.StatusMessage;
 import it.polimi.ingsw.utils.networking.transmittables.clientmessages.ClientMessage;
-import it.polimi.ingsw.utils.networking.transmittables.DisconnectionMessage;
+import it.polimi.ingsw.utils.networking.transmittables.resilienza.DisconnectionMessage;
 import it.polimi.ingsw.utils.observer.LambdaObservable;
 import it.polimi.ingsw.utils.observer.LambdaObserver;
 

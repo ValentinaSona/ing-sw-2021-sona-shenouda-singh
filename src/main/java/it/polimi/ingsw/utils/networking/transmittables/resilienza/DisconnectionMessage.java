@@ -1,4 +1,4 @@
-package it.polimi.ingsw.utils.networking.transmittables;
+package it.polimi.ingsw.utils.networking.transmittables.resilienza;
 
 
 import it.polimi.ingsw.client.ui.controller.DispatcherController;

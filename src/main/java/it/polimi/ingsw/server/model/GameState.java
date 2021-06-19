@@ -10,6 +10,7 @@ public enum GameState {
          */
         PLAY,
 
-        END_GAME;
+        WAITING_FOR_SOMEONE,
 
+        END_GAME;
 }

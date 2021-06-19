@@ -1,7 +1,7 @@
 package it.polimi.ingsw.utils.networking;
 
-import it.polimi.ingsw.utils.networking.transmittables.KeepAlive;
-import it.polimi.ingsw.utils.networking.transmittables.DisconnectionMessage;
+import it.polimi.ingsw.utils.networking.transmittables.resilienza.KeepAlive;
+import it.polimi.ingsw.utils.networking.transmittables.resilienza.DisconnectionMessage;
 import it.polimi.ingsw.utils.observer.LambdaObservable;
 
 import java.io.IOException;
@@ -19,7 +19,9 @@ public class Connection extends LambdaObservable<Transmittable> implements Runna
     private final ObjectInputStream inputStream;
     private final ObjectOutputStream outputStream;
     private Timer keepAliveTimer;
+
     private boolean active = true;
+    private Object activeLock = new Object();
 
     public Connection(Socket socket) throws IOException {
         this.socket = socket;
@@ -29,7 +31,9 @@ public class Connection extends LambdaObservable<Transmittable> implements Runna
     }
 
     public boolean isActive() {
-        return active;
+        synchronized (activeLock){
+            return active;
+        }
     }
 
     /**
@@ -60,7 +64,7 @@ public class Connection extends LambdaObservable<Transmittable> implements Runna
 
     private void notifyDisconnection() {
         if (isActive()) {
-            active = false;
+            setActive(false);
             notify( new DisconnectionMessage());
         }
     }
@@ -73,7 +77,7 @@ public class Connection extends LambdaObservable<Transmittable> implements Runna
         try{
             //more observers can call the method send from different threads
             synchronized (outputStream){
-                if(!active){
+                if(!isActive()){
                     return;
                 }
                 outputStream.writeObject(message);
@@ -122,5 +126,11 @@ public class Connection extends LambdaObservable<Transmittable> implements Runna
                     cancel();
             }
         },INTERVAL_MS, INTERVAL_MS);
+    }
+
+    private void setActive(boolean active) {
+        synchronized (activeLock){
+            this.active = active;
+        }
     }
 }

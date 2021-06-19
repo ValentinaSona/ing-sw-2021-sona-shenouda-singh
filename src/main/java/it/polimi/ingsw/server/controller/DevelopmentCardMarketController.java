@@ -33,6 +33,14 @@ public class DevelopmentCardMarketController{
 
     }
 
+    public static DevelopmentCardMarketController destroy(){
+        if(singleton != null){
+            singleton = null;
+        }
+
+        return null;
+    }
+
     /**
      * Called when te player selects a card they wish to buy. Checks whether the card and the slot selected are valid before proceeding to the payment.
      * @param action the ClientMessage containing information about the player's action.

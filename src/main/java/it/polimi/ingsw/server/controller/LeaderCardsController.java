@@ -42,6 +42,13 @@ public class LeaderCardsController {
         return singleton;
     }
 
+    public static LeaderCardsController destroy(){
+        if(singleton != null){
+            singleton = null;
+        }
+
+        return null;
+    }
     /**
      * Called when the player is attempting to activate a Leader Card special ability.
      * @param action the ClientMessage containing information about the player's action.

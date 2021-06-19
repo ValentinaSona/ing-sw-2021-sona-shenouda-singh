@@ -167,6 +167,8 @@ public class MainMenuGUIController extends AbstractGUIController {
             }else if(message.equals(StatusMessage.JOIN_LOBBY)){
                 //posso settare il numero di player
                 handleJoinLobbyConfirmation(false);
+            }else if(message.equals(StatusMessage.CLIENT_ERROR)){
+                handleNicknameConfirmation(false);
             }
         });
     }

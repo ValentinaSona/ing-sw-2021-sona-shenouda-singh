@@ -2,6 +2,7 @@ package it.polimi.ingsw.server;
 
 import it.polimi.ingsw.server.controller.User;
 import it.polimi.ingsw.server.model.Game;
+import it.polimi.ingsw.server.model.GameState;
 import it.polimi.ingsw.utils.networking.Connection;
 import it.polimi.ingsw.utils.networking.transmittables.StatusMessage;
 import it.polimi.ingsw.utils.networking.transmittables.servermessages.ServerUpdateLobbyMessage;
@@ -44,12 +45,14 @@ public class Lobby {
     private final Server server;
 
     private Match match;
-    private MatchStatus lobbyStatus;
-    private Object statusLock;
+    private boolean activeMatch;
+    private Object activeMatchLock = new Object();
+
+    private LobbyState lobbyState;
+    private Object stateLock;
 
     //maximum number of player
     private int currentLobbyPlayerCount;
-
     private final Object playerCountLock;
 
 
@@ -67,9 +70,9 @@ public class Lobby {
         this.disconnectedPlayers = new LinkedBlockingDeque<>();
         this.registeredNicknamesMap = new ConcurrentHashMap<>();
         this.playerCountLock = new Object();
-        this.statusLock = new Object();
+        this.stateLock = new Object();
         this.active = true;
-        this.lobbyStatus = MatchStatus.LOBBY_SETUP;
+        this.lobbyState = LobbyState.LOBBY_SETUP;
     }
 
     public boolean handleNicknameRegistration(String nickname, Connection connection) {
@@ -126,14 +129,14 @@ public class Lobby {
         //the lobbyRequestingConnection
         synchronized (registeredNicknamesMap){
             if(!registeredNicknamesMap.containsValue(nickname) || !registeredNicknamesMap.containsKey(connection)){
-                LOGGER.log(Level.INFO,nickname+ "isn't registered and he is trying to join the lobby");
+                LOGGER.log(Level.INFO,nickname+ " isn't registered and he is trying to join the lobby");
                 return false;
             }
         }
 
         boolean validOp = true;
-        synchronized (statusLock){
-            if(!lobbyStatus.equals(MatchStatus.LOBBY_SETUP))
+        synchronized (stateLock){
+            if(!lobbyState.equals(LobbyState.LOBBY_SETUP))
                 validOp = false;
         }
 
@@ -180,7 +183,8 @@ public class Lobby {
     }
 
     public void start(){
-        while(active){
+        while(isActive()){
+            LOGGER.log(Level.INFO,"waiting for first connection");
             this.waitForFirstConnection();
 
             //after the first player is arrived he has to choose the numOfPlayer for the game
@@ -190,8 +194,9 @@ public class Lobby {
 
             //if the first player is still connected
             if(!participants.isEmpty()){
+                lobbyState = LobbyState.GAME_SETUP;
 
-                this.match= new Match(server);
+                this.match= new Match(server, this);
                 List<Connection> connectionList = new ArrayList<>();
                 for(Connection c : participants.keySet()){
                     connectionList.add(c);
@@ -202,12 +207,23 @@ public class Lobby {
                     match.addParticipant(participants.get(c), c);
                 }
                 server.submitMatch(match);
-                waitForDisconnectedPlayers();
-                stop();
+
+                while(getLobbyState().equals(LobbyState.GAME_SETUP)){
+                    synchronized (this){
+                        try{
+                            this.wait();
+                        } catch (InterruptedException e) {
+                            Thread.currentThread().interrupt();
+                        }
+                    }
+                }
+
+                if(isActiveMatch()){
+                    waitForDisconnectedPlayers();
+                }
             }
             //if the first player disconnected while no one was in the lobby what will happen is
             //that we will do another time the while
-
         }
 
     }
@@ -227,7 +243,7 @@ public class Lobby {
 
         synchronized (disconnectedPlayers){
             try{
-                if(status && lobbyStatus.equals(MatchStatus.IN_GAME)){
+                if(status && lobbyState.equals(LobbyState.IN_GAME)){
                     disconnectedPlayers.put(connection);
                     disconnectedPlayers.notifyAll();
                     return true;
@@ -243,7 +259,7 @@ public class Lobby {
     }
 
     private void waitForDisconnectedPlayers(){
-        while(isActive()){
+        while(isActiveMatch()){
             try{
                 Connection connection = disconnectedPlayers.take();
                 Game model = Game.getInstance();
@@ -370,11 +386,32 @@ public class Lobby {
     public boolean isActive() {
         return active;
     }
-}
 
-enum MatchStatus{
-    LOBBY_SETUP,
-    LOAD_GAME,
-    IN_GAME;
+    public boolean isActiveMatch() {
+        synchronized (activeMatchLock){
+            return activeMatch;
+        }
+    }
+
+    public void setActiveMatch(boolean activeMatch) {
+        synchronized (activeMatchLock){
+            this.activeMatch = activeMatch;
+        }
+    }
+
+    public void setLobbyState(LobbyState lobbyState) {
+        synchronized (stateLock){
+            this.lobbyState = lobbyState;
+        }
+        synchronized (this){
+            this.notifyAll();
+        }
+    }
+
+    public LobbyState getLobbyState() {
+        synchronized (stateLock){
+            return lobbyState;
+        }
+    }
 }
 

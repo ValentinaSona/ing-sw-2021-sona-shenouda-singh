@@ -1,11 +1,13 @@
 package it.polimi.ingsw.server.controller;
 
+import it.polimi.ingsw.server.LobbyState;
 import it.polimi.ingsw.server.exception.EndOfGameException;
 import it.polimi.ingsw.server.exception.VaticanReportException;
 import it.polimi.ingsw.server.model.*;
 import it.polimi.ingsw.server.view.RemoteViewHandler;
 import it.polimi.ingsw.utils.networking.transmittables.StatusMessage;
 import it.polimi.ingsw.utils.networking.transmittables.clientmessages.game.ClientEndTurnMessage;
+import it.polimi.ingsw.utils.networking.transmittables.resilienza.ServerForceEndTurnMessage;
 import it.polimi.ingsw.utils.networking.transmittables.servermessages.*;
 
 import java.util.*;
@@ -13,6 +15,7 @@ import java.util.*;
 public class TurnController{
     private static TurnController singleton;
     private Game model;
+    private Controller controller;
 
     /*  Called when a player ends their turn.
             Modifies currentPlayer and playerList for all controller and resets players' actions as needed.
@@ -29,6 +32,14 @@ public class TurnController{
         return singleton;
     }
 
+    public static TurnController destroy(){
+        if(singleton != null){
+            singleton = null;
+        }
+
+        return null;
+    }
+
     /** TODO: should also be called when timeout kicks in in case of disconnection.
      * Called when the user communicates that their turn has ended.
      * @param view the player's corresponding RealRemoteViewHandler that will handle status messages to be sent back to the view.
@@ -41,8 +52,10 @@ public class TurnController{
         if( !(endingPlayer.getTurn())  ){
             view.handleStatusMessage(StatusMessage.CLIENT_ERROR);
         }else{
-            //TODO nell'else volendo potrei mettere semplicemente la chiamata a forceEndTurn
-            endingPlayer.toggleTurn();
+            endingPlayer.toggleTurn();;
+            if(endingPlayer.getMainAction()){
+                endingPlayer.toggleMainAction();
+            }
 
             ArrayList<Player> players = model.getPlayers();
             int idx = players.indexOf(endingPlayer);
@@ -55,7 +68,7 @@ public class TurnController{
             }
 
             if (model.isSolo()) {
-                    LorenzoAction();
+                LorenzoAction();
             }
 
 
@@ -73,11 +86,15 @@ public class TurnController{
 
     public void forceEndTurn(Player player){
 
-        player.toggleTurn();
 
+        player.toggleTurn();
+        if(player.getMainAction()){
+            player.toggleMainAction();
+        }
+        player.setDisconnected(true);
 
         if(model.isSolo()){
-            //TODO cosa devo fare se si disconnette il player?
+            model.setGameState(GameState.WAITING_FOR_SOMEONE);
         }else if(model.getPlayers().stream().anyMatch(p-> !p.isDisconnected())){
             ArrayList<Player> players = model.getPlayers();
             int startingIdx = players.indexOf(player);
@@ -93,14 +110,17 @@ public class TurnController{
 
             }
         }else{
-            //multiplayer game e tutti sono disconnessi
-            //TODO come la gestisco
+            model.setGameState(GameState.SETUP_GAME.WAITING_FOR_SOMEONE);
+        }
+
+        if(model.getGameState().equals(GameState.WAITING_FOR_SOMEONE)){
+            return;
         }
 
         Player startingPlayer = model.getCurrentPlayer();
         startingPlayer.toggleTurn();
         startingPlayer.toggleMainAction();
-        model.notify(new ServerStartTurnMessage(
+        model.notify(new ServerForceEndTurnMessage(
                 model.getUserFromPlayer(startingPlayer),
                 model.getUserFromPlayer(player)
         ));
@@ -146,8 +166,7 @@ public class TurnController{
                 keeper.pickFour(),
                 model.getUserFromPlayer(startingPlayer)
         ));
-        //adesso il primo giocatore della lista user avrà la view utilizzabile e quindi potrà
-        //scegliere le risorse da usare e le leaderCard scelte
+
     }
 
     public void endSetupTurn(){
@@ -160,9 +179,11 @@ public class TurnController{
         endingPlayer.toggleMainAction();
 
         //last player has done the setup procedure
-        if(idx == players.size()-1){
+        if(idx == players.size()-1) {
             Player startingPlayer = players.get(0);
             model.setGameState(GameState.PLAY);
+            controller.setLobbyState(LobbyState.IN_GAME);
+
             startingPlayer.toggleTurn();
             startingPlayer.toggleMainAction();
             model.setCurrentPlayer(startingPlayer);
@@ -268,5 +289,9 @@ public class TurnController{
 
         model.notify(new ServerFinalScoreMessage(rank));
 
+    }
+
+    public void setController(Controller controller) {
+        this.controller = controller;
     }
 }

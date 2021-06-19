@@ -1,23 +1,24 @@
 package it.polimi.ingsw.server.controller;
 
 
+import it.polimi.ingsw.client.modelview.PlayerView;
+import it.polimi.ingsw.server.LobbyState;
 import it.polimi.ingsw.server.Match;
-import it.polimi.ingsw.server.exception.EndOfGameException;
 import it.polimi.ingsw.server.exception.InvalidDepotException;
 import it.polimi.ingsw.server.model.*;
 import it.polimi.ingsw.server.model.Player;
-import it.polimi.ingsw.server.view.RealRemoteViewHandler;
 import it.polimi.ingsw.server.view.RemoteViewHandler;
 import it.polimi.ingsw.server.view.ViewClientMessage;
 import it.polimi.ingsw.utils.networking.ControllerHandleable;
-import it.polimi.ingsw.utils.networking.transmittables.DisconnectionMessage;
+import it.polimi.ingsw.utils.networking.transmittables.resilienza.DisconnectionMessage;
 import it.polimi.ingsw.utils.networking.transmittables.StatusMessage;
-import it.polimi.ingsw.utils.networking.transmittables.clientmessages.game.ClientEndTurnMessage;
 import it.polimi.ingsw.utils.networking.transmittables.clientmessages.game.ClientGameReconnectionMessage;
 import it.polimi.ingsw.utils.networking.transmittables.clientmessages.game.ClientSetupActionMessage;
+import it.polimi.ingsw.utils.networking.transmittables.resilienza.ServerGameReconnectionMessage;
 import it.polimi.ingsw.utils.networking.transmittables.servermessages.*;
 import it.polimi.ingsw.utils.observer.LambdaObserver;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingDeque;
@@ -44,6 +45,19 @@ public class Controller implements LambdaObserver {
         return singleton;
     }
 
+    public static Controller destroy(){
+        if(singleton != null){
+            singleton = null;
+            DevelopmentCardMarketController.destroy();
+            LeaderCardsController.destroy();
+            MarketController.destroy();
+            ResourceController.destroy();
+            TurnController.destroy();
+        }
+
+        return  null;
+    }
+
     private Controller(Game modelInstance, Match matchInstance){
         match = matchInstance;
         model = modelInstance;
@@ -52,6 +66,7 @@ public class Controller implements LambdaObserver {
         marketController = MarketController.getInstance(model);
         resourceController = ResourceController.getInstance(model);
         turnController = TurnController.getInstance(model);
+        turnController.setController(this);
     }
 
     public static Controller getInstance(Game model){
@@ -138,16 +153,80 @@ public class Controller implements LambdaObserver {
     }
 
     public void handleDisconnection(DisconnectionMessage action, RemoteViewHandler view, User user){
+        GameState currentGameState = model.getGameState();
+        Player currentPlayer = model.getCurrentPlayer();
+
+        if(currentGameState.equals(GameState.SETUP_GAME)){
+            handleSetupDisconnection();
+            return;
+        }
+
+        if(model.getUserFromPlayer(currentPlayer).equals(user)){
+            switch (currentPlayer.getGameAction()){
+                case MARKET -> {
+                    handleMarketDisconnection(user);
+                }
+                case DEV_CARDS -> {
+                    handleDevDisconnection(user);
+                }
+                case PROD -> {
+                    handleProdDisconnection(user);
+                }
+                case LEAD_CARDS -> {
+                    handleLeadDisconnection(user);
+                }
+            }
+            turnController.forceEndTurn(model.getPlayerFromUser(user));
+        }
+
+
         match.handleDisconnection(user);
 
-        turnController.forceEndTurn(model.getPlayerFromUser(user));
+
+
 
     }
 
     //TODO
-    public void handleReconnection(ClientGameReconnectionMessage action, RemoteViewHandler view, User user){
-        //match.handleReconnection();
+    //TODO avvisare il controller che si è riconnesso un altro giocatore??
+    //TODO controller.reconnectPlayer(nickname); deve essere thread safe l'accesso alla lista di player!!
+    public void handleReconnection(RemoteViewHandler view, User user){
+
+        Player player = model.getPlayerFromUser(user);
+        player.setDisconnected(false);
+
+        if(model.getGameState().equals(GameState.WAITING_FOR_SOMEONE)){
+            model.setCurrentPlayer(player);
+
+            player.toggleTurn();
+            player.toggleMainAction();
+            List<PlayerView> playerViews = new ArrayList<>();
+            model.getPlayers().forEach((p)->playerViews.add(p.getVisible()));
+            view.updateFromGame(new ServerGameReconnectionMessage(
+                    user,
+                    playerViews,
+                    model.getMarketInstance().getVisible(),
+                    model.getDevelopmentCardsMarket().getVisible()
+            ));
+        }
 
     }
 
+    private void handleSetupDisconnection(){
+        match.endGame();
+    }
+
+    private void handleMarketDisconnection(User user){}
+
+    private void handleDevDisconnection(User user){}
+
+    private void handleProdDisconnection(User user){}
+
+    private void handleLeadDisconnection(User user){}
+
+    private void handleEndGameDisconnection(User user){}
+
+    public void setLobbyState(LobbyState state){
+        match.setLobbyState(state);
+    }
 }

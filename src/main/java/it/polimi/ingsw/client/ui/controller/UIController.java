@@ -8,7 +8,7 @@ import it.polimi.ingsw.server.view.MockRemoteViewHandler;
 import it.polimi.ingsw.server.view.RemoteViewHandler;
 import it.polimi.ingsw.utils.networking.Connection;
 import it.polimi.ingsw.utils.networking.Transmittable;
-import it.polimi.ingsw.utils.networking.transmittables.DisconnectionMessage;
+import it.polimi.ingsw.utils.networking.transmittables.resilienza.DisconnectionMessage;
 import it.polimi.ingsw.utils.networking.transmittables.clientmessages.game.*;
 import it.polimi.ingsw.utils.networking.transmittables.clientmessages.setup.ClientJoinLobbyMessage;
 import it.polimi.ingsw.utils.networking.transmittables.clientmessages.setup.ClientSetNicknameMessage;
@@ -19,7 +19,6 @@ import it.polimi.ingsw.utils.observer.LambdaObserver;
 import java.io.IOException;
 import java.net.Socket;
 
-import java.rmi.ConnectException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Level;
@@ -83,12 +82,10 @@ public class UIController implements LambdaObserver{
 
             controller.setup();
 
-            //TODO: this as an alternate method to EndOfGame?
-            model.setActive(true);
 
-            while (model.isActive()){
+
+            while (true){
                 try{
-                    System.out.println("Sono entrato");
                     controller.dispatchViewClientMessage();
                 }catch (Exception e) {
                     e.printStackTrace();

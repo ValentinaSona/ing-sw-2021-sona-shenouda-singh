@@ -4,9 +4,11 @@ package it.polimi.ingsw.server;
 import it.polimi.ingsw.server.controller.Controller;
 import it.polimi.ingsw.server.controller.User;
 import it.polimi.ingsw.server.model.Game;
+import it.polimi.ingsw.server.model.GameState;
 import it.polimi.ingsw.server.view.RealRemoteViewHandler;
 import it.polimi.ingsw.utils.networking.Connection;
-import it.polimi.ingsw.utils.networking.transmittables.DisconnectionMessage;
+import it.polimi.ingsw.utils.networking.transmittables.resilienza.DisconnectionGameSetupMessage;
+import it.polimi.ingsw.utils.networking.transmittables.resilienza.DisconnectionMessage;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -15,14 +17,17 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public class Match implements Runnable{
     private Game model;
+    private Lobby lobby;
     private Controller controller;
     private final Map<String, Connection> participantMap;
     private final List<RealRemoteViewHandler> remoteViewList;
     private final Server server;
+    private Object activeLock = new Object();
     private boolean active;
 
 
-    public Match(Server server){
+    public Match(Server server, Lobby lobby){
+        this.lobby = lobby;
         this.server = server;
         this.participantMap = new ConcurrentHashMap<>();
         this.remoteViewList = new LinkedList<>();
@@ -47,7 +52,7 @@ public class Match implements Runnable{
     @Override
     public void run(){
         this.model = Game.getInstance(participantMap.size());
-
+        model.setGameState(GameState.SETUP_GAME);
         this.controller = Controller.getInstance(model, this);
 
         //this list is already populated but we have yet to decide what the remoteView should do
@@ -69,35 +74,31 @@ public class Match implements Runnable{
 
             view.addObserver(controller, (observer, viewClientMessage) ->
                     ((Controller) observer).update(viewClientMessage) );
-
-            //TODO controllo che la connessione sia ancora attiva
         }
 
         controller.setup();
-
-        //TODO: this as an alternate method to EndOfGame?
-        model.setActive(true);
 
         while (isActive()){
             try{
                 controller.dispatchViewClientMessage();
             }catch (Exception e){
                 e.printStackTrace();
-                //devo gestire l'errore disconnettendo tutti i giocatori
             }
-
-            this.setActive(model.isActive());
         }
 
 
     }
 
     public boolean isActive() {
-        return active;
+        synchronized (activeLock){
+            return active;
+        }
     }
 
     public void setActive(boolean active) {
-        this.active = active;
+        synchronized (activeLock){
+            this.active = active;
+        }
     }
 
     public void handleReconnection(String nickname, Connection connection){
@@ -117,13 +118,26 @@ public class Match implements Runnable{
         view.addObserver(controller, (observer, viewClientMessage) ->
                 ((Controller) observer).update(viewClientMessage) );
 
-        //TODO avvisare il controller che si è riconnesso un altro giocatore??
-        //TODO controller.reconnectPlayer(nickname); deve essere thread safe l'accesso alla lista di player!!
+        controller.handleReconnection(view, view.getUser());
     }
 
     public void handleDisconnection(User user){
         model.disconnectPlayer(user.getNickName());
         participantMap.remove(user.getNickName());
         remoteViewList.removeIf(view-> view.getUser().equals(user));
+    }
+
+    public void endGame(){
+        model.notify(new DisconnectionGameSetupMessage());
+        Game.destroy();
+        Controller.destroy();
+        setActive(false);
+        lobby.setActiveMatch(false);
+        lobby.setLobbyState(LobbyState.LOBBY_SETUP);
+        remoteViewList.forEach((remoteView)-> remoteView.requestDisconnection());
+    }
+
+    public void setLobbyState(LobbyState state){
+        lobby.setLobbyState(state);
     }
 }

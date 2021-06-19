@@ -5,7 +5,7 @@ import it.polimi.ingsw.client.ui.controller.UIController;
 import it.polimi.ingsw.server.controller.Controller;
 import it.polimi.ingsw.utils.networking.Transmittable;
 import it.polimi.ingsw.utils.networking.transmittables.StatusMessage;
-import it.polimi.ingsw.utils.networking.transmittables.DisconnectionMessage;
+import it.polimi.ingsw.utils.networking.transmittables.resilienza.DisconnectionMessage;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
