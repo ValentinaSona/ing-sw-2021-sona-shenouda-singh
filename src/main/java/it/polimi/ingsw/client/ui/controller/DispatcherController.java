@@ -9,11 +9,8 @@ import it.polimi.ingsw.client.ui.gui.JFXControllers.ScreenName;
 import it.polimi.ingsw.server.model.LeaderCard;
 import it.polimi.ingsw.utils.networking.ClientHandleable;
 import it.polimi.ingsw.utils.networking.Transmittable;
-import it.polimi.ingsw.utils.networking.transmittables.resilienza.DisconnectionGameSetupMessage;
-import it.polimi.ingsw.utils.networking.transmittables.resilienza.DisconnectionMessage;
+import it.polimi.ingsw.utils.networking.transmittables.resilienza.*;
 import it.polimi.ingsw.utils.networking.transmittables.StatusMessage;
-import it.polimi.ingsw.utils.networking.transmittables.resilienza.ServerForceEndTurnMessage;
-import it.polimi.ingsw.utils.networking.transmittables.resilienza.ServerGameReconnectionMessage;
 import it.polimi.ingsw.utils.networking.transmittables.servermessages.*;
 import it.polimi.ingsw.utils.observer.LambdaObserver;
 
@@ -348,7 +345,7 @@ public class DispatcherController implements Runnable, LambdaObserver {
         }
     }
 
-    public void handleDisconnectionMessage(DisconnectionMessage message){
+    public void handleDisconnection(DisconnectionMessage message){
         //METODO solo per partita in multiplayer
         UIController.getInstance().getClientConnection().closeConnection();
         if(gui){
@@ -379,10 +376,15 @@ public class DispatcherController implements Runnable, LambdaObserver {
     }
 
     //TODO messaggio che si riceve quando il current player si disconnete durante il suo turno
-    public void handleForceEndTurnMessage(ServerForceEndTurnMessage message){}
+    public void handleForceEndTurn(ServerForceEndTurnMessage message){}
 
     //TODO messaggio che ricevo dopo che mi riconnetto ad una partita
-    public void handleGameReconnectionMessage(ServerGameReconnectionMessage message){
+    public void handleGameReconnection(ServerGameReconnectionMessage message){
+
+    }
+
+    //TODO messagio che ricevo appena mi connetto se mi ero disconnesso quando dovevo riordinare le risorse ricevute
+    public void handleEndLastBuyMarblesAction(ServerEndLastBuyMarblesActionMessage message){
 
     }
     public void handleStatus(StatusMessage message){

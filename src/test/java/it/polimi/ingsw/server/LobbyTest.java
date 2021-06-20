@@ -174,10 +174,10 @@ class LobbyTest {
         setNickname(3, "Gino");
         setJoinLobby(3,false, 4);
 
-        lobbyThread.join();
+
         assertEquals(4, lobby.getCurrentLobbyPlayerCount());
-        assertFalse(lobby.isActive());
-        assertFalse(lobbyThread.isAlive());
+        assertTrue(lobby.isActive());
+        assertTrue(lobbyThread.isAlive());
 
     }
 }

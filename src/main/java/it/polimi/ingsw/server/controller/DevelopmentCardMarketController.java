@@ -6,6 +6,7 @@ import it.polimi.ingsw.server.model.DevelopmentCardSlot;
 import it.polimi.ingsw.server.model.Player;
 import it.polimi.ingsw.server.view.RealRemoteViewHandler;
 import it.polimi.ingsw.server.view.RemoteViewHandler;
+import it.polimi.ingsw.utils.GameActions;
 import it.polimi.ingsw.utils.networking.transmittables.StatusMessage;
 import it.polimi.ingsw.utils.networking.transmittables.clientmessages.game.ClientBuyTargetCardMessage;
 import it.polimi.ingsw.utils.networking.transmittables.clientmessages.game.ClientSelectDevelopmentCardMessage;
@@ -55,6 +56,7 @@ public class DevelopmentCardMarketController{
                 model.getGameState() != GameState.PLAY ){
             view.handleStatusMessage(StatusMessage.CLIENT_ERROR);
         } else {
+
             DevMarket developmentCardsMarket = model.getDevelopmentCardsMarket();
 
             DevelopmentCard targetCard = developmentCardsMarket.getDevelopmentCard(player, action.getRow(),action.getCol());
@@ -67,7 +69,6 @@ public class DevelopmentCardMarketController{
 
                 target.setTargetCard(targetCard, action.getRow(), action.getCol());
                 view.handleStatusMessage(StatusMessage.CONTINUE);
-
 
             } catch (DevelopmentCardException e) {
                 view.handleStatusMessage(StatusMessage.SELECTION_ERROR);

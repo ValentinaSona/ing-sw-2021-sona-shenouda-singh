@@ -3,6 +3,8 @@ package it.polimi.ingsw.server.controller;
 
 import it.polimi.ingsw.server.exception.*;
 import it.polimi.ingsw.server.model.*;
+import it.polimi.ingsw.server.model.action.BuyMarblesAction;
+import it.polimi.ingsw.server.model.action.ProductionOrBuyDevAction;
 import it.polimi.ingsw.server.view.RemoteViewHandler;
 import it.polimi.ingsw.utils.networking.transmittables.StatusMessage;
 import it.polimi.ingsw.utils.networking.transmittables.clientmessages.game.*;
@@ -332,6 +334,7 @@ public class ResourceController{
                 // If it is not illegal to deposit, i can add to the resource to the target deposit.
                 targetDepot.addResource(action.getResource());
 
+
                 // If the deposit fails the InvalidDepotException is thrown by addResources and the next statement is never executed, leaving the resources still to be deposited.
                 player.subFromTempResources(action.getResource());
                 model.notify(new ServerDepositActionMessage(
@@ -344,6 +347,10 @@ public class ResourceController{
 
             } catch (InvalidDepotException invalidDepotException) {
                 view.handleStatusMessage(StatusMessage.REQUIREMENTS_ERROR);
+            }finally {
+                if(!player.getTempResources().isEmpty()){
+                    player.setGameAction(new BuyMarblesAction());
+                }
             }
         }
     }
@@ -410,6 +417,8 @@ public class ResourceController{
                     view.handleStatusMessage(StatusMessage.SERVER_ERROR);
                 }
 
+            }finally {
+                player.setGameAction(new ProductionOrBuyDevAction());
             }
         }
     }

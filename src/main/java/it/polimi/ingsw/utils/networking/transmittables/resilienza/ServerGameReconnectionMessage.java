@@ -40,9 +40,9 @@ public class ServerGameReconnectionMessage implements ServerMessage, ClientHandl
         return devMarketView;
     }
 
-    //TODO ..
     @Override
     public boolean handleMessage(DispatcherController handler) {
-        return false;
+        handler.handleGameReconnection(this);
+        return true;
     }
 }
