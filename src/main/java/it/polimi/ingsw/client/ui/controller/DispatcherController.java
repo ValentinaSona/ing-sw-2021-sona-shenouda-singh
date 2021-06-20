@@ -9,6 +9,7 @@ import it.polimi.ingsw.client.ui.gui.JFXControllers.ScreenName;
 import it.polimi.ingsw.server.model.LeaderCard;
 import it.polimi.ingsw.utils.networking.ClientHandleable;
 import it.polimi.ingsw.utils.networking.Transmittable;
+import it.polimi.ingsw.utils.networking.transmittables.clientmessages.game.ServerLobbyReconnectionMessage;
 import it.polimi.ingsw.utils.networking.transmittables.resilienza.*;
 import it.polimi.ingsw.utils.networking.transmittables.StatusMessage;
 import it.polimi.ingsw.utils.networking.transmittables.servermessages.*;
@@ -378,7 +379,7 @@ public class DispatcherController implements Runnable, LambdaObserver {
     //TODO messaggio che si riceve quando il current player si disconnete durante il suo turno
     public void handleForceEndTurn(ServerForceEndTurnMessage message){}
 
-    //TODO messaggio che ricevo dopo che mi riconnetto ad una partita
+    //TODO messaggio che ricevo dopo che mi riconnetto ad una partita contiene info sulla partita e i giocatori
     public void handleGameReconnection(ServerGameReconnectionMessage message){
 
     }
@@ -387,6 +388,12 @@ public class DispatcherController implements Runnable, LambdaObserver {
     public void handleEndLastBuyMarblesAction(ServerEndLastBuyMarblesActionMessage message){
 
     }
+
+    //TODO metodo che viene chiamato appena mi riconnetto alla lobby
+    public void handleLobbyReconnection(ServerLobbyReconnectionMessage message){
+
+    }
+
     public void handleStatus(StatusMessage message){
         if(gui){
             GUIMessageHandler.getInstance().handleStatusMessage(message);

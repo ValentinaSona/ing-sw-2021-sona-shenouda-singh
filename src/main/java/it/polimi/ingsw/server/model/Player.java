@@ -391,7 +391,8 @@ public class Player extends LambdaObservable<Transmittable> {
 
 	//TODO
 	public PlayerView getVisible(){
-		return null;
+
+		return new PlayerView(this);
 	}
 	/**
 	 * Calculates the player total victory points.

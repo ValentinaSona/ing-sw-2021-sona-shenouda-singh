@@ -206,6 +206,32 @@ public class UIController implements LambdaObserver{
         send(new DisconnectionMessage());
     }
 
+    //TODO da chiamare se voglio riconnettermi dopo che mi sono disconnesso in risposta
+    //TODO il DispatcherController ricevera un messaggio ServerLobbyReconnectionMessage se tutto va bene
+    //TODO altrimenti uno StatusMessage.CLIENT_ERROR se qualcosa è andato storto e da li in poi ricevero gli altri
+    //messaggi con le informazioni sulla partita vedi ultimi 4 metodi DispatcherController
+    public void reconnectToServer(String nickname, String host, int port) throws IOException{
+        local = false;
+        MatchSettings.getInstance().setClientNickname(nickname);
+        DispatcherController dispatcherController = DispatcherController.getInstance();
+
+        try {
+            Socket clientSocket = new Socket(host, port);
+            clientConnection = new Connection(clientSocket);
+            clientConnection.addObserver(dispatcherController, (observer, transmittable) -> {
+                ((DispatcherController) observer).update(transmittable);
+            });
+            //mando il messaggio
+            Thread t = new Thread(clientConnection);
+            t.start();
+            Transmittable message = new ClientGameReconnectionMessage(nickname);
+            send(message);
+        }catch (IOException exception){
+            LOGGER.log(Level.SEVERE, "Apertura socket fallita "+exception.getMessage());
+            throw exception;
+        }
+    }
+
     public Connection getClientConnection() {
         return clientConnection;
     }
