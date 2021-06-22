@@ -104,16 +104,17 @@ public class TurnController{
             ArrayList<Player> players = model.getPlayers();
             int startingIdx = players.indexOf(endingPlayer);
 
-            for(int idx = startingIdx; idx < players.size(); idx++){
-                idx =(idx == players.size()-1)? 0: idx+1;
+            int idx =(startingIdx == players.size()-1)? 0: startingIdx+1;
+            while (true){
                 Player p = model.getPlayers().get(idx);
 
                 if(!p.isDisconnected()){
                     model.setCurrentPlayer(players.get(idx));
                     break;
                 }
-
+                idx =(idx == players.size()-1)? 0: idx+1;
             }
+
         }else{
             model.setGameState(GameState.WAITING_FOR_SOMEONE);
         }

@@ -367,7 +367,6 @@ public class CLIMessageHandler {
 
         if (message.isPendingAction()) MenuRunner.getInstance().getGameMenu().depositResources();
 
-
         MenuRunner.getInstance().setState(MenuStates.GAME);
 
         synchronized (MenuRunner.getInstance()) {
