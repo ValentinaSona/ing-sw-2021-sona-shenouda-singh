@@ -30,6 +30,8 @@ public class Lobby {
 
     private static Lobby singleton;
     private volatile boolean active;
+    private volatile boolean loadGameFromFile;
+    private Object loadGameLock = new Object();
 
     //connection that have been registered with a valid nickname
     private final Map<Connection, String> registeredNicknamesMap;
@@ -75,6 +77,32 @@ public class Lobby {
         this.lobbyState = LobbyState.LOBBY_SETUP;
     }
 
+    private void setLoadGameFromFile(boolean load){
+        synchronized (loadGameLock){
+            this.loadGameFromFile = load;
+        }
+    }
+
+    private boolean isLoadGameFromFile(){
+        synchronized (loadGameLock){
+            return loadGameFromFile;
+        }
+    }
+
+    public boolean handleNicknameRegistration(String nickname, Connection connection, boolean load){
+        if(firstConnection != null){
+            return false;
+        }
+        setLoadGameFromFile(load);
+        boolean status = handleNicknameRegistration(nickname,connection);
+
+        if(status) {
+            return true;
+        }else{
+            setLoadGameFromFile(false);
+            return false;
+        }
+    }
     public boolean handleNicknameRegistration(String nickname, Connection connection) {
         //while a player is trying to register,  the map can't be modified by other threads
         synchronized (registeredNicknamesMap){
@@ -182,50 +210,63 @@ public class Lobby {
         return true;
     }
 
+    private void chooseSettings(){
+        if(isLoadGameFromFile()){
+            startLoadGameFromFile();
+        }else{
+            startNormalGame();
+        }
+    }
+
     public void start(){
         while(isActive()){
             LOGGER.log(Level.INFO,"waiting for first connection");
             this.waitForFirstConnection();
 
-            //after the first player is arrived he has to choose the numOfPlayer for the game
-            this.waitForCurrentPlayerCount();
+            chooseSettings();
 
-            Map<Connection, String> participants = this.getAllParticipants();
-
-            //if the first player is still connected
-            if(!participants.isEmpty()){
-                lobbyState = LobbyState.GAME_SETUP;
-
-                this.match= new Match(server, this);
-                List<Connection> connectionList = new ArrayList<>();
-                for(Connection c : participants.keySet()){
-                    connectionList.add(c);
-                }
-                //randomizing the order of the users
-                Collections.shuffle(connectionList);
-                for(Connection c : connectionList){
-                    match.addParticipant(participants.get(c), c);
-                }
-                server.submitMatch(match);
-
-                while(getLobbyState().equals(LobbyState.GAME_SETUP)){
-                    synchronized (this){
-                        try{
-                            this.wait();
-                        } catch (InterruptedException e) {
-                            Thread.currentThread().interrupt();
-                        }
-                    }
-                }
-
-                if(isActiveMatch()){
-                    waitForDisconnectedPlayers();
-                }
-            }
-            //if the first player disconnected while no one was in the lobby what will happen is
-            //that we will do another time the while
         }
 
+    }
+
+    private void startNormalGame(){
+        //after the first player is arrived he has to choose the numOfPlayer for the game
+        this.waitForCurrentPlayerCount();
+
+        Map<Connection, String> participants = this.getAllParticipants();
+
+        //if the first player is still connected
+        if(!participants.isEmpty()){
+            lobbyState = LobbyState.GAME_SETUP;
+
+            this.match= new Match(server, this);
+            List<Connection> connectionList = new ArrayList<>();
+            for(Connection c : participants.keySet()){
+                connectionList.add(c);
+            }
+            //randomizing the order of the users
+            Collections.shuffle(connectionList);
+            for(Connection c : connectionList){
+                match.addParticipant(participants.get(c), c);
+            }
+            server.submitMatch(match);
+
+            while(getLobbyState().equals(LobbyState.GAME_SETUP)){
+                synchronized (this){
+                    try{
+                        this.wait();
+                    } catch (InterruptedException e) {
+                        Thread.currentThread().interrupt();
+                    }
+                }
+            }
+
+            if(isActiveMatch()){
+                waitForDisconnectedPlayers();
+            }
+        }
+        //if the first player disconnected while no one was in the lobby what will happen is
+        //that we will do another time the while
     }
 
     public boolean handleInGameLobbyDisconnection(Connection connection){
@@ -414,5 +455,6 @@ public class Lobby {
             return lobbyState;
         }
     }
+
 }
 

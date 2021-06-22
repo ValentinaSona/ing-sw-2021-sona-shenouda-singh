@@ -43,5 +43,7 @@ public enum StatusMessage implements Transmittable {
 
     RECONNECTION_OK,
 
-    RECONNECTION_FAILED;
+    RECONNECTION_FAILED,
+
+    LOAD_GAME_OK;
 }

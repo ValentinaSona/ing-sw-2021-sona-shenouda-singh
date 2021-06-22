@@ -372,6 +372,7 @@ public class DispatcherController implements Runnable, LambdaObserver {
 
         UIController.getInstance().getClientConnection().closeConnection();
 
+
         if(gui){
 
         }else {
