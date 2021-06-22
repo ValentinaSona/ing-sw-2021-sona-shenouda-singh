@@ -48,6 +48,8 @@ public class LobbyGUIController extends AbstractGUIController implements UiContr
         starting.setOpacity(0);
 
         timeline = GUIHelper.loadingWheel(loading);
+
+        GUIHelper.getInstance().setSetUpDone(false);
     }
 
     private void updatePlayersHeader() {

@@ -81,6 +81,8 @@ public class LeaderSelectionGUIController extends AbstractGUIController implemen
     @FXML
     public void initialize() {
 
+        GUIHelper.getInstance().setSetUpDone(false);
+
         selectedCards = 0;
         cardList = new ArrayList<>();
         timeline = GUIHelper.loadingWheel(loading);
@@ -371,6 +373,8 @@ public class LeaderSelectionGUIController extends AbstractGUIController implemen
             }
             UIController.getInstance().chosenStartingResources(resourceMap,
                     cardList.stream().filter(LeaderCardSelection::isSelected).map(LeaderCardSelection::getCard).toArray(LeaderCard[]::new));
+
+            GUIHelper.getInstance().setSetUpDone(true);
         }
     }
 

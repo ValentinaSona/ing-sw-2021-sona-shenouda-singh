@@ -2,13 +2,13 @@ package it.polimi.ingsw.client.ui.gui.JFXControllers;
 
 import it.polimi.ingsw.client.modelview.DepotView;
 import it.polimi.ingsw.client.modelview.PlayerView;
-import it.polimi.ingsw.client.ui.gui.GUIHelper;
-import it.polimi.ingsw.client.ui.gui.GameLog;
+import it.polimi.ingsw.client.ui.controller.UIController;
+import it.polimi.ingsw.client.ui.gui.*;
+import it.polimi.ingsw.server.model.Id;
 import it.polimi.ingsw.server.model.ResourceType;
 import it.polimi.ingsw.utils.networking.transmittables.StatusMessage;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.SnapshotParameters;
 import javafx.scene.control.Button;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
@@ -16,7 +16,7 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
-import javafx.scene.text.TextFlow;
+import javafx.scene.shape.Rectangle;
 
 public class BoardGUIController extends AbstractGUIController implements GameGUIControllerInterface {
 
@@ -27,31 +27,84 @@ public class BoardGUIController extends AbstractGUIController implements GameGUI
     @FXML
     private HBox depot1, depot2, depot3;
     @FXML
+    private HBox topBar, tempBox;
+    @FXML
     private VBox depotBox;
     @FXML
     private StackPane rightPane;
     @FXML
-    private TextFlow log;
+    private Rectangle tempWindow, tempBlock;
+    @FXML
+    private Button activateProd, end, discard;
 
     private PlayerView playerView;
 
     @FXML
     public void initialize() {
 
-        GUIHelper.getInstance().setCurrentGameController(this);
+        GUIHelper.getInstance().setCurrentScreen(ScreenName.PERSONAL_BOARD);
+
         GameTemplate.getInstance().setTabs(ScreenName.PERSONAL_BOARD);
         rightPane.getChildren().add(GameTemplate.getInstance().getPlayersTabs());
-        rightPane.getChildren().add(GameTemplate.getInstance().getMarketsTabs());
 
         setPlayerView(GUIHelper.getInstance().getClientView());
 
         updateFaithTrack();
         updateDepot();
 
+        activateTurn(GUIHelper.getInstance().getTurn());
+
         screenStart();
+
+        GameLog.getInstance().setLog(topBar);
+
+        synchronized (GUIMessageHandler.getInstance()) {
+            GUIMessageHandler.getInstance().setCurrentGameController(this);
+            GUIMessageHandler.getInstance().notifyAll();
+        }
+
+        update();
     }
 
-    public void screenStart() { }
+    private void setDepot() {
+        DragNDrop.getInstance().setDepotDraggable(depot1, Id.DEPOT_1, true);
+        DragNDrop.getInstance().setDepotDraggable(depot2, Id.DEPOT_2, true);
+        DragNDrop.getInstance().setDepotDraggable(depot3, Id.DEPOT_3, true);
+
+        DragNDrop.getInstance().setDroppable(depot1, Id.DEPOT_1);
+        DragNDrop.getInstance().setDroppable(depot2, Id.DEPOT_2);
+        DragNDrop.getInstance().setDroppable(depot3, Id.DEPOT_3);
+    }
+
+    public void screenStart() {
+        setDepot();
+        if (GUIHelper.getInstance().isChoosingTemp()) {
+            showTemp();
+        }
+    }
+
+    private void showTemp() {
+
+        tempBox.getChildren().clear();
+
+        tempWindow.setOpacity(1);
+        tempBlock.setOpacity(1);
+        tempBox.setOpacity(1);
+        discard.setOpacity(1);
+        discard.setDisable(false);
+
+        tempBox.setOpacity(1);
+
+        for (var r : GUIHelper.getInstance().getClientView().getTempResources()) {
+
+            for (int i = 0; i < r.getQuantity(); i++) {
+                var res = new ImageView(GUIHelper.getInstance().getImage(r.getResourceType(), 120, 120));
+                tempBox.getChildren().add(res);
+                DragNDrop.getInstance().setDraggableResource(res, true);
+            }
+
+        }
+    }
 
     public void setPlayerView(PlayerView playerView) {
         this.playerView = playerView;
@@ -102,6 +155,25 @@ public class BoardGUIController extends AbstractGUIController implements GameGUI
 
             }
         }
+
+        if (GUIHelper.getInstance().isChoosingTemp()) {
+
+            if (GUIHelper.getInstance().getClientView().getTempResources().size() == 0) {
+                tempWindow.setOpacity(0);
+                tempBlock.setOpacity(0);
+                tempBox.setOpacity(0);
+                discard.setOpacity(0);
+                discard.setDisable(true);
+
+                tempBox.setOpacity(0);
+
+                GUIHelper.getInstance().setChoosingTemp(false);
+            }
+
+            else {
+                showTemp();
+            }
+        }
     }
 
     public void strBoxHighlight(MouseEvent mouseEvent) {
@@ -131,8 +203,41 @@ public class BoardGUIController extends AbstractGUIController implements GameGUI
         change(ScreenName.OTHER_BOARD);
     }
 
+    @Override
+    public void update() {
+        activateTurn(GUIHelper.getInstance().getTurn());
+        if(GUIHelper.getInstance().getTurn())
+            end.setDisable(GUIHelper.getInstance().getClientView().isMainAction() || GUIHelper.getInstance().isChoosingTemp());
+    }
+
+    private void activateTurn(boolean turn) {
+        activateProd.setDisable(!turn);
+    }
+
     public void goToLeader(ActionEvent actionEvent) {
         GUIHelper.getInstance().setScreenshot(GUIHelper.getInstance().getCurrentScene().snapshot(null));
         change(ScreenName.LEADER);
+    }
+
+    public void showStrongbox(MouseEvent mouseEvent) {
+    }
+
+    public void discardResources(ActionEvent actionEvent) {
+        tempWindow.setOpacity(0);
+        tempBlock.setOpacity(0);
+        tempBox.setOpacity(0);
+        discard.setOpacity(0);
+        discard.setDisable(true);
+
+        tempBox.setOpacity(0);
+
+        GUIHelper.getInstance().setChoosingTemp(false);
+        UIController.getInstance().throwResources();
+
+        update();
+    }
+
+    public void endTurn(ActionEvent actionEvent) {
+        UIController.getInstance().endTurn();
     }
 }

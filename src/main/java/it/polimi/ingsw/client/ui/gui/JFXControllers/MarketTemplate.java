@@ -3,6 +3,7 @@ package it.polimi.ingsw.client.ui.gui.JFXControllers;
 import it.polimi.ingsw.client.modelview.GameView;
 import it.polimi.ingsw.client.modelview.MarketView;
 import it.polimi.ingsw.client.ui.gui.GUIHelper;
+import javafx.application.Platform;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -91,6 +92,11 @@ public class MarketTemplate {
             rc.setOnMouseEntered(e -> rc.setOpacity(1));
             rc.setOnMouseExited(e -> rc.setOpacity(0));
 
+            int choice = i;
+
+            rc.setOnMouseReleased(e ->
+                    Platform.runLater(() -> ((MarketGUIController)GUIHelper.getInstance().getCurrentGameController()).showMarbles(choice)));
+
         }
         StackPane.setMargin(vHighlight, new Insets(220, 200, 0, 0));
 
@@ -110,6 +116,11 @@ public class MarketTemplate {
 
             rc.setOnMouseEntered(e -> rc.setOpacity(1));
             rc.setOnMouseExited(e -> rc.setOpacity(0));
+
+            int choice = i;
+
+            rc.setOnMouseReleased(e ->
+                    Platform.runLater(() -> ((MarketGUIController)GUIHelper.getInstance().getCurrentGameController()).showMarbles(choice + 3)));
 
         }
         StackPane.setMargin(hHighlight, new Insets(0, 307, 0, 0));

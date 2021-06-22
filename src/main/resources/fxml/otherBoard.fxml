@@ -12,9 +12,8 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
-<?import javafx.scene.text.TextFlow?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="768.0" minWidth="1366.0" prefHeight="1080.0" prefWidth="1920.0" xmlns="http://javafx.com/javafx/15.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.client.ui.gui.JFXControllers.OtherBoardGUIController">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="768.0" minWidth="1366.0" prefHeight="1080.0" prefWidth="1920.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.client.ui.gui.JFXControllers.OtherBoardGUIController">
     <right>
         <StackPane fx:id="rightPane" prefHeight="1080.0" prefWidth="420.0" BorderPane.alignment="CENTER" />
     </right>
@@ -32,7 +31,7 @@
                   <ColorAdjust saturation="-0.93" />
                </effect>
                 </ImageView>
-                <HBox maxHeight="90.0" maxWidth="1300.0" prefHeight="100.0" prefWidth="200.0" spacing="15.0" StackPane.alignment="TOP_LEFT">
+                <HBox fx:id="topBar" maxHeight="90.0" maxWidth="1300.0" prefHeight="100.0" prefWidth="200.0" spacing="15.0" StackPane.alignment="TOP_LEFT">
                     <StackPane.margin>
                         <Insets left="30.0" top="30.0" />
                     </StackPane.margin>
@@ -41,9 +40,8 @@
                             <HBox.margin>
                                 <Insets right="55.0" />
                             </HBox.margin></Button>
-                        <TextFlow fx:id="log" prefHeight="120.0" prefWidth="404.0" styleClass="textLog" />
                         <Button alignment="CENTER" mnemonicParsing="false" prefHeight="120.0" prefWidth="170.0" styleClass="darkButton" text="Leader&#10;Cards" textAlignment="CENTER" />
-                        <Button alignment="CENTER" disable="true" mnemonicParsing="false" prefHeight="120.0" prefWidth="240.0" styleClass="darkButton" text="Activate&#10;Production" textAlignment="CENTER" />
+                        <Button fx:id="activateProd" alignment="CENTER" disable="true" mnemonicParsing="false" prefHeight="120.0" prefWidth="240.0" styleClass="darkButton" text="Activate&#10;Production" textAlignment="CENTER" />
                         <Button fx:id="end" alignment="CENTER" disable="true" mnemonicParsing="false" nodeOrientation="LEFT_TO_RIGHT" prefHeight="120.0" prefWidth="170.0" styleClass="darkButton" text="End&#10;Turn" textAlignment="CENTER" />
                     </children>
                 </HBox>

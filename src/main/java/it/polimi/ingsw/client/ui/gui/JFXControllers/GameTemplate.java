@@ -1,6 +1,7 @@
 package it.polimi.ingsw.client.ui.gui.JFXControllers;
 
 import it.polimi.ingsw.client.modelview.GameView;
+import it.polimi.ingsw.client.modelview.MatchSettings;
 import it.polimi.ingsw.client.ui.gui.GUIHelper;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -44,7 +45,7 @@ public class GameTemplate {
         StackPane.setAlignment(tabsPlayer, Pos.TOP_RIGHT);
         StackPane.setMargin(tabsPlayer, new Insets(80, 0, 0, 0));
 
-        tabsMarket = new VBox(20);
+        //tabsMarket = new VBox(20);
 
         var marketButton = new Button();
         marketButton.setText("Resource Market");
@@ -53,6 +54,8 @@ public class GameTemplate {
 
         marketButton.setOnAction(e -> GUIHelper.getInstance().getCurrentGameController().goToMarket());
 
+        VBox.setMargin(marketButton, new Insets(40, 0, 0, 0));
+
         var devButton = new Button();
         devButton.setText("Development market");
         devButton.setId("devButton");
@@ -60,12 +63,15 @@ public class GameTemplate {
 
         devButton.setOnAction(e -> GUIHelper.getInstance().getCurrentGameController().goToDev());
 
-        tabsMarket.getChildren().add(marketButton);
-        tabsMarket.getChildren().add(devButton);
+        tabsPlayer.getChildren().add(marketButton);
+        tabsPlayer.getChildren().add(devButton);
 
-        tabsMarket.setAlignment(Pos.TOP_RIGHT);
-        tabsMarket.setMaxHeight(350);
-        StackPane.setAlignment(tabsMarket, Pos.BOTTOM_RIGHT);
+        //tabsMarket.getChildren().add(marketButton);
+        //tabsMarket.getChildren().add(devButton);
+
+        //tabsMarket.setAlignment(Pos.TOP_RIGHT);
+        //tabsMarket.setMaxHeight(350);
+        //tackPane.setAlignment(tabsMarket, Pos.BOTTOM_RIGHT);
     }
 
     public VBox getPlayersTabs() {
@@ -79,12 +85,12 @@ public class GameTemplate {
     public void setTabs(ScreenName screen) {
 
         tabsPlayer.getChildren().forEach(e -> ((Button)e).setMaxWidth(380));
-        tabsMarket.getChildren().forEach(e -> ((Button)e).setMaxWidth(380));
+        //tabsMarket.getChildren().forEach(e -> ((Button)e).setMaxWidth(380));
 
         switch(screen){
             case PERSONAL_BOARD -> ((Button) tabsPlayer.getChildren().get(0)).setMaxWidth(420);
-            case MARKET -> ((Button) tabsMarket.getChildren().get(0)).setMaxWidth(420);
-            case DEV_MARKET -> ((Button) tabsMarket.getChildren().get(1)).setMaxWidth(420);
+            case MARKET -> ((Button) tabsPlayer.getChildren().get(MatchSettings.getInstance().getTotalUsers())).setMaxWidth(420);
+            case DEV_MARKET -> ((Button) tabsPlayer.getChildren().get(MatchSettings.getInstance().getTotalUsers()+1)).setMaxWidth(420);
             case OTHER_BOARD -> ((Button) tabsPlayer.getChildren().get(GUIHelper.getInstance().getOthers().indexOf(GUIHelper.getInstance().getSelectedPlayer().getNickname())+1)).setMaxWidth(420);
             default -> {}
         }

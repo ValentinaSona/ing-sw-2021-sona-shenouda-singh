@@ -191,7 +191,7 @@ public class DispatcherController implements Runnable, LambdaObserver {
         }
 
         if(gui){
-            GUIMessageHandler.getInstance().handleStartTurn();
+            GUIMessageHandler.getInstance().handleServerStartTurnMessage(message);
         }else {
             CLIMessageHandler.getInstance().handleServerStartTurnMessage(message);
         }
@@ -205,7 +205,7 @@ public class DispatcherController implements Runnable, LambdaObserver {
         GameView.getInstance().getPlayerFromUser(message.getUser()).setWarehouse(message.getWarehouseView());
 
         if(gui){
-
+            GUIMessageHandler.getInstance().handleServerWarehouseMessage(message);
         }else {
             CLIMessageHandler.getInstance().handleServerWarehouseMessage(message);
         }
@@ -218,7 +218,7 @@ public class DispatcherController implements Runnable, LambdaObserver {
         GameView.getInstance().getCurrentPlayer().setMainAction(false);
 
         if(gui){
-
+            GUIMessageHandler.getInstance().handleServerBoughtMarblesMessage(message);
         }else {
             CLIMessageHandler.getInstance().handleServerBoughtMarblesMessage(message);
         }
@@ -257,7 +257,7 @@ public class DispatcherController implements Runnable, LambdaObserver {
         GameView.getInstance().getPlayerFromUser(message.getUser()).setWarehouse(message.getWarehouseView());
 
         if(gui){
-
+            GUIMessageHandler.getInstance().handleServerDepositActionMessage(message);
         }else {
             CLIMessageHandler.getInstance().handleServerDepositActionMessage(message);
         }
