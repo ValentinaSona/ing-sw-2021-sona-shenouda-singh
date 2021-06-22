@@ -16,11 +16,9 @@ public class CLIMessageHandler {
 
     private static CLIMessageHandler singleton;
     private final CLI cli;
-    private final MenuRunner menu;
 
     public CLIMessageHandler(CLI cli) {
         this.cli = cli;
-        this.menu = MenuRunner.getInstance();
     }
 
     public static CLIMessageHandler getInstance(CLI cli) {
@@ -134,11 +132,16 @@ public class CLIMessageHandler {
 
     public void handleServerSetupGameMessage(ServerSetupGameMessage message) {
 
+        String players = message.getUsers().stream()
+                .map(String::valueOf)
+                .collect(Collectors.joining(" , ", "", ""));
         if (!MenuRunner.getInstance().isSolo()) {
             cli.printMessage("[" + CHECK_MARK + "] The lobby is full! The game is starting!");
+            cli.printMessage("[" + CHECK_MARK + "] Players:" + players);
         } else {
             cli.printMessage("[" + CHECK_MARK + "] The game is starting! You're up against Lorenzo il Magnifico!");
         }
+
         // Saves the user's playerView for ease of access.
         cli.setView();
 
@@ -301,6 +304,9 @@ public class CLIMessageHandler {
     public void handleServerBuyDevelopmentCardMessage(ServerBuyDevelopmentCardMessage message) {
         if (message.getUser().getNickName().equals(MatchSettings.getInstance().getClientNickname()))
             MenuRunner.getInstance().sendResponse(GameActions.ACQUIRE_CARD, "[" + CHECK_MARK + "] You have acquired the following card: ");
+        else
+            MenuRunner.getInstance().sendResponse(GameActions.ACQUIRE_CARD, "[" + CHECK_MARK + "] "+ message.getUser().getNickName() +" has acquired the following card: ");
+
     }
 
     public void handleServerActivateProductionMessage(ServerActivateProductionMessage message) {
@@ -333,7 +339,7 @@ public class CLIMessageHandler {
         MenuRunner.getInstance().setState(MenuStates.END);
 
         cli.printMessage("[!] The game has ended! Here is the final score!");
-        message.getRank().forEach((u,s) ->{ cli.printMessage(u.getNickName() + " : "+ s); });
+        message.getRank().forEach((u,s) -> cli.printMessage(u.getNickName() + " : "+ s));
         // Win message
 
         MenuRunner.getInstance().sendResponse(GameActions.MENU, "[X] The game has ended. You will be returned to main menu.");

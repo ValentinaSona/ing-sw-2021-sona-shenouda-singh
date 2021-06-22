@@ -55,9 +55,7 @@ public class Player extends LambdaObservable<Transmittable> {
 
 	private List<Resource> tempResources;
 
-	/** TODO: when is the player interaction for the initial resources made? May need to change type to resource
-	 ** TODO: likewise, when is the leaderCard interaction made? Doesn't the constructor need to have 2 or 4 as input?
-	 ** TODO: does it really need the views? Or are they added manually? Should be an array anyway no?
+	/**
 	 * Constructor
 	 */
 
@@ -352,12 +350,12 @@ public class Player extends LambdaObservable<Transmittable> {
 
 	public ArrayList<DepotView> getVisibleWarehouse() {
 
-		List<DepotView> list = new ArrayList<>();
+		ArrayList<DepotView> list = new ArrayList<>();
 
 		for (Depot depot: warehouse){
 			list.add(new DepotView(depot));
 		}
-		return (ArrayList<DepotView>) list;
+		return list;
 	}
 
 	/**

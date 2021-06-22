@@ -7,6 +7,7 @@ import it.polimi.ingsw.server.view.RemoteViewHandler;
 import it.polimi.ingsw.utils.networking.Connection;
 import it.polimi.ingsw.utils.networking.transmittables.clientmessages.game.ClientActivateSpecialAbilityMessage;
 import it.polimi.ingsw.utils.networking.transmittables.clientmessages.game.ClientThrowLeaderCardMessage;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
@@ -15,6 +16,15 @@ import static org.mockito.Mockito.mock;
 class LeaderCardsControllerTest {
     Game model;
     LeaderCardsController controller;
+
+    @AfterEach
+    void destroy(){
+        model = null;
+        controller = null;
+        Game.destroy();
+        MarketController.destroy();
+    }
+
     @Test
     void activateSpecialAbility() {
         model = Game.getInstance(2);

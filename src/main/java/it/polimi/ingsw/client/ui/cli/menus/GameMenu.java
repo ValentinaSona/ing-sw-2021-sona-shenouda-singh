@@ -108,8 +108,9 @@ public class GameMenu {
 
         String[] options;
         // TODO better option print? include Prod description?
+
         if (cli.getView().getSlots().size() == 4) options = new String[]{"Board production","Slot 1", "Slot 2", "Slot 3", "Activate the selected productions"};
-        else if (cli.getView().getWarehouse().size() == 5) options = new String[]{"Board production","Slot 1", "Slot 2", "Slot 3", "Special production 1", "Activate the selected productions"};
+        else if (cli.getView().getSlots().size() == 5) options = new String[]{"Board production","Slot 1", "Slot 2", "Slot 3", "Special production 1", "Activate the selected productions"};
         else options = new String[]{"Board production","Slot 1", "Slot 2", "Slot 3", "Special production 1", "Special production 2", "Activate the selected productions"};
 
 
@@ -197,6 +198,12 @@ public class GameMenu {
 
                 var special_production = (SpecialProductionView) cli.getView().getSlots().get(prodId.getValue());
 
+                // Initialize cost creating new resources - this is to avoid modifying the card data.
+                var cost = new ArrayList<Resource>();
+                for (Resource res :special_production.getSpecialProduction().getProductionCost()){
+                    cost.add(new Resource(res.getQuantity(), res.getResourceType()));
+                }
+
                 if (!cli.getView().canPay(special_production.getSpecialProduction().getProductionCost())) {
                     cli.printMessage("[X] You do not have the resources needed to activate this production.");
                     continue;
@@ -205,15 +212,17 @@ public class GameMenu {
                 cli.printMessage("[ ] This special production converts "+ special_production.getSpecialProduction().getProductionCost()[0].toString() + " into a faith point and a resource of your choice.");
                 cli.printMessage("[ ] Select the output resource:");
                 resource = cli.getResource(1);
+                Pair<Id, Resource> values;
+                do {
+                    cli.printMessage("[ ] Select the resources you will use to pay:");
+                    values = cli.getIdResourcePair(true);
 
+                    if (values.getValue().getQuantity() > 1) {
+                        cli.printMessage("[X] More resources than needed have been selected");
+                        continue;
+                    }
 
-                Pair<Id, Resource> values = cli.getIdResourcePair(true);
-
-                if(values.getValue().getQuantity() > 1){
-                    cli.printMessage("[X] More resources than needed have been selected");
-                    continue;
-                }
-                if (!checkSourceContains(values, resIdMap,  new ArrayList<>(Arrays.asList(special_production.getSpecialProduction().getProductionCost())))) continue;
+                } while (!checkSourceContains(values, resIdMap, cost));
 
                 resIdMap.put(values.getKey(), values.getValue());
 

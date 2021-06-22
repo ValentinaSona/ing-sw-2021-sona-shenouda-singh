@@ -239,7 +239,7 @@ public class MenuRunner {
             }
 
             if(depot.getId()== Id.S_DEPOT_2){
-                output += "\t\t "+ SQUARE+ " " +content+filler +" " + SQUARE + " " + SQUARE + "        Special depot 2, capacity: 2, type: " + depot.getResource().getResourceType() +"\n";
+                output += "\t\t"+ SQUARE+ " " +content+filler +" " + SQUARE + " " + SQUARE + "        Special depot 2, capacity: 2, type: " + depot.getResource().getResourceType() +"\n";
             }
 
         }
@@ -252,9 +252,9 @@ public class MenuRunner {
         String output = "";
 
         output += "\t\t"+ SQUARE+ " " + box.getCoin() + "    "+ SQUARE +" ";
-        output += "\t\t"+ SQUARE+ " " + box.getStone() + "   "+ SQUARE +" ";
-        output += "\t\t"+ SQUARE+ " " + box.getServant() + " "+ SQUARE +" ";
-        output += "\t\t"+ SQUARE+ " " + box.getShield() + "  "+ SQUARE +"\n";
+        output += "\t"+ SQUARE+ " " + box.getStone() + "   "+ SQUARE +" ";
+        output += "\t"+ SQUARE+ " " + box.getServant() + " "+ SQUARE +" ";
+        output += "\t"+ SQUARE+ " " + box.getShield() + "  "+ SQUARE +"\n";
 
         cli.printMessage(output);
     }

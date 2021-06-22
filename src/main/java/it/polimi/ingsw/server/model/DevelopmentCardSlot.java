@@ -46,7 +46,7 @@ public class DevelopmentCardSlot extends Slot {
         return slot.pop();
     }
 
-    /** TODO: Remove updates for new methods.
+    /**
      * Checks that the card selected can be placed into the slot. If yes, its coordinates are saved, otherwise throws an exception.
      * @param targetCard Card to be placed into the slot.
      * @param row Market row coordinate of the card.
@@ -61,10 +61,8 @@ public class DevelopmentCardSlot extends Slot {
             this.targetCard = targetCard;
             this.row = row;
             this.col = col;
-            //update(TARGET_CARD, null, targetCard);
+
         }else{
-            //we can't put the card in this slot
-            //update(DEVEL_CARD_LEVEL_ERROR, null, null);
             throw new DevelopmentCardException();
         }
     }
