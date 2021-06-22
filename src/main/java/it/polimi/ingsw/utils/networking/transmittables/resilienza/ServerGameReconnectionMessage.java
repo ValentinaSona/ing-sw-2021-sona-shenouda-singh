@@ -11,21 +11,24 @@ import it.polimi.ingsw.utils.networking.transmittables.servermessages.ServerMess
 import java.util.List;
 
 public class ServerGameReconnectionMessage implements ServerMessage, ClientHandleable {
-    private final User currentUser;
+    private boolean pendingAction;
     private final List<PlayerView> playerViews;
     private final MarketView marketView;
     private final DevMarketView devMarketView;
 
 
-    public ServerGameReconnectionMessage(User currentUser, List<PlayerView> playerViews, MarketView marketView, DevMarketView devMarketView) {
-        this.currentUser = currentUser;
+    public ServerGameReconnectionMessage(boolean pendingAction, List<PlayerView> playerViews, MarketView marketView, DevMarketView devMarketView) {
+        this.pendingAction = pendingAction;
         this.playerViews = playerViews;
         this.marketView = marketView;
         this.devMarketView = devMarketView;
     }
 
-    public User getCurrentUser() {
-        return currentUser;
+    public void setPendingAction(boolean pendingAction){
+        this.pendingAction =pendingAction;
+    }
+    public boolean isPendingAction() {
+        return pendingAction;
     }
 
     public List<PlayerView> getPlayerViews() {

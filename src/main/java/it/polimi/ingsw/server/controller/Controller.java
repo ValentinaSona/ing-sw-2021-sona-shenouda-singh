@@ -95,7 +95,9 @@ public class Controller implements LambdaObserver {
         try{
             ViewClientMessage action = this.actionToProcess.take();
             ControllerHandleable handleable = (ControllerHandleable) action.clientMessage;
-            if(!(handleable instanceof DisconnectionMessage)){
+
+            if(action.user.equals(model.getUserFromPlayer(model.getCurrentPlayer())) &&
+                    !(handleable instanceof DisconnectionMessage)){
                 model.getCurrentPlayer().setGameActionEmpty();
             }
             handleable.handleMessage(this, action.view, action.user);
@@ -173,6 +175,7 @@ public class Controller implements LambdaObserver {
             }
             turnController.forceEndTurn(model.getPlayerFromUser(user));
         }
+
         match.handleDisconnection(user);
     }
 
@@ -183,19 +186,23 @@ public class Controller implements LambdaObserver {
 
         List<PlayerView> playerViews = new ArrayList<>();
         model.getPlayers().forEach((p)->playerViews.add(p.getVisible()));
-        view.updateFromGame(new ServerGameReconnectionMessage(
-                user,
+        ServerGameReconnectionMessage message = new ServerGameReconnectionMessage(
+                false,
                 playerViews,
                 model.getMarketInstance().getVisible(),
                 model.getDevelopmentCardsMarket().getVisible()
-        ));
+        );
+
 
         Optional<Action> gameAction = player.getGameAction();
         if(gameAction.isPresent()){
-            gameAction.get().handleReconnection(player, this, view);
+            gameAction.get().handleReconnection(player,message);
         }
 
+        view.updateFromGame(message);
+
         if(model.getGameState().equals(GameState.WAITING_FOR_SOMEONE)){
+            model.setGameState(GameState.PLAY);
             Player endingPlayer = model.getCurrentPlayer();
             model.setCurrentPlayer(player);
             player.toggleTurn();

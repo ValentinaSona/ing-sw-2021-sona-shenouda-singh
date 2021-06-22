@@ -267,6 +267,7 @@ public class Lobby {
                 ConnectionSetupHandler handler = server.getHandlerMap().get(connection);
                 if(disconnected.contains(new User(handler.getNickname()))){
                     //devo gestire la riconnessione
+                    connection.send(StatusMessage.RECONNECTION_OK);
                     server.removeHandlerForReconnection(connection);
                     match.handleReconnection(handler.getNickname(), connection);
                 }else{

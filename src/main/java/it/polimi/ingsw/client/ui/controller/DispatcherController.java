@@ -9,7 +9,6 @@ import it.polimi.ingsw.client.ui.gui.JFXControllers.ScreenName;
 import it.polimi.ingsw.server.model.LeaderCard;
 import it.polimi.ingsw.utils.networking.ClientHandleable;
 import it.polimi.ingsw.utils.networking.Transmittable;
-import it.polimi.ingsw.utils.networking.transmittables.clientmessages.game.ServerLobbyReconnectionMessage;
 import it.polimi.ingsw.utils.networking.transmittables.resilienza.*;
 import it.polimi.ingsw.utils.networking.transmittables.StatusMessage;
 import it.polimi.ingsw.utils.networking.transmittables.servermessages.*;
@@ -386,11 +385,6 @@ public class DispatcherController implements Runnable, LambdaObserver {
 
     //TODO messagio che ricevo appena mi connetto se mi ero disconnesso quando dovevo riordinare le risorse ricevute
     public void handleEndLastBuyMarblesAction(ServerEndLastBuyMarblesActionMessage message){
-
-    }
-
-    //TODO metodo che viene chiamato appena mi riconnetto alla lobby
-    public void handleLobbyReconnection(ServerLobbyReconnectionMessage message){
 
     }
 

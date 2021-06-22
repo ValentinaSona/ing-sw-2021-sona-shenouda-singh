@@ -1,14 +1,12 @@
 package it.polimi.ingsw.server.model.action;
 
-import it.polimi.ingsw.server.controller.Controller;
 import it.polimi.ingsw.server.model.Player;
-import it.polimi.ingsw.server.view.RemoteViewHandler;
-import it.polimi.ingsw.utils.networking.transmittables.resilienza.ServerEndLastBuyMarblesActionMessage;
+import it.polimi.ingsw.utils.networking.transmittables.resilienza.ServerGameReconnectionMessage;
 
 public class BuyMarblesAction implements Action{
     @Override
-    public void handleReconnection(Player player, Controller controller, RemoteViewHandler view) {
+    public void handleReconnection(Player player, ServerGameReconnectionMessage message) {
         player.setGameActionEmpty();
-        view.updateFromGame(new ServerEndLastBuyMarblesActionMessage());
+        message.setPendingAction(true);
     }
 }

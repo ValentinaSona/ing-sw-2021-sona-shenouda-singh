@@ -207,8 +207,8 @@ public class UIController implements LambdaObserver{
     }
 
     //TODO da chiamare se voglio riconnettermi dopo che mi sono disconnesso in risposta
-    //TODO il DispatcherController ricevera un messaggio ServerLobbyReconnectionMessage se tutto va bene
-    //TODO altrimenti uno StatusMessage.CLIENT_ERROR se qualcosa è andato storto e da li in poi ricevero gli altri
+    //TODO il DispatcherController ricevera un messaggio RECONNECTION_OK se tutto va bene
+    //TODO altrimenti un DisconnectionMessage che chiude la connessione se qualcosa è andato storto e da li in poi ricevero gli altri
     //messaggi con le informazioni sulla partita vedi ultimi 4 metodi DispatcherController
     public void reconnectToServer(String nickname, String host, int port) throws IOException{
         local = false;

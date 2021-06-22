@@ -7,7 +7,6 @@ import it.polimi.ingsw.server.model.*;
 import it.polimi.ingsw.server.view.RemoteViewHandler;
 import it.polimi.ingsw.utils.networking.transmittables.StatusMessage;
 import it.polimi.ingsw.utils.networking.transmittables.clientmessages.game.ClientEndTurnMessage;
-import it.polimi.ingsw.utils.networking.transmittables.resilienza.ServerForceEndTurnMessage;
 import it.polimi.ingsw.utils.networking.transmittables.servermessages.*;
 
 import java.util.*;
@@ -57,21 +56,27 @@ public class TurnController{
                 endingPlayer.toggleMainAction();
             }
 
-            ArrayList<Player> players = model.getPlayers();
-            int idx = players.indexOf(endingPlayer);
 
-            if(idx == players.size()-1){
-                //restart from the first player in the list
-                model.setCurrentPlayer(players.get(0));
-            }else{
-                model.setCurrentPlayer(players.get(idx+1));
+            List<Player> players = model.getPlayers();
+            int startingIdx = players.indexOf(endingPlayer);
+
+            for(int idx = startingIdx; idx < players.size(); idx++){
+                idx =(idx == players.size()-1)? 0: idx+1;
+                Player p = model.getPlayers().get(idx);
+
+                if(!p.isDisconnected()){
+                    model.setCurrentPlayer(players.get(idx));
+                    break;
+                }
             }
+
 
             if (model.isSolo()) {
                 LorenzoAction();
             }
 
-
+            //TODO metto boolean per dire se è un giocatore
+            //TODO che si è disconnesso e anche quello di riconnessione
             Player startingPlayer = model.getCurrentPlayer();
             startingPlayer.toggleTurn();
             startingPlayer.toggleMainAction();
@@ -84,20 +89,19 @@ public class TurnController{
 
     }
 
-    public void forceEndTurn(Player player){
+    public void forceEndTurn(Player endingPlayer){
 
-
-        player.toggleTurn();
-        if(player.getMainAction()){
-            player.toggleMainAction();
+        endingPlayer.toggleTurn();
+        if(endingPlayer.getMainAction()){
+            endingPlayer.toggleMainAction();
         }
-        player.setDisconnected(true);
+        endingPlayer.setDisconnected(true);
 
         if(model.isSolo()){
             model.setGameState(GameState.WAITING_FOR_SOMEONE);
         }else if(model.getPlayers().stream().anyMatch(p-> !p.isDisconnected())){
             ArrayList<Player> players = model.getPlayers();
-            int startingIdx = players.indexOf(player);
+            int startingIdx = players.indexOf(endingPlayer);
 
             for(int idx = startingIdx; idx < players.size(); idx++){
                 idx =(idx == players.size()-1)? 0: idx+1;
@@ -110,7 +114,7 @@ public class TurnController{
 
             }
         }else{
-            model.setGameState(GameState.SETUP_GAME.WAITING_FOR_SOMEONE);
+            model.setGameState(GameState.WAITING_FOR_SOMEONE);
         }
 
         if(model.getGameState().equals(GameState.WAITING_FOR_SOMEONE)){
@@ -120,9 +124,9 @@ public class TurnController{
         Player startingPlayer = model.getCurrentPlayer();
         startingPlayer.toggleTurn();
         startingPlayer.toggleMainAction();
-        model.notify(new ServerForceEndTurnMessage(
+        model.notify(new ServerStartTurnMessage(
                 model.getUserFromPlayer(startingPlayer),
-                model.getUserFromPlayer(player)
+                model.getUserFromPlayer(endingPlayer)
         ));
 
     }

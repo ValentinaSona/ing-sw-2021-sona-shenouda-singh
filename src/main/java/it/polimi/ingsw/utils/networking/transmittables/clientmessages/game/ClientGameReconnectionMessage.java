@@ -27,12 +27,6 @@ public class ClientGameReconnectionMessage implements ClientMessage, ServerHandl
         //now i try to join the lobby with the following nickname and connection
         boolean status = lobby.handleGameReconnection(nickname, connection);
 
-        if(!status){
-            connection.send(StatusMessage.CLIENT_ERROR);
-        }else{
-            connection.send(new ServerLobbyReconnectionMessage());
-        }
-
         return status;
     }
 }

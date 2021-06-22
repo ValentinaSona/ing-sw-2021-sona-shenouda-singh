@@ -8,7 +8,7 @@ import it.polimi.ingsw.server.model.Player;
 import it.polimi.ingsw.server.model.WhiteMarbleAbility;
 import it.polimi.ingsw.server.view.RemoteViewHandler;
 import it.polimi.ingsw.utils.networking.transmittables.clientmessages.game.ClientConvertWhiteMarblesMessage;
-import it.polimi.ingsw.utils.networking.transmittables.resilienza.ServerEndLastBuyMarblesActionMessage;
+import it.polimi.ingsw.utils.networking.transmittables.resilienza.ServerGameReconnectionMessage;
 
 import java.util.Arrays;
 
@@ -33,12 +33,13 @@ public class TwoLeaderCardsAction implements Action{
             );
         } catch (EndOfGameException e) {
             e.printStackTrace();
+            controller.turnController.endOfGame(view);
         }
     }
 
     @Override
-    public void handleReconnection(Player player, Controller controller, RemoteViewHandler view) {
+    public void handleReconnection(Player player, ServerGameReconnectionMessage message) {
         player.setGameActionEmpty();
-        view.updateFromGame(new ServerEndLastBuyMarblesActionMessage());
+        message.setPendingAction(true);
     }
 }
