@@ -6,6 +6,7 @@ import it.polimi.ingsw.client.ui.cli.CLI;
 import it.polimi.ingsw.client.ui.controller.DispatcherController;
 import it.polimi.ingsw.client.ui.gui.GUI;
 import it.polimi.ingsw.server.Server;
+import it.polimi.ingsw.utils.Constant;
 import javafx.application.Application;
 
 import java.io.IOException;
@@ -29,7 +30,7 @@ public class App
                 DispatcherController.getInstance(true);
                 client.getChosenUi().start();
             }
-            case "server" -> new Server(10003).start();
+            case "server" -> new Server(Constant.port()).start();
             case "cli" -> {
                 Client client = new Client(new CLI());
                 //mi metto semplicemente ad aspettare che vengano messi messaggi nella coda
