@@ -2,6 +2,7 @@ package it.polimi.ingsw.client.ui.cli.menus;
 
 import it.polimi.ingsw.client.ui.cli.CLI;
 import it.polimi.ingsw.client.ui.controller.UIController;
+import it.polimi.ingsw.utils.GameActions;
 
 import java.io.IOException;
 

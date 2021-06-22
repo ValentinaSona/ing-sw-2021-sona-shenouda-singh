@@ -23,10 +23,9 @@ public class ServerForceEndTurnMessage implements ServerMessage, ClientHandleabl
         return startingTurn;
     }
 
-    //TODO ...
     @Override
     public boolean handleMessage(DispatcherController handler) {
-
-        return false;
+        handler.handleForceEndTurn(this);
+        return true;
     }
 }

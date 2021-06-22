@@ -1,4 +1,4 @@
-package it.polimi.ingsw.client.ui.cli.menus;
+package it.polimi.ingsw.utils;
 
 public enum GameActions {
     TIDY_WAREHOUSE, BUY_MARBLES, DEPOSIT_RESOURCES, TWO_LEADERS, ACTIVATE_LEADER,THROW_LEADER,SELECT_CARD, BUY_CARD, ACQUIRE_CARD, SELECT_PRODUCTION, ACTIVATE_PRODUCTION, WAITING, MENU, END_TURN;

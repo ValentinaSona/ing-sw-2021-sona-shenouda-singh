@@ -39,5 +39,7 @@ public enum StatusMessage implements Transmittable {
 
     SET_COUNT,
 
-    JOIN_LOBBY;
+    JOIN_LOBBY,
+
+    RECONNECTION_OK;
 }

@@ -80,6 +80,13 @@ public class MainMenuGUIController extends AbstractGUIController {
                     UIController.getInstance().sendNickname(nicknameField.getText(),"127.0.0.1", 10002);
                 } catch (IOException e) {
                     chooseNick.setText("Failed to connect...");
+                    chooseNick.setOpacity(1);
+                    nicknameField.setEditable(true);
+                    backArrow.setDisable(false);
+
+                    joining.setOpacity(0);
+                    joinButton.setOpacity(1);
+                    joinButton.setDisable(false);
                     e.printStackTrace();
                 }
             }

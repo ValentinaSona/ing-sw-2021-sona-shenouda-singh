@@ -1,19 +1,18 @@
 package it.polimi.ingsw.server.model;
 
 import it.polimi.ingsw.client.modelview.*;
+import it.polimi.ingsw.server.model.action.Action;
+import it.polimi.ingsw.utils.GameActions;
 import it.polimi.ingsw.utils.networking.Transmittable;
 import it.polimi.ingsw.utils.observer.LambdaObservable;
 
-import java.util.ArrayList;
-import java.util.EmptyStackException;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 import java.util.stream.Collectors;
 
 //TODO does player really need to be observable??
 public class Player extends LambdaObservable<Transmittable> {
 
-	private GameAction gameAction;
+	private Optional<Action> gameAction = Optional.empty();
 	/**
 	 * Set to true if the connection with the player fails and their turn is to be skipped.
 	 */
@@ -390,7 +389,8 @@ public class Player extends LambdaObservable<Transmittable> {
 
 	//TODO
 	public PlayerView getVisible(){
-		return null;
+
+		return new PlayerView(this);
 	}
 	/**
 	 * Calculates the player total victory points.
@@ -431,12 +431,17 @@ public class Player extends LambdaObservable<Transmittable> {
 		isDisconnected = disconnected;
 	}
 
-	public GameAction getGameAction() {
+
+	public Optional<Action> getGameAction() {
 		return gameAction;
 	}
 
-	public void setGameAction(GameAction gameAction) {
-		this.gameAction = gameAction;
+	public void setGameAction(Action gameAction) {
+		this.gameAction = Optional.of(gameAction);
+	}
+
+	public void setGameActionEmpty(){
+		gameAction = Optional.empty();
 	}
 
 	@Override

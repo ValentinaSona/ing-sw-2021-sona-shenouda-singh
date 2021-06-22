@@ -6,8 +6,11 @@ import it.polimi.ingsw.server.exception.NotDecoratedException;
 import it.polimi.ingsw.server.exception.TwoLeaderCardsException;
 import it.polimi.ingsw.server.model.*;
 import it.polimi.ingsw.server.model.Player;
+import it.polimi.ingsw.server.model.action.BuyMarblesAction;
+import it.polimi.ingsw.server.model.action.TwoLeaderCardsAction;
 import it.polimi.ingsw.server.view.RealRemoteViewHandler;
 import it.polimi.ingsw.server.view.RemoteViewHandler;
+import it.polimi.ingsw.utils.GameActions;
 import it.polimi.ingsw.utils.networking.transmittables.StatusMessage;
 import it.polimi.ingsw.utils.networking.transmittables.clientmessages.game.ClientBuyMarblesMessage;
 import it.polimi.ingsw.utils.networking.transmittables.clientmessages.game.ClientConvertWhiteMarblesMessage;
@@ -71,10 +74,12 @@ public class MarketController{
                 model.notify(new ServerBoughtMarblesMessage(market.getVisible(),
                         resources,
                         model.getUserFromPlayer(player)));
-
+                //if the player disconnect after this move
+                player.setGameAction(new BuyMarblesAction());
             } catch (TwoLeaderCardsException e) {
                 //the client knows that if he receive this type of message while doing
                 //this action he has to choose between his leaderCards
+                player.setGameAction(new TwoLeaderCardsAction(e.getWhiteMarbles()));
                 model.notify(new ServerChooseWhiteMarblesMessage(e.getWhiteMarbles(),
                         model.getUserFromPlayer(player)));
             }

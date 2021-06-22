@@ -13,11 +13,11 @@ import it.polimi.ingsw.utils.networking.transmittables.clientmessages.ClientMess
 import it.polimi.ingsw.utils.networking.transmittables.servermessages.ServerMessage;
 
 public class DisconnectionMessage implements ClientHandleable, ControllerHandleable, ServerHandleable, ClientMessage, ServerMessage {
-    //TODO
+
     @Override
     public boolean handleMessage(DispatcherController handler) {
-
-        return false;
+        handler.handleDisconnection(this);
+        return true;
     }
 
 

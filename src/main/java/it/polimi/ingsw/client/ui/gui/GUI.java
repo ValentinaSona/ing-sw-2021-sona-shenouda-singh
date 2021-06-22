@@ -3,6 +3,7 @@ package it.polimi.ingsw.client.ui.gui;
 import it.polimi.ingsw.client.modelview.MatchSettings;
 import it.polimi.ingsw.client.ui.Ui;
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Parent;
@@ -36,6 +37,8 @@ public class GUI extends Application implements Ui {
         primaryStage.setScene(scene);
         primaryStage.setMinWidth(1280);
         primaryStage.setMinHeight(720);
+
+        primaryStage.setOnCloseRequest(e -> Platform.exit());
 
         primaryStage.show();
     }

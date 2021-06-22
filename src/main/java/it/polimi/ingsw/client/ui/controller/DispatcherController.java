@@ -9,11 +9,9 @@ import it.polimi.ingsw.client.ui.gui.JFXControllers.ScreenName;
 import it.polimi.ingsw.server.model.LeaderCard;
 import it.polimi.ingsw.utils.networking.ClientHandleable;
 import it.polimi.ingsw.utils.networking.Transmittable;
-import it.polimi.ingsw.utils.networking.transmittables.resilienza.DisconnectionGameSetupMessage;
-import it.polimi.ingsw.utils.networking.transmittables.resilienza.DisconnectionMessage;
+import it.polimi.ingsw.utils.networking.transmittables.clientmessages.game.ServerLobbyReconnectionMessage;
+import it.polimi.ingsw.utils.networking.transmittables.resilienza.*;
 import it.polimi.ingsw.utils.networking.transmittables.StatusMessage;
-import it.polimi.ingsw.utils.networking.transmittables.resilienza.ServerForceEndTurnMessage;
-import it.polimi.ingsw.utils.networking.transmittables.resilienza.ServerGameReconnectionMessage;
 import it.polimi.ingsw.utils.networking.transmittables.servermessages.*;
 import it.polimi.ingsw.utils.observer.LambdaObserver;
 
@@ -193,7 +191,7 @@ public class DispatcherController implements Runnable, LambdaObserver {
         }
 
         if(gui){
-            GUIMessageHandler.getInstance().handleStartTurn();
+            GUIMessageHandler.getInstance().handleServerStartTurnMessage(message);
         }else {
             CLIMessageHandler.getInstance().handleServerStartTurnMessage(message);
         }
@@ -207,7 +205,7 @@ public class DispatcherController implements Runnable, LambdaObserver {
         GameView.getInstance().getPlayerFromUser(message.getUser()).setWarehouse(message.getWarehouseView());
 
         if(gui){
-
+            GUIMessageHandler.getInstance().handleServerWarehouseMessage(message);
         }else {
             CLIMessageHandler.getInstance().handleServerWarehouseMessage(message);
         }
@@ -220,7 +218,7 @@ public class DispatcherController implements Runnable, LambdaObserver {
         GameView.getInstance().getCurrentPlayer().setMainAction(false);
 
         if(gui){
-
+            GUIMessageHandler.getInstance().handleServerBoughtMarblesMessage(message);
         }else {
             CLIMessageHandler.getInstance().handleServerBoughtMarblesMessage(message);
         }
@@ -259,7 +257,7 @@ public class DispatcherController implements Runnable, LambdaObserver {
         GameView.getInstance().getPlayerFromUser(message.getUser()).setWarehouse(message.getWarehouseView());
 
         if(gui){
-
+            GUIMessageHandler.getInstance().handleServerDepositActionMessage(message);
         }else {
             CLIMessageHandler.getInstance().handleServerDepositActionMessage(message);
         }
@@ -348,7 +346,7 @@ public class DispatcherController implements Runnable, LambdaObserver {
         }
     }
 
-    public void handleDisconnectionMessage(DisconnectionMessage message){
+    public void handleDisconnection(DisconnectionMessage message){
         //METODO solo per partita in multiplayer
         UIController.getInstance().getClientConnection().closeConnection();
         if(gui){
@@ -379,12 +377,23 @@ public class DispatcherController implements Runnable, LambdaObserver {
     }
 
     //TODO messaggio che si riceve quando il current player si disconnete durante il suo turno
-    public void handleForceEndTurnMessage(ServerForceEndTurnMessage message){}
+    public void handleForceEndTurn(ServerForceEndTurnMessage message){}
 
-    //TODO messaggio che ricevo dopo che mi riconnetto ad una partita
-    public void handleGameReconnectionMessage(ServerGameReconnectionMessage message){
+    //TODO messaggio che ricevo dopo che mi riconnetto ad una partita contiene info sulla partita e i giocatori
+    public void handleGameReconnection(ServerGameReconnectionMessage message){
 
     }
+
+    //TODO messagio che ricevo appena mi connetto se mi ero disconnesso quando dovevo riordinare le risorse ricevute
+    public void handleEndLastBuyMarblesAction(ServerEndLastBuyMarblesActionMessage message){
+
+    }
+
+    //TODO metodo che viene chiamato appena mi riconnetto alla lobby
+    public void handleLobbyReconnection(ServerLobbyReconnectionMessage message){
+
+    }
+
     public void handleStatus(StatusMessage message){
         if(gui){
             GUIMessageHandler.getInstance().handleStatusMessage(message);

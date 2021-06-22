@@ -59,6 +59,11 @@ public class LeaderShowGUIController extends AbstractGUIController implements Ga
 
     }
 
+    @Override
+    public void update() {
+
+    }
+
     public void updateLeader() {
         var cards = GUIHelper.getInstance().getClientView().getLeaderCards();
         leaderBox.getChildren().clear();

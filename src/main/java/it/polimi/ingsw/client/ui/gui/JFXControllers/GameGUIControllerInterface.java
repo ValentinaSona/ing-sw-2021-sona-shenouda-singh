@@ -1,5 +1,6 @@
 package it.polimi.ingsw.client.ui.gui.JFXControllers;
 
+import it.polimi.ingsw.utils.networking.transmittables.servermessages.ServerStartTurnMessage;
 import javafx.event.ActionEvent;
 
 public interface GameGUIControllerInterface {
@@ -9,4 +10,5 @@ public interface GameGUIControllerInterface {
     void goToDev();
     void goToOtherBoard(ActionEvent e);
 
+    void update();
 }

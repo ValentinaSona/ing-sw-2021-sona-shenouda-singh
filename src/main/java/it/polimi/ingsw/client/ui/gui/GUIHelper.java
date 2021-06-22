@@ -25,10 +25,14 @@ import javafx.util.Duration;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 public class GUIHelper {
+
+    private boolean setUpPhase;
 
     private Background background;
     private Scene currentScene;
@@ -46,17 +50,30 @@ public class GUIHelper {
     private static GUIHelper singleton;
     private double screenHeight;
     private ScreenName prevScreen;
+    private boolean turn;
+    private boolean choosingTemp;
 
     private GUIHelper() {
+        choosingTemp = false;
         devVisualizer = new ImageView();
         devVisualizer.setFitWidth(400);
         devVisualizer.setPreserveRatio(true);
         StackPane.setMargin(devVisualizer, new Insets(0, 0, 0, 1000));
+
+        setUpPhase = true;
     }
 
     public static GUIHelper getInstance() {
         if (singleton == null) singleton = new GUIHelper();
         return singleton;
+    }
+
+    public void setTurn(boolean turn) {
+        this.turn = turn;
+    }
+
+    public boolean getTurn() {
+        return turn;
     }
 
     public void setCurrentController(UiControllerInterface currentController) {
@@ -277,5 +294,26 @@ public class GUIHelper {
 
     public ScreenName getPrevScreen() {
         return prevScreen;
+    }
+
+    public boolean isSetUpDone() {
+        return setUpPhase;
+    }
+
+    public void setSetUpDone (boolean setUpPhase) {
+        this.setUpPhase = setUpPhase;
+    }
+
+    public Image getResourceImage(MarketMarble m, int x, int y) {
+        if (m != MarketMarble.WHITE) return getImage(m.convertToResource(), x, y);
+        else return new Image("assets/game/resources/nores.png", x, y, false, false);
+    }
+
+    public boolean isChoosingTemp() {
+        return choosingTemp;
+    }
+
+    public void setChoosingTemp(boolean choosingTemp) {
+        this.choosingTemp = choosingTemp;
     }
 }
