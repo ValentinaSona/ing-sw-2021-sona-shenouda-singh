@@ -53,7 +53,7 @@ public class MainMenu {
                         MenuRunner.getInstance().setContextAction(GameActions.MENU);
                         MenuRunner.getInstance().setCurrentAction(GameActions.WAITING);
                         synchronized (MenuRunner.getInstance()) {
-                            UIController.getInstance().sendNickname(nickname, "127.0.0.1", 10002);
+                            UIController.getInstance().sendNickname(nickname, "127.0.0.1", 10003);
                             MenuRunner.getInstance().waitResponse();
                         }
                     } while (MenuRunner.getInstance().getCurrentAction() == GameActions.END_TURN);
@@ -72,7 +72,7 @@ public class MainMenu {
                         MenuRunner.getInstance().setContextAction(GameActions.MENU);
                         MenuRunner.getInstance().setCurrentAction(GameActions.WAITING);
                         synchronized (MenuRunner.getInstance()) {
-                            UIController.getInstance().reconnectToServer(nickname, "127.0.0.1", 10002);
+                            UIController.getInstance().reconnectToServer(nickname, "127.0.0.1", 10003);
                             MenuRunner.getInstance().waitResponse();
                         }
 

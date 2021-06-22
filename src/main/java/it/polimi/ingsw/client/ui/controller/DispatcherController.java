@@ -6,6 +6,8 @@ import it.polimi.ingsw.client.ui.cli.CLIMessageHandler;
 import it.polimi.ingsw.client.ui.gui.GUIHelper;
 import it.polimi.ingsw.client.ui.gui.GUIMessageHandler;
 import it.polimi.ingsw.client.ui.gui.JFXControllers.ScreenName;
+import it.polimi.ingsw.server.controller.User;
+import it.polimi.ingsw.server.model.Game;
 import it.polimi.ingsw.server.model.LeaderCard;
 import it.polimi.ingsw.utils.networking.ClientHandleable;
 import it.polimi.ingsw.utils.networking.Transmittable;
@@ -15,6 +17,7 @@ import it.polimi.ingsw.utils.networking.transmittables.servermessages.*;
 import it.polimi.ingsw.utils.observer.LambdaObserver;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingDeque;
 
@@ -384,6 +387,9 @@ public class DispatcherController implements Runnable, LambdaObserver {
 
     // messaggio che ricevo dopo che mi riconnetto ad una partita contiene info sulla partita e i giocatori
     public void handleGameReconnection(ServerGameReconnectionMessage message){
+        List<User> userList = new ArrayList<>();
+        message.getPlayerViews().forEach(playerView -> userList.add(new User(playerView.getNickname())));
+        GameView.getInstance(userList);
         GameView.getInstance().setMarketInstance(message.getMarketView());
         GameView.getInstance().setDevelopmentCardsMarket(message.getDevMarketView());
         GameView.getInstance().updatePlayerViews(message.getPlayerViews());

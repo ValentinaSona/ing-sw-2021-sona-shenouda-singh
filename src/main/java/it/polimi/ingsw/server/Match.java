@@ -139,5 +139,6 @@ public class Match implements Runnable{
 
     public void setLobbyState(LobbyState state){
         lobby.setLobbyState(state);
+        lobby.setActiveMatch(true);
     }
 }

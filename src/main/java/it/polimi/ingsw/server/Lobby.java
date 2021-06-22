@@ -103,6 +103,7 @@ public class Lobby {
             return false;
         }
     }
+
     public boolean handleNicknameRegistration(String nickname, Connection connection) {
         //while a player is trying to register,  the map can't be modified by other threads
         synchronized (registeredNicknamesMap){
@@ -212,7 +213,7 @@ public class Lobby {
 
     private void chooseSettings(){
         if(isLoadGameFromFile()){
-            startLoadGameFromFile();
+            //startLoadGameFromFile();
         }else{
             startNormalGame();
         }
@@ -244,6 +245,8 @@ public class Lobby {
             for(Connection c : participants.keySet()){
                 connectionList.add(c);
             }
+
+
             //randomizing the order of the users
             Collections.shuffle(connectionList);
             for(Connection c : connectionList){
@@ -251,15 +254,18 @@ public class Lobby {
             }
             server.submitMatch(match);
 
-            while(getLobbyState().equals(LobbyState.GAME_SETUP)){
-                synchronized (this){
+            synchronized (stateLock){
+                while(getLobbyState().equals(LobbyState.GAME_SETUP)){
+
                     try{
-                        this.wait();
+                        stateLock.wait();
                     } catch (InterruptedException e) {
                         Thread.currentThread().interrupt();
                     }
+
                 }
             }
+
 
             if(isActiveMatch()){
                 waitForDisconnectedPlayers();
@@ -377,10 +383,19 @@ public class Lobby {
             if(!firstPlayerDisconnected){
                 for(Connection connection : lobbyRequestingConnections){
                     participants.put(connection, registeredNicknamesMap.get(connection));
+                    registeredNicknamesMap.remove(connection);
                 }
 
                 for(int i=0; i<currentLobbyPlayerCount; i++){
                     lobbyRequestingConnections.removeFirst();
+                }
+
+                //disconnecting remaining users that joined the lobby but will not be part of the game
+                for(int i= 0; i< lobbyRequestingConnections.size(); i++){
+                    Connection c = lobbyRequestingConnections.removeFirst();
+                    registeredNicknamesMap.remove(c);
+                    server.removeHandler(c);
+                    c.closeConnection();
                 }
             }else{
                 //the first player disconnected we need to choose again the lobby count
@@ -444,9 +459,7 @@ public class Lobby {
     public void setLobbyState(LobbyState lobbyState) {
         synchronized (stateLock){
             this.lobbyState = lobbyState;
-        }
-        synchronized (this){
-            this.notifyAll();
+            stateLock.notifyAll();
         }
     }
 

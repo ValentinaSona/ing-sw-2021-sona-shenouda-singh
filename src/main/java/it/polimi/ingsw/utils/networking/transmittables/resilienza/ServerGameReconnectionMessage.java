@@ -24,6 +24,7 @@ public class ServerGameReconnectionMessage implements ServerMessage, ClientHandl
         this.devMarketView = devMarketView;
     }
 
+
     public void setPendingAction(boolean pendingAction){
         this.pendingAction =pendingAction;
     }

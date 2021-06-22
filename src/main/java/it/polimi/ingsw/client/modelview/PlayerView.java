@@ -1,12 +1,14 @@
 package it.polimi.ingsw.client.modelview;
 
 import it.polimi.ingsw.server.model.*;
+import it.polimi.ingsw.utils.networking.Transmittable;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
 
-public class PlayerView {
+public class PlayerView implements Transmittable {
     /**
      * The player's nickname, used to identify them in case of reconnection.
      */
