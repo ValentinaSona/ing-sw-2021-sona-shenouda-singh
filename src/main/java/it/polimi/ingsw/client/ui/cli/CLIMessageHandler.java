@@ -367,7 +367,12 @@ public class CLIMessageHandler {
         // Saves the user's playerView for ease of access.
         cli.setView();
 
+        MenuRunner.getInstance().getGameMenu().setRunner(MenuRunner.getInstance());
+
         cli.printMessage("[" + CHECK_MARK + "] Rejoining the game. Check what you have missed!");
+
+
+        //TODO REJOINING STATE -> MenuRUNNER to run the deposit function.
 
         if (message.isPendingAction()) MenuRunner.getInstance().getGameMenu().depositResources();
 

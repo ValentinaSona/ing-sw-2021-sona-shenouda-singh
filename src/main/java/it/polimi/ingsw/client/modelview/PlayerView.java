@@ -77,10 +77,12 @@ public class PlayerView implements Transmittable {
         isMyTurn = false;
         mainAction = false;
 
-        strongboxView = new StrongboxView(player.getStrongbox());
-        warehouse = player.getWarehouse().stream().map(DepotView::new).collect(Collectors.toList());
-        // TODO need help to know how slots are handled
-        faithTrackView = new FaithTrackView(player.getFaithTrack());
+        strongboxView = player.getVisibleStrongbox();
+        warehouse = player.getVisibleWarehouse();
+        leaderCards = player.getLeaderCards();
+        slots = player.getVisibleSlots();
+        faithTrackView = player.getVisibleFaithTrack();
+        tempResources = player.getTempResources();
 
     }
 

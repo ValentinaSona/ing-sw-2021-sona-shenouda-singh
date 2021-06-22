@@ -27,7 +27,9 @@ public class GameMenu {
         this.cli = cli;
     }
 
-
+    public void setRunner(MenuRunner runner) {
+        this.runner = runner;
+    }
 
     public void run(){
         this.runner = MenuRunner.getInstance(cli);
