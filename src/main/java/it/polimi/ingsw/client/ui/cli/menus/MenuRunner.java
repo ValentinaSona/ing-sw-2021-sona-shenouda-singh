@@ -35,6 +35,10 @@ public class MenuRunner {
         return state;
     }
 
+    public GameMenu getGameMenu() {
+        return gameMenu;
+    }
+
     public void setState(MenuStates state) {
         this.state = state;
         this.wait = false;
@@ -107,7 +111,11 @@ public class MenuRunner {
 
             // If a menu arrives naturally to its end, wait for a state change to print the next one.
             if (state != END) waitStateChange();
-            else state = MAIN;
+            else {
+                state = MAIN;
+                setupMenu.setDone(false);
+                mainMenu.setReturned(true);
+            }
         }
     }
 

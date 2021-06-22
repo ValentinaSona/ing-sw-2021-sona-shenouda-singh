@@ -10,26 +10,31 @@ public class MainMenu {
 
 
     private final CLI cli;
+    private boolean returned;
 
     public MainMenu(CLI cli) {
         this.cli = cli;
+        returned = false;
     }
 
+    public void setReturned(boolean returned) {
+        this.returned = returned;
+    }
 
     public void run(){
         mainMenu();
     }
 
-
     private void mainMenu(){
         String[] options = {"Singleplayer", "Multiplayer","Credits", "Quit"};
 
-        switch (cli.getChoice(options)){
+        switch (cli.getChoice(options, returned, true)){
             case 1 -> singleMenu();
             case 2 -> multiMenu();
             case 3 -> credits();
             case 4 -> System.exit(0);
         }
+        returned = false;
     }
 
 

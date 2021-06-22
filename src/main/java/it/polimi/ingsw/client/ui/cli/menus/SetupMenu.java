@@ -31,6 +31,9 @@ public class SetupMenu {
         done = false;
     }
 
+    public void setDone(boolean done) {
+        this.done = done;
+    }
 
     public void run(){
         this.runner = MenuRunner.getInstance(cli);
@@ -93,19 +96,24 @@ public class SetupMenu {
                 case 4 -> {
 
                     // If the resources have already been picked and the cards haven't, send the message and exit setup.
-                    if (pickLeaders() && map != null) UIController.getInstance().chosenStartingResources(map, chosen);
+                    if (pickLeaders() && map != null) {
+                        UIController.getInstance().chosenStartingResources(map, chosen);
+                        done = true;
+                    }
                     else hasBeenRefreshed = false;
                 }
                 case 5 -> {
 
                     // If the cards have already been picked and the resources haven't, send the message and exit setup.
-                    if (pickResources() && chosen != null)
+                    if (pickResources() && chosen != null) {
                         UIController.getInstance().chosenStartingResources(map, chosen);
+                        done = true;
+                    }
                     else  hasBeenRefreshed = false;
                 }
 
             }
-        } while (runner.getState()== MenuStates.SETUP);
+        } while (runner.getState()== MenuStates.SETUP && !done);
     }
 
     private boolean pickResources(){

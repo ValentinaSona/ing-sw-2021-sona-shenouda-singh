@@ -616,7 +616,7 @@ public class GameMenu {
         }
     }
 
-    private void depositResources() {
+    public void depositResources() {
 
         String[] options = {"Deposit resource", "Rearrange warehouse", "Throw away remaining resources"};
 

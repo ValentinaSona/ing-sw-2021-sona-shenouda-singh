@@ -40,7 +40,7 @@ public class Connection extends LambdaObservable<Transmittable> implements Runna
      * if the connection is not closed
      * we try to close this socket
      */
-    public synchronized void closeConnection(){
+    public void closeConnection(){
         if (!isActive()) {
             return;
         }
