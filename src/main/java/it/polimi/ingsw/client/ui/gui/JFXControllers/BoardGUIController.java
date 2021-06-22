@@ -56,7 +56,7 @@ public class BoardGUIController extends AbstractGUIController implements GameGUI
 
         screenStart();
 
-        GameLog.getInstance().setLog(topBar);
+        GameLog.getInstance().setLog(rightPane);
 
         synchronized (GUIMessageHandler.getInstance()) {
             GUIMessageHandler.getInstance().setCurrentGameController(this);

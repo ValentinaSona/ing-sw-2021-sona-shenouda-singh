@@ -6,13 +6,16 @@ import it.polimi.ingsw.server.model.MarketMarble;
 import it.polimi.ingsw.server.model.Resource;
 import javafx.application.Platform;
 import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.StackPane;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Stack;
 
 public class GameLog {
 
@@ -29,20 +32,22 @@ public class GameLog {
     private GameLog() {
         log = new TextFlow();
         log.getStyleClass().add("textLog");
-        log.setPrefWidth(404);
-        log.setPrefHeight(120);
+        log.setMaxWidth(350);
+        log.setMaxHeight(350);
         log.setPadding(new Insets(5, 0, 0, 20));
+        StackPane.setMargin(log, new Insets(0, 0, 10, 0));
+        StackPane.setAlignment(log, Pos.BOTTOM_CENTER);
     }
 
-    public void setLog(HBox bar) {
-        bar.getChildren().add(1, log);
+    public void setLog(StackPane pane) {
+        pane.getChildren().add(log);
     }
 
     public void update(Action action, User user) {
         Platform.runLater(() -> {
             if(action == Action.TURN) {
                 if (user.getNickName().equals(MatchSettings.getInstance().getClientNickname())) {
-                    add("It's your turn!");
+                    add("It's your turn!\n\n");
                 }
                 else add("It's " + user.getNickName() + "'s turn!\n\n");
             }

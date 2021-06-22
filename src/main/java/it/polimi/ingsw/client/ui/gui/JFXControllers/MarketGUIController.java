@@ -40,7 +40,7 @@ public class MarketGUIController extends AbstractGUIController implements GameGU
         activateTurn(turn);
 
         GUIHelper.getInstance().setCurrentGameController(this);
-        GameLog.getInstance().setLog(topBar);
+        GameLog.getInstance().setLog(rightPane);
         activateTurn(GUIHelper.getInstance().getTurn());
 
         GameTemplate.getInstance().setTabs(ScreenName.MARKET);
