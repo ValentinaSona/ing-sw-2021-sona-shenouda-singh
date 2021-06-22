@@ -34,7 +34,7 @@ public class SetupMenu {
 
     public void run(){
         this.runner = MenuRunner.getInstance(cli);
-        if (!done) setupMenu(false);
+        if (!done) setupMenu();
         done = true;
     }
 
@@ -71,38 +71,41 @@ public class SetupMenu {
 
     }
 
-    public void setupMenu(boolean hasBeenRefreshed) {
-
+    public void setupMenu() {
+        boolean hasBeenRefreshed = false;
+        do {
             String[] options = getSetupOptions();
             switch (cli.getChoice(options, hasBeenRefreshed, true)) {
-                case 0 -> setupMenu(true);
+                case 0 ->  hasBeenRefreshed = true;
                 case 1 -> {
                     cli.printMessage(MARBLE_LEGEND);
                     cli.printMessage(GameView.getInstance().getMarketInstance());
-                    setupMenu(false);
+                    hasBeenRefreshed = false;
                 }
                 case 2 -> {
                     cli.printMessage(GameView.getInstance().getDevelopmentCardsMarket());
-                    setupMenu(false);
+                    hasBeenRefreshed = false;
                 }
                 case 3 -> {
                     runner.printFaithTracks();
-                    setupMenu(false);
+                    hasBeenRefreshed = false;
                 }
                 case 4 -> {
 
                     // If the resources have already been picked and the cards haven't, send the message and exit setup.
                     if (pickLeaders() && map != null) UIController.getInstance().chosenStartingResources(map, chosen);
-                    else setupMenu(false);
+                    else hasBeenRefreshed = false;
                 }
                 case 5 -> {
 
                     // If the cards have already been picked and the resources haven't, send the message and exit setup.
-                    if (pickResources() && chosen != null) UIController.getInstance().chosenStartingResources(map, chosen);
-                    else setupMenu(false);
+                    if (pickResources() && chosen != null)
+                        UIController.getInstance().chosenStartingResources(map, chosen);
+                    else  hasBeenRefreshed = false;
                 }
 
             }
+        } while (runner.getState()== MenuStates.SETUP);
     }
 
     private boolean pickResources(){

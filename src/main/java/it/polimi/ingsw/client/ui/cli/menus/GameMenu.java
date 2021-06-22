@@ -87,6 +87,10 @@ public class GameMenu {
                     endOfTurn();
                     hasBeenRefreshed = false;
                 }
+                case 1492 -> {
+                    UIController.getInstance().endGame();
+                    hasBeenRefreshed = false;
+                }
                 default -> hasBeenRefreshed = false;
             }
         } while (runner.getState()== MenuStates.GAME);
@@ -128,7 +132,7 @@ public class GameMenu {
 
 
         List<Id> productions = new ArrayList<>();
-        Id prodId = null;
+        Id prodId;
         Map<Id, Resource> resIdMap = new HashMap<>();
         Resource resource = null;
         // Loop start
@@ -219,7 +223,6 @@ public class GameMenu {
 
                     if (values.getValue().getQuantity() > 1) {
                         cli.printMessage("[X] More resources than needed have been selected");
-                        continue;
                     }
 
                 } while (!checkSourceContains(values, resIdMap, cost));
@@ -316,7 +319,7 @@ public class GameMenu {
         options = new String[3];
         for (int i = 0 ; i <3; i++){
             DevelopmentCard slotCard = ((DevelopmentCardSlotView)cli.getView().getSlots().get(i+1)).peek();
-            options[i]=((slotCard!= null) ? "\n" + slotCard.toString() : "Empty slot");
+            options[i]=((slotCard!= null) ? "\n" + slotCard : "Empty slot");
         }
 
         Id id = null;
@@ -369,7 +372,7 @@ public class GameMenu {
                         .collect(Collectors.joining(", ", "", ""));
 
                 // Various print to deliver info to the player.
-                cli.printMessage("[" + CHECK_MARK + "] Selected card: \n" + card.toString());
+                cli.printMessage("[" + CHECK_MARK + "] Selected card: \n" + card);
                 runner.printDepots();
                 runner.printStrongbox();
                 cli.printMessage("[ ] Cost left to pay: " + costPrint);
