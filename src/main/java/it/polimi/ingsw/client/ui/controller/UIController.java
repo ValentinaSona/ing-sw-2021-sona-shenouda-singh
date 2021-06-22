@@ -206,6 +206,11 @@ public class UIController implements LambdaObserver{
         send(new DisconnectionMessage());
     }
 
+    /**
+     * For ease of testing only!
+     */
+    public void endGame(){send(new ClientEndGameMessage());}
+
     //TODO da chiamare se voglio riconnettermi dopo che mi sono disconnesso in risposta
     //TODO il DispatcherController ricevera un messaggio ServerLobbyReconnectionMessage se tutto va bene
     //TODO altrimenti uno StatusMessage.CLIENT_ERROR se qualcosa è andato storto e da li in poi ricevero gli altri

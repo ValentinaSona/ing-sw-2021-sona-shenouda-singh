@@ -6,6 +6,8 @@ import it.polimi.ingsw.client.ui.cli.menus.MenuRunner;
 import it.polimi.ingsw.client.ui.cli.menus.MenuStates;
 import it.polimi.ingsw.client.ui.controller.UIController;
 import it.polimi.ingsw.utils.networking.transmittables.StatusMessage;
+import it.polimi.ingsw.utils.networking.transmittables.resilienza.DisconnectionMessage;
+import it.polimi.ingsw.utils.networking.transmittables.resilienza.ServerGameReconnectionMessage;
 import it.polimi.ingsw.utils.networking.transmittables.servermessages.*;
 
 import java.util.stream.Collectors;
@@ -62,6 +64,8 @@ public class CLIMessageHandler {
             case SELECTION_ERROR -> handleSelectionError();
 
             case CONTINUE -> handleContinue();
+
+            case RECONNECTION_OK ->  MenuRunner.getInstance().sendResponse(GameActions.MENU, "[" + CHECK_MARK + "] Rejoining the game!");
 
             default -> cli.printMessage("Server Says: " + msg);
         }
@@ -350,5 +354,30 @@ public class CLIMessageHandler {
         }
         // Force end of turn method?
 
+    }
+
+    public void handleServerDisconnectionMessage() {
+        if (MenuRunner.getInstance().getState() == MenuStates.MAIN)
+            // Tried to rejoin a game, no game or no player by that nickname found.
+            MenuRunner.getInstance().sendResponse(GameActions.MENU, "[X] No game found.");
+    }
+
+    public void handleServerGameReconnectionMessage() {
+        cli.printMessage("[" + CHECK_MARK + "] Rejoining the game. Check what you have missed!");
+
+
+        // TODO handle actions.
+
+        MenuRunner.getInstance().setState(MenuStates.GAME);
+
+        synchronized (MenuRunner.getInstance()) {
+            MenuRunner.getInstance().notifyAll();
+        }
+
+    }
+
+    public void handleDisconnectionGameSetupMessage() {
+        cli.printMessage("[X] A player has disconnected. Returning you to main menu - try to start a new game!");
+        MenuRunner.getInstance().setState(MenuStates.END);
     }
 }

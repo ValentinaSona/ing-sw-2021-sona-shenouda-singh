@@ -9,7 +9,6 @@ import it.polimi.ingsw.client.ui.gui.JFXControllers.ScreenName;
 import it.polimi.ingsw.server.model.LeaderCard;
 import it.polimi.ingsw.utils.networking.ClientHandleable;
 import it.polimi.ingsw.utils.networking.Transmittable;
-import it.polimi.ingsw.utils.networking.transmittables.clientmessages.game.ServerLobbyReconnectionMessage;
 import it.polimi.ingsw.utils.networking.transmittables.resilienza.*;
 import it.polimi.ingsw.utils.networking.transmittables.StatusMessage;
 import it.polimi.ingsw.utils.networking.transmittables.servermessages.*;
@@ -78,6 +77,8 @@ public class DispatcherController implements Runnable, LambdaObserver {
 
 
     public void handleFinalScore(ServerFinalScoreMessage message){
+
+
         if(gui){
 
         }else{
@@ -352,7 +353,7 @@ public class DispatcherController implements Runnable, LambdaObserver {
         if(gui){
             //decido cosa fare una volta disconnesso
         }else{
-            //decido cosa fare una volta disconnesso
+            CLIMessageHandler.getInstance().handleServerDisconnectionMessage();
         }
     }
 
@@ -365,34 +366,35 @@ public class DispatcherController implements Runnable, LambdaObserver {
         }
     }
 
-    //TODO messaaggio di disconnessione
-    //TODO durante la fase di setup viene chiusa la partita e bisogna riniziarne un altra
+    // messaaggio di disconnessione
+    // durante la fase di setup viene chiusa la partita e bisogna riniziarne un altra
     public void handleDisconnectionGameSetup(DisconnectionGameSetupMessage message){
+
+        UIController.getInstance().getClientConnection().closeConnection();
 
         if(gui){
 
         }else {
-
+            CLIMessageHandler.getInstance().handleDisconnectionGameSetupMessage();
         }
     }
 
-    //TODO messaggio che si riceve quando il current player si disconnete durante il suo turno
-    public void handleForceEndTurn(ServerForceEndTurnMessage message){}
 
-    //TODO messaggio che ricevo dopo che mi riconnetto ad una partita contiene info sulla partita e i giocatori
+    // messaggio che ricevo dopo che mi riconnetto ad una partita contiene info sulla partita e i giocatori
     public void handleGameReconnection(ServerGameReconnectionMessage message){
+        GameView.getInstance().setMarketInstance(message.getMarketView());
+        GameView.getInstance().setDevelopmentCardsMarket(message.getDevMarketView());
+        GameView.getInstance().updatePlayerViews(message.getPlayerViews());
+
+        if(gui){
+
+        }else {
+            CLIMessageHandler.getInstance().handleServerGameReconnectionMessage();
+        }
 
     }
 
-    //TODO messagio che ricevo appena mi connetto se mi ero disconnesso quando dovevo riordinare le risorse ricevute
-    public void handleEndLastBuyMarblesAction(ServerEndLastBuyMarblesActionMessage message){
 
-    }
-
-    //TODO metodo che viene chiamato appena mi riconnetto alla lobby
-    public void handleLobbyReconnection(ServerLobbyReconnectionMessage message){
-
-    }
 
     public void handleStatus(StatusMessage message){
         if(gui){

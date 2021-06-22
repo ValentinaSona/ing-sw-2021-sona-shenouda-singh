@@ -5,23 +5,22 @@ import it.polimi.ingsw.server.controller.User;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class GameView implements Serializable {
     private static GameView singleton;
 
-    private final ArrayList<User> users;
     private MarketView marketInstance;
     private DevMarketView developmentCardsMarket;
     private int blackCross;
-    //da sostituire al più presto con mappa bidirezionale
     private final Map<User, PlayerView> userPlayerHashMap = new HashMap<>();
     private PlayerView currentPlayer;
 
 
 
 
-    public static GameView getInstance(ArrayList<User> users){
+    public static GameView getInstance(List<User> users){
         if(singleton == null){
             singleton = new GameView(users);
         }
@@ -31,7 +30,7 @@ public class GameView implements Serializable {
 
     public static GameView getInstance(){
         if(singleton == null){
-            throw new RuntimeException("this method should never be called if the game is not yet initialized");
+            throw new RuntimeException("This method should never be called if the game is not yet initialized");
         }
 
         return singleton;
@@ -48,14 +47,14 @@ public class GameView implements Serializable {
      * This constructor is used when we create a new game
      *
      */
-    private GameView(ArrayList<User> users){
-        this.users = users;
+    private GameView(List<User> users){
         for(User user : users){
             userPlayerHashMap.put(user, new PlayerView(user.getNickName()));
         }
         blackCross = 0;
     }
 
+    // TODO solo game faith view
     public int getBlackCross() {
         return blackCross;
     }
@@ -76,8 +75,6 @@ public class GameView implements Serializable {
         developmentCardsMarket = devMarketView;
     }
 
-
-
     public PlayerView getPlayerFromUser(User user){
         return userPlayerHashMap.get(user);
     }
@@ -95,4 +92,11 @@ public class GameView implements Serializable {
         this.currentPlayer = currentPlayer;
     }
 
+    public void updatePlayerViews(List<PlayerView> playerViews) {
+        if (playerViews.size() != userPlayerHashMap.size()) return;
+
+        for (PlayerView player : playerViews){
+            userPlayerHashMap.replace(new User(player.getNickname()), player);
+        }
+    }
 }
