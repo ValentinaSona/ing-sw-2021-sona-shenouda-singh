@@ -362,11 +362,11 @@ public class CLIMessageHandler {
             MenuRunner.getInstance().sendResponse(GameActions.MENU, "[X] No game found.");
     }
 
-    public void handleServerGameReconnectionMessage() {
+    public void handleServerGameReconnectionMessage(ServerGameReconnectionMessage message) {
         cli.printMessage("[" + CHECK_MARK + "] Rejoining the game. Check what you have missed!");
 
+        if (message.isPendingAction()) MenuRunner.getInstance().getGameMenu().depositResources();
 
-        // TODO handle actions.
 
         MenuRunner.getInstance().setState(MenuStates.GAME);
 
@@ -379,5 +379,10 @@ public class CLIMessageHandler {
     public void handleDisconnectionGameSetupMessage() {
         cli.printMessage("[X] A player has disconnected. Returning you to main menu - try to start a new game!");
         MenuRunner.getInstance().setState(MenuStates.END);
+
+        synchronized (CLIMessageHandler.getInstance()) {
+            cli.setInterrupted(true);
+            CLIMessageHandler.getInstance().notifyAll();
+        }
     }
 }

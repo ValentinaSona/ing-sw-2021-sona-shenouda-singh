@@ -186,7 +186,7 @@ public class DispatcherController implements Runnable, LambdaObserver {
         GameView.getInstance().getPlayerFromUser(message.getStartingTurn()).setMyTurn(true);
         GameView.getInstance().getPlayerFromUser(message.getStartingTurn()).setMainAction(true);
         // Make sure the ending player turn ends.
-        if (!MatchSettings.getInstance().isSolo()) {
+        if (!MatchSettings.getInstance().isSolo() && !message.getStartingTurn().equals(message.getEndingTurn())) {
             GameView.getInstance().getPlayerFromUser(message.getEndingTurn()).setMyTurn(false);
             GameView.getInstance().getPlayerFromUser(message.getEndingTurn()).setMainAction(false);
         }
@@ -371,6 +371,7 @@ public class DispatcherController implements Runnable, LambdaObserver {
     public void handleDisconnectionGameSetup(DisconnectionGameSetupMessage message){
 
         UIController.getInstance().getClientConnection().closeConnection();
+        GameView.destroy();
 
         if(gui){
 
@@ -389,7 +390,7 @@ public class DispatcherController implements Runnable, LambdaObserver {
         if(gui){
 
         }else {
-            CLIMessageHandler.getInstance().handleServerGameReconnectionMessage();
+            CLIMessageHandler.getInstance().handleServerGameReconnectionMessage(message);
         }
 
     }
