@@ -6,6 +6,7 @@ import it.polimi.ingsw.client.modelview.MatchSettings;
 import it.polimi.ingsw.client.modelview.PlayerView;
 import it.polimi.ingsw.client.ui.Ui;
 import it.polimi.ingsw.client.ui.cli.menus.MenuRunner;
+import it.polimi.ingsw.client.ui.cli.menus.MenuStates;
 import it.polimi.ingsw.server.model.DevelopmentCard;
 import it.polimi.ingsw.server.model.Id;
 import it.polimi.ingsw.server.model.Resource;
@@ -186,7 +187,7 @@ public class CLI implements Ui {
                         input.next();
                         continue;
                     }
-                    if (choice > 0 && choice < optNum) break;
+                    if ((choice > 0 && choice < optNum) || (choice == 1492 && isMenu && MenuRunner.getInstance().getState() == MenuStates.GAME)) break;
                     //if (enableHidden && choice == 0) break;
                     else output.println("Input must be the number of a menu item");
                 } else {

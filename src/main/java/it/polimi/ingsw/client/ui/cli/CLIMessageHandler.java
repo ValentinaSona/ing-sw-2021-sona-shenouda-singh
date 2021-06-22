@@ -363,6 +363,10 @@ public class CLIMessageHandler {
     }
 
     public void handleServerGameReconnectionMessage(ServerGameReconnectionMessage message) {
+
+        // Saves the user's playerView for ease of access.
+        cli.setView();
+
         cli.printMessage("[" + CHECK_MARK + "] Rejoining the game. Check what you have missed!");
 
         if (message.isPendingAction()) MenuRunner.getInstance().getGameMenu().depositResources();
