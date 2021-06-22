@@ -3,6 +3,7 @@ package it.polimi.ingsw.client.ui.gui.JFXControllers;
 import it.polimi.ingsw.client.modelview.GameView;
 import it.polimi.ingsw.client.modelview.MarketView;
 import it.polimi.ingsw.client.ui.gui.GUIHelper;
+import it.polimi.ingsw.client.ui.gui.GUISizes;
 import javafx.application.Platform;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
@@ -129,18 +130,18 @@ public class MarketTemplate {
 
     public GridPane updateMarket() {
 
-        var tray = market.getTray();
+        var tray = GameView.getInstance().getMarketInstance().getTray();
 
         marketGrid.getChildren().clear();
         addArrows();
 
         for(int i = 0; i < 3; i ++) {
             for(int j = 0; j < 4; j++) {
-                marketGrid.add(new ImageView(GUIHelper.getInstance().getImage(tray[i][j], 110, 110)), j, i+1);
+                marketGrid.add(new ImageView(GUIHelper.getInstance().getImage(tray[i][j], GUISizes.get().marbles(), GUISizes.get().marbles())), j, i+1);
             }
         }
 
-        marketGrid.add(new ImageView(GUIHelper.getInstance().getImage(market.getExtra(), 110, 110)), 4, 0);
+        marketGrid.add(new ImageView(GUIHelper.getInstance().getImage(GameView.getInstance().getMarketInstance().getExtra(), GUISizes.get().marbles(), GUISizes.get().marbles())), 4, 0);
 
         return marketGrid;
     }

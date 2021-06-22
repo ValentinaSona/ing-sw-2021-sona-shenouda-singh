@@ -2,6 +2,7 @@ package it.polimi.ingsw.client.ui.gui;
 
 import it.polimi.ingsw.client.modelview.MatchSettings;
 import it.polimi.ingsw.client.ui.controller.DispatcherController;
+import it.polimi.ingsw.client.ui.controller.UIController;
 import it.polimi.ingsw.client.ui.controller.UiControllerInterface;
 import it.polimi.ingsw.client.ui.gui.JFXControllers.*;
 import it.polimi.ingsw.utils.networking.transmittables.StatusMessage;
@@ -31,6 +32,13 @@ public class GUIMessageHandler {
 
     public void handleStatusMessage(StatusMessage message) {
 
+        System.out.println(message);
+
+        Platform.runLater(() -> {
+            switch(GUIHelper.getInstance().getCurrAction()){
+                case SELECTED_SLOT -> ((BoardGUIController)currentController).startDevResSelection();
+            }
+        });
         currentController.handleStatusMessage(message);
 
     }
@@ -99,5 +107,14 @@ public class GUIMessageHandler {
         if (message.getUser().getNickName().equals(MatchSettings.getInstance().getClientNickname())
                 && GUIHelper.getInstance().getCurrentScreen() == ScreenName.PERSONAL_BOARD)
             Platform.runLater(() -> ((BoardGUIController)currentGameController).updateDepot());
+    }
+
+    public void handleServerBuyDevelopmentCardMessage(ServerBuyDevelopmentCardMessage message) {
+        Platform.runLater(() -> GUIHelper.getInstance().getCurrentGameController().update());
+    }
+
+    public void handleServerDepositIntoSlotMessage(ServerDepositIntoSlotMessage message) {
+        GUIHelper.getInstance().setChosenCard(false);
+        UIController.getInstance().buyTargetCard(GUIHelper.getInstance().getSelectedSlot());
     }
 }

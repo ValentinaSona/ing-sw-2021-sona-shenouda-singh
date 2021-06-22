@@ -18,6 +18,8 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.TextFlow;
 
+import java.util.Arrays;
+
 public class MarketGUIController extends AbstractGUIController implements GameGUIControllerInterface {
 
     @FXML

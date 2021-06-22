@@ -1,5 +1,7 @@
 package it.polimi.ingsw.client.ui.gui.JFXControllers;
 
+import it.polimi.ingsw.client.modelview.GameView;
+import it.polimi.ingsw.client.ui.controller.UIController;
 import it.polimi.ingsw.client.ui.gui.GUIHelper;
 import it.polimi.ingsw.client.ui.gui.GameLog;
 import it.polimi.ingsw.utils.networking.transmittables.StatusMessage;
@@ -7,6 +9,7 @@ import it.polimi.ingsw.utils.networking.transmittables.servermessages.ServerStar
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
+import javafx.scene.image.Image;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.text.TextFlow;
@@ -16,11 +19,9 @@ public class DevelopmentGUIController extends AbstractGUIController implements G
     @FXML
     private GridPane devGrid;
     @FXML
-    private TextFlow log;
-    @FXML
     private StackPane rightPane, centerPane;
     @FXML
-    private Button end;
+    private Button buy, end;
 
     @FXML
     public void initialize() {
@@ -30,7 +31,12 @@ public class DevelopmentGUIController extends AbstractGUIController implements G
 
         centerPane.getChildren().add(GUIHelper.getInstance().getDevVisualizer());
 
+        buy.setOpacity(0);
+        buy.setDisable(true);
+
         updateDevelopment();
+
+        GameLog.getInstance().setLog(rightPane);
 
         update();
     }
@@ -70,5 +76,16 @@ public class DevelopmentGUIController extends AbstractGUIController implements G
 
         GUIHelper.getInstance().updateDevGrid(devGrid);
 
+    }
+
+    public void enableBuy(boolean chosenCard) {
+        buy.setDisable(!chosenCard);
+        if (chosenCard) buy.setOpacity(1);
+        else buy.setOpacity(0);
+    }
+
+    public void buyCard(ActionEvent actionEvent) {
+        change(ScreenName.PERSONAL_BOARD);
+        GUIHelper.getInstance().setSelectSlot(true);
     }
 }

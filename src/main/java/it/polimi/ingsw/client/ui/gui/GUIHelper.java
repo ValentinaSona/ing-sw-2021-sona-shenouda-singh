@@ -5,11 +5,13 @@ import it.polimi.ingsw.client.modelview.MarketView;
 import it.polimi.ingsw.client.modelview.MatchSettings;
 import it.polimi.ingsw.client.modelview.PlayerView;
 import it.polimi.ingsw.client.ui.controller.UiControllerInterface;
+import it.polimi.ingsw.client.ui.gui.JFXControllers.DevelopmentGUIController;
 import it.polimi.ingsw.client.ui.gui.JFXControllers.GameGUIControllerInterface;
 import it.polimi.ingsw.client.ui.gui.JFXControllers.ScreenName;
 import it.polimi.ingsw.server.controller.User;
 import it.polimi.ingsw.server.model.*;
 import javafx.animation.*;
+import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
 import javafx.scene.Node;
@@ -48,13 +50,25 @@ public class GUIHelper {
     private Image screenshot;
 
     private static GUIHelper singleton;
+
     private double screenHeight;
     private ScreenName prevScreen;
     private boolean turn;
     private boolean choosingTemp;
 
+    private boolean chosenCard;
+    private int selectedI, selectedJ;
+    private boolean selectSlot;
+
+    private Id selectedSlot;
+
+    CurrAction currAction;
+
     private GUIHelper() {
+        currAction = CurrAction.IDLE;
+        selectSlot = false;
         choosingTemp = false;
+        chosenCard = false;
         devVisualizer = new ImageView();
         devVisualizer.setFitWidth(400);
         devVisualizer.setPreserveRatio(true);
@@ -158,10 +172,37 @@ public class GUIHelper {
                 var tempIm = getInstance().getImage(cards[i][j]);
                 var tempView = new ImageView(tempIm);
 
-                tempView.setFitWidth(187);
+                tempView.setFitWidth(GUISizes.get().devSize());
                 tempView.setPreserveRatio(true);
 
-                tempView.setOnMouseEntered(e -> devVisualizer.setImage(tempIm));
+                tempView.setOnMouseEntered(e -> { if (!chosenCard) devVisualizer.setImage(tempIm);});
+
+                int indexI = i;
+                int indexJ = j;
+
+                var selection = new ImageView(new Image("assets/game/development_cards/card_selection.png"));
+                selection.setFitWidth(GUISizes.get().devSize());
+                selection.setPreserveRatio(true);
+
+
+                tempView.setOnMouseReleased(e -> {
+                    if(getInstance().getTurn()) {
+                        if (!chosenCard) {
+                            grid.add(selection, indexJ, indexI);
+                            selectedI = indexI;
+                            selectedJ = indexJ;
+                            chosenCard = true;
+                        }
+                        else {
+                            grid.getChildren().remove(selection);
+                            chosenCard = false;
+                        }
+
+                        Platform.runLater(() -> {
+                            ((DevelopmentGUIController)GUIHelper.getInstance().currentGameController).enableBuy(chosenCard);
+                        });
+                    }
+                });
 
                 if (cards[i][j] != null) {
                     grid.add(tempView, j, i);
@@ -170,7 +211,7 @@ public class GUIHelper {
             }
         }
 
-        grid.setOnMouseExited(e -> devVisualizer.setImage(null));
+        grid.setOnMouseExited(e -> { if (!chosenCard) devVisualizer.setImage(null);});
 
     }
 
@@ -315,5 +356,41 @@ public class GUIHelper {
 
     public void setChoosingTemp(boolean choosingTemp) {
         this.choosingTemp = choosingTemp;
+    }
+
+    public boolean isSelectSlot() {
+        return selectSlot;
+    }
+
+    public void setSelectSlot(boolean selectSlot) {
+        this.selectSlot = selectSlot;
+    }
+
+    public int getSelectedI() {
+        return selectedI;
+    }
+
+    public int getSelectedJ() {
+        return selectedJ;
+    }
+
+    public CurrAction getCurrAction() {
+        return currAction;
+    }
+
+    public void setCurrAction(CurrAction currAction) {
+        this.currAction = currAction;
+    }
+
+    public Id getSelectedSlot() {
+        return selectedSlot;
+    }
+
+    public void setSelectedSlot(Id selectedSlot) {
+        this.selectedSlot = selectedSlot;
+    }
+
+    public void setChosenCard(boolean chosenCard) {
+        this.chosenCard = chosenCard;
     }
 }

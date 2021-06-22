@@ -1,6 +1,5 @@
 package it.polimi.ingsw.client.ui.gui;
 
-import it.polimi.ingsw.client.modelview.MatchSettings;
 import it.polimi.ingsw.client.ui.Ui;
 import javafx.application.Application;
 import javafx.application.Platform;
@@ -38,8 +37,10 @@ public class GUI extends Application implements Ui {
         primaryStage.setMinWidth(1280);
         primaryStage.setMinHeight(720);
 
-        primaryStage.setOnCloseRequest(e -> Platform.exit());
-
+        primaryStage.setOnCloseRequest(t -> {
+            Platform.exit();
+            System.exit(0);
+        });
         primaryStage.show();
     }
 

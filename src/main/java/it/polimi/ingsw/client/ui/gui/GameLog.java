@@ -32,7 +32,7 @@ public class GameLog {
     private GameLog() {
         log = new TextFlow();
         log.getStyleClass().add("textLog");
-        log.setMaxWidth(350);
+        log.setMaxWidth(400);
         log.setMaxHeight(350);
         log.setPadding(new Insets(5, 0, 0, 20));
         StackPane.setMargin(log, new Insets(0, 0, 10, 0));
@@ -91,7 +91,7 @@ public class GameLog {
     public String transformToString(Resource resource) {
         String output = Integer.toString(resource.getQuantity());
         output += " ";
-        output += resource.getResourceType();
+        output += resource.getResourceType().toString().toLowerCase();
 
         if (resource.getQuantity() > 1) output += "s";
 

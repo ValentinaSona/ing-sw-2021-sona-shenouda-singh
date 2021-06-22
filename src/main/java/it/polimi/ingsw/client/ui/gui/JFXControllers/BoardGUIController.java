@@ -1,29 +1,38 @@
 package it.polimi.ingsw.client.ui.gui.JFXControllers;
 
 import it.polimi.ingsw.client.modelview.DepotView;
+import it.polimi.ingsw.client.modelview.DevelopmentCardSlotView;
 import it.polimi.ingsw.client.modelview.PlayerView;
+import it.polimi.ingsw.client.modelview.SlotView;
 import it.polimi.ingsw.client.ui.controller.UIController;
 import it.polimi.ingsw.client.ui.gui.*;
 import it.polimi.ingsw.server.model.Id;
+import it.polimi.ingsw.server.model.Resource;
 import it.polimi.ingsw.server.model.ResourceType;
 import it.polimi.ingsw.utils.networking.transmittables.StatusMessage;
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.geometry.HPos;
+import javafx.geometry.Pos;
+import javafx.geometry.VPos;
 import javafx.scene.control.Button;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.StackPane;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
 import javafx.scene.shape.Rectangle;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class BoardGUIController extends AbstractGUIController implements GameGUIControllerInterface {
 
     @FXML
+    private Button confirmDev;
+    @FXML
     private ImageView strongBoxHover;
     @FXML
-    private GridPane faithGrid;
+    private GridPane faithGrid, productionGrid;
     @FXML
     private HBox depot1, depot2, depot3;
     @FXML
@@ -39,6 +48,8 @@ public class BoardGUIController extends AbstractGUIController implements GameGUI
 
     private PlayerView playerView;
 
+    private Map<Id, Resource> devChoiceMap;
+
     @FXML
     public void initialize() {
 
@@ -49,12 +60,7 @@ public class BoardGUIController extends AbstractGUIController implements GameGUI
 
         setPlayerView(GUIHelper.getInstance().getClientView());
 
-        updateFaithTrack();
-        updateDepot();
-
         activateTurn(GUIHelper.getInstance().getTurn());
-
-        screenStart();
 
         GameLog.getInstance().setLog(rightPane);
 
@@ -62,6 +68,11 @@ public class BoardGUIController extends AbstractGUIController implements GameGUI
             GUIMessageHandler.getInstance().setCurrentGameController(this);
             GUIMessageHandler.getInstance().notifyAll();
         }
+
+        screenStart();
+
+        updateFaithTrack();
+        updateDepot();
 
         update();
     }
@@ -81,6 +92,9 @@ public class BoardGUIController extends AbstractGUIController implements GameGUI
         if (GUIHelper.getInstance().isChoosingTemp()) {
             showTemp();
         }
+        devChoiceMap = new HashMap<>();
+
+        if (GUIHelper.getInstance().getCurrAction() == CurrAction.SELECTED_SLOT) startDevResSelection();
     }
 
     private void showTemp() {
@@ -174,6 +188,9 @@ public class BoardGUIController extends AbstractGUIController implements GameGUI
                 showTemp();
             }
         }
+
+        if(GUIHelper.getInstance().getTurn())
+            end.setDisable(!(!GUIHelper.getInstance().getClientView().isMainAction() && GUIHelper.getInstance().getTurn()));
     }
 
     public void strBoxHighlight(MouseEvent mouseEvent) {
@@ -207,7 +224,9 @@ public class BoardGUIController extends AbstractGUIController implements GameGUI
     public void update() {
         activateTurn(GUIHelper.getInstance().getTurn());
         if(GUIHelper.getInstance().getTurn())
-            end.setDisable(GUIHelper.getInstance().getClientView().isMainAction() || GUIHelper.getInstance().isChoosingTemp());
+            end.setDisable(!(!GUIHelper.getInstance().getClientView().isMainAction() && GUIHelper.getInstance().getTurn()));
+
+        updateDevSlots();
     }
 
     private void activateTurn(boolean turn) {
@@ -239,5 +258,63 @@ public class BoardGUIController extends AbstractGUIController implements GameGUI
 
     public void endTurn(ActionEvent actionEvent) {
         UIController.getInstance().endTurn();
+    }
+
+    public void lightSlot(MouseEvent mouseEvent) {
+        if (GUIHelper.getInstance().isSelectSlot()) ((Pane)mouseEvent.getSource()).setStyle("-fx-background-color: rgba(245, 179, 66, 0.5)");
+    }
+
+    public void turnOffSlot(MouseEvent mouseEvent) {
+        if (GUIHelper.getInstance().isSelectSlot()) ((Pane)mouseEvent.getSource()).setStyle("-fx-background-color: transparent");
+    }
+
+    public void selectedSlot1(MouseEvent mouseEvent) {
+        GUIHelper.getInstance().setCurrAction(CurrAction.SELECTED_SLOT);
+        GUIHelper.getInstance().setSelectedSlot(Id.SLOT_1);
+        if (GUIHelper.getInstance().isSelectSlot())
+            UIController.getInstance().selectDevelopmentCard(GUIHelper.getInstance().getSelectedI(), GUIHelper.getInstance().getSelectedJ(), Id.SLOT_1);
+    }
+
+    public void selectedSlot2(MouseEvent mouseEvent) {
+        GUIHelper.getInstance().setCurrAction(CurrAction.SELECTED_SLOT);
+        GUIHelper.getInstance().setSelectedSlot(Id.SLOT_2);
+        if (GUIHelper.getInstance().isSelectSlot())
+            UIController.getInstance().selectDevelopmentCard(GUIHelper.getInstance().getSelectedI(), GUIHelper.getInstance().getSelectedJ(), Id.SLOT_2);
+    }
+
+    public void selectedSlot3(MouseEvent mouseEvent) {
+        GUIHelper.getInstance().setCurrAction(CurrAction.SELECTED_SLOT);
+        GUIHelper.getInstance().setSelectedSlot(Id.SLOT_3);
+        if (GUIHelper.getInstance().isSelectSlot())
+            UIController.getInstance().selectDevelopmentCard(GUIHelper.getInstance().getSelectedI(), GUIHelper.getInstance().getSelectedJ(), Id.SLOT_3);
+    }
+
+    public void updateDevSlots() {
+        Platform.runLater(() -> {
+            var slots = playerView.getSlots();
+
+            for(int i = 0; i < 3; i++) {
+                var card = ((DevelopmentCardSlotView)slots.get(i+1)).peek();
+                if (card != null) {
+                    var image = new ImageView(GUIHelper.getInstance().getImage(card, GUISizes.get().devSize(), GUISizes.get().devSizeY()));
+                    GridPane.setValignment(image, VPos.CENTER);
+                    GridPane.setHalignment(image, HPos.CENTER);
+                    productionGrid.add(image, i, 0);
+                }
+
+            }
+        });
+
+    }
+
+    public void startDevResSelection() {
+        Modify.makeDepotResourcesSelectable(depotBox, devChoiceMap, true);
+        confirmDev.setDisable(false);
+        confirmDev.setOpacity(1);
+    }
+
+    public void confirmDevRes(ActionEvent actionEvent) {
+        GUIHelper.getInstance().setCurrAction(CurrAction.DEV_CONFIRMATION);
+        UIController.getInstance().depositResourcesIntoSlot(GUIHelper.getInstance().getSelectedSlot(), devChoiceMap);
     }
 }

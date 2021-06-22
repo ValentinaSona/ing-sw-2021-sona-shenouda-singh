@@ -49,3 +49,7 @@
 #end {
     -fx-background-color: rgba(199, 113, 70, 0.5);
 }
+
+#end:hover {
+    -fx-background-color: #fa8e57;
+}
