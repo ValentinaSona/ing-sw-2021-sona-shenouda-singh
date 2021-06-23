@@ -8,6 +8,8 @@ import it.polimi.ingsw.server.view.MockRemoteViewHandler;
 import it.polimi.ingsw.server.view.RemoteViewHandler;
 import it.polimi.ingsw.utils.networking.Connection;
 import it.polimi.ingsw.utils.networking.Transmittable;
+import it.polimi.ingsw.utils.networking.transmittables.persistenza.ClientLoadGameMessage;
+import it.polimi.ingsw.utils.networking.transmittables.persistenza.ClientSaveGameMessage;
 import it.polimi.ingsw.utils.networking.transmittables.resilienza.DisconnectionMessage;
 import it.polimi.ingsw.utils.networking.transmittables.clientmessages.game.*;
 import it.polimi.ingsw.utils.networking.transmittables.clientmessages.setup.ClientJoinLobbyMessage;
@@ -206,11 +208,21 @@ public class UIController implements LambdaObserver{
         send(new DisconnectionMessage());
     }
 
+    //TODO da chiamare dopo aver fatto  il setNickname solito se fallisce arriva un disconnectionMessage()
+    public void resumeGameFromFile(){
+        send(new ClientJoinLobbyMessage(true));
+    }
+
+    //TODO da chiamare se e solo se si riceve il messaggio di setCount in ritorno si ottiene il messaggio
+    //StatusMessage.OK_COUNT oppure StatusMessage.CLIENT_ERROR
+    public void loadGameFromFile(){send(new ClientLoadGameMessage());}
     /**
      * For ease of testing only!
      */
     public void endGame(){send(new ClientEndGameMessage());}
 
+    //TODO da chiamare se sei il player corrente e vuoi salvare la partita
+    public void saveGame(){send(new ClientSaveGameMessage());}
     //TODO da chiamare se voglio riconnettermi dopo che mi sono disconnesso in risposta
     //TODO il DispatcherController ricevera un messaggio RECONNECTION_OK se tutto va bene
     //TODO altrimenti un DisconnectionMessage che chiude la connessione se qualcosa è andato storto e da li in poi ricevero gli altri

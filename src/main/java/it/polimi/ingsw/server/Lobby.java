@@ -4,6 +4,7 @@ import it.polimi.ingsw.server.controller.User;
 import it.polimi.ingsw.server.model.Game;
 import it.polimi.ingsw.utils.networking.Connection;
 import it.polimi.ingsw.utils.networking.transmittables.StatusMessage;
+import it.polimi.ingsw.utils.networking.transmittables.clientmessages.setup.ClientJoinLobbyMessage;
 import it.polimi.ingsw.utils.networking.transmittables.servermessages.ServerUpdateLobbyMessage;
 import it.polimi.ingsw.utils.persistence.SavedState;
 
@@ -91,12 +92,12 @@ public class Lobby {
         }
     }
 
-    public boolean handleResumeGame(String nickname, Connection connection){
+    public boolean handleResumeGame(Connection connection){
         if (firstConnection == null || connection != firstConnection) {
             return false;
         }
 
-        LOGGER.log(Level.INFO, "Il seguente giocatore sta tentando di fare il load da file"+nickname);
+        LOGGER.log(Level.INFO, "Il seguente giocatore sta tentando di fare il load da file");
         SavedState.load();
         userList = new ArrayList<>();
         Game.getInstance().getPlayers().forEach(player -> userList.add(new User(player.getNickname())));
@@ -176,7 +177,7 @@ public class Lobby {
      * @param connection the Connection from which the user is
      * @return true if there were no errors
      */
-    public boolean handleLobbyJoiningRequest(String nickname, Connection connection){
+    public boolean handleLobbyJoiningRequest(ClientJoinLobbyMessage message, String nickname, Connection connection){
         //if the player has already registered itself in the Map he can proceed to be registered in
         //the lobbyRequestingConnection
         synchronized (registeredNicknamesMap){
@@ -194,7 +195,10 @@ public class Lobby {
             }
 
         }
-
+        if(firstConnection != null && !isLoadGameFromFile() && message.isLoadFromGame()){
+            //the lobby is waiting for players in  order to create a new game and not to load it
+            handleLobbyDisconnection(connection);
+        }
         synchronized (lobbyRequestingConnections){
             lobbyRequestingConnections.add(connection);
             LOGGER.log(Level.INFO, nickname+" joined successfully the lobby");

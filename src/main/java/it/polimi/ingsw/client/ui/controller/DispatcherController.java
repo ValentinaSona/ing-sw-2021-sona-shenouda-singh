@@ -402,6 +402,20 @@ public class DispatcherController implements Runnable, LambdaObserver {
 
     }
 
+    //TODO termian la partita perche un giocatore ha richiesto il salvataggio
+    public void handleGameSaving(){
+        UIController.getInstance().getClientConnection().closeConnection();
+
+        if(gui){
+
+        }else{
+
+        }
+    }
+
+
+    //TODO addesso se nella fase di join della lobby mi viene mandato il Set_count posso decidere se caricare una partita da file
+    //mandando il messaggio GameLoadFromFile
     public void handleStatus(StatusMessage message){
         if(gui){
             GUIMessageHandler.getInstance().handleStatusMessage(message);
