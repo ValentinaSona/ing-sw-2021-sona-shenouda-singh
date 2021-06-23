@@ -9,6 +9,7 @@ import it.polimi.ingsw.server.view.RealRemoteViewHandler;
 import it.polimi.ingsw.utils.networking.Connection;
 import it.polimi.ingsw.utils.networking.transmittables.resilienza.DisconnectionGameSetupMessage;
 import it.polimi.ingsw.utils.networking.transmittables.resilienza.DisconnectionMessage;
+import it.polimi.ingsw.utils.persistence.SavedState;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -17,6 +18,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public class Match implements Runnable{
     private Game model;
+    private boolean loadFromFile;
     private Lobby lobby;
     private Controller controller;
     private final Map<String, Connection> participantMap;
@@ -51,8 +53,11 @@ public class Match implements Runnable{
 
     @Override
     public void run(){
-        this.model = Game.getInstance(participantMap.size());
-        model.setGameState(GameState.SETUP_GAME);
+
+        if(!isLoadFromFile()){
+            this.model = Game.getInstance(participantMap.size());
+            model.setGameState(GameState.SETUP_GAME);
+        }
         this.controller = Controller.getInstance(model, this);
 
         //this list is already populated but we have yet to decide what the remoteView should do
@@ -75,8 +80,12 @@ public class Match implements Runnable{
             view.addObserver(controller, (observer, viewClientMessage) ->
                     ((Controller) observer).update(viewClientMessage) );
         }
+        if(isLoadFromFile()){
+            controller.loadFromFile(remoteViewList);
+        }else{
+            controller.setup();
+        }
 
-        controller.setup();
 
         while (isActive()){
             try{
@@ -124,7 +133,15 @@ public class Match implements Runnable{
     public void handleDisconnection(User user){
         model.disconnectPlayer(user.getNickName());
         participantMap.remove(user.getNickName());
-        remoteViewList.removeIf(view-> view.getUser().equals(user));
+        remoteViewList.removeIf(view-> {
+            if(view.getUser().equals(user)){
+                view.requestDisconnection();
+                return true;
+            }else {
+                return false;
+            }
+        });
+
     }
 
     public void endGame(){
@@ -135,10 +152,36 @@ public class Match implements Runnable{
         lobby.setActiveMatch(false);
         lobby.setLobbyState(LobbyState.LOBBY_SETUP);
         remoteViewList.forEach((remoteView)-> remoteView.requestDisconnection());
+        remoteViewList.clear();
+    }
+
+    public void saveToFile(){
+
+        SavedState.save(Game.getInstance());
+        Game.destroy();
+        Controller.destroy();
+        setLobbyState(LobbyState.LOBBY_SETUP);
+        Game.destroy();
+        setActive(false);
+        remoteViewList.forEach((remoteView)-> remoteView.requestDisconnection());
+        remoteViewList.clear();
     }
 
     public void setLobbyState(LobbyState state){
+        if(state.equals(LobbyState.IN_GAME)){
+            lobby.setActiveMatch(true);
+        }else {
+            lobby.setActiveMatch(false);
+        }
         lobby.setLobbyState(state);
-        lobby.setActiveMatch(true);
+
+    }
+
+    public boolean isLoadFromFile() {
+        return loadFromFile;
+    }
+
+    public void setLoadFromFile(boolean loadFromFile) {
+        this.loadFromFile = loadFromFile;
     }
 }

@@ -23,7 +23,7 @@ public class ClientLoadGameMessage implements ClientMessage, ServerHandleable {
         Lobby lobby = handler.getLobby();
         Connection connection = handler.getConnection();
 
-        boolean status = lobby.handleNicknameRegistration(nickname, connection, true);
+        boolean status = handler.getLobby().handleResumeGame(nickname,connection);
 
         if(status){
             //tell the client that the operation ended successfully

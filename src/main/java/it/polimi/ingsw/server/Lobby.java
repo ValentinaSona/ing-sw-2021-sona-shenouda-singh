@@ -2,10 +2,10 @@ package it.polimi.ingsw.server;
 
 import it.polimi.ingsw.server.controller.User;
 import it.polimi.ingsw.server.model.Game;
-import it.polimi.ingsw.server.model.GameState;
 import it.polimi.ingsw.utils.networking.Connection;
 import it.polimi.ingsw.utils.networking.transmittables.StatusMessage;
 import it.polimi.ingsw.utils.networking.transmittables.servermessages.ServerUpdateLobbyMessage;
+import it.polimi.ingsw.utils.persistence.SavedState;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
@@ -31,7 +31,7 @@ public class Lobby {
     private static Lobby singleton;
     private volatile boolean active;
     private volatile boolean loadGameFromFile;
-    private Object loadGameLock = new Object();
+    private final Object loadGameLock = new Object();
 
     //connection that have been registered with a valid nickname
     private final Map<Connection, String> registeredNicknamesMap;
@@ -42,16 +42,17 @@ public class Lobby {
     private final LinkedBlockingDeque<Connection> disconnectedPlayers;
     //the first connection to arrive that has the control on the player count
     private Connection firstConnection;
-
+    //used when loading a game from a file
+    private List<User> userList;
 
     private final Server server;
 
     private Match match;
     private boolean activeMatch;
-    private Object activeMatchLock = new Object();
+    private final Object activeMatchLock = new Object();
 
     private LobbyState lobbyState;
-    private Object stateLock;
+    private final Object stateLock;
 
     //maximum number of player
     private int currentLobbyPlayerCount;
@@ -75,6 +76,7 @@ public class Lobby {
         this.stateLock = new Object();
         this.active = true;
         this.lobbyState = LobbyState.LOBBY_SETUP;
+        this.loadGameFromFile = false;
     }
 
     private void setLoadGameFromFile(boolean load){
@@ -89,19 +91,35 @@ public class Lobby {
         }
     }
 
-    public boolean handleNicknameRegistration(String nickname, Connection connection, boolean load){
-        if(firstConnection != null){
+    public boolean handleResumeGame(String nickname, Connection connection){
+        if (firstConnection == null || connection != firstConnection) {
             return false;
         }
-        setLoadGameFromFile(load);
-        boolean status = handleNicknameRegistration(nickname,connection);
 
-        if(status) {
-            return true;
-        }else{
-            setLoadGameFromFile(false);
-            return false;
-        }
+        LOGGER.log(Level.INFO, "Il seguente giocatore sta tentando di fare il load da file"+nickname);
+        SavedState.load();
+        userList = new ArrayList<>();
+        Game.getInstance().getPlayers().forEach(player -> userList.add(new User(player.getNickname())));
+        setLobbyMaxPlayerCount(userList.size(), firstConnection);
+
+        setLoadGameFromFile(true);
+
+        List<Connection> toRemove = new ArrayList<>();
+        registeredNicknamesMap.forEach((key, value)-> {
+            if(userList.contains(new User(value)))
+                toRemove.add(key);
+        });
+
+        toRemove.forEach(con->handleLobbyDisconnection(con));
+
+        //all the player that were connected to the lobby included the one who asked to resume the game
+        //were not part of the previous game
+
+        //TODO .. per quanto mi riguarda resterei anche in attesa di nuovi giocatori
+
+
+        return true;
+
     }
 
     public boolean handleNicknameRegistration(String nickname, Connection connection) {
@@ -111,6 +129,11 @@ public class Lobby {
                 LOGGER.log(Level.INFO, " we have already a player with that name or a connection from that client");
                 return false;
             } else {
+
+                if(isLoadGameFromFile() && !userList.contains(new User(nickname))){
+                    handleLobbyDisconnection(connection);
+                    return false;
+                }
                 LOGGER.log(Level.INFO,nickname+" connected to the lobby");
                 registeredNicknamesMap.put(connection, nickname);
                 return true;
@@ -163,14 +186,13 @@ public class Lobby {
             }
         }
 
-        boolean validOp = true;
-        synchronized (stateLock){
-            if(!lobbyState.equals(LobbyState.LOBBY_SETUP))
-                validOp = false;
-        }
 
-        if(!validOp) {
-            handleInGameLobbyDisconnection(connection);
+        synchronized (stateLock){
+            if(!lobbyState.equals(LobbyState.LOBBY_SETUP)){
+                handleInGameLobbyDisconnection(connection);
+                return false;
+            }
+
         }
 
         synchronized (lobbyRequestingConnections){
@@ -211,73 +233,59 @@ public class Lobby {
         return true;
     }
 
-    private void chooseSettings(){
-        if(isLoadGameFromFile()){
-            //startLoadGameFromFile();
-        }else{
-            startNormalGame();
-        }
-    }
-
     public void start(){
         while(isActive()){
             LOGGER.log(Level.INFO,"waiting for first connection");
             this.waitForFirstConnection();
+            //after the first player is arrived he has to choose the numOfPlayer for the game
+            this.waitForCurrentPlayerCount();
 
-            chooseSettings();
+            Map<Connection, String> participants = this.getAllParticipants();
 
-        }
+            //if the first player is still connected
+            if(!participants.isEmpty()){
+                lobbyState = LobbyState.GAME_SETUP;
 
-    }
+                this.match= new Match(server, this);
+                List<Connection> connectionList = new ArrayList<>(participants.keySet());
 
-    private void startNormalGame(){
-        //after the first player is arrived he has to choose the numOfPlayer for the game
-        this.waitForCurrentPlayerCount();
+                //randomizing the order of the users
+                Collections.shuffle(connectionList);
+                for(Connection c : connectionList){
+                    match.addParticipant(participants.get(c), c);
+                }
 
-        Map<Connection, String> participants = this.getAllParticipants();
-
-        //if the first player is still connected
-        if(!participants.isEmpty()){
-            lobbyState = LobbyState.GAME_SETUP;
-
-            this.match= new Match(server, this);
-            List<Connection> connectionList = new ArrayList<>();
-            for(Connection c : participants.keySet()){
-                connectionList.add(c);
-            }
+                if(isLoadGameFromFile()){
+                    match.setLoadFromFile(true);
+                }
+                server.submitMatch(match);
 
 
-            //randomizing the order of the users
-            Collections.shuffle(connectionList);
-            for(Connection c : connectionList){
-                match.addParticipant(participants.get(c), c);
-            }
-            server.submitMatch(match);
-
-            synchronized (stateLock){
-                while(getLobbyState().equals(LobbyState.GAME_SETUP)){
-
-                    try{
-                        stateLock.wait();
-                    } catch (InterruptedException e) {
-                        Thread.currentThread().interrupt();
+                synchronized (stateLock){
+                    while(getLobbyState().equals(LobbyState.GAME_SETUP)){
+                        try{
+                            stateLock.wait();
+                        } catch (InterruptedException e) {
+                            Thread.currentThread().interrupt();
+                        }
                     }
+                }
 
+
+                if(isActiveMatch()){
+                    waitForDisconnectedPlayers();
                 }
             }
-
-
-            if(isActiveMatch()){
-                waitForDisconnectedPlayers();
-            }
+            //if the first player disconnected while no one was in the lobby what will happen is
+            //that we will do another time the while
         }
-        //if the first player disconnected while no one was in the lobby what will happen is
-        //that we will do another time the while
+
     }
 
     public boolean handleInGameLobbyDisconnection(Connection connection){
         synchronized (registeredNicknamesMap) {
             registeredNicknamesMap.remove(connection);
+            lobbyRequestingConnections.remove(connection);
             server.removeHandler(connection);
             connection.closeConnection();
         }
@@ -315,7 +323,11 @@ public class Lobby {
                 if(disconnected.contains(new User(handler.getNickname()))){
                     //devo gestire la riconnessione
                     connection.send(StatusMessage.RECONNECTION_OK);
+
                     server.removeHandlerForReconnection(connection);
+                    lobbyRequestingConnections.remove(connection);
+                    registeredNicknamesMap.remove(connection);
+
                     match.handleReconnection(handler.getNickname(), connection);
                 }else{
                     //gestisco disconnessione

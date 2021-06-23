@@ -8,16 +8,20 @@ import it.polimi.ingsw.server.exception.InvalidDepotException;
 import it.polimi.ingsw.server.model.*;
 import it.polimi.ingsw.server.model.Player;
 import it.polimi.ingsw.server.model.action.Action;
+import it.polimi.ingsw.server.view.RealRemoteViewHandler;
 import it.polimi.ingsw.server.view.RemoteViewHandler;
 import it.polimi.ingsw.server.view.ViewClientMessage;
 import it.polimi.ingsw.utils.networking.ControllerHandleable;
+import it.polimi.ingsw.utils.networking.transmittables.persistenza.ClientSaveGameMessage;
+import it.polimi.ingsw.utils.networking.transmittables.persistenza.ServerGameSavingMessage;
 import it.polimi.ingsw.utils.networking.transmittables.resilienza.DisconnectionMessage;
 import it.polimi.ingsw.utils.networking.transmittables.StatusMessage;
-import it.polimi.ingsw.utils.networking.transmittables.clientmessages.game.ClientGameReconnectionMessage;
 import it.polimi.ingsw.utils.networking.transmittables.clientmessages.game.ClientSetupActionMessage;
 import it.polimi.ingsw.utils.networking.transmittables.resilienza.ServerGameReconnectionMessage;
 import it.polimi.ingsw.utils.networking.transmittables.servermessages.*;
 import it.polimi.ingsw.utils.observer.LambdaObserver;
+import it.polimi.ingsw.utils.persistence.SavedState;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -28,7 +32,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class Controller implements LambdaObserver {
-    private Logger LOGGER = Logger.getLogger(Controller.class.getName());
+    private final Logger LOGGER = Logger.getLogger(Controller.class.getName());
     private static Controller singleton;
     public final DevelopmentCardMarketController developmentCardMarketController;
     public final LeaderCardsController leaderCardsController;
@@ -127,6 +131,65 @@ public class Controller implements LambdaObserver {
 
         model.setCurrentPlayer(players.get(0));
         turnController.startSetupTurn();
+    }
+
+    public void loadFromFile(List<RealRemoteViewHandler> viewList){
+
+        ArrayList<User> users = new ArrayList<>();
+        ArrayList<Player> players = model.getPlayers();
+
+        for(Player p: players) {
+            users.add(model.getUserFromPlayer(p));
+        }
+
+        List<PlayerView> playerViews = new ArrayList<>();
+        model.getPlayers().forEach((p)->playerViews.add(p.getVisible()));
+
+        for(RealRemoteViewHandler view : viewList){
+            Player p = model.getPlayerFromUser(view.getUser());
+            ServerGameReconnectionMessage message = new ServerGameReconnectionMessage(
+                    false,
+                    playerViews,
+                    model.getMarketInstance().getVisible(),
+                    model.getDevelopmentCardsMarket().getVisible()
+            );
+
+
+            Optional<Action> gameAction = p.getGameAction();
+            if(gameAction.isPresent()){
+                gameAction.get().handleReconnection(p,message);
+            }
+
+            view.updateFromGame(message);
+        }
+
+        Player currentPlayer = model.getCurrentPlayer();
+        int currentPlayerIdx = players.indexOf(currentPlayer);
+        Player endingPlayer = (currentPlayerIdx == 0) ? players.get(players.size()-1) : players.get(currentPlayerIdx+1);
+
+        model.notify(new ServerStartTurnMessage(
+                model.getUserFromPlayer(currentPlayer),
+                model.getUserFromPlayer(endingPlayer)
+        ));
+        setLobbyState(LobbyState.IN_GAME);
+    }
+
+    public void saveToFile(ClientSaveGameMessage action, RemoteViewHandler view, User user){
+        Player currentPlayer = model.getPlayerFromUser(user);
+
+        if( !(currentPlayer.getTurn())  ||
+                model.getGameState() != GameState.PLAY ){
+            view.handleStatusMessage(StatusMessage.CLIENT_ERROR);
+        } else {
+            model.notify(new ServerGameSavingMessage());
+
+            Optional<Action> gameAction = currentPlayer.getGameAction();
+            if (gameAction.isPresent()) {
+                gameAction.get().handleDisconnection(currentPlayer, this, view, user);
+            }
+
+            match.saveToFile();
+        }
     }
 
     public void setupAction(ClientSetupActionMessage action, RemoteViewHandler view, User user){
