@@ -1,14 +1,11 @@
 package it.polimi.ingsw.client.ui.gui.JFXControllers;
 
 import it.polimi.ingsw.client.modelview.GameView;
-import it.polimi.ingsw.client.modelview.MarketView;
 import it.polimi.ingsw.client.ui.controller.UIController;
-import it.polimi.ingsw.client.ui.gui.Action;
 import it.polimi.ingsw.client.ui.gui.GUIHelper;
 import it.polimi.ingsw.client.ui.gui.GameLog;
 import it.polimi.ingsw.server.model.MarketMarble;
 import it.polimi.ingsw.utils.networking.transmittables.StatusMessage;
-import it.polimi.ingsw.utils.networking.transmittables.servermessages.ServerStartTurnMessage;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -16,9 +13,6 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
-import javafx.scene.text.TextFlow;
-
-import java.util.Arrays;
 
 public class MarketGUIController extends AbstractGUIController implements GameGUIControllerInterface {
 
@@ -32,6 +26,8 @@ public class MarketGUIController extends AbstractGUIController implements GameGU
     private VBox choice;
     @FXML
     private Button buyButton, end;
+    @FXML
+    private ImageView inkwell;
 
     private boolean turn;
     private int rowCol;
@@ -58,6 +54,8 @@ public class MarketGUIController extends AbstractGUIController implements GameGU
 
     private void activateTurn(boolean turn) {
         this.turn = turn;
+        if(turn) inkwell.setOpacity(1);
+        else inkwell.setOpacity(0);
     }
 
     public void goToBoard(ActionEvent actionEvent) {
@@ -133,5 +131,10 @@ public class MarketGUIController extends AbstractGUIController implements GameGU
         GUIHelper.getInstance().setChoosingTemp(true);
         UIController.getInstance().buyMarbles(rowCol);
         rowCol = -1;
+    }
+
+    public void goToLeader(ActionEvent actionEvent) {
+        GUIHelper.getInstance().setScreenshot(GUIHelper.getInstance().getCurrentScene().snapshot(null));
+        change(ScreenName.LEADER);
     }
 }

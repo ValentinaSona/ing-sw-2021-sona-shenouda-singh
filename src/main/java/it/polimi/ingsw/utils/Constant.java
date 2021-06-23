@@ -2,8 +2,8 @@ package it.polimi.ingsw.utils;
 
 public class Constant {
 
-    private static int port = 10003;
-    private static String hostIp = "127.0.0.1";
+    private static final int port = 10003;
+    private static final String hostIp = "127.0.0.1";
 
     public static int port() {
         return  port;

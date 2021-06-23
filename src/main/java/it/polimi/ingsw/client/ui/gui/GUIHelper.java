@@ -275,6 +275,10 @@ public class GUIHelper {
         return new Image("assets/game/leader_cards/" + card.getId() + ".png", x, y, false, false);
     }
 
+    public Image getImage(PopeFavorTiles tile, int index) {
+        return new Image("assets/game/pope_tiles/" + index + "_" + tile.toString().toLowerCase() + ".png", GUISizes.get().popeTile(), GUISizes.get().popeTile(), false, false);
+    }
+
     public void setScreen(ScreenName screen) {
         Scene scene = GUIHelper.getInstance().getCurrentScene();
 
@@ -392,5 +396,9 @@ public class GUIHelper {
 
     public void setChosenCard(boolean chosenCard) {
         this.chosenCard = chosenCard;
+    }
+
+    public Image getAbilityImageFromLeader(LeaderCard card) {
+        return new Image("assets/game/leader_cards/abilities/" + card.getId() + ".png", GUISizes.get().abilityX(), GUISizes.get().abilityY(), false, false);
     }
 }

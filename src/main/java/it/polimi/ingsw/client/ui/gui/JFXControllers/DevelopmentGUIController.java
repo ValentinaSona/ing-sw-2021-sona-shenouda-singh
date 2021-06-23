@@ -1,18 +1,14 @@
 package it.polimi.ingsw.client.ui.gui.JFXControllers;
 
-import it.polimi.ingsw.client.modelview.GameView;
-import it.polimi.ingsw.client.ui.controller.UIController;
 import it.polimi.ingsw.client.ui.gui.GUIHelper;
 import it.polimi.ingsw.client.ui.gui.GameLog;
 import it.polimi.ingsw.utils.networking.transmittables.StatusMessage;
-import it.polimi.ingsw.utils.networking.transmittables.servermessages.ServerStartTurnMessage;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
-import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.StackPane;
-import javafx.scene.text.TextFlow;
 
 public class DevelopmentGUIController extends AbstractGUIController implements GameGUIControllerInterface{
 
@@ -22,6 +18,8 @@ public class DevelopmentGUIController extends AbstractGUIController implements G
     private StackPane rightPane, centerPane;
     @FXML
     private Button buy, end;
+    @FXML
+    private ImageView inkwell;
 
     @FXML
     public void initialize() {
@@ -68,8 +66,11 @@ public class DevelopmentGUIController extends AbstractGUIController implements G
     @Override
     public void update() {
         //activateTurn(GUIHelper.getInstance().getTurn());
-        if(GUIHelper.getInstance().getTurn())
+        if(GUIHelper.getInstance().getTurn()) {
             end.setDisable(GUIHelper.getInstance().getClientView().isMainAction());
+            inkwell.setOpacity(1);
+        }
+        else inkwell.setOpacity(0);
     }
 
     public void updateDevelopment() {
@@ -87,5 +88,10 @@ public class DevelopmentGUIController extends AbstractGUIController implements G
     public void buyCard(ActionEvent actionEvent) {
         change(ScreenName.PERSONAL_BOARD);
         GUIHelper.getInstance().setSelectSlot(true);
+    }
+
+    public void goToLeader(ActionEvent actionEvent) {
+        GUIHelper.getInstance().setScreenshot(GUIHelper.getInstance().getCurrentScene().snapshot(null));
+        change(ScreenName.LEADER);
     }
 }

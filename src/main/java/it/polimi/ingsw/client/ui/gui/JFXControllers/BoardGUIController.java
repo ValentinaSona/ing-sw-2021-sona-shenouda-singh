@@ -7,6 +7,7 @@ import it.polimi.ingsw.client.modelview.SlotView;
 import it.polimi.ingsw.client.ui.controller.UIController;
 import it.polimi.ingsw.client.ui.gui.*;
 import it.polimi.ingsw.server.model.Id;
+import it.polimi.ingsw.server.model.LeaderCard;
 import it.polimi.ingsw.server.model.Resource;
 import it.polimi.ingsw.server.model.ResourceType;
 import it.polimi.ingsw.utils.networking.transmittables.StatusMessage;
@@ -17,6 +18,7 @@ import javafx.geometry.HPos;
 import javafx.geometry.Pos;
 import javafx.geometry.VPos;
 import javafx.scene.control.Button;
+import javafx.scene.effect.DropShadow;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
@@ -30,13 +32,13 @@ public class BoardGUIController extends AbstractGUIController implements GameGUI
     @FXML
     private Button confirmDev;
     @FXML
-    private ImageView strongBoxHover;
+    private ImageView strongBoxHover, inkwell;
     @FXML
     private GridPane faithGrid, productionGrid;
     @FXML
     private HBox depot1, depot2, depot3;
     @FXML
-    private HBox topBar, tempBox;
+    private HBox topBar, tempBox, abilityBox;
     @FXML
     private VBox depotBox;
     @FXML
@@ -45,6 +47,9 @@ public class BoardGUIController extends AbstractGUIController implements GameGUI
     private Rectangle tempWindow, tempBlock;
     @FXML
     private Button activateProd, end, discard;
+    @FXML
+    private StackPane popeTile1, popeTile2, popeTile3;
+    private StackPane[] tilePane;
 
     private PlayerView playerView;
 
@@ -68,6 +73,8 @@ public class BoardGUIController extends AbstractGUIController implements GameGUI
             GUIMessageHandler.getInstance().setCurrentGameController(this);
             GUIMessageHandler.getInstance().notifyAll();
         }
+
+        tilePane = new StackPane[]{popeTile1, popeTile2, popeTile3};
 
         screenStart();
 
@@ -124,10 +131,6 @@ public class BoardGUIController extends AbstractGUIController implements GameGUI
         this.playerView = playerView;
     }
 
-    public void goToMarket(ActionEvent actionEvent) {
-        change(ScreenName.MARKET);
-    }
-
     //TODO
     @Override
     public void handleStatusMessage(StatusMessage message) {
@@ -149,6 +152,12 @@ public class BoardGUIController extends AbstractGUIController implements GameGUI
         else if (faith == 17) faithGrid.add(faithImage, 12, 1);
         else if (faith <= 24) faithGrid.add(faithImage, faith-6, 0);
         else throw new RuntimeException("Faith out of bounds");
+
+        var tiles = playerView.getFaithTrackView().getPopeFavorTiles();
+
+        for (int i = 0; i < 3; i++) {
+            tilePane[i].getChildren().add(new ImageView(GUIHelper.getInstance().getImage(tiles[i], i)));
+        }
     }
 
     public void updateDepot() {
@@ -227,10 +236,13 @@ public class BoardGUIController extends AbstractGUIController implements GameGUI
             end.setDisable(!(!GUIHelper.getInstance().getClientView().isMainAction() && GUIHelper.getInstance().getTurn()));
 
         updateDevSlots();
+        updateAbilityBox();
     }
 
     private void activateTurn(boolean turn) {
         activateProd.setDisable(!turn);
+        if(turn) inkwell.setOpacity(1);
+        else inkwell.setOpacity(0);
     }
 
     public void goToLeader(ActionEvent actionEvent) {
@@ -316,5 +328,20 @@ public class BoardGUIController extends AbstractGUIController implements GameGUI
     public void confirmDevRes(ActionEvent actionEvent) {
         GUIHelper.getInstance().setCurrAction(CurrAction.DEV_CONFIRMATION);
         UIController.getInstance().depositResourcesIntoSlot(GUIHelper.getInstance().getSelectedSlot(), devChoiceMap);
+    }
+
+    public void updateAbilityBox() {
+        var cards = playerView.getLeaderCards();
+
+        if (cards != null) {
+            cards.stream().filter(c -> c != null && c.isActive())
+                    .forEach( e -> {
+                        var im = new ImageView(GUIHelper.getInstance().getAbilityImageFromLeader(e));
+                        var effect = new DropShadow();
+                        im.setEffect(effect);
+                        abilityBox.getChildren().add(im);
+                    });
+        }
+
     }
 }

@@ -315,7 +315,7 @@ public class DispatcherController implements Runnable, LambdaObserver {
 
 
         if(gui){
-
+            GUIMessageHandler.getInstance().handleServerActivateLeaderCardAbilityMessage(message);
         }else{
             CLIMessageHandler.getInstance().handleServerActivateLeaderCardAbilityMessage(message);
         }
@@ -331,7 +331,7 @@ public class DispatcherController implements Runnable, LambdaObserver {
         }
 
         if(gui){
-
+            GUIMessageHandler.getInstance().handleServerThrowLeaderCardAbilityMessage(message);
         }else{
             CLIMessageHandler.getInstance().handleServerThrowLeaderCardAbilityMessage(message);
         }

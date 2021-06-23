@@ -1,6 +1,7 @@
 package it.polimi.ingsw.client.ui.gui;
 
 import it.polimi.ingsw.client.modelview.MatchSettings;
+import it.polimi.ingsw.client.ui.cli.CLIMessageHandler;
 import it.polimi.ingsw.client.ui.controller.DispatcherController;
 import it.polimi.ingsw.client.ui.controller.UIController;
 import it.polimi.ingsw.client.ui.controller.UiControllerInterface;
@@ -83,7 +84,7 @@ public class GUIMessageHandler {
 
             // Game has begun
             GUIHelper.getInstance().setTurn(message.getStartingTurn().getNickName().equals(MatchSettings.getInstance().getClientNickname()));
-            GameLog.getInstance().update(Action.TURN, message.getStartingTurn());
+            GameLog.getInstance().update(LogUpdates.TURN, message.getStartingTurn());
             currentGameController.update();
 
 
@@ -97,7 +98,7 @@ public class GUIMessageHandler {
 
     public void handleServerBoughtMarblesMessage(ServerBoughtMarblesMessage message) {
         if (!message.getUser().getNickName().equals(MatchSettings.getInstance().getClientNickname()))
-            GameLog.getInstance().update(Action.BUY_MARKET, message.getUser(), message.getBoughtResources());
+            GameLog.getInstance().update(LogUpdates.BUY_MARKET, message.getUser(), message.getBoughtResources());
             Platform.runLater(() -> GUIHelper.getInstance().setScreen(ScreenName.PERSONAL_BOARD));
 
 
@@ -116,5 +117,16 @@ public class GUIMessageHandler {
     public void handleServerDepositIntoSlotMessage(ServerDepositIntoSlotMessage message) {
         GUIHelper.getInstance().setChosenCard(false);
         UIController.getInstance().buyTargetCard(GUIHelper.getInstance().getSelectedSlot());
+    }
+
+    public void handleServerActivateLeaderCardAbilityMessage(ServerActivateLeaderCardAbilityMessage message) {
+        Platform.runLater(() -> currentGameController.update());
+        GameLog.getInstance().update(LogUpdates.ABILITY_ACTIVATION, message.getUser());
+    }
+
+    public void handleServerThrowLeaderCardAbilityMessage(ServerThrowLeaderCardMessage message) {
+        if (currentGameController instanceof BoardGUIController) System.out.println("HO SBAGLIATO");
+        Platform.runLater(() -> currentGameController.update());
+        GameLog.getInstance().update(LogUpdates.CARD_THROW, message.getUser());
     }
 }
