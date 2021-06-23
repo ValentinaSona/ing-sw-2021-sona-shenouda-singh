@@ -4,6 +4,7 @@ import it.polimi.ingsw.client.modelview.DepotView;
 import it.polimi.ingsw.client.ui.controller.UIController;
 import it.polimi.ingsw.server.model.Id;
 import it.polimi.ingsw.server.model.ResourceType;
+import javafx.application.Platform;
 import javafx.event.Event;
 import javafx.scene.Group;
 import javafx.scene.Node;
@@ -97,6 +98,10 @@ public class DragNDrop {
             /* the drag-and-drop gesture ended */
             source.setOnDragDone(event -> {
                 currentDraggedImage = null;
+                if (GUIHelper.getInstance().getClientView().getTempResources().size() == 0) {
+                    GUIHelper.getInstance().setChoosingTemp(false);
+                    Platform.runLater(() -> GUIHelper.getInstance().getCurrentGameController().update());
+                }
                 event.consume();
             });
         }

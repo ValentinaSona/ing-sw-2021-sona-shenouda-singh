@@ -2,20 +2,15 @@ package it.polimi.ingsw.client.ui.gui;
 
 import it.polimi.ingsw.client.modelview.MatchSettings;
 import it.polimi.ingsw.server.controller.User;
-import it.polimi.ingsw.server.model.MarketMarble;
 import it.polimi.ingsw.server.model.Resource;
 import javafx.application.Platform;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
 
 import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Stack;
 
 public class GameLog {
 
@@ -32,7 +27,7 @@ public class GameLog {
     private GameLog() {
         log = new TextFlow();
         log.getStyleClass().add("textLog");
-        log.setMaxWidth(350);
+        log.setMaxWidth(400);
         log.setMaxHeight(350);
         log.setPadding(new Insets(5, 0, 0, 20));
         StackPane.setMargin(log, new Insets(0, 0, 10, 0));
@@ -43,23 +38,36 @@ public class GameLog {
         pane.getChildren().add(log);
     }
 
-    public void update(Action action, User user) {
+    public void update(LogUpdates logUpdates, User user) {
         Platform.runLater(() -> {
-            if(action == Action.TURN) {
-                if (user.getNickName().equals(MatchSettings.getInstance().getClientNickname())) {
-                    add("It's your turn!\n\n");
+            switch(logUpdates) {
+
+                case TURN -> {
+                    if (user.getNickName().equals(MatchSettings.getInstance().getClientNickname())) {
+                        add("It's your turn!\n\n");
+                    }
+                    else add("It's " + user.getNickName() + "'s turn!\n\n");
                 }
-                else add("It's " + user.getNickName() + "'s turn!\n\n");
+
+                case ABILITY_ACTIVATION -> {
+                    if (!user.getNickName().equals(MatchSettings.getInstance().getClientNickname()))
+                        add(user.getNickName() + " has activated a leader card\n\n");
+                }
+
+                case CARD_THROW -> {
+                    if (!user.getNickName().equals(MatchSettings.getInstance().getClientNickname()))
+                        add(user.getNickName() + " threw a leader card\n\n");
+                }
             }
         });
     }
 
-    public void update(Action action, User user, ArrayList<Resource> resources) {
+    public void update(LogUpdates logUpdates, User user, ArrayList<Resource> resources) {
 
         Platform.runLater(() -> {
             String activity = "";
 
-            if(action == Action.BUY_MARKET) {
+            if(logUpdates == LogUpdates.BUY_MARKET) {
                 if (user.getNickName().equals(MatchSettings.getInstance().getClientNickname())) {
                     activity = "You bought ";
                 }
@@ -72,7 +80,7 @@ public class GameLog {
                     activity += transformToString(resources.get(i));
                 }
 
-                activity += " from the market.\n\n";
+                activity += " from the market\n\n";
             }
 
             add(activity);
@@ -91,7 +99,7 @@ public class GameLog {
     public String transformToString(Resource resource) {
         String output = Integer.toString(resource.getQuantity());
         output += " ";
-        output += resource.getResourceType();
+        output += resource.getResourceType().toString().toLowerCase();
 
         if (resource.getQuantity() > 1) output += "s";
 

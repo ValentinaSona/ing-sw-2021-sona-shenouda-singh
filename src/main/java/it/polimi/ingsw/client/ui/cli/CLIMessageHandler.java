@@ -6,7 +6,6 @@ import it.polimi.ingsw.client.ui.cli.menus.MenuRunner;
 import it.polimi.ingsw.client.ui.cli.menus.MenuStates;
 import it.polimi.ingsw.client.ui.controller.UIController;
 import it.polimi.ingsw.utils.networking.transmittables.StatusMessage;
-import it.polimi.ingsw.utils.networking.transmittables.resilienza.DisconnectionMessage;
 import it.polimi.ingsw.utils.networking.transmittables.resilienza.ServerGameReconnectionMessage;
 import it.polimi.ingsw.utils.networking.transmittables.servermessages.*;
 
@@ -367,16 +366,25 @@ public class CLIMessageHandler {
         // Saves the user's playerView for ease of access.
         cli.setView();
 
+        MenuRunner.getInstance().getGameMenu().setRunner(MenuRunner.getInstance());
+
         cli.printMessage("[" + CHECK_MARK + "] Rejoining the game. Check what you have missed!");
 
-        if (message.isPendingAction()) MenuRunner.getInstance().getGameMenu().depositResources();
 
-        MenuRunner.getInstance().setState(MenuStates.GAME);
+        //TODO REJOINING STATE -> MenuRUNNER to run the deposit function.
 
+        if (message.isPendingAction()) {
+
+            MenuRunner.getInstance().setState(MenuStates.REJOIN);
+
+        } else {
+
+            MenuRunner.getInstance().setState(MenuStates.GAME);
+
+        }
         synchronized (MenuRunner.getInstance()) {
             MenuRunner.getInstance().notifyAll();
         }
-
     }
 
     public void handleDisconnectionGameSetupMessage() {

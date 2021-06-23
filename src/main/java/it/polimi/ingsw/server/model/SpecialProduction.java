@@ -29,16 +29,20 @@ public class SpecialProduction extends Slot {
 
         //to activate the board production we can use resource of different types
         int tot = 0;
+        boolean type = true;
         for(Resource res : resourceCloset){
             tot += res.getQuantity();
+            if (res.getResourceType() != cost.getResourceType()) type = false;
         }
 
-        if( cost.getQuantity() != tot){
+
+        if( cost.getQuantity() != tot || !type){
             resourceCloset.clear();
             HashMap<Id, Resource> copy = new HashMap<>(originResourceHashMap);
             originResourceHashMap.clear();
             throw new NotSufficientResourceException(copy);
         }
+        confirmed = true;
     }
 
     /**
@@ -66,7 +70,7 @@ public class SpecialProduction extends Slot {
     }
     @Override
     public Resource[] productionCost(){
-        return new Resource[]{new Resource(1, chosenType), new Resource(1, ResourceType.FAITH)};
+        return specialProduction.getProductionCost();
     }
 
     public ResourceType getChosenType() {

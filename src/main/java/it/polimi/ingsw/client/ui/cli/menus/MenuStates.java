@@ -2,7 +2,7 @@ package it.polimi.ingsw.client.ui.cli.menus;
 
 public enum MenuStates {
 
-    MAIN, SETUP, GAME, END
+    MAIN, SETUP, GAME, REJOIN, END
 
 }
 

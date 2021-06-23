@@ -103,7 +103,7 @@ public class MarketController{
             view.handleStatusMessage(StatusMessage.CLIENT_ERROR);
         } else {
             Market market = model.getMarketInstance();
-            player.toggleMainAction();
+
 
             MarketMarble[] marbles = new MarketMarble[0];
 

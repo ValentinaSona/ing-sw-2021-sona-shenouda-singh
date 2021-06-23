@@ -186,7 +186,6 @@ public class LeaderCardsController {
         }
 
 
-        // TODO SEND BACK WAREHOUSE FOR DEPOT ABILITY AND SLOTS FOR PRODUCTION ABILITY.
         model.notify(new ServerActivateLeaderCardAbilityMessage(
                 targetCard,
                 warehouse,

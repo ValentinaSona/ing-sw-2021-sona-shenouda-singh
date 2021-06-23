@@ -179,7 +179,7 @@ public class ResourceController{
     public void throwResources(RemoteViewHandler view, User user) throws EndOfGameException {
         Player player = model.getPlayerFromUser(user);
 
-        if( !(player.getTurn()) ||
+        if(
                 model.getGameState() != GameState.PLAY ){
             view.handleStatusMessage(StatusMessage.CLIENT_ERROR);
         } else {
@@ -298,7 +298,7 @@ public class ResourceController{
 
         Player player = model.getPlayerFromUser(user);
 
-        if(     !(player.getTurn()) ||
+        if(
                 model.getGameState() != GameState.PLAY ||
                 //The request was malformed and references a resource not contained in tempResources.
                 !player.tempResourcesContains(action.getResource()) ) {

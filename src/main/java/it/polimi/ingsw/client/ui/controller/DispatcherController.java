@@ -275,7 +275,7 @@ public class DispatcherController implements Runnable, LambdaObserver {
         GameView.getInstance().getPlayerFromUser(message.getUser()).setSlots(message.getSlotViews());
 
         if(gui){
-
+            GUIMessageHandler.getInstance().handleServerDepositIntoSlotMessage(message);
         }else {
             CLIMessageHandler.getInstance().handleServerDepositIntoSlotMessage(message);
         }
@@ -287,7 +287,7 @@ public class DispatcherController implements Runnable, LambdaObserver {
         GameView.getInstance().getCurrentPlayer().setMainAction(false);
 
         if(gui){
-
+            GUIMessageHandler.getInstance().handleServerBuyDevelopmentCardMessage(message);
         }else {
             CLIMessageHandler.getInstance().handleServerBuyDevelopmentCardMessage(message);
         }
@@ -315,7 +315,7 @@ public class DispatcherController implements Runnable, LambdaObserver {
 
 
         if(gui){
-
+            GUIMessageHandler.getInstance().handleServerActivateLeaderCardAbilityMessage(message);
         }else{
             CLIMessageHandler.getInstance().handleServerActivateLeaderCardAbilityMessage(message);
         }
@@ -331,7 +331,7 @@ public class DispatcherController implements Runnable, LambdaObserver {
         }
 
         if(gui){
-
+            GUIMessageHandler.getInstance().handleServerThrowLeaderCardAbilityMessage(message);
         }else{
             CLIMessageHandler.getInstance().handleServerThrowLeaderCardAbilityMessage(message);
         }

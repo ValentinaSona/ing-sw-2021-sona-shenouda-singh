@@ -3,6 +3,7 @@ package it.polimi.ingsw.client.ui.gui.JFXControllers;
 import it.polimi.ingsw.client.modelview.MatchSettings;
 import it.polimi.ingsw.client.ui.controller.UIController;
 import it.polimi.ingsw.client.ui.gui.GUIHelper;
+import it.polimi.ingsw.utils.Constant;
 import it.polimi.ingsw.utils.networking.transmittables.StatusMessage;
 import javafx.animation.Interpolator;
 import javafx.animation.TranslateTransition;
@@ -77,7 +78,7 @@ public class MainMenuGUIController extends AbstractGUIController {
                 joinButton.setDisable(true);
 
                 try {
-                    UIController.getInstance().sendNickname(nicknameField.getText(),"127.0.0.1", 10002);
+                    UIController.getInstance().sendNickname(nicknameField.getText(), Constant.hostIp(), Constant.port());
                 } catch (IOException e) {
                     chooseNick.setText("Failed to connect...");
                     chooseNick.setOpacity(1);
