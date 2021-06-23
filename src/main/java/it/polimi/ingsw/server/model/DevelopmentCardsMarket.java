@@ -98,8 +98,8 @@ public class DevelopmentCardsMarket implements  DevMarket {
 		return new DevelopmentCardsMarketAbility(this, map);
 	}
 
-	public HashMap<Player, List<Resource>> getMap() {
-		throw new RuntimeException("No player has still activated a discount ability, invalid method");
+	public HashMap<Player, List<Resource>> getMap() throws NotDecoratedException {
+		throw new NotDecoratedException();
 	}
 
 	/**

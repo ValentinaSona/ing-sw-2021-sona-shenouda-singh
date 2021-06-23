@@ -285,7 +285,7 @@ public class TurnController{
         while(rank.size()< size){
             highest.setValue(0);
             for (Player player: model.getPlayers()){
-                if (scores.get(model.getUserFromPlayer(player)) > highest.getValue()){
+                if (scores.containsKey(model.getUserFromPlayer(player)) && scores.get(model.getUserFromPlayer(player)) >= highest.getValue()){
                     highest = new AbstractMap.SimpleEntry<User,Integer>(model.getUserFromPlayer(player),scores.get(model.getUserFromPlayer(player)));
                 }
             }

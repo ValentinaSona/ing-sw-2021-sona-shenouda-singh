@@ -225,7 +225,7 @@ public class CLI implements Ui {
             }
         }
 
-
+        if (choice == 1492) return choice;
         output.println("["+CHECK_MARK+"] Chosen: " + options[choice-1]);
         output.flush();
         input.nextLine();

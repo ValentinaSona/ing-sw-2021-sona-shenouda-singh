@@ -2,6 +2,7 @@ package it.polimi.ingsw.client.ui.controller;
 
 import it.polimi.ingsw.client.modelview.GameView;
 import it.polimi.ingsw.client.modelview.MatchSettings;
+import it.polimi.ingsw.client.ui.cli.CLI;
 import it.polimi.ingsw.client.ui.cli.CLIMessageHandler;
 import it.polimi.ingsw.client.ui.gui.GUIHelper;
 import it.polimi.ingsw.client.ui.gui.GUIMessageHandler;
@@ -409,7 +410,7 @@ public class DispatcherController implements Runnable, LambdaObserver {
         if(gui){
 
         }else{
-
+            CLIMessageHandler.getInstance().handleGameSaving();
         }
     }
 
