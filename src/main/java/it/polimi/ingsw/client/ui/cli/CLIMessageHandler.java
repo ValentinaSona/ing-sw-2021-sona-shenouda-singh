@@ -47,14 +47,24 @@ public class CLIMessageHandler {
                 if (!MenuRunner.getInstance().isSolo()) {
                     cli.printMessage("[ ] You are the first player! Select the size of the lobby (2-4 players): ");
                     UIController.getInstance().setCreation(cli.getInt(2, 4));
+                } else if (MenuRunner.getInstance().getState() ==MenuStates.RESUME){
+                    UIController.getInstance().loadGameFromFile();
                 }
             }
             case OK_COUNT -> {
                 if (!MenuRunner.getInstance().isSolo()) {
                     cli.printMessage("[" + CHECK_MARK + "] The server has created the lobby! Wait for other players to join! ");
+                } else if (MenuRunner.getInstance().getState() ==MenuStates.RESUME){
+                    cli.printMessage("[" + CHECK_MARK + "] The server has restored the game. Wait for the other players to rejoin! ");
                 }
             }
-            case JOIN_LOBBY -> cli.printMessage("[" + CHECK_MARK + "] Found an already existing lobby to join.");
+
+            case JOIN_LOBBY -> {
+
+                if (MenuRunner.getInstance().getState() == MenuStates.RESUME){
+                    cli.printMessage("[" + CHECK_MARK + "] The server has restored the game. Wait for the other players to rejoin! ");
+                } else {cli.printMessage("[" + CHECK_MARK + "] Found an already existing lobby to join.");}
+            }
 
             case CLIENT_ERROR -> handleClientError();
 
@@ -371,8 +381,6 @@ public class CLIMessageHandler {
         cli.printMessage("[" + CHECK_MARK + "] Rejoining the game. Check what you have missed!");
 
 
-        //TODO REJOINING STATE -> MenuRUNNER to run the deposit function.
-
         if (message.isPendingAction()) {
 
             MenuRunner.getInstance().setState(MenuStates.REJOIN);
@@ -388,6 +396,8 @@ public class CLIMessageHandler {
     }
 
     public void handleDisconnectionGameSetupMessage() {
+        if (MenuRunner.getInstance().getState() == MenuStates.SAVING)
+            cli.printMessage("["+ CHECK_MARK+ "] The game has been saved. Returning you to main menu - you may resume it whenever you wish.");
         cli.printMessage("[X] A player has disconnected. Returning you to main menu - try to start a new game!");
         MenuRunner.getInstance().setState(MenuStates.END);
 
@@ -395,5 +405,12 @@ public class CLIMessageHandler {
             cli.setInterrupted(true);
             CLIMessageHandler.getInstance().notifyAll();
         }
+    }
+
+    public void handleGameSaving() {
+
+        cli.printMessage("[!] The game has been stopped by a player. To continue it, all of the current players must resume playing with the same nickname.");
+
+        MenuRunner.getInstance().setState(MenuStates.SAVING);
     }
 }

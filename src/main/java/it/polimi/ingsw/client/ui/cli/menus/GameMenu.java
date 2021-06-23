@@ -40,9 +40,9 @@ public class GameMenu {
         if (cli.getView().isMyTurn()){
             if (cli.getView().isMainAction()){
 
-                return new String[] {"See market / buy marbles", "See development card market / buy cards ", "See your board / activate productions", "See other players boards", "See faith tracks",  "Arrange warehouse", "Leader Action", "End Turn"};
+                return new String[] {"See market / buy marbles", "See development card market / buy cards ", "See your board / activate productions", "See other players boards", "See faith tracks",  "Arrange warehouse", "Leader Action", "End Turn", "Save game and quit"};
             } else {
-                return new String[] {"See market", "See development card market", "See your board", "See other players boards",  "See faith tracks", "Arrange warehouse", "Leader Action", "End Turn"};
+                return new String[] {"See market", "See development card market", "See your board", "See other players boards",  "See faith tracks", "Arrange warehouse", "Leader Action", "End Turn", "Save game and quit"};
             }
 
         } else {
@@ -87,6 +87,10 @@ public class GameMenu {
                 }
                 case 8 -> {
                     endOfTurn();
+                    hasBeenRefreshed = false;
+                }
+                case 9 -> {
+                    UIController.getInstance().saveGame();
                     hasBeenRefreshed = false;
                 }
                 case 1492 -> {
