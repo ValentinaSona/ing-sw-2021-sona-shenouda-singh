@@ -44,18 +44,19 @@ public class CLIMessageHandler {
             case OK_NICK -> MenuRunner.getInstance().sendResponse(GameActions.MENU, "[" + CHECK_MARK + "] The server has received your nickname ");
 
             case SET_COUNT -> {
-                if (!MenuRunner.getInstance().isSolo()) {
+                if (MenuRunner.getInstance().getState() ==MenuStates.RESUME){
+                    UIController.getInstance().loadGameFromFile();
+                }
+                else if (!MenuRunner.getInstance().isSolo()) {
                     cli.printMessage("[ ] You are the first player! Select the size of the lobby (2-4 players): ");
                     UIController.getInstance().setCreation(cli.getInt(2, 4));
-                } else if (MenuRunner.getInstance().getState() ==MenuStates.RESUME){
-                    UIController.getInstance().loadGameFromFile();
                 }
             }
             case OK_COUNT -> {
-                if (!MenuRunner.getInstance().isSolo()) {
-                    cli.printMessage("[" + CHECK_MARK + "] The server has created the lobby! Wait for other players to join! ");
-                } else if (MenuRunner.getInstance().getState() ==MenuStates.RESUME){
+                if (MenuRunner.getInstance().getState() ==MenuStates.RESUME){
                     cli.printMessage("[" + CHECK_MARK + "] The server has restored the game. Wait for the other players to rejoin! ");
+                }else if (!MenuRunner.getInstance().isSolo()) {
+                    cli.printMessage("[" + CHECK_MARK + "] The server has created the lobby! Wait for other players to join! ");
                 }
             }
 
@@ -369,6 +370,16 @@ public class CLIMessageHandler {
         if (MenuRunner.getInstance().getState() == MenuStates.MAIN)
             // Tried to rejoin a game, no game or no player by that nickname found.
             MenuRunner.getInstance().sendResponse(GameActions.MENU, "[X] No game found.");
+        else {
+
+            MenuRunner.getInstance().setState(MenuStates.END);
+            MenuRunner.getInstance().sendResponse(GameActions.MENU, "[X] You have been disconnected. You will be returned to main menu.");
+
+            synchronized (CLIMessageHandler.getInstance()) {
+                cli.setInterrupted(true);
+                CLIMessageHandler.getInstance().notifyAll();
+            }
+        }
     }
 
     public void handleServerGameReconnectionMessage(ServerGameReconnectionMessage message) {
