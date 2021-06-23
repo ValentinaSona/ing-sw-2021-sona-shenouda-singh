@@ -18,7 +18,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class SavedState {
-
+    private static boolean flag = false;
     private static final String pathToSavedGame = "./saved_game"; //TODO IMPORTANTE!!! DA DEFINIRE BENE ALTRIMENTI NON FUNZIONA NULLA
 
     private final PlayersOrder order;
@@ -84,11 +84,13 @@ public class SavedState {
 
         } catch (FileNotFoundException e) {
             e.printStackTrace();
+        }finally {
+            flag = false;
         }
     }
 
     public static void save(Game game) {
-
+        flag = true;
         Market market = game.getMarketInstance();
         DevMarket devMarket = game.getDevelopmentCardsMarket();
         Map<Player, List<MarketMarble>> marketMap;

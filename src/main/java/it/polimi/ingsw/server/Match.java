@@ -163,7 +163,10 @@ public class Match implements Runnable{
         setLobbyState(LobbyState.LOBBY_SETUP);
         Game.destroy();
         setActive(false);
-        remoteViewList.forEach((remoteView)-> remoteView.requestDisconnection());
+        remoteViewList.forEach((remoteView)-> {
+
+            remoteView.requestDisconnection();
+        });
         remoteViewList.clear();
     }
 

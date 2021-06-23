@@ -187,7 +187,7 @@ public class Controller implements LambdaObserver {
             if (gameAction.isPresent()) {
                 gameAction.get().handleDisconnection(currentPlayer, this, view, user);
             }
-
+            model.notify(new DisconnectionMessage());
             match.saveToFile();
         }
     }
