@@ -8,8 +8,7 @@ import it.polimi.ingsw.utils.GameActions;
 import it.polimi.ingsw.utils.networking.transmittables.servermessages.ServerMessage;
 
 import static it.polimi.ingsw.client.ui.cli.CLIHelper.*;
-import static it.polimi.ingsw.client.ui.cli.menus.MenuStates.END;
-import static it.polimi.ingsw.client.ui.cli.menus.MenuStates.MAIN;
+import static it.polimi.ingsw.client.ui.cli.menus.MenuStates.*;
 
 
 public class MenuRunner {
@@ -109,10 +108,15 @@ public class MenuRunner {
                 case MAIN -> mainMenu.run();
                 case SETUP -> setupMenu.run();
                 case GAME -> gameMenu.run();
+                case REJOIN -> gameMenu.depositResources();
             }
 
             // If a menu arrives naturally to its end, wait for a state change to print the next one.
-            if (state != END) waitStateChange();
+            if (state != END && state != REJOIN) waitStateChange();
+            else if (state == REJOIN) {
+                state = GAME;
+                gameMenu.run();
+            }
             else {
                 state = MAIN;
                 setupMenu.setDone(false);

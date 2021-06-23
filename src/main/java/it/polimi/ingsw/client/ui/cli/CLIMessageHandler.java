@@ -6,7 +6,6 @@ import it.polimi.ingsw.client.ui.cli.menus.MenuRunner;
 import it.polimi.ingsw.client.ui.cli.menus.MenuStates;
 import it.polimi.ingsw.client.ui.controller.UIController;
 import it.polimi.ingsw.utils.networking.transmittables.StatusMessage;
-import it.polimi.ingsw.utils.networking.transmittables.resilienza.DisconnectionMessage;
 import it.polimi.ingsw.utils.networking.transmittables.resilienza.ServerGameReconnectionMessage;
 import it.polimi.ingsw.utils.networking.transmittables.servermessages.*;
 
@@ -374,14 +373,18 @@ public class CLIMessageHandler {
 
         //TODO REJOINING STATE -> MenuRUNNER to run the deposit function.
 
-        if (message.isPendingAction()) MenuRunner.getInstance().getGameMenu().depositResources();
+        if (message.isPendingAction()) {
 
-        MenuRunner.getInstance().setState(MenuStates.GAME);
+            MenuRunner.getInstance().setState(MenuStates.REJOIN);
 
+        } else {
+
+            MenuRunner.getInstance().setState(MenuStates.GAME);
+
+        }
         synchronized (MenuRunner.getInstance()) {
             MenuRunner.getInstance().notifyAll();
         }
-
     }
 
     public void handleDisconnectionGameSetupMessage() {

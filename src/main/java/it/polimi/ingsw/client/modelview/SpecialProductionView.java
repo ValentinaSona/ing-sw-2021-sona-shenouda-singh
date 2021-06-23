@@ -11,9 +11,9 @@ import java.io.Serializable;
 public class SpecialProductionView extends SlotView implements Serializable {
     private Production specialProduction;
 
-    public SpecialProductionView(Id id, boolean confirmed, ResourceType chosenType) {
+    public SpecialProductionView(Id id, boolean confirmed, ResourceType costType) {
         super(id, confirmed);
-        Resource[] cost = new Resource[]{new Resource(1, chosenType)};
+        Resource[] cost = new Resource[]{new Resource(1, costType)};
         Resource[] out = new Resource[]{new Resource(1, ResourceType.JOLLY), new Resource(1, ResourceType.FAITH)};
         this.specialProduction = new Production(cost, out);
     }

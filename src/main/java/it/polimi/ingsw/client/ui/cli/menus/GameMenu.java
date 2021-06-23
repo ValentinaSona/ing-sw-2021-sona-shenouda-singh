@@ -446,7 +446,8 @@ public class GameMenu {
         }
 
         // If the player already extracted resources from there, subtract them.
-        if (map.containsKey(idResourcePair.getKey())){ quantity = quantity - idResourcePair.getValue().getQuantity();
+        if (map.containsKey(idResourcePair.getKey())){
+            quantity = quantity - idResourcePair.getValue().getQuantity();
         }
 
         // Check that they not taking more than available or of a different type.
@@ -582,11 +583,11 @@ public class GameMenu {
         if (runner.getCurrentAction() == GameActions.DEPOSIT_RESOURCES){
             depositResources();
         } else if (runner.getCurrentAction() == GameActions.TWO_LEADERS){
-            // TODO: Two leaders
             twoLeaders();
             depositResources();
         }
     }
+
 
     private void twoLeaders() {
 
@@ -601,9 +602,9 @@ public class GameMenu {
                 .map(WhiteMarbleAbility::getMarble)
                 .collect(Collectors.toList());
 
-        cli.printMessage("Choose between 1) "+ abilities.get(0)+ "marble and 2) "+ abilities.get(1)+" marble.");
+        cli.printMessage("Choose between 1) "+ abilities.get(0)+ " marble and 2) "+ abilities.get(1)+" marble.");
         for (int i = 0; i < marbles; i++) {
-            cli.printMessage("[ ] Which color do you wish to convert marble #"+i+" to?");
+            cli.printMessage("[ ] Which color do you wish to convert marble #"+(i+1)+" to?");
             int colorChoice = cli.getInt(1,2);
             choices[i] = abilities.get(colorChoice-1);
         }
