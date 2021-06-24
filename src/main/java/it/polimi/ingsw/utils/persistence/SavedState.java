@@ -26,6 +26,27 @@ public class SavedState {
     private final SavedDevMarket savedDevMarket;
     private final List<Player> savedPlayers;
 
+    private static final RuntimeTypeAdapterFactory<SpecialAbility> leaderAdapterFactory = RuntimeTypeAdapterFactory
+            .of(SpecialAbility.class, "SpecialAbilityType")
+            .registerSubtype(DiscountAbility.class, "discount")
+            .registerSubtype(WhiteMarbleAbility.class, "marble")
+            .registerSubtype(ExtraDepotAbility.class, "depot")
+            .registerSubtype(ProductionAbility.class, "production");
+
+    private static final RuntimeTypeAdapterFactory<Slot> slotAdapterFactory = RuntimeTypeAdapterFactory
+            .of(Slot.class, "specialSlotType")
+            .registerSubtype(DevelopmentCardSlot.class, "SLOT")
+            .registerSubtype(BoardProduction.class, "BOARD_PRODUCTION")
+            .registerSubtype(SpecialProduction.class, "S_SLOT");
+
+    private static final Gson gson= new GsonBuilder()
+            .registerTypeAdapterFactory(slotAdapterFactory)
+            .registerTypeAdapterFactory(leaderAdapterFactory)
+            .setPrettyPrinting()
+            .create();
+
+
+
     public SavedState(PlayersOrder order, SavedResourceMarket savedMarket, SavedDevMarket savedDevMarket, List<PlayerView> savedPlayers, Map<String, List<LeaderCard>> savedLeaderCards, Map<String,List<Slot>> savedSlot) {
         this.order = order;
         this.savedMarket = savedMarket;
@@ -37,26 +58,6 @@ public class SavedState {
 
     public static void load() {
 
-        Gson gson = new Gson();
-
-        RuntimeTypeAdapterFactory<SpecialAbility> leaderAdapterFactory = RuntimeTypeAdapterFactory
-                .of(SpecialAbility.class, "abilityType")
-                .registerSubtype(DiscountAbility.class, "discount")
-                .registerSubtype(WhiteMarbleAbility.class, "marble")
-                .registerSubtype(ExtraDepotAbility.class, "depot")
-                .registerSubtype(ProductionAbility.class, "production");
-        Gson gsonLeader = new GsonBuilder()
-                .registerTypeAdapterFactory(leaderAdapterFactory)
-                .create();
-
-        RuntimeTypeAdapterFactory<Slot> slotAdapterFactory = RuntimeTypeAdapterFactory
-                .of(Slot.class, "id")
-                .registerSubtype(DevelopmentCardSlot.class, "SLOT")
-                .registerSubtype(BoardProduction.class, "BOARD_PRODUCTION")
-                .registerSubtype(SpecialProduction.class, "S_SLOT");
-        Gson gsonSlot = new GsonBuilder()
-                .registerTypeAdapterFactory(slotAdapterFactory)
-                .create();
 
         try {
 
@@ -64,8 +65,8 @@ public class SavedState {
             SavedResourceMarket marketFile =  gson.fromJson(new FileReader(pathToSavedGame + "/res_market.json"), SavedResourceMarket.class);
             SavedDevMarket devMarketFile =  gson.fromJson(new FileReader(pathToSavedGame + "/dev_market.json"), SavedDevMarket.class);
             List<PlayerView> players =  Stream.of(gson.fromJson(new FileReader(pathToSavedGame + "/players.json"), PlayerView[].class)).collect(Collectors.toList());
-            List<PlayerLeaderCards> leaderCardsFile =  Stream.of(gsonLeader.fromJson(new FileReader(pathToSavedGame + "/leader_cards.json"), PlayerLeaderCards[].class)).collect(Collectors.toList());
-            List<PlayerSlot> slotFile = Stream.of(gsonSlot.fromJson(new FileReader(pathToSavedGame + "/slots.json"), PlayerSlot[].class)).collect(Collectors.toList());
+            List<PlayerLeaderCards> leaderCardsFile =  Stream.of(gson.fromJson(new FileReader(pathToSavedGame + "/leader_cards.json"), PlayerLeaderCards[].class)).collect(Collectors.toList());
+            List<PlayerSlot> slotFile = Stream.of(gson.fromJson(new FileReader(pathToSavedGame + "/slots.json"), PlayerSlot[].class)).collect(Collectors.toList());
 
             Map<String, List<LeaderCard>> playerLeaderMap = leaderCardsFile.stream().collect(Collectors.toMap(
                     PlayerLeaderCards::getPlayer,
@@ -117,7 +118,9 @@ public class SavedState {
     }
 
     public static void write (Object source, String path) {
-        Gson gson = new GsonBuilder().setPrettyPrinting().create();
+
+
+
         FileWriter writer;
         try {
             writer = new FileWriter(pathToSavedGame + path);
