@@ -24,6 +24,7 @@ import javafx.scene.shape.Rectangle;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.stream.Stream;
 
 public class BoardGUIController extends AbstractGUIController implements GameGUIControllerInterface {
 
@@ -36,9 +37,9 @@ public class BoardGUIController extends AbstractGUIController implements GameGUI
     @FXML
     private HBox depot1, depot2, depot3;
     @FXML
-    private HBox topBar, tempBox, abilityBox;
+    private HBox topBar, tempBox;
     @FXML
-    private VBox depotBox;
+    private VBox depotBox, abilityBox;
     @FXML
     private StackPane rightPane;
     @FXML
@@ -59,7 +60,8 @@ public class BoardGUIController extends AbstractGUIController implements GameGUI
     @FXML
     private VBox boardSelectionResources;
     @FXML
-    private Button confirmBoardButton;
+    private Button selectBoardProd, selectSlot1, selectSlot2, selectSlot3, selectSpecialProd1, selectSpecialProd2;
+    private Button[] prodButtons;
 
     private PlayerView playerView;
 
@@ -85,6 +87,7 @@ public class BoardGUIController extends AbstractGUIController implements GameGUI
         }
 
         tilePane = new StackPane[]{popeTile1, popeTile2, popeTile3};
+        prodButtons = new Button[]{selectBoardProd, selectSlot1, selectSlot2, selectSlot3, selectSpecialProd1, selectSpecialProd2};
 
         screenStart();
 
@@ -107,7 +110,6 @@ public class BoardGUIController extends AbstractGUIController implements GameGUI
     public void screenStart() {
         setDepot();
         disableNode(strongboxScrollPane);
-        disableNode(confirmBoardButton);
         disableNode(boardSelectionDialog);
         disableNode(boardSelectionResources);
         if (GUIHelper.getInstance().isChoosingTemp()) {
@@ -116,6 +118,8 @@ public class BoardGUIController extends AbstractGUIController implements GameGUI
         resChoiceMap = new HashMap<>();
 
         if (GUIHelper.getInstance().getCurrAction() == CurrAction.SELECTED_SLOT) startDevResSelection();
+
+        Stream.of(prodButtons).forEach(this::disableNode);
     }
 
     private void showTemp() {
@@ -170,7 +174,8 @@ public class BoardGUIController extends AbstractGUIController implements GameGUI
         var tiles = playerView.getFaithTrackView().getPopeFavorTiles();
 
         for (int i = 0; i < 3; i++) {
-            tilePane[i].getChildren().add(new ImageView(GUIHelper.getInstance().getImage(tiles[i], i)));
+            var im = GUIHelper.getInstance().getImage(tiles[i], i);
+            if (im != null) tilePane[i].getChildren().add(new ImageView(im));
         }
     }
 
@@ -316,6 +321,9 @@ public class BoardGUIController extends AbstractGUIController implements GameGUI
 
         updateDevSlots();
         updateAbilityBox();
+        updateProductions();
+        if (GUIHelper.getInstance().getCurrAction() == CurrAction.SELECTED_SLOT) showStrongbox(null);
+        SelectedProductions.getInstance().update();
     }
 
     private void activateTurn(boolean turn) {
@@ -362,32 +370,40 @@ public class BoardGUIController extends AbstractGUIController implements GameGUI
     }
 
     public void selectedSlot1(MouseEvent mouseEvent) {
-        GUIHelper.getInstance().setCurrAction(CurrAction.SELECTED_SLOT);
-        ((Pane)mouseEvent.getSource()).setStyle("-fx-background-color: transparent");
-        GUIHelper.getInstance().setSelectedSlot(Id.SLOT_1);
-        if (GUIHelper.getInstance().getCurrAction() == CurrAction.SELECTED_SLOT)
-            UIController.getInstance().selectDevelopmentCard(GUIHelper.getInstance().getSelectedI(), GUIHelper.getInstance().getSelectedJ(), Id.SLOT_1);
+        if(GUIHelper.getInstance().getCurrAction() == CurrAction.SELECTING_SLOT) {
+            GUIHelper.getInstance().setCurrAction(CurrAction.SELECTED_SLOT);
+            ((Pane)mouseEvent.getSource()).setStyle("-fx-background-color: transparent");
+            GUIHelper.getInstance().setSelectedSlot(Id.SLOT_1);
+            if (GUIHelper.getInstance().getCurrAction() == CurrAction.SELECTED_SLOT)
+                UIController.getInstance().selectDevelopmentCard(GUIHelper.getInstance().getSelectedI(), GUIHelper.getInstance().getSelectedJ(), Id.SLOT_1);
+        }
     }
 
     public void selectedSlot2(MouseEvent mouseEvent) {
-        GUIHelper.getInstance().setCurrAction(CurrAction.SELECTED_SLOT);
-        ((Pane)mouseEvent.getSource()).setStyle("-fx-background-color: transparent");
-        GUIHelper.getInstance().setSelectedSlot(Id.SLOT_2);
-        if (GUIHelper.getInstance().getCurrAction() == CurrAction.SELECTED_SLOT)
-            UIController.getInstance().selectDevelopmentCard(GUIHelper.getInstance().getSelectedI(), GUIHelper.getInstance().getSelectedJ(), Id.SLOT_2);
+        if(GUIHelper.getInstance().getCurrAction() == CurrAction.SELECTING_SLOT) {
+            GUIHelper.getInstance().setCurrAction(CurrAction.SELECTED_SLOT);
+            ((Pane)mouseEvent.getSource()).setStyle("-fx-background-color: transparent");
+            GUIHelper.getInstance().setSelectedSlot(Id.SLOT_2);
+            if (GUIHelper.getInstance().getCurrAction() == CurrAction.SELECTED_SLOT)
+                UIController.getInstance().selectDevelopmentCard(GUIHelper.getInstance().getSelectedI(), GUIHelper.getInstance().getSelectedJ(), Id.SLOT_2);
+        }
     }
 
     public void selectedSlot3(MouseEvent mouseEvent) {
-        GUIHelper.getInstance().setCurrAction(CurrAction.SELECTED_SLOT);
-        ((Pane)mouseEvent.getSource()).setStyle("-fx-background-color: transparent");
-        GUIHelper.getInstance().setSelectedSlot(Id.SLOT_3);
-        if (GUIHelper.getInstance().getCurrAction() == CurrAction.SELECTED_SLOT)
-            UIController.getInstance().selectDevelopmentCard(GUIHelper.getInstance().getSelectedI(), GUIHelper.getInstance().getSelectedJ(), Id.SLOT_3);
+        if(GUIHelper.getInstance().getCurrAction() == CurrAction.SELECTING_SLOT) {
+            GUIHelper.getInstance().setCurrAction(CurrAction.SELECTED_SLOT);
+            ((Pane)mouseEvent.getSource()).setStyle("-fx-background-color: transparent");
+            GUIHelper.getInstance().setSelectedSlot(Id.SLOT_3);
+            if (GUIHelper.getInstance().getCurrAction() == CurrAction.SELECTED_SLOT)
+                UIController.getInstance().selectDevelopmentCard(GUIHelper.getInstance().getSelectedI(), GUIHelper.getInstance().getSelectedJ(), Id.SLOT_3);
+        }
     }
 
     public void updateDevSlots() {
         Platform.runLater(() -> {
             var slots = playerView.getSlots();
+
+            productionGrid.getChildren().clear();
 
             for(int i = 0; i < 3; i++) {
                 var card = ((DevelopmentCardSlotView)slots.get(i+1)).peek();
@@ -410,6 +426,38 @@ public class BoardGUIController extends AbstractGUIController implements GameGUI
 
     }
 
+    public void updateProductions() {
+        if (prodButtons == null) prodButtons = new Button[]{selectBoardProd, selectSlot1, selectSlot2, selectSlot3, selectSpecialProd1, selectSpecialProd2};
+        if (playerView.isMainAction()) {
+            var productions = SelectedProductions.getInstance().getProductions();
+
+            for (int i =0; i < productions.size(); i++) {
+                var p = productions.get(i);
+                enableNode(prodButtons[i]);
+                if (p == ProductionState.IDLE) prodButtons[i].setText("Select");
+                else if (p == ProductionState.SELECTED) prodButtons[i].setText("Confirm");
+                else if (p == ProductionState.CONFIRMED) {
+                    prodButtons[i].setText("Confirmed");
+                    prodButtons[i].setStyle("-fx-background-color: rgba(77, 125, 42, 1)");
+                    prodButtons[i].setDisable(true);
+                }
+                else disableNode(prodButtons[i]);
+            }
+
+            if (SelectedProductions.getInstance().get(0) == ProductionState.CONFIRMED) {
+                disableNode(boardSelectionDialog);
+                disableNode(boardSelectionResources);
+            }
+
+            activateProd.setDisable(productions.stream().noneMatch(e -> e == ProductionState.CONFIRMED));
+
+            System.out.println(productions);
+        }
+        else {
+            Stream.of(prodButtons).forEach(this::disableNode);
+        }
+    }
+
     public void startDevResSelection() {
         Modify.makeDepotResourcesSelectable(depotBox, resChoiceMap, true);
         confirmDev.setDisable(false);
@@ -422,17 +470,21 @@ public class BoardGUIController extends AbstractGUIController implements GameGUI
     }
 
     public void updateAbilityBox() {
-        var cards = playerView.getLeaderCards();
+        Platform.runLater(() -> {
+            var cards = playerView.getLeaderCards();
 
-        if (cards != null) {
-            cards.stream().filter(c -> c != null && c.isActive())
-                    .forEach( e -> {
-                        var im = new ImageView(GUIHelper.getInstance().getAbilityImageFromLeader(e));
-                        var effect = new DropShadow();
-                        im.setEffect(effect);
-                        abilityBox.getChildren().add(im);
-                    });
-        }
+            abilityBox.getChildren().clear();
+
+            if (cards != null) {
+                cards.stream().filter(c -> c != null && c.isActive())
+                        .forEach( e -> {
+                            var im = new ImageView(GUIHelper.getInstance().getAbilityImageFromLeader(e));
+                            var effect = new DropShadow();
+                            im.setEffect(effect);
+                            abilityBox.getChildren().add(im);
+                        });
+            }
+        });
 
     }
 
@@ -446,14 +498,6 @@ public class BoardGUIController extends AbstractGUIController implements GameGUI
         selectedBoardRes = (ImageView)mouseEvent.getSource();
     }
 
-    public void confirmBoardProduction(ActionEvent actionEvent) {
-        if (selectedBoardRes != null)
-            UIController.getInstance().depositResourcesIntoSlot(Id.BOARD_PRODUCTION,
-                    resChoiceMap,
-                    GUIHelper.getInstance().getResFromImage(selectedBoardRes.getImage()).getResourceType(),
-                    false);
-    }
-
     public void imgOn(MouseEvent mouseEvent) {
         if(!selecting)((Rectangle)mouseEvent.getSource()).setOpacity(1);
     }
@@ -462,15 +506,96 @@ public class BoardGUIController extends AbstractGUIController implements GameGUI
         if(!selecting)((Rectangle)mouseEvent.getSource()).setOpacity(0);
     }
 
-    public void selectBoardProduction(MouseEvent mouseEvent) {
-        selecting = true;
-        Modify.makeDepotResourcesSelectable(depotBox, resChoiceMap, true);
-        enableNode(confirmBoardButton);
-        enableNode(boardSelectionDialog, 0.75);
-        enableNode(boardSelectionResources);
+    public void selectBoardProduction(ActionEvent actionEvent) {
+        var state = SelectedProductions.getInstance().get(0);
+
+        if (state == ProductionState.IDLE) {
+            resChoiceMap.clear();
+            Modify.makeDepotResourcesSelectable(depotBox, resChoiceMap, true);
+            showStrongbox(null);
+            Modify.makeStrongboxSelectable(strongboxGrid, resChoiceMap, true);
+            enableNode(boardSelectionDialog, 0.75);
+            enableNode(boardSelectionResources);
+            SelectedProductions.getInstance().set(0, ProductionState.SELECTED);
+            updateProductions();
+        }
+
+        else if (state == ProductionState.SELECTED) {
+            if (selectedBoardRes != null) {
+                UIController.getInstance().depositResourcesIntoSlot(Id.BOARD_PRODUCTION,
+                        resChoiceMap,
+                        GUIHelper.getInstance().getResFromImage(selectedBoardRes.getImage()).getResourceType(),
+                        false);
+            }
+
+        }
+    }
+
+    public void selectSlot1Production(ActionEvent actionEvent) {
+        var state = SelectedProductions.getInstance().get(1);
+
+        if (state == ProductionState.IDLE) {
+            resChoiceMap.clear();
+            Modify.makeDepotResourcesSelectable(depotBox, resChoiceMap, true);
+            showStrongbox(null);
+            Modify.makeStrongboxSelectable(strongboxGrid, resChoiceMap, true);
+            SelectedProductions.getInstance().set(1, ProductionState.SELECTED);
+            updateProductions();
+        }
+
+        else if (state == ProductionState.SELECTED) {
+            UIController.getInstance().depositResourcesIntoSlot(Id.SLOT_1,
+                    resChoiceMap,
+                    ResourceType.JOLLY,
+                    false);
+        }
+    }
+
+    public void selectSlot2Production(ActionEvent actionEvent) {
+        var state = SelectedProductions.getInstance().get(2);
+
+        if (state == ProductionState.IDLE) {
+            resChoiceMap.clear();
+            Modify.makeDepotResourcesSelectable(depotBox, resChoiceMap, true);
+            showStrongbox(null);
+            Modify.makeStrongboxSelectable(strongboxGrid, resChoiceMap, true);
+            SelectedProductions.getInstance().set(2, ProductionState.SELECTED);
+            updateProductions();
+        }
+
+        else if (state == ProductionState.SELECTED) {
+            UIController.getInstance().depositResourcesIntoSlot(Id.SLOT_2,
+                    resChoiceMap,
+                    ResourceType.JOLLY,
+                    false);
+        }
+    }
+
+    public void selectSlot3Production(ActionEvent actionEvent) {
+        var state = SelectedProductions.getInstance().get(3);
+
+        if (state == ProductionState.IDLE) {
+            resChoiceMap.clear();
+            Modify.makeDepotResourcesSelectable(depotBox, resChoiceMap, true);
+            showStrongbox(null);
+            Modify.makeStrongboxSelectable(strongboxGrid, resChoiceMap, true);
+            SelectedProductions.getInstance().set(3, ProductionState.SELECTED);
+            updateProductions();
+        }
+
+        else if (state == ProductionState.SELECTED) {
+            UIController.getInstance().depositResourcesIntoSlot(Id.SLOT_3,
+                    resChoiceMap,
+                    ResourceType.JOLLY,
+                    false);
+        }
     }
 
     public void activateProduction(ActionEvent actionEvent) {
         UIController.getInstance().activateProduction();
     }
+
+    public void confirmBoardProduction(ActionEvent actionEvent) {
+    }
+
 }

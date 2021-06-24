@@ -3,6 +3,8 @@ package it.polimi.ingsw.client.ui.gui;
 import it.polimi.ingsw.client.modelview.MatchSettings;
 import it.polimi.ingsw.server.controller.User;
 import it.polimi.ingsw.server.model.Resource;
+import it.polimi.ingsw.utils.networking.transmittables.servermessages.ServerActivateProductionMessage;
+import it.polimi.ingsw.utils.networking.transmittables.servermessages.ServerMessage;
 import javafx.application.Platform;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -11,6 +13,7 @@ import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class GameLog {
 
@@ -27,8 +30,8 @@ public class GameLog {
     private GameLog() {
         log = new TextFlow();
         log.getStyleClass().add("textLog");
-        log.setMaxWidth(400);
-        log.setMaxHeight(350);
+        log.setMaxWidth(GUISizes.get().logX());
+        log.setMaxHeight(GUISizes.get().logY());
         log.setPadding(new Insets(5, 0, 0, 20));
         StackPane.setMargin(log, new Insets(0, 0, 10, 0));
         StackPane.setAlignment(log, Pos.BOTTOM_CENTER);
@@ -44,19 +47,19 @@ public class GameLog {
 
                 case TURN -> {
                     if (user.getNickName().equals(MatchSettings.getInstance().getClientNickname())) {
-                        add("It's your turn!\n\n");
+                        add("It's your turn!");
                     }
-                    else add("It's " + user.getNickName() + "'s turn!\n\n");
+                    else add("It's " + user.getNickName() + "'s turn!");
                 }
 
                 case ABILITY_ACTIVATION -> {
                     if (!user.getNickName().equals(MatchSettings.getInstance().getClientNickname()))
-                        add(user.getNickName() + " has activated a leader card\n\n");
+                        add(user.getNickName() + " has activated a leader card");
                 }
 
                 case CARD_THROW -> {
                     if (!user.getNickName().equals(MatchSettings.getInstance().getClientNickname()))
-                        add(user.getNickName() + " threw a leader card\n\n");
+                        add(user.getNickName() + " threw a leader card");
                 }
             }
         });
@@ -73,27 +76,62 @@ public class GameLog {
                 }
                 else activity = user.getNickName() + " has bought ";
 
-                activity += transformToString(resources.get(0));
+                activity += getResRegister(resources);
 
-                for (int i = 1; i < resources.size(); i++){
-                    activity += ", ";
-                    activity += transformToString(resources.get(i));
-                }
-
-                activity += " from the market\n\n";
+                activity += " from the market";
             }
 
             add(activity);
         });
     }
 
+    public String getResRegister(List<Resource> resources) {
+
+        String activity;
+
+        activity = transformToString(resources.get(0));
+
+        for (int i = 1; i < resources.size(); i++){
+            activity += ", ";
+            activity += transformToString(resources.get(i));
+        }
+
+        return activity;
+
+    }
+
+    public void update(LogUpdates logUpdates, ServerMessage message) {
+
+        String activity = "";
+
+        if (logUpdates == LogUpdates.PRODUCTION_ACTIVATED) {
+            ServerActivateProductionMessage newMessage = (ServerActivateProductionMessage) message;
+
+            if (newMessage.getUser().getNickName().equals(MatchSettings.getInstance().getClientNickname())) {
+                activity = "You have";
+            }
+            else activity = newMessage.getUser().getNickName() + " has";
+
+            activity += " spent ";
+            activity += getResRegister(newMessage.getSpent());
+
+            activity += " and gained ";
+            activity += getResRegister(newMessage.getGained());
+        }
+
+        add(activity);
+
+    }
+
     private void add(String text) {
-        if(log.getChildren().size() > logLenght) log.getChildren().remove(0);
+        Platform.runLater(() -> {
+            if(log.getChildren().size() > logLenght) log.getChildren().remove(0);
 
-        var line = new Text(text);
-        line.setStyle("-fx-fill: #5a9cf2");
+            var line = new Text(text + "\n\n");
+            line.setStyle("-fx-fill: #5a9cf2");
 
-        log.getChildren().add(line);
+            log.getChildren().add(line);
+        });
     }
 
     public String transformToString(Resource resource) {

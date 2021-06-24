@@ -71,6 +71,10 @@ public class GameMenu {
                     activateProductions();
                     hasBeenRefreshed = false;
                 }
+                case 4 -> {
+                    runner.printBoards();
+                    hasBeenRefreshed = false;
+                }
 
                 case 5 -> {
                     runner.printFaithTracks();
@@ -103,11 +107,7 @@ public class GameMenu {
     }
 
     private void activateProductions() {
-        runner.printDepots();
-        runner.printStrongbox();
-        runner.printPlayedLeaders();
-        runner.printProductions();
-
+        runner.printBoard();
         // Set the player's choice or return if they can only observe.
         if (cli.getView().isMyTurn() && cli.getView().isMainAction()) {
             if (!cli.getYesOrNo("Do you wish to activate your productions?")) return;
@@ -370,17 +370,17 @@ public class GameMenu {
                     }
                 }
             }
-
+            // Various print to deliver info to the player.
+            cli.printMessage("[" + CHECK_MARK + "] Selected card: \n" + card);
+            runner.printDepots();
+            runner.printStrongbox();
             while (!cost.isEmpty()) {
 
                 String costPrint = cost.stream()
                         .map(String::valueOf)
                         .collect(Collectors.joining(", ", "", ""));
 
-                // Various print to deliver info to the player.
-                cli.printMessage("[" + CHECK_MARK + "] Selected card: \n" + card);
-                runner.printDepots();
-                runner.printStrongbox();
+
                 cli.printMessage("[ ] Cost left to pay: " + costPrint);
                 cli.printMessage("[ ] Select the resources to pay and their source (e.g. 1 coin @ D1 - D for Depots, S for Special depots, B for strongBox)");
 
@@ -559,7 +559,13 @@ public class GameMenu {
         cli.printMessage(MARBLE_LEGEND);
         cli.printMessage(GameView.getInstance().getMarketInstance());
 
-        //TODO SPECIAL ABILITY MESSAGE
+        // Check if there are discount abilities active
+        var discounts = cli.getView().getLeaderCards().stream().filter(leaderCard -> leaderCard!=null && leaderCard.isActive() && leaderCard.getSpecialAbility() instanceof WhiteMarbleAbility).collect(Collectors.toList());
+
+        // Inform the player
+        for (LeaderCard discount : discounts){
+            cli.printMessage("[" + CHECK_MARK + "] Your white marbles can be converted into " + ((WhiteMarbleAbility)discount.getSpecialAbility()).getMarble()+ " marbles!");
+        }
 
         // Set the player's choice or return if they can only observe.
         if (cli.getView().isMyTurn() && cli.getView().isMainAction()){

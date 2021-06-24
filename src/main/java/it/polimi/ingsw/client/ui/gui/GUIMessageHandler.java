@@ -116,8 +116,10 @@ public class GUIMessageHandler {
 
     public void handleServerDepositIntoSlotMessage(ServerDepositIntoSlotMessage message) {
         GUIHelper.getInstance().setChosenCard(false);
+        if (GUIHelper.getInstance().getCurrAction() == CurrAction.DEV_CONFIRMATION )
+            UIController.getInstance().buyTargetCard(GUIHelper.getInstance().getSelectedSlot());
+        else SelectedProductions.getInstance().confirm();
         GUIHelper.getInstance().setCurrAction(CurrAction.IDLE);
-        UIController.getInstance().buyTargetCard(GUIHelper.getInstance().getSelectedSlot());
         Platform.runLater(() -> currentGameController.update());
     }
 
@@ -129,5 +131,11 @@ public class GUIMessageHandler {
     public void handleServerThrowLeaderCardAbilityMessage(ServerThrowLeaderCardMessage message) {
         Platform.runLater(() -> currentGameController.update());
         GameLog.getInstance().update(LogUpdates.CARD_THROW, message.getUser());
+    }
+
+    public void handleServerActivateProductionMessage(ServerActivateProductionMessage message) {
+        SelectedProductions.getInstance().reset();
+        GameLog.getInstance().update(LogUpdates.PRODUCTION_ACTIVATED, message);
+        Platform.runLater(() -> currentGameController.update());
     }
 }

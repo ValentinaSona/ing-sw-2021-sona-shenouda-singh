@@ -1,2 +1,14 @@
 /target/
 /.attach_*
+/.classpath
+/.project
+/saved_game/dev_market.json
+/saved_game/leader_cards.json
+/saved_game/order.json
+/.settings/org.eclipse.core.resources.prefs
+/.settings/org.eclipse.jdt.apt.core.prefs
+/.settings/org.eclipse.jdt.core.prefs
+/.settings/org.eclipse.m2e.core.prefs
+/saved_game/players.json
+/saved_game/res_market.json
+/saved_game/slots.json

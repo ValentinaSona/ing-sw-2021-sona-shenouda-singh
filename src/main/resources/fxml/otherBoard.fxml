@@ -100,7 +100,7 @@
                         <Insets left="61.0" top="677.0" />
                     </StackPane.margin>
                 </ImageView>
-            <GridPane fx:id="productionGrid" maxHeight="450.0" maxWidth="720.0">
+            <GridPane fx:id="productionGrid" maxHeight="450.0" maxWidth="720.0" StackPane.alignment="CENTER_LEFT">
                <columnConstraints>
                   <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
                   <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
@@ -115,7 +115,7 @@
                   <Pane fx:id="slot3" onMouseEntered="#lightSlot" onMouseExited="#turnOffSlot" onMouseReleased="#selectedSlot3" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="2" />
                </children>
                <StackPane.margin>
-                  <Insets left="225.0" top="400.0" />
+                  <Insets left="500.0" top="400.0" />
                </StackPane.margin>
             </GridPane>
             <StackPane fx:id="popeTile1" maxHeight="95.0" maxWidth="95.0" prefHeight="150.0" prefWidth="200.0" StackPane.alignment="CENTER_LEFT">
@@ -133,6 +133,11 @@
                   <Insets bottom="435.0" left="1007.0" />
                </StackPane.margin>
             </StackPane>
+            <VBox fx:id="abilityBox" alignment="CENTER_LEFT" maxHeight="250.0" maxWidth="280.0" prefHeight="200.0" prefWidth="100.0">
+               <StackPane.margin>
+                  <Insets bottom="150.0" left="1100.0" />
+               </StackPane.margin>
+            </VBox>
             </children>
         </StackPane>
     </center>

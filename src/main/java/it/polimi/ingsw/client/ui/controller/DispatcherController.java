@@ -345,6 +345,7 @@ public class DispatcherController implements Runnable, LambdaObserver {
 
         GameView.getInstance().getCurrentPlayer().setMainAction(false);
         if(gui){
+            GUIMessageHandler.getInstance().handleServerActivateProductionMessage(message);
 
         }else{
             CLIMessageHandler.getInstance().handleServerActivateProductionMessage(message);
