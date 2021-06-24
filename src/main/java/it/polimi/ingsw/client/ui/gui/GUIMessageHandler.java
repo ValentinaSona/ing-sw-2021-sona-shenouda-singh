@@ -111,12 +111,14 @@ public class GUIMessageHandler {
     }
 
     public void handleServerBuyDevelopmentCardMessage(ServerBuyDevelopmentCardMessage message) {
-        Platform.runLater(() -> GUIHelper.getInstance().getCurrentGameController().update());
+        Platform.runLater(() -> currentGameController.update());
     }
 
     public void handleServerDepositIntoSlotMessage(ServerDepositIntoSlotMessage message) {
         GUIHelper.getInstance().setChosenCard(false);
+        GUIHelper.getInstance().setCurrAction(CurrAction.IDLE);
         UIController.getInstance().buyTargetCard(GUIHelper.getInstance().getSelectedSlot());
+        Platform.runLater(() -> currentGameController.update());
     }
 
     public void handleServerActivateLeaderCardAbilityMessage(ServerActivateLeaderCardAbilityMessage message) {
@@ -125,7 +127,6 @@ public class GUIMessageHandler {
     }
 
     public void handleServerThrowLeaderCardAbilityMessage(ServerThrowLeaderCardMessage message) {
-        if (currentGameController instanceof BoardGUIController) System.out.println("HO SBAGLIATO");
         Platform.runLater(() -> currentGameController.update());
         GameLog.getInstance().update(LogUpdates.CARD_THROW, message.getUser());
     }

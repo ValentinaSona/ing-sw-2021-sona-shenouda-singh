@@ -362,14 +362,6 @@ public class GUIHelper {
         this.choosingTemp = choosingTemp;
     }
 
-    public boolean isSelectSlot() {
-        return selectSlot;
-    }
-
-    public void setSelectSlot(boolean selectSlot) {
-        this.selectSlot = selectSlot;
-    }
-
     public int getSelectedI() {
         return selectedI;
     }
