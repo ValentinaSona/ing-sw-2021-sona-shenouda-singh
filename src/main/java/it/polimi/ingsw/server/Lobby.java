@@ -210,7 +210,8 @@ public class Lobby {
                 //informing the client he is not the first one
                 connection.send(StatusMessage.JOIN_LOBBY);
                 //updates the client about the number of player in the lobby
-                updateMessage();
+                if(getCurrentLobbyPlayerCount() > 0)
+                    updateMessage();
             }
             lobbyRequestingConnections.notifyAll();
         }
@@ -473,6 +474,7 @@ public class Lobby {
     public void setActiveMatch(boolean activeMatch) {
         synchronized (activeMatchLock){
             this.activeMatch = activeMatch;
+            activeMatchLock.notifyAll();
         }
     }
 

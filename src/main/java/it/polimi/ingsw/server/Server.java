@@ -18,6 +18,7 @@ public class Server {
     //used to give the provide threads for the connections that manage the inbound sockets
     private final ExecutorService executorService;
 
+    private final Thread lobbyThread;
     private Match match;
 
     private Lobby lobby;
@@ -33,7 +34,8 @@ public class Server {
         this.lobby = Lobby.getInstance(this);
         this.executorService = Executors.newCachedThreadPool();
         this.handlerMap = new ConcurrentHashMap<>();
-        executorService.submit(()->lobby.start());
+        lobbyThread = new Thread(()->lobby.start());
+        lobbyThread.start();
     }
 
     /**
@@ -106,5 +108,9 @@ public class Server {
 
     public Map<Connection, ConnectionSetupHandler> getHandlerMap() {
         return handlerMap;
+    }
+
+    public Thread getLobbyThread(){
+        return lobbyThread;
     }
 }

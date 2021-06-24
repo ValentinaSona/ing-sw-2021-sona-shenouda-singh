@@ -160,6 +160,7 @@ public class Match implements Runnable{
         setActive(false);
         setLobbyState(LobbyState.LOBBY_SETUP);
         lobby.setActiveMatch(false);
+        server.getLobbyThread().interrupt();
         remoteViewList.forEach((remoteView)-> remoteView.requestDisconnection());
         remoteViewList.clear();
     }

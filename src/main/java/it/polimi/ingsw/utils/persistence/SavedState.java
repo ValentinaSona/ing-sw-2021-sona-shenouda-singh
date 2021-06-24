@@ -51,12 +51,9 @@ public class SavedState {
 
         RuntimeTypeAdapterFactory<Slot> slotAdapterFactory = RuntimeTypeAdapterFactory
                 .of(Slot.class, "id")
-                .registerSubtype(DevelopmentCardSlot.class, "SLOT_1")
-                .registerSubtype(DevelopmentCardSlot.class, "SLOT_2")
-                .registerSubtype(DevelopmentCardSlot.class, "SLOT_3")
+                .registerSubtype(DevelopmentCardSlot.class, "SLOT")
                 .registerSubtype(BoardProduction.class, "BOARD_PRODUCTION")
-                .registerSubtype(SpecialProduction.class, "S_SLOT_1")
-                .registerSubtype(SpecialProduction.class, "S_SLOT_2");
+                .registerSubtype(SpecialProduction.class, "S_SLOT");
         Gson gsonSlot = new GsonBuilder()
                 .registerTypeAdapterFactory(slotAdapterFactory)
                 .create();
