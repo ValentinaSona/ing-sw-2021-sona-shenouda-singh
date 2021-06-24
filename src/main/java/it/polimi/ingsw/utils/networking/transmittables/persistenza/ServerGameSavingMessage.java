@@ -6,9 +6,10 @@ import it.polimi.ingsw.utils.networking.transmittables.servermessages.ServerMess
 
 public class ServerGameSavingMessage implements ServerMessage, ClientHandleable{
 
-    //TODO ..
+
     @Override
     public boolean handleMessage(DispatcherController handler) {
-        return false;
+        handler.handleGameSaving();
+        return true;
     }
 }

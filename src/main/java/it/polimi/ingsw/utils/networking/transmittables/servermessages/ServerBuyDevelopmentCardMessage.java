@@ -12,12 +12,14 @@ import java.util.List;
 public class ServerBuyDevelopmentCardMessage implements ServerMessage, ClientHandleable {
     private final DevMarketView view;
     private final List<SlotView> slots;
+    private final DevelopmentCard card;
     private final User user;
 
-    public ServerBuyDevelopmentCardMessage(DevMarketView view, List<SlotView> slots,User user){
+    public ServerBuyDevelopmentCardMessage(DevMarketView view, List<SlotView> slots, DevelopmentCard card, User user){
         this.view = view;
         this.user = user;
         this.slots = slots;
+        this.card = card;
     }
 
     public User getUser() {
@@ -26,6 +28,10 @@ public class ServerBuyDevelopmentCardMessage implements ServerMessage, ClientHan
 
     public DevMarketView getView() {
         return view;
+    }
+
+    public DevelopmentCard getCard() {
+        return card;
     }
 
     public List<SlotView> getSlots() {

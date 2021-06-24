@@ -208,12 +208,12 @@ public class UIController implements LambdaObserver{
         send(new DisconnectionMessage());
     }
 
-    //TODO da chiamare dopo aver fatto  il setNickname solito se fallisce arriva un disconnectionMessage()
+    // da chiamare dopo aver fatto  il setNickname solito se fallisce arriva un disconnectionMessage()
     public void resumeGameFromFile(){
         send(new ClientJoinLobbyMessage(true));
     }
 
-    //TODO da chiamare se e solo se si riceve il messaggio di setCount in ritorno si ottiene il messaggio
+    //da chiamare se e solo se si riceve il messaggio di setCount in ritorno si ottiene il messaggio
     //StatusMessage.OK_COUNT oppure StatusMessage.CLIENT_ERROR
     public void loadGameFromFile(){send(new ClientLoadGameMessage());}
     /**
@@ -221,11 +221,11 @@ public class UIController implements LambdaObserver{
      */
     public void endGame(){send(new ClientEndGameMessage());}
 
-    //TODO da chiamare se sei il player corrente e vuoi salvare la partita
+    // da chiamare se sei il player corrente e vuoi salvare la partita
     public void saveGame(){send(new ClientSaveGameMessage());}
-    //TODO da chiamare se voglio riconnettermi dopo che mi sono disconnesso in risposta
-    //TODO il DispatcherController ricevera un messaggio RECONNECTION_OK se tutto va bene
-    //TODO altrimenti un DisconnectionMessage che chiude la connessione se qualcosa è andato storto e da li in poi ricevero gli altri
+    //da chiamare se voglio riconnettermi dopo che mi sono disconnesso in risposta
+    //il DispatcherController ricevera un messaggio RECONNECTION_OK se tutto va bene
+    // altrimenti un DisconnectionMessage che chiude la connessione se qualcosa è andato storto e da li in poi ricevero gli altri
     //messaggi con le informazioni sulla partita vedi ultimi 4 metodi DispatcherController
     public void reconnectToServer(String nickname, String host, int port) throws IOException{
         local = false;

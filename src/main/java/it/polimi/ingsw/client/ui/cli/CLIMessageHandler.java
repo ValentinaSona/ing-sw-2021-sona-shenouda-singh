@@ -265,7 +265,7 @@ public class CLIMessageHandler {
 
         if (message.isReport()) {
             if (message.getUser().getNickName().equals(MatchSettings.getInstance().getClientNickname()))
-                cli.printMessage("[" + CHECK_MARK + "] You have received " + message.getFaith() + " faith points and triggered a vatican report. Check the faith tracks to see the results!");
+                cli.printMessage("[" + CHECK_MARK + "] A vatican report has been triggered. Check the faith tracks to see the results!");
             else
                 cli.printMessage("[!] " + message.getUser().getNickName() + " has received " + message.getFaith() + " faith points and triggered a vatican report! Check your faith track!");
         } else {
@@ -317,19 +317,19 @@ public class CLIMessageHandler {
 
     public void handleServerBuyDevelopmentCardMessage(ServerBuyDevelopmentCardMessage message) {
         if (message.getUser().getNickName().equals(MatchSettings.getInstance().getClientNickname()))
-            MenuRunner.getInstance().sendResponse(GameActions.ACQUIRE_CARD, "[" + CHECK_MARK + "] You have acquired the following card: ");
+            MenuRunner.getInstance().sendResponse(GameActions.ACQUIRE_CARD, "[" + CHECK_MARK + "] You have acquired the following card:\n" + message.getCard());
         else
-            MenuRunner.getInstance().sendResponse(GameActions.ACQUIRE_CARD, "[" + CHECK_MARK + "] "+ message.getUser().getNickName() +" has acquired the following card: ");
+            MenuRunner.getInstance().sendResponse(GameActions.ACQUIRE_CARD, "[" + CHECK_MARK + "] "+ message.getUser().getNickName() +" has acquired the following card:\n" + message.getCard());
 
     }
 
     public void handleServerActivateProductionMessage(ServerActivateProductionMessage message) {
         String costPrint = message.getSpent().stream()
                 .map(String::valueOf)
-                .collect(Collectors.joining(" , ", "", ""));
+                .collect(Collectors.joining(", ", "", ""));
         String gainPrint = message.getGained().stream()
                 .map(String::valueOf)
-                .collect(Collectors.joining(" , ", "", ""));
+                .collect(Collectors.joining(", ", "", ""));
         if (message.getUser().getNickName().equals(MatchSettings.getInstance().getClientNickname())) {
             MenuRunner.getInstance().sendResponse(GameActions.ACTIVATE_PRODUCTION, "[" + CHECK_MARK + "] You have spent " + costPrint + " and received " + gainPrint + ".");
 

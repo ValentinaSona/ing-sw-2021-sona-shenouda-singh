@@ -6,7 +6,7 @@ import it.polimi.ingsw.client.ui.controller.DispatcherController;
  * client method dispatchServerMessages
  */
 public interface ClientHandleable {
-    /** TODO: actual client implementation
+    /**
      * Every class that represent a message implements this method calling a different
      * method of the client
      * @param handler

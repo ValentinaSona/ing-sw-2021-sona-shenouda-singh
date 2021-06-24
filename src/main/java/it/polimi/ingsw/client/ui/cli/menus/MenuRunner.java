@@ -178,6 +178,29 @@ public class MenuRunner {
 
 
 
+    public void printBoard(PlayerView view){
+        cli.printMessage("Development card slots:");
+        printProductions(view);
+        cli.printMessage("Played leader cards:");
+        printPlayedLeaders(view);
+        cli.printMessage("Warehouse and strongbox:");
+        printDepots(view);
+        printStrongbox(view);
+    }
+
+    public void printBoard(){
+        printBoard(cli.getView());
+    }
+
+    public void printBoards(){
+        for (PlayerView player : GameView.getInstance().getPlayers()){
+            if(!player.getNickname().equals(MatchSettings.getInstance().getClientNickname())) {
+                cli.printMessage("\t" + player.getNickname() + "'s Board:");
+                printBoard(player);
+            }
+        }
+    }
+
     public void printFaithTracks(){
         for (PlayerView player : GameView.getInstance().getPlayers()){
             if(player.getNickname().equals(MatchSettings.getInstance().getClientNickname()))
@@ -187,9 +210,8 @@ public class MenuRunner {
             cli.printMessage(player.getFaithTrackView());
         }
     }
-
-    public void printHand(){
-        var cards = cli.getView().getLeaderCards();
+    public void printHand(PlayerView view){
+        var cards = view.getLeaderCards();
         int i = 0;
 
         for (LeaderCard card : cards){
@@ -201,9 +223,10 @@ public class MenuRunner {
 
         if (i == 0) cli.printMessage("[X} There are no cards in your hand");
     }
+    public void printHand(){printHand(cli.getView());}
 
-    public void printPlayedLeaders(){
-        var cards = cli.getView().getLeaderCards();
+    public void printPlayedLeaders(PlayerView view){
+        var cards = view.getLeaderCards();
         int i = 0;
         for (LeaderCard card : cards){
             if (card != null && card.isActive()) {
@@ -215,7 +238,9 @@ public class MenuRunner {
         if (i == 0) cli.printMessage("[X] You have played no leader cards");
     }
 
-    public void printDepots(){
+    public void printPlayedLeaders(){printPlayedLeaders(cli.getView());}
+
+    public void printDepots(PlayerView view){
         var warehouse = cli.getView().getWarehouse();
         String output = "";
         String content;
@@ -260,8 +285,10 @@ public class MenuRunner {
 
     }
 
-    public void printStrongbox(){
-        var box = cli.getView().getStrongboxView();
+    public void printDepots(){printDepots(cli.getView());}
+
+    public void printStrongbox(PlayerView view){
+        var box = view.getStrongboxView();
         String output = "";
 
         output += "\t\t"+ SQUARE+ " " + box.getCoin() + "    "+ SQUARE +" ";
@@ -271,6 +298,8 @@ public class MenuRunner {
 
         cli.printMessage(output);
     }
+
+    public void printStrongbox(){printStrongbox(cli.getView());}
 
     public void printSlots(){
         var slots = cli.getView().getSlots();
@@ -301,31 +330,32 @@ public class MenuRunner {
 //TODO hiddenVP should print colors of cards.
     }
 
-    public void printProductions(){
+    public void printProductions(PlayerView view){
 
-        var slots = cli.getView().getSlots();
+        var slots = view.getSlots();
 
-        cli.printMessage("Board Production: 1 JOLLY + 1 JOLLY -> 1 JOLLY");
+        cli.printMessage("\nBoard Production:\n 1 JOLLY + 1 JOLLY -> 1 JOLLY");
 
         DevelopmentCardSlotView slot = (DevelopmentCardSlotView) slots.get(1);
-        cli.printMessage("Slot 1: ");
+        cli.printMessage("\nSlot 1: ");
         if (slot.peek() != null)
-            cli.printMessage("\n" + slot.peek().toString() + "Hidden cards value: " + slot.hiddenVP()+" VP.");
+            cli.printMessage("\n\t" + slot.peek().toString() + "Hidden cards value: " + slot.hiddenVP()+" VP " + slot.hiddenColors() );
         else
             cli.printMessage("empty \n");
 
         slot = (DevelopmentCardSlotView) slots.get(2);
-        cli.printMessage("Slot 2: ");
+        cli.printMessage("\nSlot 2: ");
         if (slot.peek() != null)
-            cli.printMessage("\n" + slot.peek().toString()+ "Hidden cards value: " + slot.hiddenVP()+" VP.");
+            cli.printMessage("\n\t" + slot.peek().toString()+ "Hidden cards value: " + slot.hiddenVP()+" VP " + slot.hiddenColors() );
         else
             cli.printMessage("empty \n");
 
 
         slot = (DevelopmentCardSlotView) slots.get(3);
-        cli.printMessage("Slot 3: ");
+        cli.printMessage("\nSlot 3: ");
         if (slot.peek() != null)
-            cli.printMessage("\n" + slot.peek().toString()+ "Hidden cards value: " + slot.hiddenVP()+" VP.");
+
+            cli.printMessage("\n\t" + slot.peek().toString()+ "Hidden cards value: " + slot.hiddenVP()+" VP " + slot.hiddenColors() );
 
         else
             cli.printMessage("empty \n");
@@ -333,13 +363,15 @@ public class MenuRunner {
         SpecialProductionView special;
         if (slots.size() >= 5) {
             special = (SpecialProductionView) slots.get(4);
-            cli.printMessage("Special slot 1:\n " + special.getSpecialProduction());
+            cli.printMessage("\nSpecial slot 1:\n \t" + special.getSpecialProduction());
         }
         if (slots.size() >= 6) {
             special = (SpecialProductionView) slots.get(5);
-            cli.printMessage("Special slot 2:\n " + special.getSpecialProduction());
+            cli.printMessage("\nSpecial slot 2:\n \t" + special.getSpecialProduction());
         }
 
     }
+
+    public void printProductions(){printProductions(cli.getView());}
 
 }
