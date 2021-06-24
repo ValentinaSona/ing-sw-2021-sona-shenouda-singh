@@ -33,5 +33,16 @@ public abstract class AbstractGUIController implements UiControllerInterface {
         node.setDisable(true);
     }
 
+    public void enableNode(Node node) {
+        node.setOpacity(1);
+        node.setDisable(false);
+    }
+
+    public void enableNode(Node node, double opacity) {
+        node.setOpacity(opacity);
+        node.setDisable(false);
+    }
+
+
 
 }

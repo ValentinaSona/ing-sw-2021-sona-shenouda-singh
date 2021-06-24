@@ -46,9 +46,9 @@
             </GridPane>
             <HBox fx:id="topBar" maxHeight="90.0" maxWidth="1300.0" prefHeight="100.0" prefWidth="200.0" spacing="15.0" StackPane.alignment="TOP_LEFT">
                <children>
-                  <Button mnemonicParsing="false" prefHeight="127.0" prefWidth="150.0" styleClass="basicButton" text="Menu">
+                  <Button mnemonicParsing="false" prefHeight="127.0" prefWidth="162.0" styleClass="basicButton" text="Menu">
                      <HBox.margin>
-                        <Insets right="380.0" />
+                        <Insets right="368.0" />
                      </HBox.margin>
                   </Button>
                   <ImageView fx:id="inkwell" fitHeight="91.0" fitWidth="96.0" opacity="0.0" pickOnBounds="true" preserveRatio="true">

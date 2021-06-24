@@ -194,7 +194,7 @@ public class UIController implements LambdaObserver{
 
     public void throwLeaderCard(Id id){ send(new ClientThrowLeaderCardMessage(id));}
 
-    public void selectDevelopmentCard(int row, int col, Id slot){send(new ClientSelectDevelopmentCardMessage(row, col,slot));}
+    public void selectDevelopmentCard(int row, int col, Id slot){ send(new ClientSelectDevelopmentCardMessage(row, col,slot));}
 
     public void depositResourcesIntoSlot(Id slot,  Map<Id, Resource> map){send(new ClientDepositResourceIntoSlotMessage(slot, map));}
 

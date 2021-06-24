@@ -37,9 +37,9 @@
                         <Insets left="30.0" top="30.0" />
                     </StackPane.margin>
                     <children>
-                        <Button mnemonicParsing="false" prefHeight="127.0" prefWidth="150.0" styleClass="basicButton" text="Menu">
+                        <Button mnemonicParsing="false" prefHeight="127.0" prefWidth="162.0" styleClass="basicButton" text="Menu">
                             <HBox.margin>
-                                <Insets right="380.0" />
+                                <Insets right="368.0" />
                             </HBox.margin></Button>
                   <ImageView fx:id="inkwell" fitHeight="91.0" fitWidth="96.0" opacity="0.0" pickOnBounds="true" preserveRatio="true">
                      <image>
@@ -118,11 +118,6 @@
                   <Insets left="225.0" top="400.0" />
                </StackPane.margin>
             </GridPane>
-            <HBox fx:id="abilityBox" alignment="CENTER" maxHeight="250.0" maxWidth="280.0" prefHeight="100.0" prefWidth="200.0" spacing="15.0">
-               <StackPane.margin>
-                  <Insets bottom="150.0" left="1100.0" />
-               </StackPane.margin>
-            </HBox>
             <StackPane fx:id="popeTile1" maxHeight="95.0" maxWidth="95.0" prefHeight="150.0" prefWidth="200.0" StackPane.alignment="CENTER_LEFT">
                <StackPane.margin>
                   <Insets bottom="430.0" left="333.0" />

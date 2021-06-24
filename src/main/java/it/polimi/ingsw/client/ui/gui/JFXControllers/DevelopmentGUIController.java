@@ -1,5 +1,6 @@
 package it.polimi.ingsw.client.ui.gui.JFXControllers;
 
+import it.polimi.ingsw.client.ui.gui.CurrAction;
 import it.polimi.ingsw.client.ui.gui.GUIHelper;
 import it.polimi.ingsw.client.ui.gui.GameLog;
 import it.polimi.ingsw.utils.networking.transmittables.StatusMessage;
@@ -87,7 +88,7 @@ public class DevelopmentGUIController extends AbstractGUIController implements G
 
     public void buyCard(ActionEvent actionEvent) {
         change(ScreenName.PERSONAL_BOARD);
-        GUIHelper.getInstance().setSelectSlot(true);
+        GUIHelper.getInstance().setCurrAction(CurrAction.SELECTING_SLOT);
     }
 
     public void goToLeader(ActionEvent actionEvent) {

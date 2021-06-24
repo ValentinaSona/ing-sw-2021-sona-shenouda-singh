@@ -17,6 +17,10 @@ public class GUISizes {
 
     private int marbles;
 
+    private int strongboxCols;
+
+    private int strongBoxRes;
+
     public static GUISizes get() {
         if (singleton == null) singleton = new GUISizes();
         return  singleton;
@@ -41,6 +45,10 @@ public class GUISizes {
 
         popeTile = 90;
 
+        strongboxCols = 6;
+
+        strongBoxRes = 50;
+
     }
 
     public int devSize() {
@@ -62,5 +70,9 @@ public class GUISizes {
     public int abilityY() {return abilityY;}
 
     public int popeTile() {return popeTile;}
+
+    public int strongboxCols() {return strongboxCols;}
+
+    public int strongboxRes() {return strongBoxRes;}
 
 }
