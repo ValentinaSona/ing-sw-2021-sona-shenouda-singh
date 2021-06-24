@@ -59,6 +59,7 @@ public class Lobby {
     private int currentLobbyPlayerCount;
     private final Object playerCountLock;
 
+    private final Object resumeGameObject = new Object();
 
     public static Lobby getInstance(Server server) {
         if (singleton == null) {
@@ -97,29 +98,32 @@ public class Lobby {
             return false;
         }
 
-        LOGGER.log(Level.INFO, "Il seguente giocatore sta tentando di fare il load da file");
-        SavedState.load();
-        userList = new ArrayList<>();
-        Game.getInstance().getPlayers().forEach(player -> userList.add(new User(player.getNickname())));
-        setLobbyMaxPlayerCount(userList.size(), firstConnection);
+        synchronized (resumeGameObject){
+            LOGGER.log(Level.INFO, "Il seguente giocatore sta tentando di fare il load da file");
+            SavedState.load();
+            userList = new ArrayList<>();
+            Game.getInstance().getPlayers().forEach(player -> userList.add(new User(player.getNickname())));
+            LOGGER.log(Level.INFO, ""+userList.size());
+            setLobbyMaxPlayerCount(userList.size(), firstConnection);
 
-        setLoadGameFromFile(true);
+            setLoadGameFromFile(true);
 
-        List<Connection> toRemove = new ArrayList<>();
-        registeredNicknamesMap.forEach((key, value)-> {
-            if(userList.contains(new User(value)))
-                toRemove.add(key);
-        });
+            List<Connection> toRemove = new ArrayList<>();
+            registeredNicknamesMap.forEach((key, value)-> {
+                if(userList.contains(new User(value)))
+                    toRemove.add(key);
+            });
 
-        toRemove.forEach(con->handleLobbyDisconnection(con));
+            toRemove.forEach(con->handleLobbyDisconnection(con));
 
-        //all the player that were connected to the lobby included the one who asked to resume the game
-        //were not part of the previous game
+            //all the player that were connected to the lobby included the one who asked to resume the game
+            //were not part of the previous game
 
-        //TODO .. per quanto mi riguarda resterei anche in attesa di nuovi giocatori
+            //TODO .. per quanto mi riguarda resterei anche in attesa di nuovi giocatori
 
+            return true;
+        }
 
-        return true;
 
     }
 

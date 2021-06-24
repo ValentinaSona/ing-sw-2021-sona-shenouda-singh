@@ -20,7 +20,6 @@ import it.polimi.ingsw.utils.networking.transmittables.clientmessages.game.Clien
 import it.polimi.ingsw.utils.networking.transmittables.resilienza.ServerGameReconnectionMessage;
 import it.polimi.ingsw.utils.networking.transmittables.servermessages.*;
 import it.polimi.ingsw.utils.observer.LambdaObserver;
-import it.polimi.ingsw.utils.persistence.SavedState;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -139,6 +138,7 @@ public class Controller implements LambdaObserver {
         ArrayList<Player> players = model.getPlayers();
 
         for(Player p: players) {
+            p.setDisconnected(false);
             users.add(model.getUserFromPlayer(p));
         }
 
@@ -278,7 +278,7 @@ public class Controller implements LambdaObserver {
     }
 
     private void handleSetupDisconnection(){
-        match.endGame();
+        match.endGameDuringSetup();
     }
 
     public void setLobbyState(LobbyState state){

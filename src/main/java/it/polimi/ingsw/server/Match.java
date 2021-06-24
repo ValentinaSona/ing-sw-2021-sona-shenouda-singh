@@ -94,8 +94,6 @@ public class Match implements Runnable{
                 e.printStackTrace();
             }
         }
-
-
     }
 
     public boolean isActive() {
@@ -144,7 +142,7 @@ public class Match implements Runnable{
 
     }
 
-    public void endGame(){
+    public void endGameDuringSetup(){
         model.notify(new DisconnectionGameSetupMessage());
         Game.destroy();
         Controller.destroy();
@@ -156,27 +154,32 @@ public class Match implements Runnable{
     }
 
     public void saveToFile(){
-
         SavedState.save(Game.getInstance());
         Game.destroy();
         Controller.destroy();
-        setLobbyState(LobbyState.LOBBY_SETUP);
-        Game.destroy();
         setActive(false);
-        remoteViewList.forEach((remoteView)-> {
-
-            remoteView.requestDisconnection();
-        });
+        setLobbyState(LobbyState.LOBBY_SETUP);
+        lobby.setActiveMatch(false);
+        remoteViewList.forEach((remoteView)-> remoteView.requestDisconnection());
         remoteViewList.clear();
     }
 
     public void setLobbyState(LobbyState state){
-        if(state.equals(LobbyState.IN_GAME)){
-            lobby.setActiveMatch(true);
-        }else {
-            lobby.setActiveMatch(false);
+        switch (state){
+            case LOBBY_SETUP -> {
+                lobby.setLobbyState(state);
+                lobby.setActiveMatch(false);
+                setActive(false);
+            }
+            case GAME_SETUP -> {
+                setLobbyState(state);
+            }
+            case IN_GAME -> {
+                lobby.setLobbyState(state);
+                lobby.setActiveMatch(true);
+            }
+
         }
-        lobby.setLobbyState(state);
 
     }
 
