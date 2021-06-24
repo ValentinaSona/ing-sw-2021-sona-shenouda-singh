@@ -276,6 +276,7 @@ public class GUIHelper {
     }
 
     public Image getImage(PopeFavorTiles tile, int index) {
+        if (tile == PopeFavorTiles.DISMISSED) return null;
         return new Image("assets/game/pope_tiles/" + index + "_" + tile.toString().toLowerCase() + ".png", GUISizes.get().popeTile(), GUISizes.get().popeTile(), false, false);
     }
 

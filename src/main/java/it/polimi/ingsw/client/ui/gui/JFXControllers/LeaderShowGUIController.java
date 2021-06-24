@@ -5,6 +5,7 @@ import it.polimi.ingsw.client.ui.gui.GUIHelper;
 import it.polimi.ingsw.client.ui.gui.GUIMessageHandler;
 import it.polimi.ingsw.client.ui.gui.GUISizes;
 import it.polimi.ingsw.server.model.Id;
+import it.polimi.ingsw.server.model.LeaderCard;
 import it.polimi.ingsw.utils.networking.transmittables.StatusMessage;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
@@ -78,7 +79,7 @@ public class LeaderShowGUIController extends AbstractGUIController implements Ga
     public void updateLeader() {
         var cards = GUIHelper.getInstance().getClientView().getLeaderCards();
         leaderBox.getChildren().clear();
-        cards.stream().filter(Objects::nonNull).forEach(e -> {
+        cards.stream().filter(Objects::nonNull).filter(e -> !e.isActive()).forEach(e -> {
 
             VBox leader = new VBox(30);
             leader.setAlignment(Pos.CENTER);

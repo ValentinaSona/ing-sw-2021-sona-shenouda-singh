@@ -21,6 +21,10 @@ public class GUISizes {
 
     private int strongBoxRes;
 
+    private int logX;
+    private int logY;
+    private int logSpacing;
+
     public static GUISizes get() {
         if (singleton == null) singleton = new GUISizes();
         return  singleton;
@@ -49,6 +53,10 @@ public class GUISizes {
 
         strongBoxRes = 50;
 
+        logX = 400;
+        logY = 350;
+        logSpacing = 8;
+
     }
 
     public int devSize() {
@@ -75,4 +83,9 @@ public class GUISizes {
 
     public int strongboxRes() {return strongBoxRes;}
 
+    public int logX() { return logX; }
+
+    public int logY() { return logY; }
+
+    public int logSpacing() { return logSpacing; }
 }

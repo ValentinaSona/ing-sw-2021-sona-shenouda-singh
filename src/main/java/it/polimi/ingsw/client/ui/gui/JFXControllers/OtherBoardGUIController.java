@@ -17,4 +17,6 @@ public class OtherBoardGUIController extends BoardGUIController {
         updateDepot();
     }
 
+    public void updateProductions() { }
+
 }

@@ -31,6 +31,9 @@
                <StackPane.margin>
                   <Insets left="30.0" top="115.0" />
                </StackPane.margin>
+               <effect>
+                  <DropShadow />
+               </effect>
             </ImageView>
             <HBox fx:id="topBar" maxHeight="90.0" maxWidth="1300.0" prefHeight="100.0" prefWidth="200.0" spacing="15.0" StackPane.alignment="TOP_LEFT">
                <StackPane.margin>
@@ -92,7 +95,7 @@
                   <HBox fx:id="depot3" alignment="CENTER" prefHeight="100.0" prefWidth="200.0" />
                </children>
             </VBox>
-            <GridPane fx:id="productionGrid" alignment="CENTER" maxHeight="450.0" maxWidth="730.0">
+            <GridPane fx:id="productionGrid" alignment="CENTER" maxHeight="450.0" maxWidth="730.0" StackPane.alignment="CENTER_LEFT">
               <columnConstraints>
                 <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
                 <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
@@ -102,7 +105,7 @@
                 <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
               </rowConstraints>
                <StackPane.margin>
-                  <Insets left="230.0" top="400.0" />
+                  <Insets left="500.0" top="400.0" />
                </StackPane.margin>
                <children>
                   <Pane fx:id="slot1" onMouseEntered="#lightSlot" onMouseExited="#turnOffSlot" onMouseReleased="#selectedSlot1" prefHeight="200.0" prefWidth="200.0" GridPane.halignment="CENTER" GridPane.valignment="CENTER" />
@@ -154,11 +157,11 @@
                   <String fx:value="darkButton" />
                </styleClass>
             </Button>
-            <HBox fx:id="abilityBox" alignment="CENTER" maxHeight="250.0" maxWidth="280.0" prefHeight="100.0" prefWidth="200.0" spacing="15.0">
+            <VBox fx:id="abilityBox" maxHeight="250.0" maxWidth="280.0" prefHeight="200.0" prefWidth="100.0" StackPane.alignment="CENTER_LEFT">
                <StackPane.margin>
-                  <Insets bottom="150.0" left="1100.0" />
+                  <Insets bottom="150.0" left="1180.0" />
                </StackPane.margin>
-            </HBox>
+            </VBox>
             <StackPane fx:id="popeTile1" maxHeight="95.0" maxWidth="95.0" prefHeight="150.0" prefWidth="200.0" StackPane.alignment="CENTER_LEFT">
                <StackPane.margin>
                   <Insets bottom="430.0" left="333.0" />
@@ -201,22 +204,17 @@
                   </GridPane>
                </content>
             </ScrollPane>
-            <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#f2af4480" height="170.0" onMouseEntered="#imgOn" onMouseExited="#imgOf" onMouseReleased="#selectBoardProduction" opacity="0.0" stroke="TRANSPARENT" strokeType="INSIDE" width="166.0">
-               <StackPane.margin>
-                  <Insets right="680.0" top="580.0" />
-               </StackPane.margin>
-            </Rectangle>
-            <ImageView fx:id="boardSelectionDialog" fitHeight="101.0" fitWidth="294.0" opacity="0.75" pickOnBounds="true" preserveRatio="true" rotate="270.0">
+            <ImageView fx:id="boardSelectionDialog" fitHeight="101.0" fitWidth="294.0" opacity="0.75" pickOnBounds="true" preserveRatio="true" rotate="270.0" StackPane.alignment="CENTER_LEFT">
                <image>
                   <Image url="@../assets/game/Selection.png" />
                </image>
                <StackPane.margin>
-                  <Insets right="590.0" top="220.0" />
+                  <Insets left="307.0" top="220.0" />
                </StackPane.margin>
             </ImageView>
-            <VBox fx:id="boardSelectionResources" alignment="TOP_CENTER" maxHeight="210.0" maxWidth="80.0" prefHeight="200.0" prefWidth="100.0">
+            <VBox fx:id="boardSelectionResources" alignment="TOP_CENTER" maxHeight="210.0" maxWidth="80.0" prefHeight="200.0" prefWidth="100.0" StackPane.alignment="CENTER_LEFT">
                <StackPane.margin>
-                  <Insets right="590.0" top="190.0" />
+                  <Insets left="415.0" top="190.0" />
                </StackPane.margin>
                <children>
                   <ImageView fitHeight="59.0" fitWidth="95.0" onMouseReleased="#resBoardSelected" opacity="0.5" pickOnBounds="true" preserveRatio="true">
@@ -241,9 +239,34 @@
                   </ImageView>
                </children>
             </VBox>
-            <Button fx:id="confirmBoardButton" mnemonicParsing="false" onAction="#confirmBoardProduction" styleClass="darkButton" text="Confirm">
+            <Button fx:id="selectBoardProd" mnemonicParsing="false" onAction="#selectBoardProduction" prefHeight="57.0" prefWidth="150.0" styleClass="darkButton" text="Select" textAlignment="CENTER" StackPane.alignment="CENTER_LEFT">
                <StackPane.margin>
-                  <Insets right="670.0" top="820.0" />
+                  <Insets left="345.0" top="820.0" />
+               </StackPane.margin>
+            </Button>
+            <Button fx:id="selectSlot1" mnemonicParsing="false" onAction="#selectSlot1Production" prefHeight="57.0" prefWidth="150.0" styleClass="darkButton" text="Select" textAlignment="CENTER" StackPane.alignment="CENTER_LEFT">
+               <StackPane.margin>
+                  <Insets left="550.0" top="820.0" />
+               </StackPane.margin>
+            </Button>
+            <Button fx:id="selectSlot2" mnemonicParsing="false" onAction="#selectSlot2Production" prefWidth="150.0" styleClass="darkButton" text="Select" textAlignment="CENTER" StackPane.alignment="CENTER_LEFT">
+               <StackPane.margin>
+                  <Insets left="790.0" top="820.0" />
+               </StackPane.margin>
+            </Button>
+            <Button fx:id="selectSlot3" layoutX="704.0" layoutY="522.0" mnemonicParsing="false" onAction="#selectSlot3Production" prefWidth="150.0" styleClass="darkButton" text="Select" textAlignment="CENTER" StackPane.alignment="CENTER_LEFT">
+               <StackPane.margin>
+                  <Insets left="1030.0" top="820.0" />
+               </StackPane.margin>
+            </Button>
+            <Button fx:id="selectSpecialProd1" mnemonicParsing="false" onAction="#confirmBoardProduction" prefWidth="150.0" styleClass="darkButton" text="Select" textAlignment="CENTER" StackPane.alignment="CENTER_LEFT">
+               <StackPane.margin>
+                  <Insets bottom="250.0" left="1000.0" />
+               </StackPane.margin>
+            </Button>
+            <Button fx:id="selectSpecialProd2" mnemonicParsing="false" onAction="#confirmBoardProduction" prefWidth="150.0" styleClass="darkButton" text="Select" textAlignment="CENTER" StackPane.alignment="CENTER_LEFT">
+               <StackPane.margin>
+                  <Insets bottom="40.0" left="1000.0" />
                </StackPane.margin>
             </Button>
          </children>
