@@ -1,8 +1,10 @@
 package it.polimi.ingsw.client.ui.gui.JFXControllers;
 
+import it.polimi.ingsw.client.modelview.GameView;
 import it.polimi.ingsw.client.ui.gui.CurrAction;
 import it.polimi.ingsw.client.ui.gui.GUIHelper;
 import it.polimi.ingsw.client.ui.gui.GameLog;
+import it.polimi.ingsw.client.ui.gui.LogUpdates;
 import it.polimi.ingsw.utils.networking.transmittables.StatusMessage;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -87,8 +89,12 @@ public class DevelopmentGUIController extends AbstractGUIController implements G
     }
 
     public void buyCard(ActionEvent actionEvent) {
-        change(ScreenName.PERSONAL_BOARD);
-        GUIHelper.getInstance().setCurrAction(CurrAction.SELECTING_SLOT);
+        var price = GameView.getInstance().getDevelopmentCardsMarket().getTray()[GUIHelper.getInstance().getSelectedI()][GUIHelper.getInstance().getSelectedJ()].getCost();
+        if (GUIHelper.getInstance().getClientView().canPay(price)) {
+            change(ScreenName.PERSONAL_BOARD);
+            GUIHelper.getInstance().setCurrAction(CurrAction.SELECTING_SLOT);
+        }
+        else GameLog.getInstance().update(LogUpdates.DEV_NOT_RICH);
     }
 
     public void goToLeader(ActionEvent actionEvent) {

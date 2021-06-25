@@ -180,4 +180,8 @@ public class MainMenuGUIController extends AbstractGUIController {
             }
         });
     }
+
+    public void quitGame(MouseEvent mouseEvent) {
+        Platform.exit();
+    }
 }

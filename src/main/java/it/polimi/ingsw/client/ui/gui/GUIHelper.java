@@ -194,8 +194,10 @@ public class GUIHelper {
                             chosenCard = true;
                         }
                         else {
-                            grid.getChildren().remove(selection);
-                            chosenCard = false;
+                            if (indexI == selectedI && indexJ == selectedJ) {
+                                grid.getChildren().remove(selection);
+                                chosenCard = false;
+                            }
                         }
 
                         Platform.runLater(() -> {

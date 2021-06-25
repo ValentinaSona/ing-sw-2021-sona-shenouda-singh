@@ -84,7 +84,7 @@ public class DispatcherController implements Runnable, LambdaObserver {
 
 
         if(gui){
-
+            GUIMessageHandler.getInstance().handleServerFinalScoreMessage(message);
         }else{
             CLIMessageHandler.getInstance().handleServerFinalScoreMessage(message);
         }

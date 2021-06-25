@@ -108,8 +108,10 @@ public class LeaderShowGUIController extends AbstractGUIController implements Ga
                 else UIController.getInstance().throwLeaderCard(Id.LEADER_CARD_2);
             });
 
-            leader.getChildren().add(activate);
-            leader.getChildren().add(throwCard);
+            if (GUIHelper.getInstance().getTurn()) {
+                leader.getChildren().add(activate);
+                leader.getChildren().add(throwCard);
+            }
 
             leaderBox.getChildren().add(leader);
         });

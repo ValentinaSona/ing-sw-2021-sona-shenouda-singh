@@ -34,7 +34,7 @@
                 </ImageView>
                 <HBox fx:id="topBar" maxHeight="90.0" maxWidth="1300.0" prefHeight="100.0" prefWidth="200.0" spacing="15.0" StackPane.alignment="TOP_LEFT">
                     <StackPane.margin>
-                        <Insets left="30.0" top="30.0" />
+                        <Insets left="30.0" top="20.0" />
                     </StackPane.margin>
                     <children>
                         <Button mnemonicParsing="false" prefHeight="127.0" prefWidth="162.0" styleClass="basicButton" text="Menu">
@@ -133,9 +133,21 @@
                   <Insets bottom="435.0" left="1007.0" />
                </StackPane.margin>
             </StackPane>
-            <VBox fx:id="abilityBox" alignment="CENTER_LEFT" maxHeight="250.0" maxWidth="280.0" prefHeight="200.0" prefWidth="100.0">
+            <VBox fx:id="abilityBox" maxHeight="200.0" maxWidth="440.0" prefHeight="212.0" prefWidth="280.0" spacing="10.0" StackPane.alignment="CENTER_LEFT">
+               <children>
+                  <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0" spacing="15.0">
+                     <children>
+                        <Button fx:id="selectSpecialProd1" alignment="CENTER" mnemonicParsing="false" onAction="#confirmBoardProduction" opacity="0.0" styleClass="darkButton" text="Select" textAlignment="CENTER" />
+                     </children>
+                  </HBox>
+                  <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0" spacing="15.0">
+                     <children>
+                        <Button fx:id="selectSpecialProd2" alignment="CENTER" mnemonicParsing="false" onAction="#confirmBoardProduction" opacity="0.0" styleClass="darkButton" text="Select" textAlignment="CENTER" />
+                     </children>
+                  </HBox>
+               </children>
                <StackPane.margin>
-                  <Insets bottom="150.0" left="1100.0" />
+                  <Insets bottom="150.0" left="1050.0" />
                </StackPane.margin>
             </VBox>
             </children>

@@ -61,7 +61,7 @@
                   <Button fx:id="end" alignment="CENTER" mnemonicParsing="false" nodeOrientation="LEFT_TO_RIGHT" prefHeight="120.0" prefWidth="170.0" styleClass="darkButton" text="End&#10;Turn" textAlignment="CENTER" />
                </children>
                <StackPane.margin>
-                  <Insets left="30.0" top="30.0" />
+                  <Insets left="30.0" top="20.0" />
                </StackPane.margin>
             </HBox>
             <Button fx:id="buyButton" disable="true" mnemonicParsing="false" onAction="#buyMarbles" opacity="0.0" styleClass="basicButton" text="Buy">

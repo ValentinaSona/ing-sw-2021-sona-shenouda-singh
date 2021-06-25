@@ -138,4 +138,8 @@ public class GUIMessageHandler {
         GameLog.getInstance().update(LogUpdates.PRODUCTION_ACTIVATED, message);
         Platform.runLater(() -> currentGameController.update());
     }
+
+    public void handleServerFinalScoreMessage(ServerFinalScoreMessage message) {
+        GUIHelper.getInstance().setScreen(ScreenName.END_OF_GAME);
+    }
 }

@@ -123,12 +123,29 @@ public class GameLog {
 
     }
 
+    public void update(LogUpdates logUpdates) {
+        switch(logUpdates){
+            case DEV_NOT_RICH -> addError("You don't have enough resources to buy this card");
+        }
+    }
+
     private void add(String text) {
         Platform.runLater(() -> {
             if(log.getChildren().size() > logLenght) log.getChildren().remove(0);
 
             var line = new Text(text + "\n\n");
             line.setStyle("-fx-fill: #5a9cf2");
+
+            log.getChildren().add(line);
+        });
+    }
+
+    private void addError(String text) {
+        Platform.runLater(() -> {
+            if(log.getChildren().size() > logLenght) log.getChildren().remove(0);
+
+            var line = new Text(text + "\n\n");
+            line.setStyle("-fx-fill: red");
 
             log.getChildren().add(line);
         });
