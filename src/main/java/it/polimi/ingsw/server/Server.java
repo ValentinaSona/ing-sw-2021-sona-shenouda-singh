@@ -19,6 +19,7 @@ public class Server {
     private final ExecutorService executorService;
 
     private final Thread lobbyThread;
+    private Thread matchThread;
     private Match match;
 
     private Lobby lobby;
@@ -68,7 +69,9 @@ public class Server {
      * @param match the match that has been created by the lobby
      */
     public void submitMatch(Match match){
-        executorService.submit(match);
+
+        matchThread = new Thread(match);
+        matchThread.start();
         Map<String, Connection> participants = match.getParticipantMap();
         for(Connection connection : participants.values()){
             synchronized (handlerMap){

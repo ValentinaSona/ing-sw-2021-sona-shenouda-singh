@@ -34,6 +34,7 @@ public class Match implements Runnable{
         this.participantMap = new ConcurrentHashMap<>();
         this.remoteViewList = new LinkedList<>();
         this.active = true;
+        this.loadFromFile = false;
     }
 
     public void addParticipant(String nickname, Connection connection) {
@@ -57,6 +58,8 @@ public class Match implements Runnable{
         if(!isLoadFromFile()){
             this.model = Game.getInstance(participantMap.size());
             model.setGameState(GameState.SETUP_GAME);
+        }else{
+            this.model = Game.getInstance();
         }
         this.controller = Controller.getInstance(model, this);
 
@@ -65,8 +68,9 @@ public class Match implements Runnable{
         for(RealRemoteViewHandler view : remoteViewList){
 
             User user = view.getUser();
-
-            model.subscribeUser(user);
+            if(!isLoadFromFile()){
+                model.subscribeUser(user);
+            }
 
             model.addObserver(view, (observer, transmittable)->{
                 if(transmittable instanceof DisconnectionMessage){
@@ -168,16 +172,17 @@ public class Match implements Runnable{
     public void setLobbyState(LobbyState state){
         switch (state){
             case LOBBY_SETUP -> {
-                lobby.setLobbyState(state);
                 lobby.setActiveMatch(false);
                 setActive(false);
+                lobby.setLobbyState(state);
             }
             case GAME_SETUP -> {
                 setLobbyState(state);
             }
             case IN_GAME -> {
-                lobby.setLobbyState(state);
                 lobby.setActiveMatch(true);
+                lobby.setLobbyState(state);
+
             }
 
         }
