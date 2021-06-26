@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.shape.SVGPath?>
+
+<StackPane fx:id="mainPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="720.0" prefWidth="1280.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.client.ui.gui.JFXControllers.JoinSingleplayerGUIController">
+    <children>
+        <AnchorPane prefHeight="200.0" prefWidth="200.0" StackPane.alignment="CENTER" />
+        <BorderPane minHeight="-Infinity" minWidth="-Infinity" prefHeight="200.0" prefWidth="200.0">
+            <center>
+                <StackPane prefHeight="150.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+                    <children>
+                        <Label fx:id="joining" opacity="0.0" styleClass="normalLabel" text="Joining game...">
+                            <StackPane.margin>
+                                <Insets top="240.0" />
+                            </StackPane.margin>
+                        </Label>
+                        <TextField fx:id="nicknameField" maxWidth="400.0" onAction="#goToJoinEnter" prefHeight="39.0" prefWidth="400.0" styleClass="text-field">
+                            <StackPane.margin>
+                                <Insets bottom="100.0" left="200.0" right="200.0" />
+                            </StackPane.margin>
+                        </TextField>
+                        <Label fx:id="chooseNick" styleClass="normalLabel" text="Choose a nickname: " textFill="WHITE">
+                            <StackPane.margin>
+                                <Insets bottom="300.0" />
+                            </StackPane.margin>
+                        </Label>
+                        <Label fx:id="party" opacity="0.0" text="You are the funny one, right?">
+                            <StackPane.margin>
+                                <Insets top="80.0" />
+                            </StackPane.margin>
+                        </Label>
+                        <Label fx:id="emptyNickname" opacity="0.0" styleClass="normalLabel" text="You must choose a nickname!">
+                            <StackPane.margin>
+                                <Insets top="80.0" />
+                            </StackPane.margin>
+                        </Label>
+                        <Button fx:id="joinButton" mnemonicParsing="false" onAction="#startGame" styleClass="basicButton" text="START">
+                            <StackPane.margin>
+                                <Insets top="240.0" />
+                            </StackPane.margin>
+                        </Button>
+                    </children>
+                </StackPane>
+            </center>
+            <top>
+                <StackPane prefHeight="150.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+                    <children>
+                        <ImageView fitHeight="194.0" fitWidth="986.0" pickOnBounds="true" preserveRatio="true">
+                            <image>
+                                <Image url="@../assets/main_menu/Title_main.png" />
+                            </image>
+                            <StackPane.margin>
+                                <Insets top="20.0" />
+                            </StackPane.margin>
+                        </ImageView>
+                        <SVGPath fx:id="backArrow" content="M10,20 30,0 30,10 60,10,60,30,30,30,30,40" onMouseReleased="#backToSingle" styleClass="svgObj" StackPane.alignment="CENTER_LEFT">
+                            <StackPane.margin>
+                                <Insets left="60.0" />
+                            </StackPane.margin>
+                        </SVGPath>
+                    </children>
+                </StackPane>
+            </top>
+        </BorderPane>
+    </children>
+</StackPane>

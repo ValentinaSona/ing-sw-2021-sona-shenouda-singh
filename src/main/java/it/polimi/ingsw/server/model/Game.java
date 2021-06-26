@@ -101,6 +101,16 @@ public class Game extends LambdaObservable<Transmittable> {
         this.leaderCardsKeeper = new LeaderCardsKeeper();
         this.players = savedState.getSavedPlayers();
         this.currentPlayer = savedState.currentPlayer();
+        if(!currentPlayer.getTurn()){
+            currentPlayer.toggleTurn();
+        }
+        if(!currentPlayer.getMainAction()){
+            currentPlayer.toggleMainAction();
+        }
+        players.forEach(player -> {
+            playerUserHashMap.put(player, new User(player.getNickname()));
+            userPlayerHashMap.put(new User(player.getNickname()), player);
+        });
 
         if (savedState.numOfPlayers() == 1){
             // If the game is a single player

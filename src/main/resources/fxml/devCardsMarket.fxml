@@ -40,7 +40,7 @@
                         <Button fx:id="end" alignment="CENTER" disable="true" mnemonicParsing="false" nodeOrientation="LEFT_TO_RIGHT" prefHeight="120.0" prefWidth="170.0" styleClass="darkButton" text="End&#10;Turn" textAlignment="CENTER" />
                     </children>
                     <StackPane.margin>
-                        <Insets left="30.0" top="30.0" />
+                        <Insets left="30.0" top="20.0" />
                     </StackPane.margin>
                 </HBox>
             <GridPane fx:id="devGrid" maxHeight="877.0" maxWidth="900.0" prefHeight="877.0" prefWidth="900.0">

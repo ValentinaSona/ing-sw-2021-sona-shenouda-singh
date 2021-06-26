@@ -14,7 +14,8 @@ public enum ScreenName {
     MARKET("marketScreen.fxml", new String[]{"standardBackground.css", "gameTabs.css", "buttons.css", "gameLog.css"}),
     DEV_MARKET("devCardsMarket.fxml", new String[]{"standardBackground.css", "gameTabs.css", "buttons.css", "gameLog.css"}),
     OTHER_BOARD("otherBoard.fxml", new String[]{"standardBackground.css", "gameTabs.css", "gameLog.css", "buttons.css"}),
-    LEADER("leaderCardsScreen.fxml", new String[]{"buttons.css"});
+    LEADER("leaderCardsScreen.fxml", new String[]{"buttons.css"}),
+    END_OF_GAME("endScreen.fxml", new String[]{"mainText.css", "standardBackground.css"});
 
     private String fxml;
     private String[] css;
