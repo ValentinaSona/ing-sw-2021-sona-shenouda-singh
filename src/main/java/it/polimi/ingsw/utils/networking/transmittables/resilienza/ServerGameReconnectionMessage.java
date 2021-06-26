@@ -13,13 +13,15 @@ import java.util.List;
 public class ServerGameReconnectionMessage implements ServerMessage, ClientHandleable {
     private boolean pendingAction;
     private final List<PlayerView> playerViews;
+    private final PlayerView currentPlayer;
     private final MarketView marketView;
     private final DevMarketView devMarketView;
 
 
-    public ServerGameReconnectionMessage(boolean pendingAction, List<PlayerView> playerViews, MarketView marketView, DevMarketView devMarketView) {
+    public ServerGameReconnectionMessage(boolean pendingAction, List<PlayerView> playerViews, PlayerView currentPlayer, MarketView marketView, DevMarketView devMarketView) {
         this.pendingAction = pendingAction;
         this.playerViews = playerViews;
+        this.currentPlayer = currentPlayer;
         this.marketView = marketView;
         this.devMarketView = devMarketView;
     }
@@ -30,6 +32,10 @@ public class ServerGameReconnectionMessage implements ServerMessage, ClientHandl
     }
     public boolean isPendingAction() {
         return pendingAction;
+    }
+
+    public PlayerView getCurrentPlayer() {
+        return currentPlayer;
     }
 
     public List<PlayerView> getPlayerViews() {

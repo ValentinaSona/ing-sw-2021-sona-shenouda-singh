@@ -150,6 +150,7 @@ public class Controller implements LambdaObserver {
             ServerGameReconnectionMessage message = new ServerGameReconnectionMessage(
                     false,
                     playerViews,
+                    model.getCurrentPlayer().getVisible(),
                     model.getMarketInstance().getVisible(),
                     model.getDevelopmentCardsMarket().getVisible()
             );
@@ -252,15 +253,14 @@ public class Controller implements LambdaObserver {
         ServerGameReconnectionMessage message = new ServerGameReconnectionMessage(
                 false,
                 playerViews,
+                model.getCurrentPlayer().getVisible(),
                 model.getMarketInstance().getVisible(),
                 model.getDevelopmentCardsMarket().getVisible()
         );
 
 
         Optional<Action> gameAction = player.getGameAction();
-        if(gameAction.isPresent()){
-            gameAction.get().handleReconnection(player,message);
-        }
+        gameAction.ifPresent(action -> action.handleReconnection(player, message));
 
         view.updateFromGame(message);
 

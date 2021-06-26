@@ -395,6 +395,7 @@ public class DispatcherController implements Runnable, LambdaObserver {
         GameView.getInstance().setMarketInstance(message.getMarketView());
         GameView.getInstance().setDevelopmentCardsMarket(message.getDevMarketView());
         GameView.getInstance().updatePlayerViews(message.getPlayerViews());
+        GameView.getInstance().setCurrentPlayer(message.getCurrentPlayer());
 
         if(gui){
 

@@ -415,7 +415,6 @@ public class GameMenu {
             runner.waitResponse();
         }
 
-        cli.printMessage(((DevelopmentCardSlotView)cli.getView().getSlots().get(chosen_id)).peek().toString());
 
 
     }
