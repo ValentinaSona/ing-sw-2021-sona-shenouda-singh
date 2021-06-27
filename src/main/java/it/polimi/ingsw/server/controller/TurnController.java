@@ -188,7 +188,10 @@ public class TurnController{
         if(idx == players.size()-1) {
             Player startingPlayer = players.get(0);
             model.setGameState(GameState.PLAY);
-            controller.setLobbyState(LobbyState.IN_GAME);
+
+            if(!controller.getLocal()){
+                controller.setLobbyState(LobbyState.IN_GAME);
+            }
 
             startingPlayer.toggleTurn();
             startingPlayer.toggleMainAction();

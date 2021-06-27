@@ -40,11 +40,12 @@ public class Controller implements LambdaObserver {
     public final TurnController turnController;
     private final Game model;
     private final Match match;
+    private final boolean local;
     private final BlockingQueue<ViewClientMessage> actionToProcess = new LinkedBlockingDeque<>();
 
     public static Controller getInstance(Game model,Match matchInstance){
         if(singleton == null){
-            singleton = new Controller(model, matchInstance);
+            singleton = new Controller(model, matchInstance, false);
         }
 
         return singleton;
@@ -63,7 +64,8 @@ public class Controller implements LambdaObserver {
         return  null;
     }
 
-    private Controller(Game modelInstance, Match matchInstance){
+    private Controller(Game modelInstance, Match matchInstance, boolean localGame){
+        local = localGame;
         match = matchInstance;
         model = modelInstance;
         developmentCardMarketController = DevelopmentCardMarketController.getInstance(model);
@@ -76,7 +78,7 @@ public class Controller implements LambdaObserver {
 
     public static Controller getInstance(Game model){
         if(singleton == null){
-            singleton = new Controller(model, null);
+            singleton = new Controller(model, null, true);
         }
 
         return singleton;
@@ -132,6 +134,9 @@ public class Controller implements LambdaObserver {
         turnController.startSetupTurn();
     }
 
+    public boolean getLocal(){
+        return local;
+    }
     public void loadFromFile(List<RealRemoteViewHandler> viewList){
 
         ArrayList<User> users = new ArrayList<>();
