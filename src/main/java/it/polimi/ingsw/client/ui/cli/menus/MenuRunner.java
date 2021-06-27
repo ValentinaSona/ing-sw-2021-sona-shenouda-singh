@@ -181,7 +181,7 @@ public class MenuRunner {
     public void printBoard(PlayerView view){
         cli.printMessage("Development card slots:");
         printProductions(view);
-        cli.printMessage("Played leader cards:");
+        cli.printMessage("\nPlayed leader cards:");
         printPlayedLeaders(view);
         cli.printMessage("Warehouse and strongbox:");
         printDepots(view);
@@ -241,7 +241,7 @@ public class MenuRunner {
     public void printPlayedLeaders(){printPlayedLeaders(cli.getView());}
 
     public void printDepots(PlayerView view){
-        var warehouse = cli.getView().getWarehouse();
+        var warehouse = view.getWarehouse();
         String output = "";
         String content;
         String padding =  new Resource(1, ResourceType.SERVANT).toString();
@@ -339,14 +339,14 @@ public class MenuRunner {
         DevelopmentCardSlotView slot = (DevelopmentCardSlotView) slots.get(1);
         cli.printMessage("\nSlot 1: ");
         if (slot.peek() != null)
-            cli.printMessage("\n\t" + slot.peek().toString() + "Hidden cards value: " + slot.hiddenVP()+" VP " + slot.hiddenColors() );
+            cli.printMessage("\n" + slot.peek().toString() + "\tHidden cards value: " + slot.hiddenVP()+" VP " + slot.hiddenColors() );
         else
             cli.printMessage("empty \n");
 
         slot = (DevelopmentCardSlotView) slots.get(2);
         cli.printMessage("\nSlot 2: ");
         if (slot.peek() != null)
-            cli.printMessage("\n\t" + slot.peek().toString()+ "Hidden cards value: " + slot.hiddenVP()+" VP " + slot.hiddenColors() );
+            cli.printMessage("\n" + slot.peek().toString()+ "\tHidden cards value: " + slot.hiddenVP()+" VP " + slot.hiddenColors() );
         else
             cli.printMessage("empty \n");
 
@@ -355,7 +355,7 @@ public class MenuRunner {
         cli.printMessage("\nSlot 3: ");
         if (slot.peek() != null)
 
-            cli.printMessage("\n\t" + slot.peek().toString()+ "Hidden cards value: " + slot.hiddenVP()+" VP " + slot.hiddenColors() );
+            cli.printMessage("\n\t" + slot.peek().toString()+ "\tHidden cards value: " + slot.hiddenVP()+" VP " + slot.hiddenColors() );
 
         else
             cli.printMessage("empty \n");

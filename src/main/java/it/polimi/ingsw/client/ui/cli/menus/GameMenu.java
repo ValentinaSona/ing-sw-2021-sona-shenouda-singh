@@ -113,7 +113,7 @@ public class GameMenu {
             if (!cli.getYesOrNo("Do you wish to activate your productions?")) return;
         } else return;
 
-            Id[] slots = new Id[]{Id.BOARD_PRODUCTION, Id.SLOT_1, Id.SLOT_2, Id.SLOT_2, Id.S_SLOT_1, Id.S_SLOT_2};
+            Id[] slots = new Id[]{Id.BOARD_PRODUCTION, Id.SLOT_1, Id.SLOT_2, Id.SLOT_3, Id.S_SLOT_1, Id.S_SLOT_2};
 
 
         String[] options;
@@ -236,7 +236,8 @@ public class GameMenu {
                 resIdMap.put(values.getKey(), values.getValue());
 
 
-            }  else if (prodId == Id.SLOT_1 || prodId == Id.SLOT_2 || prodId == Id.SLOT_3 ) {
+            }
+            else if (prodId == Id.SLOT_1 || prodId == Id.SLOT_2 || prodId == Id.SLOT_3 ) {
                 var production = (DevelopmentCardSlotView) cli.getView().getSlots().get(prodId.getValue());
 
                 // Safe init of list so that we can work on it without modifying the actual card - Important for local games.

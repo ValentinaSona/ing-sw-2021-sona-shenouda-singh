@@ -303,18 +303,16 @@ public class DispatcherController implements Runnable, LambdaObserver {
         if (message.getWarehouse()!=null) {
             GameView.getInstance().getPlayerFromUser(message.getUser()).setWarehouse(message.getWarehouse());}
 
-        if(message.getUser().getNickName().equals(MatchSettings.getInstance().getClientNickname())) {
-            // Other players don't know the leader cards in a player's hand.
-            int i = GameView.getInstance().getPlayerFromUser(message.getUser()).getLeaderCards().indexOf(message.getAbility());
-            GameView.getInstance().getPlayerFromUser(message.getUser()).getLeaderCards().get(i).setActive(true);
-        } else {
-            // But they know them once activated.
+        if (!message.getUser().getNickName().equals(MatchSettings.getInstance().getClientNickname())) {
+            // Other players only know leader cards once activated.
             if (GameView.getInstance().getPlayerFromUser(message.getUser()).getLeaderCards() == null) {
                 GameView.getInstance().getPlayerFromUser(message.getUser()).setLeaderCards(new ArrayList<LeaderCard>());
             }
             GameView.getInstance().getPlayerFromUser(message.getUser()).getLeaderCards().add(message.getAbility());
         }
 
+        int i = GameView.getInstance().getPlayerFromUser(message.getUser()).getLeaderCards().indexOf(message.getAbility());
+        GameView.getInstance().getPlayerFromUser(message.getUser()).getLeaderCards().get(i).setActive(true);
 
         if(gui){
             GUIMessageHandler.getInstance().handleServerActivateLeaderCardAbilityMessage(message);
