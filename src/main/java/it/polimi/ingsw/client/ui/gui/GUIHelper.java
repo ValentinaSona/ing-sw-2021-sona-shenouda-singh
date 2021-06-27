@@ -293,7 +293,13 @@ public class GUIHelper {
             Parent root = FXMLLoader.load(url);
             scene.setRoot(root);
         } catch (IOException e) {
-            e.printStackTrace();
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getClassLoader().getResource("fxml/" + screen.fxml()));
+            try {
+                Parent root = fxmlLoader.load();
+                scene.setRoot(root);
+            } catch (IOException ioException) {
+                ioException.printStackTrace();
+            }
         }
 
         String[] stylesheets = screen.css();
