@@ -60,7 +60,7 @@ public class GameCreationGUIController extends AbstractGUIController implements 
             if(success){
                 change(ScreenName.LOBBY);
             }else{
-                //messaggio d'errore a video
+                selectNumLabel.setText("An error occurred");
             }
         });
     }

@@ -120,4 +120,8 @@ public class LeaderShowGUIController extends AbstractGUIController implements Ga
     public void goBack(ActionEvent actionEvent) {
         change(GUIHelper.getInstance().getPrevScreen());
     }
+
+    public void openMenu(ActionEvent actionEvent) {
+        change(ScreenName.GAME_MENU);
+    }
 }

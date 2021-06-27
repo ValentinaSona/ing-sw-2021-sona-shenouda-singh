@@ -137,4 +137,9 @@ public class MarketGUIController extends AbstractGUIController implements GameGU
         GUIHelper.getInstance().setScreenshot(GUIHelper.getInstance().getCurrentScene().snapshot(null));
         change(ScreenName.LEADER);
     }
+
+    public void openMenu(ActionEvent actionEvent) {
+        GUIHelper.getInstance().setScreenshot(GUIHelper.getInstance().getCurrentScene().snapshot(null));
+        change(ScreenName.GAME_MENU);
+    }
 }

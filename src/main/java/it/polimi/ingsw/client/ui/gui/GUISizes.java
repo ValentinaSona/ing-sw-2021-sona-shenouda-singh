@@ -25,6 +25,8 @@ public class GUISizes {
     private int logY;
     private int logSpacing;
 
+    private int faithTrack;
+
     public static GUISizes get() {
         if (singleton == null) singleton = new GUISizes();
         return  singleton;
@@ -57,6 +59,8 @@ public class GUISizes {
         logY = 350;
         logSpacing = 8;
 
+        faithTrack = 62;
+
     }
 
     public int devSize() {
@@ -88,4 +92,6 @@ public class GUISizes {
     public int logY() { return logY; }
 
     public int logSpacing() { return logSpacing; }
+
+    public int faithTrack() { return faithTrack; }
 }

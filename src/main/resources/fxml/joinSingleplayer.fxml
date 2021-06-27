@@ -11,7 +11,7 @@
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.shape.SVGPath?>
 
-<StackPane fx:id="mainPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="720.0" prefWidth="1280.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.client.ui.gui.JFXControllers.JoinSingleplayerGUIController">
+<StackPane fx:id="mainPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="720.0" prefWidth="1280.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.client.ui.gui.JFXControllers.MainMenuGUIController">
     <children>
         <AnchorPane prefHeight="200.0" prefWidth="200.0" StackPane.alignment="CENTER" />
         <BorderPane minHeight="-Infinity" minWidth="-Infinity" prefHeight="200.0" prefWidth="200.0">

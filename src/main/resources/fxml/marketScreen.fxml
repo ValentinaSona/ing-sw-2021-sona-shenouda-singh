@@ -46,7 +46,7 @@
             </GridPane>
             <HBox fx:id="topBar" maxHeight="90.0" maxWidth="1300.0" prefHeight="100.0" prefWidth="200.0" spacing="15.0" StackPane.alignment="TOP_LEFT">
                <children>
-                  <Button mnemonicParsing="false" prefHeight="127.0" prefWidth="162.0" styleClass="basicButton" text="Menu">
+                  <Button mnemonicParsing="false" onAction="#openMenu" prefHeight="127.0" prefWidth="162.0" styleClass="basicButton" text="Menu">
                      <HBox.margin>
                         <Insets right="368.0" />
                      </HBox.margin>

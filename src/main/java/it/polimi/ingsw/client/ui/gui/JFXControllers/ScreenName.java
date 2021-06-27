@@ -15,7 +15,10 @@ public enum ScreenName {
     DEV_MARKET("devCardsMarket.fxml", new String[]{"standardBackground.css", "gameTabs.css", "buttons.css", "gameLog.css"}),
     OTHER_BOARD("otherBoard.fxml", new String[]{"standardBackground.css", "gameTabs.css", "gameLog.css", "buttons.css"}),
     LEADER("leaderCardsScreen.fxml", new String[]{"buttons.css"}),
-    END_OF_GAME("endScreen.fxml", new String[]{"mainText.css", "standardBackground.css"});
+    END_OF_GAME("endScreen.fxml", new String[]{"mainText.css", "standardBackground.css"}),
+    JOIN_SINGLEPLAYER("joinSinglePlayer.fxml", new String[]{"mainText.css", "standardBackground.css", "buttons.css"}),
+    GAME_MENU("gameMenu.fxml", new String[]{"buttons.css"}),
+    WARNING("warning.fxml", new String[]{"mainText.css"});
 
     private String fxml;
     private String[] css;

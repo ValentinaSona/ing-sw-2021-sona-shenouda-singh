@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+
+<StackPane fx:id="backPane" minHeight="1080.0" minWidth="1920.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.client.ui.gui.JFXControllers.WarningGUIController">
+    <children>
+        <Region fx:id="backRegion" prefHeight="200.0" prefWidth="200.0" />
+        <VBox spacing="15.0">
+            <StackPane.margin>
+                <Insets left="30.0" top="30.0" />
+            </StackPane.margin>
+        </VBox>
+      <Label styleClass="normalLabel" text="A player left the game during the setup phase. &#10;The game is being interrupted.&#10;" textAlignment="CENTER" />
+    </children>
+</StackPane>

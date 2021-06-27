@@ -93,7 +93,7 @@ public class DispatcherController implements Runnable, LambdaObserver {
     public void handleSoloDiscard(ServerSoloDiscardMessage message){
         GameView.getInstance().setDevelopmentCardsMarket(message.getDevView());
         if(gui){
-
+            GUIMessageHandler.getInstance().handleServerServerSoloDiscardMessage(message);
         }else{
             CLIMessageHandler.getInstance().handleServerServerSoloDiscardMessage(message);
         }
@@ -103,6 +103,7 @@ public class DispatcherController implements Runnable, LambdaObserver {
         GameView.getInstance().setBlackCross(message.getBlackCross());
 
         if(gui){
+            GUIMessageHandler.getInstance().handleServerSoloMoveMessage(message);
 
         }else{
             CLIMessageHandler.getInstance().handleServerSoloMoveMessage(message);
@@ -233,7 +234,7 @@ public class DispatcherController implements Runnable, LambdaObserver {
 
     public void handleThrowResource(ServerThrowResourceMessage message){
         if(gui){
-
+            GUIMessageHandler.getInstance().handleServerThrowResourceMessage(message);
         }else {
             CLIMessageHandler.getInstance().handleServerThrowResourceMessage(message);
         }
@@ -250,7 +251,7 @@ public class DispatcherController implements Runnable, LambdaObserver {
         else GameView.getInstance().getPlayerFromUser(message.getUser()).setFaithTrackView(message.getFaithTrackView());
 
         if(gui){
-
+            GUIMessageHandler.getInstance().handleServerFaithTrackMessage (message);
         }else {
             CLIMessageHandler.getInstance().handleServerFaithTrackMessage (message);
         }
@@ -380,6 +381,7 @@ public class DispatcherController implements Runnable, LambdaObserver {
 
 
         if(gui){
+            GUIMessageHandler.getInstance().handleDisconnectionGameSetupMessage();
 
         }else {
             CLIMessageHandler.getInstance().handleDisconnectionGameSetupMessage();
@@ -398,7 +400,7 @@ public class DispatcherController implements Runnable, LambdaObserver {
         GameView.getInstance().setCurrentPlayer(message.getCurrentPlayer());
 
         if(gui){
-
+            GUIMessageHandler.getInstance().handleServerGameReconnectionMessage(message);
         }else {
             CLIMessageHandler.getInstance().handleServerGameReconnectionMessage(message);
         }

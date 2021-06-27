@@ -6,6 +6,7 @@ import it.polimi.ingsw.client.modelview.PlayerView;
 import it.polimi.ingsw.client.ui.controller.LeaderCardSelectionController;
 import it.polimi.ingsw.client.ui.controller.UIController;
 import it.polimi.ingsw.client.ui.gui.GUIHelper;
+import it.polimi.ingsw.client.ui.gui.GUIMessageHandler;
 import it.polimi.ingsw.client.ui.gui.LeaderCardSelection;
 import it.polimi.ingsw.server.model.Id;
 import it.polimi.ingsw.server.model.LeaderCard;
@@ -129,6 +130,10 @@ public class LeaderSelectionGUIController extends AbstractGUIController implemen
         isChoosing = false;
 
         baseChoice = resChoice1.getImage();
+
+        synchronized (GUIMessageHandler.getInstance()) {
+            GUIMessageHandler.getInstance().notifyAll();
+        }
     }
 
     public void handleSetupUserMessage(ServerSetupUserMessage message) {
@@ -454,7 +459,9 @@ public class LeaderSelectionGUIController extends AbstractGUIController implemen
     }
 
     public void goToGame() {
-        Platform.runLater(() -> change(ScreenName.PERSONAL_BOARD));
+        Platform.runLater(() -> {
+            change(ScreenName.PERSONAL_BOARD);
+        });
     }
 
     private void setSize() {

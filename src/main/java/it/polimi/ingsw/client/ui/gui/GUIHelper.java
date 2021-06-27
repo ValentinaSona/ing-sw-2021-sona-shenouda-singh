@@ -36,6 +36,9 @@ public class GUIHelper {
 
     private boolean setUpPhase;
 
+    private boolean local;
+    private boolean solo;
+
     private Background background;
     private Scene currentScene;
     private List<String> nickList;
@@ -320,6 +323,17 @@ public class GUIHelper {
         return selected;
     }
 
+    public void placeFaithTrack(int faith, GridPane faithGrid, ImageView faithImage) {
+        if (faith <= 2) faithGrid.add(faithImage, faith, 2);
+        else if (faith == 3) faithGrid.add(faithImage, 2, 1);
+        else if (faith <= 9) faithGrid.add(faithImage, faith-2, 0);
+        else if (faith == 10) faithGrid.add(faithImage, 7, 1);
+        else if (faith <= 16) faithGrid.add(faithImage, faith-4, 2);
+        else if (faith == 17) faithGrid.add(faithImage, 12, 1);
+        else if (faith <= 24) faithGrid.add(faithImage, faith-6, 0);
+        else throw new RuntimeException("Faith out of bounds");
+    }
+
     public void setSelectedPlayer(Object source) {
         this.selectedPlayer = ((Button)source).getText();
     }
@@ -395,5 +409,21 @@ public class GUIHelper {
 
     public Image getAbilityImageFromLeader(LeaderCard card) {
         return new Image("assets/game/leader_cards/abilities/" + card.getId() + ".png", GUISizes.get().abilityX(), GUISizes.get().abilityY(), false, false);
+    }
+
+    public boolean isLocal() {
+        return local;
+    }
+
+    public void setLocal(boolean local) {
+        this.local = local;
+    }
+
+    public boolean isSolo() {
+        return solo;
+    }
+
+    public void setSolo(boolean solo) {
+        this.solo = solo;
     }
 }

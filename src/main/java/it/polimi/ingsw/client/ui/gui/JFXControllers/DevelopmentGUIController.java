@@ -101,4 +101,9 @@ public class DevelopmentGUIController extends AbstractGUIController implements G
         GUIHelper.getInstance().setScreenshot(GUIHelper.getInstance().getCurrentScene().snapshot(null));
         change(ScreenName.LEADER);
     }
+
+    public void openMenu(ActionEvent actionEvent) {
+        GUIHelper.getInstance().setScreenshot(GUIHelper.getInstance().getCurrentScene().snapshot(null));
+        change(ScreenName.GAME_MENU);
+    }
 }

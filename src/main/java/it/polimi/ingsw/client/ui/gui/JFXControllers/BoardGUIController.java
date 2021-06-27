@@ -2,6 +2,7 @@ package it.polimi.ingsw.client.ui.gui.JFXControllers;
 
 import it.polimi.ingsw.client.modelview.DepotView;
 import it.polimi.ingsw.client.modelview.DevelopmentCardSlotView;
+import it.polimi.ingsw.client.modelview.GameView;
 import it.polimi.ingsw.client.modelview.PlayerView;
 import it.polimi.ingsw.client.ui.controller.UIController;
 import it.polimi.ingsw.client.ui.gui.*;
@@ -17,6 +18,7 @@ import javafx.geometry.VPos;
 import javafx.scene.control.Button;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.effect.DropShadow;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
@@ -162,19 +164,18 @@ public class BoardGUIController extends AbstractGUIController implements GameGUI
 
     public void updateFaithTrack() {
 
-        var faithImage = new ImageView(GUIHelper.getInstance().getImage(ResourceType.FAITH, 62, 62));
+        var faithImage = new ImageView(GUIHelper.getInstance().getImage(ResourceType.FAITH, GUISizes.get().faithTrack(), GUISizes.get().faithTrack()));
 
         var faith = playerView.getFaithTrackView().getFaithMarker();
         faithGrid.getChildren().clear();
 
-        if (faith <= 2) faithGrid.add(faithImage, faith, 2);
-        else if (faith == 3) faithGrid.add(faithImage, 2, 1);
-        else if (faith <= 9) faithGrid.add(faithImage, faith-2, 0);
-        else if (faith == 10) faithGrid.add(faithImage, 7, 1);
-        else if (faith <= 16) faithGrid.add(faithImage, faith-4, 2);
-        else if (faith == 17) faithGrid.add(faithImage, 12, 1);
-        else if (faith <= 24) faithGrid.add(faithImage, faith-6, 0);
-        else throw new RuntimeException("Faith out of bounds");
+        if (GUIHelper.getInstance().isSolo()) {
+            var blackCross = new ImageView(new Image("assets/game/black_cross.png", GUISizes.get().faithTrack(), GUISizes.get().faithTrack(), false, false));
+            var lorenzoFaith = GameView.getInstance().getBlackCross();
+            GUIHelper.getInstance().placeFaithTrack(lorenzoFaith, getFaithGrid(), blackCross);
+        }
+
+        GUIHelper.getInstance().placeFaithTrack(faith, faithGrid, faithImage);
 
         var tiles = playerView.getFaithTrackView().getPopeFavorTiles();
 
@@ -332,6 +333,7 @@ public class BoardGUIController extends AbstractGUIController implements GameGUI
             updateProductions();
             updateDepot();
             updateStrongbox();
+            updateFaithTrack();
 
             if (GUIHelper.getInstance().getCurrAction() == CurrAction.SELECTED_SLOT) showStrongbox(null);
             SelectedProductions.getInstance().update();
@@ -347,6 +349,9 @@ public class BoardGUIController extends AbstractGUIController implements GameGUI
             productionGrid.add(slot1, 0, 0);
             productionGrid.add(slot2, 1, 0);
             productionGrid.add(slot3, 2, 0);
+            productionGrid.add(selectSlot1, 0, 0);
+            productionGrid.add(selectSlot2, 1, 0);
+            productionGrid.add(selectSlot3, 2, 0);
 
             for(int i = 0; i < 3; i++) {
                 var card = ((DevelopmentCardSlotView)slots.get(i+1)).peek();
@@ -374,11 +379,16 @@ public class BoardGUIController extends AbstractGUIController implements GameGUI
         if (playerView.isMainAction()) {
             var productions = SelectedProductions.getInstance().getProductions();
 
+
             for (int i =0; i < productions.size(); i++) {
                 var p = productions.get(i);
                 enableNode(prodButtons[i]);
-                if (p == ProductionState.IDLE) prodButtons[i].setText("Select");
-                else if (p == ProductionState.SELECTED) prodButtons[i].setText("Confirm");
+                if (p == ProductionState.IDLE) { prodButtons[i].setStyle("-fx-background-color: rgba(0, 0, 0, 0.75)");
+                    prodButtons[i].setText("Select");}
+                else if (p == ProductionState.SELECTED) {
+                    prodButtons[i].setText("Confirm");
+                    prodButtons[i].setStyle("-fx-background-color: rgba(0, 0, 0, 0.75)");
+                }
                 else if (p == ProductionState.CONFIRMED) {
                     prodButtons[i].setText("Confirmed");
                     prodButtons[i].setStyle("-fx-background-color: rgba(77, 125, 42, 1)");
@@ -632,4 +642,20 @@ public class BoardGUIController extends AbstractGUIController implements GameGUI
     public void confirmBoardProduction(ActionEvent actionEvent) {
     }
 
+    public GridPane getFaithGrid() {
+        return faithGrid;
+    }
+
+    public PlayerView getPlayerView() {
+        return playerView;
+    }
+
+    public StackPane[] getTilePane() {
+        return tilePane;
+    }
+
+    public void openMenu(ActionEvent actionEvent) {
+        GUIHelper.getInstance().setScreenshot(GUIHelper.getInstance().getCurrentScene().snapshot(null));
+        change(ScreenName.GAME_MENU);
+    }
 }

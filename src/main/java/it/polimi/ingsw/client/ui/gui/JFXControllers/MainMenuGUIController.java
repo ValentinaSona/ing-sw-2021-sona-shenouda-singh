@@ -2,6 +2,7 @@ package it.polimi.ingsw.client.ui.gui.JFXControllers;
 
 import it.polimi.ingsw.client.modelview.MatchSettings;
 import it.polimi.ingsw.client.ui.controller.UIController;
+import it.polimi.ingsw.client.ui.gui.CurrAction;
 import it.polimi.ingsw.client.ui.gui.GUIHelper;
 import it.polimi.ingsw.utils.Constant;
 import it.polimi.ingsw.utils.networking.transmittables.StatusMessage;
@@ -41,6 +42,8 @@ public class MainMenuGUIController extends AbstractGUIController {
     private StackPane mainPane;
 
     public void goToMulti(MouseEvent mouseEvent) {
+        GUIHelper.getInstance().setLocal(false);
+        GUIHelper.getInstance().setSolo(false);
         change(ScreenName.MULTIPLAYER);
     }
 
@@ -59,6 +62,7 @@ public class MainMenuGUIController extends AbstractGUIController {
     @FXML
     public void initialize() {
         GUIHelper.getInstance().setCurrentScreen(ScreenName.MAIN_MENU);
+        GUIHelper.getInstance().setCurrAction(CurrAction.CHOOSING_NICK);
     }
 
     public void goToJoin(ActionEvent actionEvent) {
@@ -78,7 +82,8 @@ public class MainMenuGUIController extends AbstractGUIController {
                 joinButton.setDisable(true);
 
                 try {
-                    UIController.getInstance().sendNickname(nicknameField.getText(), Constant.hostIp(), Constant.port());
+                    if (GUIHelper.getInstance().isLocal()) UIController.getInstance().startLocalSinglePlayerGame(nicknameField.getText());
+                    else UIController.getInstance().sendNickname(nicknameField.getText(), Constant.hostIp(), Constant.port());
                 } catch (IOException e) {
                     chooseNick.setText("Failed to connect...");
                     chooseNick.setOpacity(1);
@@ -95,7 +100,6 @@ public class MainMenuGUIController extends AbstractGUIController {
     }
 
     public void handleNicknameConfirmation(boolean success){
-        System.out.println("ho ricevuto il messagio");
         if(!success) {
             // TODO mostrare messaggio di errore
             joining.setOpacity(0);
@@ -105,10 +109,8 @@ public class MainMenuGUIController extends AbstractGUIController {
             nicknameField.setEditable(true);
         }
         else {
-            String nickname = nicknameField.getText();
             MatchSettings.getInstance().setClientNickname(nicknameField.getText());
             UIController.getInstance().joinLobby();
-
         }
 
     }
@@ -117,26 +119,34 @@ public class MainMenuGUIController extends AbstractGUIController {
         if (isFirst) {
             setGameCreation();}
         else
-            setJoiningGame();
+            if (GUIHelper.getInstance().isSolo()) chooseNick.setText("There are already players in the lobby!");
+            else setJoiningGame();
     }
 
     public void setGameCreation() {
-        TranslateTransition translate = new TranslateTransition(Duration.millis(300), nicknameField);
-        translate.setInterpolator(Interpolator.EASE_OUT);
+        if (!GUIHelper.getInstance().isSolo()) {
+            TranslateTransition translate = new TranslateTransition(Duration.millis(300), nicknameField);
+            translate.setInterpolator(Interpolator.EASE_OUT);
 
-        nicknameField.setStyle("-fx-border-color: white;" +
-                "-fx-border-width: 0 0 0 0;" +
-                "-fx-background-color: transparent;" +
-                "-fx-text-fill: #5a9cf2;" +
-                "-fx-font-family: \"Crimson Pro Medium\";" +
-                "-fx-font-size: 40px;" +
-                "-fx-alignment: center;");
+            nicknameField.setStyle("-fx-border-color: white;" +
+                    "-fx-border-width: 0 0 0 0;" +
+                    "-fx-background-color: transparent;" +
+                    "-fx-text-fill: #5a9cf2;" +
+                    "-fx-font-family: \"Crimson Pro Medium\";" +
+                    "-fx-font-size: 40px;" +
+                    "-fx-alignment: center;");
 
-        translate.setByY(-120);
-        translate.setOnFinished(e -> {
-            change(ScreenName.CREATION);
-        });
-        translate.play();
+            translate.setByY(-120);
+            translate.setOnFinished(e -> {
+                change(ScreenName.CREATION);
+            });
+            translate.play();
+        }
+
+        else {
+            chooseNick.setText("Joining game...");
+            UIController.getInstance().setCreation(1);
+        }
     }
 
     public void setJoiningGame() {
@@ -157,6 +167,7 @@ public class MainMenuGUIController extends AbstractGUIController {
     }
 
     public void goToSingleplayer(MouseEvent mouseEvent) {
+        GUIHelper.getInstance().setSolo(true);
         change(ScreenName.SINGLEPLAYER);
     }
 
@@ -177,11 +188,52 @@ public class MainMenuGUIController extends AbstractGUIController {
                 handleJoinLobbyConfirmation(false);
             }else if(message.equals(StatusMessage.CLIENT_ERROR)){
                 handleNicknameConfirmation(false);
+            }else if (message.equals(StatusMessage.OK_COUNT)) {
+                if (GUIHelper.getInstance().isSolo()) change(ScreenName.LOBBY);
+                else chooseNick.setText("An error occurred");
             }
         });
     }
 
     public void quitGame(MouseEvent mouseEvent) {
         Platform.exit();
+    }
+
+    public void goToOnlineSingleplayer(MouseEvent mouseEvent) {
+        GUIHelper.getInstance().setLocal(false);
+        GUIHelper.getInstance().setSolo(true);
+        change(ScreenName.JOIN_SINGLEPLAYER);
+    }
+
+    public void goToLocalSingleplayer(MouseEvent mouseEvent) {
+        GUIHelper.getInstance().setLocal(true);
+        GUIHelper.getInstance().setSolo(true);
+        change(ScreenName.JOIN_SINGLEPLAYER);
+    }
+
+    public void backToSingle(MouseEvent mouseEvent) {
+        change(ScreenName.SINGLEPLAYER);
+    }
+
+    public void startGame(ActionEvent actionEvent) {
+        goToJoin(actionEvent);
+    }
+
+    public void goToGame() {
+        if (GUIHelper.getInstance().isLocal()) {
+            Stage stage = (Stage) mainPane.getScene().getWindow();
+            if (GUIHelper.getInstance().getResolution() > 1080) {
+                stage.setWidth(1920);
+                stage.setHeight(1080);
+            }
+
+            else stage.setMaximized(true);
+
+            change(ScreenName.STARTING_CHOICE);
+        }
+    }
+
+    public void sameNick() {
+        chooseNick.setText("This nickname is already taken!");
     }
 }
