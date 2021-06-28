@@ -3,6 +3,7 @@ package it.polimi.ingsw.client.ui.gui.JFXControllers;
 import it.polimi.ingsw.client.modelview.GameView;
 import it.polimi.ingsw.client.modelview.MatchSettings;
 import it.polimi.ingsw.client.modelview.PlayerView;
+import it.polimi.ingsw.client.ui.controller.DispatcherController;
 import it.polimi.ingsw.client.ui.controller.LeaderCardSelectionController;
 import it.polimi.ingsw.client.ui.controller.UIController;
 import it.polimi.ingsw.client.ui.gui.GUIHelper;
@@ -81,6 +82,7 @@ public class LeaderSelectionGUIController extends AbstractGUIController implemen
     public void initialize() {
 
         GUIHelper.getInstance().setSetUpDone(false);
+        GUIHelper.getInstance().setCurrentScreen(ScreenName.STARTING_CHOICE);
 
         selectedCards = 0;
         cardList = new ArrayList<>();
@@ -131,8 +133,8 @@ public class LeaderSelectionGUIController extends AbstractGUIController implemen
 
         baseChoice = resChoice1.getImage();
 
-        synchronized (GUIMessageHandler.getInstance()) {
-            GUIMessageHandler.getInstance().notifyAll();
+        synchronized (DispatcherController.getInstance()) {
+            DispatcherController.getInstance().notifyAll();
         }
     }
 

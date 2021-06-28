@@ -89,8 +89,16 @@ public class GameTemplate {
 
         switch(screen){
             case PERSONAL_BOARD -> ((Button) tabsPlayer.getChildren().get(0)).setMaxWidth(420);
-            case MARKET -> ((Button) tabsPlayer.getChildren().get(MatchSettings.getInstance().getTotalUsers())).setMaxWidth(420);
-            case DEV_MARKET -> ((Button) tabsPlayer.getChildren().get(MatchSettings.getInstance().getTotalUsers()+1)).setMaxWidth(420);
+            case MARKET -> {
+                if (!GUIHelper.getInstance().isSolo())
+                    ((Button) tabsPlayer.getChildren().get(MatchSettings.getInstance().getTotalUsers())).setMaxWidth(420);
+                else ((Button) tabsPlayer.getChildren().get(1)).setMaxWidth(420);
+            }
+            case DEV_MARKET -> {
+                if (!GUIHelper.getInstance().isSolo())
+                    ((Button) tabsPlayer.getChildren().get(MatchSettings.getInstance().getTotalUsers()+1)).setMaxWidth(420);
+                else ((Button) tabsPlayer.getChildren().get(2)).setMaxWidth(420);
+            }
             case OTHER_BOARD -> ((Button) tabsPlayer.getChildren().get(GUIHelper.getInstance().getOthers().indexOf(GUIHelper.getInstance().getSelectedPlayer().getNickname())+1)).setMaxWidth(420);
             default -> {}
         }

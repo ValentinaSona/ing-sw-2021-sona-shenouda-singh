@@ -99,9 +99,9 @@ public class DragNDrop {
             source.setOnDragDone(event -> {
                 currentDraggedImage = null;
                 if (GUIHelper.getInstance().getClientView().getTempResources().size() == 0) {
-                    GUIHelper.getInstance().setChoosingTemp(false);
                     Platform.runLater(() -> GUIHelper.getInstance().getCurrentGameController().update());
                 }
+
                 event.consume();
             });
         }

@@ -129,9 +129,16 @@ public class GUIMessageHandler {
     }
 
     public void handleServerDepositActionMessage(ServerDepositActionMessage message) {
+
         if (message.getUser().getNickName().equals(MatchSettings.getInstance().getClientNickname())
-                && GUIHelper.getInstance().getCurrentScreen() == ScreenName.PERSONAL_BOARD)
+                && GUIHelper.getInstance().getCurrentScreen() == ScreenName.PERSONAL_BOARD) {
+
+            if (GUIHelper.getInstance().getClientView().getTempResources().size() == 0) {
+                Platform.runLater(() -> GUIHelper.getInstance().getCurrentGameController().update());
+            }
             Platform.runLater(() -> ((BoardGUIController)currentGameController).updateDepot());
+        }
+
     }
 
     public void handleServerBuyDevelopmentCardMessage(ServerBuyDevelopmentCardMessage message) {
@@ -148,6 +155,7 @@ public class GUIMessageHandler {
     }
 
     public void handleServerActivateLeaderCardAbilityMessage(ServerActivateLeaderCardAbilityMessage message) {
+        GUIHelper.getInstance().abilityActivation(message.getAbility());
         Platform.runLater(() -> currentGameController.update());
         GameLog.getInstance().update(LogUpdates.ABILITY_ACTIVATION, message.getUser());
     }
