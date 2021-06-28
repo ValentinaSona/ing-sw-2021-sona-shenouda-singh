@@ -46,8 +46,8 @@ public class GUISizes {
         leaderShowX = 369;
         leaderShowY = 558;
 
-        abilityX = 221;
-        abilityY = 84;
+        abilityX = 200;
+        abilityY = 71;
 
         popeTile = 90;
 

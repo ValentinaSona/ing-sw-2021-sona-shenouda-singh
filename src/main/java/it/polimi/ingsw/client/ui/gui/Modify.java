@@ -16,6 +16,7 @@ public class Modify {
 
     public static void makeSelectable(ImageView image, Id id, Map<Id, Resource> map, boolean active) {
         if (active) {
+
             image.setOpacity(0.5);
             image.setOnMouseReleased(e -> {
 

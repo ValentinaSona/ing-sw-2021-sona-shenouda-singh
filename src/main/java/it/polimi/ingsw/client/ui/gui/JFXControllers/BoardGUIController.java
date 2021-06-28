@@ -47,7 +47,7 @@ public class BoardGUIController extends AbstractGUIController implements GameGUI
     @FXML
     private Rectangle tempWindow, tempBlock;
     @FXML
-    private Button activateProd, end, discard;
+    private Button activateProd, end, discard, strClose;
     @FXML
     private StackPane popeTile1, popeTile2, popeTile3;
     private StackPane[] tilePane;
@@ -67,6 +67,11 @@ public class BoardGUIController extends AbstractGUIController implements GameGUI
     @FXML
     private Button selectBoardProd, selectSlot1, selectSlot2, selectSlot3, selectSpecialProd1, selectSpecialProd2;
     private Button[] prodButtons;
+
+    @FXML
+    private ImageView special1Dialog, special2Dialog;
+    @FXML
+    private VBox special1Resources, special2Resources;
 
     private PlayerView playerView;
 
@@ -117,6 +122,12 @@ public class BoardGUIController extends AbstractGUIController implements GameGUI
         disableNode(strongboxScrollPane);
         disableNode(boardSelectionDialog);
         disableNode(boardSelectionResources);
+
+        disableNode(special1Dialog);
+        disableNode(special2Dialog);
+        disableNode(special1Resources);
+        disableNode(special2Resources);
+
         if (GUIHelper.getInstance().isChoosingTemp()) {
             showTemp();
         }
@@ -141,14 +152,17 @@ public class BoardGUIController extends AbstractGUIController implements GameGUI
 
         //System.out.println(playerView.getTempResources());
 
-        for (var r : GUIHelper.getInstance().getClientView().getTempResources()) {
+        if (GUIHelper.getInstance().getClientView().getTempResources() != null) {
+            for (var r : GUIHelper.getInstance().getClientView().getTempResources()) {
 
-            for (int i = 0; i < r.getQuantity(); i++) {
-                var res = new ImageView(GUIHelper.getInstance().getImage(r.getResourceType(), 120, 120));
-                tempBox.getChildren().add(res);
-                DragNDrop.getInstance().setDraggableResource(res, true);
+                for (int i = 0; i < r.getQuantity(); i++) {
+                    var res = new ImageView(GUIHelper.getInstance().getImage(r.getResourceType(), 120, 120));
+                    tempBox.getChildren().add(res);
+                    DragNDrop.getInstance().setDraggableResource(res, true);
+                }
+
             }
-
+            if (GUIHelper.getInstance().getClientView().getTempResources().isEmpty()) update();
         }
     }
 
@@ -173,6 +187,7 @@ public class BoardGUIController extends AbstractGUIController implements GameGUI
             var blackCross = new ImageView(new Image("assets/game/black_cross.png", GUISizes.get().faithTrack(), GUISizes.get().faithTrack(), false, false));
             var lorenzoFaith = GameView.getInstance().getBlackCross();
             GUIHelper.getInstance().placeFaithTrack(lorenzoFaith, getFaithGrid(), blackCross);
+
         }
 
         GUIHelper.getInstance().placeFaithTrack(faith, faithGrid, faithImage);
@@ -203,10 +218,9 @@ public class BoardGUIController extends AbstractGUIController implements GameGUI
 
             }
         }
-
         if (GUIHelper.getInstance().isChoosingTemp()) {
 
-            if (GUIHelper.getInstance().getClientView().getTempResources().size() == 0) {
+            if (GUIHelper.getInstance().getClientView().getTempResources().isEmpty()) {
                 tempWindow.setOpacity(0);
                 tempBlock.setOpacity(0);
                 tempBox.setOpacity(0);
@@ -228,66 +242,74 @@ public class BoardGUIController extends AbstractGUIController implements GameGUI
     }
 
     public void updateStrongbox() {
-        var strongbox = playerView.getStrongboxView();
 
-        var coins = strongbox.getCoin();
-        var shields = strongbox.getShield();
-        var servants = strongbox.getServant();
-        var stones = strongbox.getStone();
+        if (GUIHelper.getInstance().getCurrAction() != CurrAction.SELECTED_SLOT) {
 
-        int i = 0;
+            strongboxGrid.getChildren().clear();
+            strongboxGrid.add(strClose, 5, 0);
 
-        for(int counter = 0, j = 0; counter < coins.getQuantity(); counter++, j++) {
-            if (j == GUISizes.get().strongboxCols()) {
-                j = 0;
-                i++;
+            var strongbox = playerView.getStrongboxView();
+
+            var coins = strongbox.getCoin();
+            var shields = strongbox.getShield();
+            var servants = strongbox.getServant();
+            var stones = strongbox.getStone();
+
+            int i = 0;
+
+            for(int counter = 0, j = 0; counter < coins.getQuantity(); counter++, j++) {
+                if (j == GUISizes.get().strongboxCols()) {
+                    j = 0;
+                    i++;
+                }
+                var im = new ImageView(GUIHelper.getInstance().getImage(ResourceType.COIN, GUISizes.get().strongboxRes(), GUISizes.get().strongboxRes()));
+                GridPane.setValignment(im, VPos.CENTER);
+                GridPane.setHalignment(im, HPos.CENTER);
+                strongboxGrid.add(im, j, i);
+
             }
-            var im = new ImageView(GUIHelper.getInstance().getImage(ResourceType.COIN, GUISizes.get().strongboxRes(), GUISizes.get().strongboxRes()));
-            GridPane.setValignment(im, VPos.CENTER);
-            GridPane.setHalignment(im, HPos.CENTER);
-            strongboxGrid.add(im, j, i);
 
-        }
+            if (coins.getQuantity() > 0) i++;
 
-        if (coins.getQuantity() > 0) i++;
+            for(int counter = 0, j = 0; counter < shields.getQuantity(); counter++, j++) {
+                if (j == GUISizes.get().strongboxCols()) {
+                    j = 0;
+                    i++;
+                }
+                var im = new ImageView(GUIHelper.getInstance().getImage(ResourceType.SHIELD, GUISizes.get().strongboxRes(), GUISizes.get().strongboxRes()));
+                GridPane.setValignment(im, VPos.CENTER);
+                GridPane.setHalignment(im, HPos.CENTER);
+                strongboxGrid.add(im, j, i);
 
-        for(int counter = 0, j = 0; counter < shields.getQuantity(); counter++, j++) {
-            if (j == GUISizes.get().strongboxCols()) {
-                j = 0;
-                i++;
             }
-            var im = new ImageView(GUIHelper.getInstance().getImage(ResourceType.SHIELD, GUISizes.get().strongboxRes(), GUISizes.get().strongboxRes()));
-            GridPane.setValignment(im, VPos.CENTER);
-            GridPane.setHalignment(im, HPos.CENTER);
-            strongboxGrid.add(im, j, i);
 
-        }
+            if (shields.getQuantity() > 0) i++;
 
-        if (shields.getQuantity() > 0) i++;
+            for(int counter = 0, j = 0; counter < servants.getQuantity(); counter++, j++) {
+                if (j == GUISizes.get().strongboxCols()) {
+                    j = 0;
+                    i++;
+                }
+                var im = new ImageView(GUIHelper.getInstance().getImage(ResourceType.SERVANT, GUISizes.get().strongboxRes(), GUISizes.get().strongboxRes()));
+                GridPane.setValignment(im, VPos.CENTER);
+                GridPane.setHalignment(im, HPos.CENTER);
+                strongboxGrid.add(im, j, i);
 
-        for(int counter = 0, j = 0; counter < servants.getQuantity(); counter++, j++) {
-            if (j == GUISizes.get().strongboxCols()) {
-                j = 0;
-                i++;
             }
-            var im = new ImageView(GUIHelper.getInstance().getImage(ResourceType.SERVANT, GUISizes.get().strongboxRes(), GUISizes.get().strongboxRes()));
-            GridPane.setValignment(im, VPos.CENTER);
-            GridPane.setHalignment(im, HPos.CENTER);
-            strongboxGrid.add(im, j, i);
 
-        }
+            if (servants.getQuantity() > 0) i++;
 
-        if (servants.getQuantity() > 0) i++;
+            for(int counter = 0, j = 0; counter < stones.getQuantity(); counter++, j++) {
+                if (j == GUISizes.get().strongboxCols()) {
+                    j = 0;
+                    i++;
+                }
+                var im = new ImageView(GUIHelper.getInstance().getImage(ResourceType.STONE, GUISizes.get().strongboxRes(), GUISizes.get().strongboxRes()));
+                GridPane.setValignment(im, VPos.CENTER);
+                GridPane.setHalignment(im, HPos.CENTER);
+                strongboxGrid.add(im, j, i);
 
-        for(int counter = 0, j = 0; counter < stones.getQuantity(); counter++, j++) {
-            if (j == GUISizes.get().strongboxCols()) {
-                j = 0;
-                i++;
             }
-            var im = new ImageView(GUIHelper.getInstance().getImage(ResourceType.STONE, GUISizes.get().strongboxRes(), GUISizes.get().strongboxRes()));
-            GridPane.setValignment(im, VPos.CENTER);
-            GridPane.setHalignment(im, HPos.CENTER);
-            strongboxGrid.add(im, j, i);
 
         }
     }
@@ -346,9 +368,6 @@ public class BoardGUIController extends AbstractGUIController implements GameGUI
 
             productionGrid.getChildren().clear();
 
-            productionGrid.add(slot1, 0, 0);
-            productionGrid.add(slot2, 1, 0);
-            productionGrid.add(slot3, 2, 0);
             productionGrid.add(selectSlot1, 0, 0);
             productionGrid.add(selectSlot2, 1, 0);
             productionGrid.add(selectSlot3, 2, 0);
@@ -365,12 +384,28 @@ public class BoardGUIController extends AbstractGUIController implements GameGUI
                 }
 
             }
+
+            if (GUIHelper.getInstance().getCurrAction() != CurrAction.SELECTED_SLOT && playerView.equals(GUIHelper.getInstance().getClientView())) {
+                confirmDev.setDisable(true);
+                confirmDev.setOpacity(0);
+            }
+
+            productionGrid.add(slot1, 0, 0);
+            productionGrid.add(slot2, 1, 0);
+            productionGrid.add(slot3, 2, 0);
+
+            slot1.setDisable(true);
+            slot2.setDisable(true);
+            slot3.setDisable(true);
+
+            if (GUIHelper.getInstance().getCurrAction() == CurrAction.SELECTING_SLOT) {
+                slot1.setDisable(false);
+                slot2.setDisable(false);
+                slot3.setDisable(false);
+            }
+
         });
 
-        if (GUIHelper.getInstance().getCurrAction() != CurrAction.SELECTED_SLOT && playerView.equals(GUIHelper.getInstance().getClientView())) {
-            confirmDev.setDisable(true);
-            confirmDev.setOpacity(0);
-        }
 
     }
 
@@ -400,6 +435,14 @@ public class BoardGUIController extends AbstractGUIController implements GameGUI
             if (SelectedProductions.getInstance().get(0) == ProductionState.CONFIRMED) {
                 disableNode(boardSelectionDialog);
                 disableNode(boardSelectionResources);
+            }
+            if (SelectedProductions.getInstance().get(4) == ProductionState.CONFIRMED) {
+                disableNode(special1Resources);
+                disableNode(special1Dialog);
+            }
+            if (SelectedProductions.getInstance().get(5) == ProductionState.CONFIRMED) {
+                disableNode(special2Dialog);
+                disableNode(special2Resources);
             }
 
             activateProd.setDisable(productions.stream().noneMatch(e -> e == ProductionState.CONFIRMED));
@@ -528,6 +571,7 @@ public class BoardGUIController extends AbstractGUIController implements GameGUI
         Modify.makeDepotResourcesSelectable(depotBox, resChoiceMap, true);
         updateStrongbox();
         if (strongboxGrid.getChildren().size() > 1) {
+
             Modify.makeStrongboxSelectable(strongboxGrid, resChoiceMap, true);
             showStrongbox(null);
         }

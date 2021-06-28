@@ -33,8 +33,15 @@ public class SelectedProductions {
             else productions.add(ProductionState.EMPTY);
         }
 
-        productions.add(ProductionState.EMPTY);
-        productions.add(ProductionState.EMPTY);
+        var first = GUIHelper.getInstance().getClientView().getLeaderCards().get(0);
+        var second = GUIHelper.getInstance().getClientView().getLeaderCards().get(1);
+
+        if (first != null && first.isActive() && first.getAbilityType().equals("production")) productions.add(ProductionState.IDLE);
+        else productions.add(ProductionState.EMPTY);
+
+        if (second != null && second.isActive() && second.getAbilityType().equals("production")) productions.add(ProductionState.IDLE);
+        else productions.add(ProductionState.EMPTY);
+
     }
 
     public void set(int index, ProductionState state) {
