@@ -202,11 +202,16 @@ public class MenuRunner {
     }
 
     public void printFaithTracks(){
+
+        String Lorenzo = " ".repeat(2*GameView.getInstance().getBlackCross()+1);
+        Lorenzo += ANSI_BLACK + CROSS + ANSI_RESET + " " + GameView.getInstance().getBlackCross();
         for (PlayerView player : GameView.getInstance().getPlayers()){
             if(player.getNickname().equals(MatchSettings.getInstance().getClientNickname()))
                 cli.printMessage("\t Your Faith Track:");
             else
                 cli.printMessage("\t" + player.getNickname() +"'s Faith Track:");
+            if (MatchSettings.getInstance().isSolo())
+                cli.printMessage(Lorenzo);
             cli.printMessage(player.getFaithTrackView());
         }
     }

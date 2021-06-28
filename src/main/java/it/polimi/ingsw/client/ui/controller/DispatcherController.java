@@ -247,7 +247,7 @@ public class DispatcherController implements Runnable, LambdaObserver {
      */
     public void handleFaithTrackMessage(ServerFaithTrackMessage message){
         if (message.getUser()==null)
-            GameView.getInstance().setBlackCross(message.getFaith());
+            GameView.getInstance().addBlackCross(message.getFaith());
         else GameView.getInstance().getPlayerFromUser(message.getUser()).setFaithTrackView(message.getFaithTrackView());
 
         if(gui){

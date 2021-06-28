@@ -256,9 +256,9 @@ public class CLIMessageHandler {
 
         if(message.getUser()==null){
             if (message.isReport()) {
-                cli.printMessage("[!] Lorenzo has received " + message.getFaith()+ "faith points and triggered a vatican report. Check the faith tracks to see the results!");
+                cli.printMessage("[!] Lorenzo has received " + message.getFaith()+ " faith points and triggered a vatican report. Check the faith tracks to see the results!");
             } else
-                cli.printMessage("[!] Lorenzo has received " + message.getFaith()+ "faith points.");
+                cli.printMessage("[!] Lorenzo has received " + message.getFaith()+ " faith points.");
 
             return;
         }

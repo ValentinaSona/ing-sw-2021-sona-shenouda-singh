@@ -176,7 +176,6 @@ public class TurnController{
     }
 
     public void endSetupTurn(){
-        //TODO: Doesn't send third one?
         Player endingPlayer = model.getCurrentPlayer();
         ArrayList<Player> players = model.getPlayers();
         int idx = players.indexOf(endingPlayer);

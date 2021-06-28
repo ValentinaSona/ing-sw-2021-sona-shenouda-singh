@@ -62,6 +62,10 @@ public class GameView implements Serializable {
     public void setBlackCross(int blackCross) {
         this.blackCross = blackCross;
     }
+    public void addBlackCross(int blackCross) {
+        this.blackCross += blackCross;
+    }
+
 
     public MarketView getMarketInstance(){
         return marketInstance;
