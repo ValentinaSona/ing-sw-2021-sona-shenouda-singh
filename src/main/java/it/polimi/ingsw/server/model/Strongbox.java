@@ -1,6 +1,7 @@
 package it.polimi.ingsw.server.model;
 
 import it.polimi.ingsw.client.modelview.StrongboxView;
+import it.polimi.ingsw.server.exception.InvalidDepotException;
 import it.polimi.ingsw.server.model.Resource;
 import it.polimi.ingsw.server.model.ResourceType;
 import it.polimi.ingsw.utils.networking.Transmittable;
@@ -88,7 +89,7 @@ public class Strongbox{
      * Function that adds a single resource to the strongbox.
      * @param resource resource to be added to the strongbox.
      */
-    public void addResources(Resource resource){
+    public void addResources(Resource resource) throws InvalidDepotException {
         switch (resource.getResourceType()){
             case SERVANT:
                 this.servant.add(resource);
@@ -103,7 +104,7 @@ public class Strongbox{
                 this.stone.add(resource);
                 break;
             default:
-                throw new RuntimeException("This type of resource is not available in the strongbox");
+                throw new InvalidDepotException();
         }
     }
 
@@ -111,7 +112,7 @@ public class Strongbox{
      * Function that adds multiple resources to the strongbox.
      * @param resources array of resources to be added to the strongbox.
      */
-    public void addResources(Resource[] resources){
+    public void addResources(Resource[] resources) throws InvalidDepotException {
         for (Resource resource : resources) {
             if (resource==null) continue;
 
@@ -120,49 +121,35 @@ public class Strongbox{
                 case COIN -> this.coin.add(resource);
                 case STONE -> this.stone.add(resource);
                 case SERVANT -> this.servant.add(resource);
-                default -> throw new RuntimeException("This type of resource is not available in the strongbox");
+                default -> throw new InvalidDepotException();
             }
         }
     }
 
 
-    public void subResources(Resource resource){
-        switch (resource.getResourceType()){
-            case SERVANT:
-                this.servant.sub(resource);
-                break;
-            case COIN:
-                this.coin.sub(resource);
-                break;
-            case SHIELD:
-                this.shield.sub(resource);
-                break;
-            case STONE:
-                this.stone.sub(resource);
-                break;
-            default:
-                throw new RuntimeException("This type of resource is not available in the strongbox");
-        }
+    public void subResources(Resource resource) throws InvalidDepotException {
+       try {
+           switch (resource.getResourceType()) {
+               case SERVANT -> this.servant.sub(resource);
+               case COIN -> this.coin.sub(resource);
+               case SHIELD -> this.shield.sub(resource);
+               case STONE -> this.stone.sub(resource);
+               default -> throw new InvalidDepotException();
+           }
+       } catch (RuntimeException e){
+           throw new InvalidDepotException();
+       }
     }
 
 
     public void subResources(Resource[] resources){
         for (Resource resource : resources) {
             switch (resource.getResourceType()) {
-                case SHIELD:
-                    this.shield.sub(resource);
-                    break;
-                case COIN:
-                    this.coin.sub(resource);
-                    break;
-                case STONE:
-                    this.stone.sub(resource);
-                    break;
-                case SERVANT:
-                    this.servant.sub(resource);
-                    break;
-                default:
-                    throw new RuntimeException("This type of resource is not available in the strongbox");
+                case SHIELD -> this.shield.sub(resource);
+                case COIN -> this.coin.sub(resource);
+                case STONE -> this.stone.sub(resource);
+                case SERVANT -> this.servant.sub(resource);
+                default -> throw new RuntimeException("This type of resource is not available in the strongbox");
             }
         }
     }

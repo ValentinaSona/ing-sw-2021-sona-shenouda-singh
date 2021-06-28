@@ -156,11 +156,9 @@ public class ResourceController{
         for(Id id : resourceHashMap.keySet()){
             if(warehouseIds.contains(id)){
                 warehouse.get(id.getValue()).addResource(resourceHashMap.get(id));
-                //resourceHashMap.remove(id);
             }else if(id == Id.STRONGBOX_SHIELD || id == Id.STRONGBOX_STONE || id == Id.STRONGBOX_SERVANT
                     || id == Id.STRONGBOX_COIN){
                 player.getStrongbox().addResources(resourceHashMap.get(id));
-                //resourceHashMap.remove(id);
             }else {
                 throw new RuntimeException("Supplied ResourceId doesn't belong to warehouse or strongbox.");
             }
@@ -464,7 +462,11 @@ public class ResourceController{
                         if (resource.getResourceType()== ResourceType.FAITH){
                             addFaithPoints(player, resource);
                         } else {
-                            player.getStrongbox().addResources(resource);
+                            try {
+                                player.getStrongbox().addResources(resource);
+                            } catch (InvalidDepotException e) {
+                                e.printStackTrace();
+                            }
                         }
                     }
 

@@ -293,8 +293,13 @@ class ResourceControllerTest {
         }
 
         // Strongbox setup
-        model.getPlayerFromUser(merlin).getStrongbox().addResources(new Resource(4, ResourceType.STONE));
-        model.getPlayerFromUser(merlin).getStrongbox().addResources(new Resource(2, ResourceType.SHIELD));
+        try {
+            model.getPlayerFromUser(merlin).getStrongbox().addResources(new Resource(4, ResourceType.STONE));
+            model.getPlayerFromUser(merlin).getStrongbox().addResources(new Resource(2, ResourceType.SHIELD));
+        } catch (InvalidDepotException e) {
+            e.printStackTrace();
+        }
+
 
         // Target slot and card.
         var production = new Production(new Resource[]{new Resource(2, ResourceType.SHIELD)}, new Resource[]{new Resource(2,ResourceType.SERVANT)});
@@ -333,34 +338,7 @@ class ResourceControllerTest {
         Assertions.assertEquals(new Resource(4, ResourceType.STONE), model.getPlayerFromUser(merlin).getStrongbox().getAvailableResources(ResourceType.STONE));
         Assertions.assertFalse(targetSlot.isConfirmed());
 
-        /*
-        try {
-            targetSlot.setTargetCard(card2, 1,2);
-        } catch (DevelopmentCardException e) {
-            Assertions.fail();
-        }
 
-
-        // Missing one resource, financing from both depot and warehouse
-        map = new HashMap<>();
-        map.put(Id.DEPOT_3, new Resource(3,ResourceType.COIN));
-        map.put(Id.STRONGBOX_COIN, new Resource(1,ResourceType.COIN));
-
-        message = new ClientDepositResourceIntoSlotMessage(Id.SLOT_1, map);
-        controller.depositResourceIntoSlot(message, view, merlin);
-
-        Assertions.assertEquals(new Resource(3, ResourceType.COIN), model.getPlayerFromUser(merlin).getWarehouse().get(2).getResource());
-        Assertions.assertEquals(new Resource(4, ResourceType.STONE), model.getPlayerFromUser(merlin).getStrongbox().getAvailableResources(ResourceType.STONE));
-        Assertions.assertFalse(targetSlot.isConfirmed());
-
-
-        try {
-            targetSlot.setTargetCard(card, 1,2);
-        } catch (DevelopmentCardException e) {
-            Assertions.fail();
-        }
-
-*/
 
         // Working
         map = new HashMap<>();
@@ -373,6 +351,87 @@ class ResourceControllerTest {
         Assertions.assertTrue(targetSlot.isConfirmed());
 
 
+
+
+
+    }
+
+
+    @Test
+    void depositResourceIntoSlotError() {
+
+
+        // D1 : 1 coin
+        // D2 : 1 stone
+        // B: 4 stones, 2 shield
+
+        // Card cost: 4 coin, 4 stones
+
+
+        model = Game.getInstance(2);
+        controller = ResourceController.getInstance(model);
+
+        Connection mockConnection = mock(Connection.class);
+        RealRemoteViewHandler view = new RealRemoteViewHandler(mockConnection, "Merlin");
+
+        User arthur = new User("Arthur");
+        User merlin = view.getUser();
+
+        model.subscribeUser(arthur);
+        model.subscribeUser(merlin);
+
+        model.getPlayerFromUser(merlin).toggleTurn();
+        model.getPlayerFromUser(merlin).toggleMainAction();
+        model.setGameState(GameState.PLAY);
+
+        // Depot setup
+        Depot targetDepot = model.getPlayerFromUser(merlin).getWarehouse().get(Id.DEPOT_2.getValue());
+        try {
+            targetDepot.addResource(new Resource(1, ResourceType.STONE));
+        } catch (InvalidDepotException e) {
+            Assertions.fail();
+        }
+        targetDepot = model.getPlayerFromUser(merlin).getWarehouse().get(Id.DEPOT_1.getValue());
+        try {
+            targetDepot.addResource(new Resource(1, ResourceType.COIN));
+        } catch (InvalidDepotException e) {
+            Assertions.fail();
+        }
+
+        // Strongbox setup
+        try {
+            model.getPlayerFromUser(merlin).getStrongbox().addResources(new Resource(3, ResourceType.STONE));
+            model.getPlayerFromUser(merlin).getStrongbox().addResources(new Resource(4, ResourceType.COIN));
+            model.getPlayerFromUser(merlin).getStrongbox().addResources(new Resource(1, ResourceType.SERVANT));
+            model.getPlayerFromUser(merlin).getStrongbox().addResources(new Resource(2, ResourceType.SHIELD));
+        } catch (InvalidDepotException e) {
+            e.printStackTrace();
+        }
+
+        // Target slot and card.
+        var production = new Production(new Resource[]{new Resource(2, ResourceType.SHIELD)}, new Resource[]{new Resource(2,ResourceType.SERVANT)});
+        var card =  new DevelopmentCard(0, new Resource[]{new Resource(4,ResourceType.COIN), new Resource(4, ResourceType.STONE)} , DevelopmentType.BLUE, 1, 1, production );
+
+
+
+        DevelopmentCardSlot targetSlot = model.getPlayerFromUser(merlin).getDevelopmentCardSlots()[0];
+        try {
+            targetSlot.setTargetCard(card, 1,2);
+        } catch (DevelopmentCardException e) {
+            Assertions.fail();
+        }
+
+        // Missing one resource, financing from both depot and warehouse
+        Map<Id, Resource> map = new HashMap<>();
+        map.put(Id.DEPOT_1, new Resource(1,ResourceType.COIN));
+        map.put(Id.STRONGBOX_COIN, new Resource(3,ResourceType.COIN));
+        map.put(Id.DEPOT_2, new Resource(1,ResourceType.STONE));
+        map.put(Id.STRONGBOX_STONE, new Resource(3,ResourceType.STONE));
+
+
+        var message = new ClientDepositResourceIntoSlotMessage(Id.SLOT_1, map);
+        controller.depositResourceIntoSlot(message, view, merlin);
+        Assertions.assertTrue(targetSlot.isConfirmed());
 
 
 

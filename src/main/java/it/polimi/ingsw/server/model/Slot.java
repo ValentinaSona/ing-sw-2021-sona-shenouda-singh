@@ -27,14 +27,16 @@ public abstract class Slot {
 
         for(Id id : idResourceMap.keySet()){
             Resource  resource = idResourceMap.get(id);
+            boolean found = false;
             for (Resource res : resourceCloset) {
 
                 if (res.getResourceType() == resource.getResourceType()) {
                     res.add(resource);
-                    return;
+                    found = true;
+                    break;
                 }
             }
-            resourceCloset.add(resource);
+            if (!found) resourceCloset.add(resource);
         }
     }
 
