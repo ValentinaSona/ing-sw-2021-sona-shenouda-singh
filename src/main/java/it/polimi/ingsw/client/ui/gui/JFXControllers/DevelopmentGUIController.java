@@ -74,6 +74,8 @@ public class DevelopmentGUIController extends AbstractGUIController implements G
             inkwell.setOpacity(1);
         }
         else inkwell.setOpacity(0);
+
+        updateDevelopment();
     }
 
     public void updateDevelopment() {

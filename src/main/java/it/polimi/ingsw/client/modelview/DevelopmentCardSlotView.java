@@ -49,4 +49,8 @@ public class DevelopmentCardSlotView extends SlotView implements Serializable {
         }
         return colors.toString();
     }
+
+    public Stack<DevelopmentCard> getSlot() {
+        return slot;
+    }
 }
