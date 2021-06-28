@@ -3,6 +3,7 @@ package it.polimi.ingsw.client.ui.gui.JFXControllers;
 import it.polimi.ingsw.client.modelview.DevelopmentCardSlotView;
 import it.polimi.ingsw.client.ui.gui.GUIHelper;
 import it.polimi.ingsw.client.ui.gui.ProductionState;
+import it.polimi.ingsw.server.model.ProductionAbility;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,10 +20,6 @@ public class SelectedProductions {
     }
 
     private SelectedProductions() {
-        update();
-    }
-
-    public void update() {
         var slots = GUIHelper.getInstance().getClientView().getSlots();
         productions  = new ArrayList<>();
 
@@ -36,11 +33,28 @@ public class SelectedProductions {
         var first = GUIHelper.getInstance().getClientView().getLeaderCards().get(0);
         var second = GUIHelper.getInstance().getClientView().getLeaderCards().get(1);
 
-        if (first != null && first.isActive() && first.getAbilityType().equals("production")) productions.add(ProductionState.IDLE);
+        if (first != null && first.isActive() && first.getSpecialAbility() instanceof ProductionAbility) productions.add(ProductionState.IDLE);
         else productions.add(ProductionState.EMPTY);
 
-        if (second != null && second.isActive() && second.getAbilityType().equals("production")) productions.add(ProductionState.IDLE);
-        else productions.add(ProductionState.EMPTY);
+        if (second != null && second.isActive() && second.getSpecialAbility() instanceof ProductionAbility) productions.add(ProductionState.IDLE);
+        else productions.add(ProductionState.EMPTY);    }
+
+    public void update() {
+        var slots = GUIHelper.getInstance().getClientView().getSlots();
+
+        for (int i = 1; i < 4; i++) {
+            if (((DevelopmentCardSlotView)slots.get(i)).peek() != null && productions.get(i) == ProductionState.EMPTY) productions.set(i, ProductionState.IDLE);
+        }
+
+        var first = GUIHelper.getInstance().getClientView().getLeaderCards().get(0);
+        var second = GUIHelper.getInstance().getClientView().getLeaderCards().get(1);
+
+        if (first != null && first.isActive() && first.getSpecialAbility() instanceof ProductionAbility && productions.get(4) == ProductionState.EMPTY)
+            productions.set(4, ProductionState.IDLE);
+
+        if (second != null && second.isActive() && second.getSpecialAbility() instanceof ProductionAbility && productions.get(5) == ProductionState.EMPTY)
+            productions.set(5, ProductionState.IDLE);
+
 
     }
 

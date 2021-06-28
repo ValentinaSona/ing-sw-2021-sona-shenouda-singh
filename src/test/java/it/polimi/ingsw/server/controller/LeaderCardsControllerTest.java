@@ -24,6 +24,7 @@ class LeaderCardsControllerTest {
         controller = null;
         Game.destroy();
         MarketController.destroy();
+        ResourceController.destroy();
     }
 
     @Test
@@ -84,7 +85,4 @@ class LeaderCardsControllerTest {
 
     }
 
-    @Test
-    void throwLeaderCard() {
-    }
 }

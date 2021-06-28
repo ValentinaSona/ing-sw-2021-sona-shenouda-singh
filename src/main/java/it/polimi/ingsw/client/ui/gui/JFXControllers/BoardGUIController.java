@@ -6,6 +6,7 @@ import it.polimi.ingsw.client.modelview.GameView;
 import it.polimi.ingsw.client.modelview.PlayerView;
 import it.polimi.ingsw.client.ui.controller.UIController;
 import it.polimi.ingsw.client.ui.gui.*;
+import it.polimi.ingsw.server.model.DevelopmentCard;
 import it.polimi.ingsw.server.model.Id;
 import it.polimi.ingsw.server.model.Resource;
 import it.polimi.ingsw.server.model.ResourceType;
@@ -14,6 +15,7 @@ import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.geometry.HPos;
+import javafx.geometry.Insets;
 import javafx.geometry.VPos;
 import javafx.scene.control.Button;
 import javafx.scene.control.ScrollPane;
@@ -37,7 +39,7 @@ public class BoardGUIController extends AbstractGUIController implements GameGUI
     @FXML
     private GridPane faithGrid, productionGrid;
     @FXML
-    private HBox depot1, depot2, depot3;
+    private HBox depot1, depot2, depot3, specialDepot1, specialDepot2;
     @FXML
     private HBox topBar, tempBox;
     @FXML
@@ -115,6 +117,16 @@ public class BoardGUIController extends AbstractGUIController implements GameGUI
         DragNDrop.getInstance().setDroppable(depot1, Id.DEPOT_1);
         DragNDrop.getInstance().setDroppable(depot2, Id.DEPOT_2);
         DragNDrop.getInstance().setDroppable(depot3, Id.DEPOT_3);
+
+        if (GUIHelper.getInstance().activeSpecialDepot(playerView, 0)) {
+            DragNDrop.getInstance().setDepotDraggable(specialDepot1, Id.S_DEPOT_1, true);
+            DragNDrop.getInstance().setDroppable(specialDepot1, Id.S_DEPOT_1);
+        }
+
+        if (GUIHelper.getInstance().activeSpecialDepot(playerView, 1)) {
+            DragNDrop.getInstance().setDepotDraggable(specialDepot2, Id.S_DEPOT_2, true);
+            DragNDrop.getInstance().setDroppable(specialDepot2, Id.S_DEPOT_2);
+        }
     }
 
     public void screenStart() {
@@ -149,8 +161,6 @@ public class BoardGUIController extends AbstractGUIController implements GameGUI
         discard.setDisable(false);
 
         tempBox.setOpacity(1);
-
-        //System.out.println(playerView.getTempResources());
 
         if (GUIHelper.getInstance().getClientView().getTempResources() != null) {
             for (var r : GUIHelper.getInstance().getClientView().getTempResources()) {
@@ -203,21 +213,56 @@ public class BoardGUIController extends AbstractGUIController implements GameGUI
     public void updateDepot() {
 
         depotBox.getChildren().stream().map(e -> (HBox)e).forEach(e -> e.getChildren().clear());
+        specialDepot1.getChildren().clear();
+        specialDepot2.getChildren().clear();
+
         var warehouse = playerView.getWarehouse();
 
-        for (DepotView d : warehouse) {
-
+        for (int j = 0; j < 3; j++) {
+            var d = warehouse.get(j);
             if (d.getResource() != null) {
                 var depot = (HBox) depotBox.getChildren().get(d.getId().getValue());
 
                 for (int i = 0; i < d.getResource().getQuantity(); i++) {
-                    var img = new ImageView(GUIHelper.getInstance().getImage(d.getResource().getResourceType(), 62, 62));
+                    var img = new ImageView(GUIHelper.getInstance().getImage(d.getResource().getResourceType(), GUISizes.get().depotRes(), GUISizes.get().depotRes()));
                     img.setPreserveRatio(true);
                     depot.getChildren().add(img);
                 }
 
             }
         }
+
+        if (warehouse.size() > 3) {
+            int index1, index2;
+
+            if (GUIHelper.getInstance().abilityCorresponds(warehouse.get(3), playerView.getLeaderCards().get(0))) {
+                index1 = 3;
+                index2 = 4;
+            }
+            else {
+                index1 = 4;
+                index2 = 3;
+            }
+
+            if(GUIHelper.getInstance().activeSpecialDepot(playerView, 0)){
+                for (int i = 0; i < warehouse.get(index1).getResource().getQuantity(); i++) {
+                    var img = new ImageView(GUIHelper.getInstance().getImage(warehouse.get(index1).getResource().getResourceType(), GUISizes.get().depotRes(), GUISizes.get().depotRes()));
+                    img.setPreserveRatio(true);
+                    specialDepot1.getChildren().add(img);
+                }
+            }
+
+            if(GUIHelper.getInstance().activeSpecialDepot(playerView, 1)) {
+                for (int i = 0; i < warehouse.get(index2).getResource().getQuantity(); i++) {
+                    var img = new ImageView(GUIHelper.getInstance().getImage(warehouse.get(index2).getResource().getResourceType(), GUISizes.get().depotRes(), GUISizes.get().depotRes()));
+                    img.setPreserveRatio(true);
+                    specialDepot2.getChildren().add(img);
+                }
+            }
+        }
+
+
+
         if (GUIHelper.getInstance().isChoosingTemp()) {
 
             if (GUIHelper.getInstance().getClientView().getTempResources().isEmpty()) {
@@ -371,7 +416,7 @@ public class BoardGUIController extends AbstractGUIController implements GameGUI
             productionGrid.add(selectSlot1, 0, 0);
             productionGrid.add(selectSlot2, 1, 0);
             productionGrid.add(selectSlot3, 2, 0);
-
+            /*
             for(int i = 0; i < 3; i++) {
                 var card = ((DevelopmentCardSlotView)slots.get(i+1)).peek();
                 if (card != null) {
@@ -381,6 +426,27 @@ public class BoardGUIController extends AbstractGUIController implements GameGUI
                     GridPane.setValignment(image, VPos.CENTER);
                     GridPane.setHalignment(image, HPos.CENTER);
                     productionGrid.add(image, i, 0);
+                }
+
+            }
+            */
+
+            for(int i = 0; i < 3; i++) {
+                var slot = ((DevelopmentCardSlotView)slots.get(i+1)).getSlot();
+                if (!slot.isEmpty()) {
+                    int offset = (slot.size()-1)*GUISizes.get().devOffset();
+
+                    for (DevelopmentCard card : slot) {
+                        var image = new ImageView(GUIHelper.getInstance().getImage(card, GUISizes.get().devSize(), GUISizes.get().devSizeY()));
+                        var effect = new DropShadow();
+                        image.setEffect(effect);
+                        GridPane.setMargin(image, new Insets(0, 0, offset, 0));
+                        GridPane.setValignment(image, VPos.CENTER);
+                        GridPane.setHalignment(image, HPos.CENTER);
+                        productionGrid.add(image, i, 0);
+
+                        offset -= GUISizes.get().devOffset();
+                    }
                 }
 
             }
@@ -418,14 +484,16 @@ public class BoardGUIController extends AbstractGUIController implements GameGUI
             for (int i =0; i < productions.size(); i++) {
                 var p = productions.get(i);
                 enableNode(prodButtons[i]);
-                if (p == ProductionState.IDLE) { prodButtons[i].setStyle("-fx-background-color: rgba(0, 0, 0, 0.75)");
+                if (p == ProductionState.IDLE) {
+                    prodButtons[i].setStyle("");
+                    prodButtons[i].getStyleClass().add("darkButton");
                     prodButtons[i].setText("Select");}
                 else if (p == ProductionState.SELECTED) {
-                    prodButtons[i].setText("Confirm");
-                    prodButtons[i].setStyle("-fx-background-color: rgba(0, 0, 0, 0.75)");
+                    prodButtons[i].setText("✓");
+                    prodButtons[i].getStyleClass().add("darkButton");
                 }
                 else if (p == ProductionState.CONFIRMED) {
-                    prodButtons[i].setText("Confirmed");
+                    prodButtons[i].setText("✓");
                     prodButtons[i].setStyle("-fx-background-color: rgba(77, 125, 42, 1)");
                     prodButtons[i].setDisable(true);
                 }
@@ -480,7 +548,7 @@ public class BoardGUIController extends AbstractGUIController implements GameGUI
                 }
             }
 
-
+            /*
             if (cards != null) {
                 cards.stream().filter(c -> c != null && c.isActive())
                         .forEach( e -> {
@@ -489,7 +557,7 @@ public class BoardGUIController extends AbstractGUIController implements GameGUI
                             im.setEffect(effect);
                             abilityBox.getChildren().add(im);
                         });
-            }
+            } */
         });
 
     }
@@ -527,6 +595,7 @@ public class BoardGUIController extends AbstractGUIController implements GameGUI
 
     public void endTurn(ActionEvent actionEvent) {
         UIController.getInstance().endTurn();
+        SelectedProductions.getInstance().reset();
     }
 
     public void lightSlot(MouseEvent mouseEvent) {
@@ -569,6 +638,7 @@ public class BoardGUIController extends AbstractGUIController implements GameGUI
 
     public void startDevResSelection() {
         Modify.makeDepotResourcesSelectable(depotBox, resChoiceMap, true);
+        Modify.makeSpecialDepotSelectable(specialDepot1, specialDepot2, resChoiceMap, true);
         updateStrongbox();
         if (strongboxGrid.getChildren().size() > 1) {
 
@@ -676,6 +746,56 @@ public class BoardGUIController extends AbstractGUIController implements GameGUI
                     resChoiceMap,
                     ResourceType.JOLLY,
                     false);
+        }
+    }
+
+    public void selectSpecialProd1(ActionEvent actionEvent) {
+        var state = SelectedProductions.getInstance().get(4);
+
+        if (state == ProductionState.IDLE) {
+            resChoiceMap.clear();
+            Modify.makeDepotResourcesSelectable(depotBox, resChoiceMap, true);
+            showStrongbox(null);
+            Modify.makeStrongboxSelectable(strongboxGrid, resChoiceMap, true);
+            enableNode(special1Dialog, 0.75);
+            enableNode(special1Resources);
+            SelectedProductions.getInstance().set(4, ProductionState.SELECTED);
+            updateProductions();
+        }
+
+        else if (state == ProductionState.SELECTED) {
+            if (selectedBoardRes != null) {
+                UIController.getInstance().depositResourcesIntoSlot(Id.S_SLOT_1,
+                        resChoiceMap,
+                        GUIHelper.getInstance().getResFromImage(selectedBoardRes.getImage()).getResourceType(),
+                        false);
+            }
+
+        }
+    }
+
+    public void selectSpecialProd2(ActionEvent actionEvent) {
+        var state = SelectedProductions.getInstance().get(5);
+
+        if (state == ProductionState.IDLE) {
+            resChoiceMap.clear();
+            Modify.makeDepotResourcesSelectable(depotBox, resChoiceMap, true);
+            showStrongbox(null);
+            Modify.makeStrongboxSelectable(strongboxGrid, resChoiceMap, true);
+            enableNode(special2Dialog, 0.75);
+            enableNode(special2Resources);
+            SelectedProductions.getInstance().set(5, ProductionState.SELECTED);
+            updateProductions();
+        }
+
+        else if (state == ProductionState.SELECTED) {
+            if (selectedBoardRes != null) {
+                UIController.getInstance().depositResourcesIntoSlot(Id.SLOT_2,
+                        resChoiceMap,
+                        GUIHelper.getInstance().getResFromImage(selectedBoardRes.getImage()).getResourceType(),
+                        false);
+            }
+
         }
     }
 

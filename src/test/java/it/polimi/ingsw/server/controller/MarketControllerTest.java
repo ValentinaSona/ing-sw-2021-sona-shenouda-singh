@@ -27,6 +27,7 @@ class MarketControllerTest {
         controller = null;
         Game.destroy();
         MarketController.destroy();
+        ResourceController.destroy();
     }
 
 
@@ -208,7 +209,11 @@ class MarketControllerTest {
         }
 
         con2 = null;
+        resCon = null;
+        ResourceController.destroy();
         MarketController.destroy();
 
     }
+
+
 }

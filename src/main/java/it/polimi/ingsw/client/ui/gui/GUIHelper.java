@@ -1,9 +1,6 @@
 package it.polimi.ingsw.client.ui.gui;
 
-import it.polimi.ingsw.client.modelview.GameView;
-import it.polimi.ingsw.client.modelview.MarketView;
-import it.polimi.ingsw.client.modelview.MatchSettings;
-import it.polimi.ingsw.client.modelview.PlayerView;
+import it.polimi.ingsw.client.modelview.*;
 import it.polimi.ingsw.client.ui.controller.UiControllerInterface;
 import it.polimi.ingsw.client.ui.gui.JFXControllers.DevelopmentGUIController;
 import it.polimi.ingsw.client.ui.gui.JFXControllers.GameGUIControllerInterface;
@@ -173,44 +170,45 @@ public class GUIHelper {
         for(int i = 2; i >= 0; i--) {
             for(int j = 0; j < 4; j++) {
 
-                var tempIm = getInstance().getImage(cards[i][j]);
-                var tempView = new ImageView(tempIm);
-
-                tempView.setFitWidth(GUISizes.get().devSize());
-                tempView.setPreserveRatio(true);
-
-                tempView.setOnMouseEntered(e -> { if (!chosenCard) devVisualizer.setImage(tempIm);});
-
-                int indexI = i;
-                int indexJ = j;
-
-                var selection = new ImageView(new Image("assets/game/development_cards/card_selection.png"));
-                selection.setFitWidth(GUISizes.get().devSize());
-                selection.setPreserveRatio(true);
-
-
-                tempView.setOnMouseReleased(e -> {
-                    if(getInstance().getTurn()) {
-                        if (!chosenCard) {
-                            grid.add(selection, indexJ, indexI);
-                            selectedI = indexI;
-                            selectedJ = indexJ;
-                            chosenCard = true;
-                        }
-                        else {
-                            if (indexI == selectedI && indexJ == selectedJ) {
-                                grid.getChildren().remove(selection);
-                                chosenCard = false;
-                            }
-                        }
-
-                        Platform.runLater(() -> {
-                            ((DevelopmentGUIController)GUIHelper.getInstance().currentGameController).enableBuy(chosenCard);
-                        });
-                    }
-                });
-
                 if (cards[i][j] != null) {
+
+                    var tempIm = getInstance().getImage(cards[i][j]);
+                    var tempView = new ImageView(tempIm);
+
+                    tempView.setFitWidth(GUISizes.get().devSize());
+                    tempView.setPreserveRatio(true);
+
+                    tempView.setOnMouseEntered(e -> { if (!chosenCard) devVisualizer.setImage(tempIm);});
+
+                    int indexI = i;
+                    int indexJ = j;
+
+                    var selection = new ImageView(new Image("assets/game/development_cards/card_selection.png"));
+                    selection.setFitWidth(GUISizes.get().devSize());
+                    selection.setPreserveRatio(true);
+
+
+                    tempView.setOnMouseReleased(e -> {
+                        if(getInstance().getTurn()) {
+                            if (!chosenCard) {
+                                grid.add(selection, indexJ, indexI);
+                                selectedI = indexI;
+                                selectedJ = indexJ;
+                                chosenCard = true;
+                            }
+                            else {
+                                if (indexI == selectedI && indexJ == selectedJ) {
+                                    grid.getChildren().remove(selection);
+                                    chosenCard = false;
+                                }
+                            }
+
+                            Platform.runLater(() -> {
+                                ((DevelopmentGUIController)GUIHelper.getInstance().currentGameController).enableBuy(chosenCard);
+                            });
+                        }
+                    });
+
                     grid.add(tempView, j, i);
                 }
 
@@ -436,5 +434,18 @@ public class GUIHelper {
 
     public void abilityActivation(LeaderCard card) {
         // TODO ability
+    }
+
+    public boolean activeSpecialDepot(PlayerView player, int index) {
+        var cards = player.getLeaderCards();
+        return cards.get(index).isActive() && cards.get(index).getSpecialAbility() instanceof ExtraDepotAbility;
+    }
+
+    public boolean abilityCorresponds(DepotView depot, LeaderCard card) {
+        if (card.getSpecialAbility() instanceof ExtraDepotAbility) {
+            var resource = ((ExtraDepotAbility)card.getSpecialAbility()).getType();
+            return resource == depot.getResource().getResourceType();
+        }
+        else return false;
     }
 }
