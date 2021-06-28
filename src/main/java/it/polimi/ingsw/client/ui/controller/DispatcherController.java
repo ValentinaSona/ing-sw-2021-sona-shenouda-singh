@@ -409,7 +409,9 @@ public class DispatcherController implements Runnable, LambdaObserver {
 
     }
 
-    // termian la partita perche un giocatore ha richiesto il salvataggio
+    /**
+     * Ends the game by closing the connection when a player as requested to save.
+     */
     public void handleGameSaving(){
         UIController.getInstance().getClientConnection().closeConnection();
 

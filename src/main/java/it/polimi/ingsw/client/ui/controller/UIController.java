@@ -32,12 +32,22 @@ import java.util.logging.Logger;
  */
 
 public class UIController implements LambdaObserver{
+
     private final Logger LOGGER = Logger.getLogger(UIController.class.getName());
     private static UIController singleton;
     private final Thread dispatcherThread;
+    /**
+     * Connection to the server.
+     */
     private Connection clientConnection;
     private Thread localGame;
+    /**
+     * Used in local solo games to maintain the message-like infrastructure.
+     */
     private MockRemoteViewHandler view;
+    /**
+     * Whether the game is local or not.
+     */
     private boolean local = false;
 
 
@@ -51,6 +61,11 @@ public class UIController implements LambdaObserver{
         dispatcherThread.start();
     }
 
+    /**
+     * Called instead of the setNickname, joinLobby and setCreation methods when starting a local game.
+     * Creates a mock remote view so that all the messages and the structures of the remote games can be used for the local ones.
+     * @param nickname the player's nickname.
+     */
     public void startLocalSinglePlayerGame(String nickname){
 
         MatchSettings.getInstance().setClientNickname(nickname);
@@ -91,7 +106,7 @@ public class UIController implements LambdaObserver{
                     controller.dispatchViewClientMessage();
                 }catch (Exception e) {
                     e.printStackTrace();
-                    //devo gestire l'errore disconnettendo tutti i giocatori
+                    //TODO devo gestire l'errore disconnettendo tutti i giocatori
                 }
             }
         };
@@ -134,13 +149,14 @@ public class UIController implements LambdaObserver{
             clientConnection.addObserver(dispatcherController, (observer, transmittable) -> {
                 ((DispatcherController) observer).update(transmittable);
             });
-            //mando il messaggio
+
+            // Send the message
             Thread t = new Thread(clientConnection);
             t.start();
             Transmittable message = new ClientSetNicknameMessage(nickname);
             send(message);
         }catch (IOException exception){
-            LOGGER.log(Level.SEVERE, "Apertura socket fallita "+exception.getMessage());
+            LOGGER.log(Level.SEVERE, "Socket Opening failed "+exception.getMessage());
             throw exception;
         }
     }
@@ -149,6 +165,10 @@ public class UIController implements LambdaObserver{
         send(new ClientJoinLobbyMessage());
     }
 
+    /**
+     * Called by the first player upon receiving the SET_COUNT message.
+     * @param playersNum the number of players expected to start the game.
+     */
     public void setCreation(int playersNum) {
         send(new ClientSetPlayersCountMessage(playersNum));
         MatchSettings.getInstance().setTotalUsers(playersNum);
@@ -180,11 +200,9 @@ public class UIController implements LambdaObserver{
 
     public void convertWhiteMarbles(MarketMarble[] choices){send(new ClientConvertWhiteMarblesMessage(choices));}
 
-    public void depositIntoWarehouse(Id id, Resource resource){
-        send( new ClientDepositIntoWarehouseMessage(id, resource));}
+    public void depositIntoWarehouse(Id id, Resource resource){send( new ClientDepositIntoWarehouseMessage(id, resource));}
 
-    public void throwResources(){
-        send( new ClientThrowResourcesMessage());}
+    public void throwResources(){send( new ClientThrowResourcesMessage());}
 
     public void endTurn(){
         send(new ClientEndTurnMessage());
@@ -232,12 +250,22 @@ public class UIController implements LambdaObserver{
      */
     public void endGame(){send(new ClientEndGameMessage());}
 
-    // da chiamare se sei il player corrente e vuoi salvare la partita
+
+    /**
+     * To be called by the current player during their turn if they wish to save the game.
+     * All players will be disconnected as result.
+     */
     public void saveGame(){send(new ClientSaveGameMessage());}
-    //da chiamare se voglio riconnettermi dopo che mi sono disconnesso in risposta
-    //il DispatcherController ricevera un messaggio RECONNECTION_OK se tutto va bene
-    // altrimenti un DisconnectionMessage che chiude la connessione se qualcosa è andato storto e da li in poi ricevero gli altri
-    //messaggi con le informazioni sulla partita vedi ultimi 4 metodi DispatcherController
+
+    /**
+     * Called when attempting to reconnect to a game after closing the client or losing the connection.
+     * A RECONNECTION_OK status message will be received if the reconnection is successful, followed by a ServerGameReconnectionMessage.
+     * Otherwise a DisconnectionMessage will close the newly reopened connection if something went wrong.
+     * @param nickname the nickname under which the player is trying to reconnect
+     * @param host the server hostname
+     * @param port the server port
+     * @throws IOException When failing to open the socket.
+     */
     public void reconnectToServer(String nickname, String host, int port) throws IOException{
         local = false;
         MatchSettings.getInstance().setClientNickname(nickname);
@@ -249,13 +277,13 @@ public class UIController implements LambdaObserver{
             clientConnection.addObserver(dispatcherController, (observer, transmittable) -> {
                 ((DispatcherController) observer).update(transmittable);
             });
-            //mando il messaggio
+            // Send the message
             Thread t = new Thread(clientConnection);
             t.start();
             Transmittable message = new ClientGameReconnectionMessage(nickname);
             send(message);
         }catch (IOException exception){
-            LOGGER.log(Level.SEVERE, "Apertura socket fallita "+exception.getMessage());
+            LOGGER.log(Level.SEVERE, "Failed to open socket "+exception.getMessage());
             throw exception;
         }
     }
