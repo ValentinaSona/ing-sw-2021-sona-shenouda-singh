@@ -22,21 +22,22 @@ public class DevMarketView implements Serializable {
     @Override
     public String toString() {
 
-        String marketPrint = "";
-
-
+        StringBuilder marketPrint = new StringBuilder();
+        String empty =  "===============\n"+
+                        "==== Empty ====\n"+
+                        "===============\n";
         for (int i = 0; i < 4; i++) {
 
             for (int j = 0; j < 3; j++) {
 
-                marketPrint += tray[j][i] + "\n";
-                if( i != 3 && j == 2) marketPrint+="\n\n";
+                marketPrint.append((tray[j][i] != null) ? tray[j][i] : empty).append("\n");
+                if( i != 3 && j == 2) marketPrint.append("\n\n");
             }
 
         }
 
 
 
-        return marketPrint;
+        return marketPrint.toString();
     }
 }

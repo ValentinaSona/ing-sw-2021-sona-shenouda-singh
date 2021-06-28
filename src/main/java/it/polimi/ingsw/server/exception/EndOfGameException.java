@@ -1,13 +1,13 @@
 package it.polimi.ingsw.server.exception;
 
 public class EndOfGameException extends Exception {
-    private final boolean lost;
+    private final EndOfGameCause cause;
 
-    public EndOfGameException(boolean lost) {
-        this.lost = lost;
+    public EndOfGameException(EndOfGameCause cause) {
+        this.cause = cause;
     }
 
-
-    public boolean hasLost() {
-        return lost;
-    }}
+    public EndOfGameCause getEndCause() {
+        return cause;
+    }
+}

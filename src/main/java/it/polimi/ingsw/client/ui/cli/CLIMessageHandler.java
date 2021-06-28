@@ -265,7 +265,7 @@ public class CLIMessageHandler {
 
         if (message.isReport()) {
             if (message.getUser().getNickName().equals(MatchSettings.getInstance().getClientNickname()))
-                cli.printMessage("[" + CHECK_MARK + "] A vatican report has been triggered. Check the faith tracks to see the results!");
+                cli.printMessage("[!] A vatican report has been triggered. Check the faith tracks to see the results!");
             else
                 cli.printMessage("[!] " + message.getUser().getNickName() + " has received " + message.getFaith() + " faith points and triggered a vatican report! Check your faith track!");
         } else {
@@ -352,11 +352,19 @@ public class CLIMessageHandler {
     public void handleServerFinalScoreMessage(ServerFinalScoreMessage message) {
         MenuRunner.getInstance().setState(MenuStates.END);
 
-        cli.printMessage("[!] The game has ended! Here is the final score!");
+        switch (message.getCause()){
+            case FAITH_END -> cli.printMessage("\n[!] A player has triggered the 3rd Vatican Report! The game has ended- check the scores to se who won!");
+            case SEVENTH_CARD -> cli.printMessage("\n[!] A player has acquired 7 development cards! The game has ended - check the scores to se who won!");
+            case LORENZO_FAITH -> cli.printMessage("\n[!] Lorenzo has reached the end of his faith track. You lost!");
+            case LORENZO_DISCARD -> cli.printMessage("\n[!] Lorenzo has discarded all the cards of one color. You lost!");
+            case DEBUG -> cli.printMessage("\n[!] A player has ended the game with a secret debug code!");
+        }
+
+        cli.printMessage("[!] Here is the final score!");
         message.getRank().forEach((u,s) -> cli.printMessage(u.getNickName() + " : "+ s));
         // Win message
 
-        MenuRunner.getInstance().sendResponse(GameActions.MENU, "[X] The game has ended. You will be returned to main menu.");
+        MenuRunner.getInstance().sendResponse(GameActions.MENU, "[X] You will be returned to main menu.");
 
         synchronized (CLIMessageHandler.getInstance()) {
             cli.setInterrupted(true);

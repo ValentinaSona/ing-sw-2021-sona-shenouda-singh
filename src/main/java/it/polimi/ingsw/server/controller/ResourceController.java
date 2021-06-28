@@ -11,7 +11,6 @@ import it.polimi.ingsw.utils.networking.transmittables.clientmessages.game.*;
 import it.polimi.ingsw.utils.networking.transmittables.servermessages.*;
 
 import java.util.*;
-import java.util.concurrent.locks.Lock;
 
 public class ResourceController{
     private static ResourceController singleton;
@@ -75,40 +74,43 @@ public class ResourceController{
             // Run the validatePopeFavor for all the players in the game.
             ArrayList<Player> players = model.getPlayers();
 
-
-            for(Player p : players){
-                FaithTrack faithTrack = p.getFaithTrack();
-                faithTrack.validatePopeFavor(vaticanReportException.getReport());
-
-                if (p == player){
-                    model.notify(new ServerFaithTrackMessage(
-                            true,
-                            player.getVisibleFaithTrack(),
-                            faithPoints.getQuantity(),
-                            model.getUserFromPlayer(p)
-                    ));
-                } else {
-                    model.notify(new ServerFaithTrackMessage(
-                            true,
-                            p.getVisibleFaithTrack(),
-                            0,
-                            model.getUserFromPlayer(p)
-                    ));
-                }
-            }
-
             if (model.isSolo()){
                 model.getLorenzo().getFaithTrack().validatePopeFavor(vaticanReportException.getReport());
+                model.getPlayers().get(0).getFaithTrack().validatePopeFavor(vaticanReportException.getReport());
                 model.notify(new ServerFaithTrackMessage(
                         true,
                         null,
                         faithPoints.getQuantity(),
                         null
                 ));
+            } else {
+
+                for (Player p : players) {
+                    FaithTrack faithTrack = p.getFaithTrack();
+                    faithTrack.validatePopeFavor(vaticanReportException.getReport());
+
+                    if (p == player) {
+                        model.notify(new ServerFaithTrackMessage(
+                                true,
+                                player.getVisibleFaithTrack(),
+                                faithPoints.getQuantity(),
+                                model.getUserFromPlayer(p)
+                        ));
+                    } else {
+                        model.notify(new ServerFaithTrackMessage(
+                                true,
+                                p.getVisibleFaithTrack(),
+                                0,
+                                model.getUserFromPlayer(p)
+                        ));
+                    }
+                }
+
             }
 
             if (vaticanReportException.getReport()==3) {
-                throw new EndOfGameException(false);
+                if (model.isSolo() &&  model.getLorenzo().getFaithTrack().getFaithMarker() >= 24) throw new EndOfGameException(EndOfGameCause.LORENZO_FAITH);
+                throw new EndOfGameException(EndOfGameCause.FAITH_END);
             }
 
         }
@@ -154,11 +156,11 @@ public class ResourceController{
         for(Id id : resourceHashMap.keySet()){
             if(warehouseIds.contains(id)){
                 warehouse.get(id.getValue()).addResource(resourceHashMap.get(id));
-                resourceHashMap.remove(id);
+                //resourceHashMap.remove(id);
             }else if(id == Id.STRONGBOX_SHIELD || id == Id.STRONGBOX_STONE || id == Id.STRONGBOX_SERVANT
                     || id == Id.STRONGBOX_COIN){
                 player.getStrongbox().addResources(resourceHashMap.get(id));
-                resourceHashMap.remove(id);
+                //resourceHashMap.remove(id);
             }else {
                 throw new RuntimeException("Supplied ResourceId doesn't belong to warehouse or strongbox.");
             }

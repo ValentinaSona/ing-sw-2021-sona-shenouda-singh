@@ -4,9 +4,7 @@ import it.polimi.ingsw.server.exception.*;
 import it.polimi.ingsw.server.model.*;
 import it.polimi.ingsw.server.model.DevelopmentCardSlot;
 import it.polimi.ingsw.server.model.Player;
-import it.polimi.ingsw.server.view.RealRemoteViewHandler;
 import it.polimi.ingsw.server.view.RemoteViewHandler;
-import it.polimi.ingsw.utils.GameActions;
 import it.polimi.ingsw.utils.networking.transmittables.StatusMessage;
 import it.polimi.ingsw.utils.networking.transmittables.clientmessages.game.ClientBuyTargetCardMessage;
 import it.polimi.ingsw.utils.networking.transmittables.clientmessages.game.ClientSelectDevelopmentCardMessage;
@@ -116,7 +114,7 @@ public class DevelopmentCardMarketController{
                     cards += devSlot.getSlot().size();
                 }
 
-                if (cards >= 7) throw new EndOfGameException(false);
+                if (cards >= 7) throw new EndOfGameException(EndOfGameCause.SEVENTH_CARD);
 
 
             } catch (NotSufficientResourceException e) {

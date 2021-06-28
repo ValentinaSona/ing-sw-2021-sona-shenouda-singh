@@ -254,6 +254,14 @@ class ResourceControllerTest {
     @Test
     void depositResourceIntoSlot() {
 
+
+        // D2 : 1 shield
+        // D3 : 3 coin
+        // B: 4 stones, 2 shield
+
+        // Card cost: 1 coin
+
+
         model = Game.getInstance(2);
         controller = ResourceController.getInstance(model);
 
@@ -290,7 +298,8 @@ class ResourceControllerTest {
 
         // Target slot and card.
         var production = new Production(new Resource[]{new Resource(2, ResourceType.SHIELD)}, new Resource[]{new Resource(2,ResourceType.SERVANT)});
-        var card = new DevelopmentCard(0, new Resource[]{new Resource(1,ResourceType.COIN)} , DevelopmentType.BLUE, 1, 1, production );
+        var card = new DevelopmentCard(0, new Resource[]{new Resource(2,ResourceType.COIN)} , DevelopmentType.BLUE, 1, 1, production );
+        var card2 = new DevelopmentCard(0, new Resource[]{new Resource(4,ResourceType.COIN), new Resource(4, ResourceType.STONE)} , DevelopmentType.BLUE, 1, 1, production );
 
 
         DevelopmentCardSlot targetSlot = model.getPlayerFromUser(merlin).getDevelopmentCardSlots()[0];
@@ -302,13 +311,65 @@ class ResourceControllerTest {
 
 
 
+        // Right number, wrong resource
         Map<Id, Resource> map = new HashMap<>();
-        map.put(Id.DEPOT_3, new Resource(1,ResourceType.COIN));
+        map.put(Id.DEPOT_3, new Resource(2,ResourceType.SHIELD));
 
         var message = new ClientDepositResourceIntoSlotMessage(Id.SLOT_1, map);
         controller.depositResourceIntoSlot(message, view, merlin);
 
-        Assertions.assertEquals(new Resource(2, ResourceType.COIN), model.getPlayerFromUser(merlin).getWarehouse().get(2).getResource());
+        Assertions.assertEquals(new Resource(3, ResourceType.COIN), model.getPlayerFromUser(merlin).getWarehouse().get(2).getResource());
+        Assertions.assertFalse(targetSlot.isConfirmed());
+
+        // Insufficient quantity, right resource
+        map = new HashMap<>();
+        map.put(Id.DEPOT_3, new Resource(1,ResourceType.COIN));
+        map.put(Id.STRONGBOX_STONE, new Resource(2,ResourceType.STONE));
+
+        message = new ClientDepositResourceIntoSlotMessage(Id.SLOT_1, map);
+        controller.depositResourceIntoSlot(message, view, merlin);
+
+        Assertions.assertEquals(new Resource(3, ResourceType.COIN), model.getPlayerFromUser(merlin).getWarehouse().get(2).getResource());
+        Assertions.assertEquals(new Resource(4, ResourceType.STONE), model.getPlayerFromUser(merlin).getStrongbox().getAvailableResources(ResourceType.STONE));
+        Assertions.assertFalse(targetSlot.isConfirmed());
+
+        /*
+        try {
+            targetSlot.setTargetCard(card2, 1,2);
+        } catch (DevelopmentCardException e) {
+            Assertions.fail();
+        }
+
+
+        // Missing one resource, financing from both depot and warehouse
+        map = new HashMap<>();
+        map.put(Id.DEPOT_3, new Resource(3,ResourceType.COIN));
+        map.put(Id.STRONGBOX_COIN, new Resource(1,ResourceType.COIN));
+
+        message = new ClientDepositResourceIntoSlotMessage(Id.SLOT_1, map);
+        controller.depositResourceIntoSlot(message, view, merlin);
+
+        Assertions.assertEquals(new Resource(3, ResourceType.COIN), model.getPlayerFromUser(merlin).getWarehouse().get(2).getResource());
+        Assertions.assertEquals(new Resource(4, ResourceType.STONE), model.getPlayerFromUser(merlin).getStrongbox().getAvailableResources(ResourceType.STONE));
+        Assertions.assertFalse(targetSlot.isConfirmed());
+
+
+        try {
+            targetSlot.setTargetCard(card, 1,2);
+        } catch (DevelopmentCardException e) {
+            Assertions.fail();
+        }
+
+*/
+
+        // Working
+        map = new HashMap<>();
+        map.put(Id.DEPOT_3, new Resource(2,ResourceType.COIN));
+
+         message = new ClientDepositResourceIntoSlotMessage(Id.SLOT_1, map);
+        controller.depositResourceIntoSlot(message, view, merlin);
+
+        Assertions.assertEquals(new Resource(1, ResourceType.COIN), model.getPlayerFromUser(merlin).getWarehouse().get(2).getResource());
         Assertions.assertTrue(targetSlot.isConfirmed());
 
 

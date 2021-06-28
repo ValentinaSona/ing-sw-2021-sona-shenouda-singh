@@ -70,7 +70,6 @@ public class SetupMenu {
             return new String[]{"See market", "See development card market", "See faith track"};
         }
 
-        //TODO: make already chosen options barred.
 
     }
 

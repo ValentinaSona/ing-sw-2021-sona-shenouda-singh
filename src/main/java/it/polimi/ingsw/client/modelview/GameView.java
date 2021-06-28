@@ -54,7 +54,6 @@ public class GameView implements Serializable {
         blackCross = 0;
     }
 
-    // TODO solo game faith view
     public int getBlackCross() {
         return blackCross;
     }

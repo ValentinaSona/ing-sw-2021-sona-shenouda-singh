@@ -3,7 +3,6 @@ package it.polimi.ingsw.utils.networking.transmittables.clientmessages.game;
 import it.polimi.ingsw.server.controller.Controller;
 import it.polimi.ingsw.server.controller.User;
 import it.polimi.ingsw.server.exception.EndOfGameException;
-import it.polimi.ingsw.server.view.RealRemoteViewHandler;
 import it.polimi.ingsw.server.view.RemoteViewHandler;
 import it.polimi.ingsw.utils.networking.ControllerHandleable;
 import it.polimi.ingsw.utils.networking.transmittables.clientmessages.ClientMessage;
@@ -20,7 +19,7 @@ public class ClientBuyMarblesMessage implements ClientMessage, ControllerHandlea
         try {
             handler.marketController.buyMarbles(this, view, user);
         } catch (EndOfGameException e) {
-            endOfGame(handler,view);
+            endOfGame(handler,e);
         }
         return  true;
     }
@@ -29,8 +28,8 @@ public class ClientBuyMarblesMessage implements ClientMessage, ControllerHandlea
         return rowCol;
     }
 
-    private void endOfGame(Controller handler, RemoteViewHandler view) {
-        handler.turnController.endOfGame(view);
+    private void endOfGame(Controller handler, EndOfGameException e) {
+        handler.turnController.endOfGame(e);
     }
 }
 

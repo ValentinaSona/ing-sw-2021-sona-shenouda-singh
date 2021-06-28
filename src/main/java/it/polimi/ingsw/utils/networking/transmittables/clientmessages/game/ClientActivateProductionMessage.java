@@ -19,12 +19,12 @@ public class ClientActivateProductionMessage implements ClientMessage, Controlle
         try {
             handler.resourceController.activateProduction(this,view, user);
         } catch (EndOfGameException e) {
-            endOfGame(handler,view);
+            endOfGame(handler,e);
         }
         return  true;
     }
 
-    private void endOfGame(Controller handler, RemoteViewHandler view) {
-        handler.turnController.endOfGame(view);
+    private void endOfGame(Controller handler, EndOfGameException e) {
+        handler.turnController.endOfGame(e);
     }
 }

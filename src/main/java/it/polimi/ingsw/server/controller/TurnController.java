@@ -1,6 +1,7 @@
 package it.polimi.ingsw.server.controller;
 
 import it.polimi.ingsw.server.LobbyState;
+import it.polimi.ingsw.server.exception.EndOfGameCause;
 import it.polimi.ingsw.server.exception.EndOfGameException;
 import it.polimi.ingsw.server.exception.VaticanReportException;
 import it.polimi.ingsw.server.model.*;
@@ -215,16 +216,17 @@ public class TurnController{
             case MOVE -> {
                 try {
                     model.getLorenzo().getFaithTrack().addFaithPoints(2);
+                    model.notify(new ServerSoloMoveMessage(model.getLorenzo().getBlackCross(), false));
                 } catch (VaticanReportException e) {
                     Player player = model.getPlayers().get(0);
                     player.getFaithTrack().validatePopeFavor(e.getReport());
+                    model.getLorenzo().getFaithTrack().validatePopeFavor(e.getReport());
+                    model.notify( new ServerFaithTrackMessage(true, player.getVisibleFaithTrack(), 2, null ) );
 
-                    model.notify( new ServerFaithTrackMessage(true, player.getVisibleFaithTrack(), 0, model.getUserFromPlayer(player) ) );
-
-                    if (e.getReport()==3) throw new EndOfGameException(true);
+                    if (e.getReport()==3) throw new EndOfGameException(EndOfGameCause.LORENZO_FAITH);
 
                 }
-                model.notify(new ServerSoloMoveMessage(model.getLorenzo().getBlackCross(), false));
+
             }
 
             case MOVE_SHUFFLE -> {
@@ -233,10 +235,11 @@ public class TurnController{
                 } catch (VaticanReportException e) {
                     Player player = model.getPlayers().get(0);
                     player.getFaithTrack().validatePopeFavor(e.getReport());
+                    model.getLorenzo().getFaithTrack().validatePopeFavor(e.getReport());
 
                     // This null needs to be handled client side but shouldn't be a problem as it's expected of singleplayer.
-                    model.notify( new ServerFaithTrackMessage( player.getVisibleFaithTrack(), 1,null ) );
-
+                    model.notify( new ServerFaithTrackMessage( true, player.getVisibleFaithTrack(), 1,null ) );
+                    if (e.getReport()==3) throw new EndOfGameException(EndOfGameCause.LORENZO_FAITH);
                 }
                 model.getLorenzo().shuffle();
 
@@ -269,9 +272,11 @@ public class TurnController{
 
     /**
      * Called when the game is done.
-     * @param view The view.
+     * @param e
      */
-    public void endOfGame(RemoteViewHandler view){
+    public void endOfGame(EndOfGameException e){
+
+
 
         Map<User, Integer> scores = new LinkedHashMap<>();
 
@@ -295,7 +300,7 @@ public class TurnController{
             rank.put(highest.getKey(),highest.getValue());
         }
 
-        model.notify(new ServerFinalScoreMessage(rank));
+        model.notify(new ServerFinalScoreMessage(rank, e.getEndCause()));
 
     }
 

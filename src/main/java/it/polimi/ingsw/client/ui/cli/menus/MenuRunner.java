@@ -332,7 +332,6 @@ public class MenuRunner {
         else
             cli.printMessage("empty \n");
 
-//TODO hiddenVP should print colors of cards.
     }
 
     public void printProductions(PlayerView view){

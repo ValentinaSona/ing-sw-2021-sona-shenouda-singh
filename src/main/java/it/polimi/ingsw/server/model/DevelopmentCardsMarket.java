@@ -1,13 +1,13 @@
 package it.polimi.ingsw.server.model;
 
 import it.polimi.ingsw.client.modelview.DevMarketView;
+import it.polimi.ingsw.server.exception.EndOfGameCause;
 import it.polimi.ingsw.server.exception.EndOfGameException;
 import it.polimi.ingsw.server.exception.NotDecoratedException;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class DevelopmentCardsMarket implements  DevMarket {
 
@@ -117,10 +117,13 @@ public class DevelopmentCardsMarket implements  DevMarket {
 		}
 
 		for (int i = 0; i < 3; i++){
+			// Find the first deck that has cards
 			if  (decks[i][type].cardsLeft()!= 0){
+				// Remove the card
 				decks[i][type].pickCard();
-				// If no cards are left of that type, the game has been lost.
-				if (decks[i][type].isEmpty()) throw new EndOfGameException(true);
+				// If no cards of third level are left of that type, the game has been lost.
+				if (decks[2][type].isEmpty()) throw new EndOfGameException(EndOfGameCause.LORENZO_DISCARD);
+				// Only discard once
 				return;
 			}
 		}
