@@ -351,6 +351,10 @@ public class DispatcherController implements Runnable, LambdaObserver {
         }
     }
 
+    /**
+     * This message is received only by the player that disconnects.
+     * @param message the disconnection message.
+     */
     public void handleDisconnection(DisconnectionMessage message){
         //METODO solo per partita in multiplayer
         UIController.getInstance().getClientConnection().closeConnection();

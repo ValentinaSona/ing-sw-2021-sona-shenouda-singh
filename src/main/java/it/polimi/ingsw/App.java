@@ -14,7 +14,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- * Hello world!
+ * Program's main argument.
  *
  */
 public class App 

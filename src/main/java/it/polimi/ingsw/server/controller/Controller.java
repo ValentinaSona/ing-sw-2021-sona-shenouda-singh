@@ -137,6 +137,12 @@ public class Controller implements LambdaObserver {
     public boolean getLocal(){
         return local;
     }
+
+
+    /**
+     * Sends the ServerGameReconnectionMessage and the ServerStartTurnMessage needed for a saved game to start.
+     * @param viewList
+     */
     public void loadFromFile(List<RealRemoteViewHandler> viewList){
 
         ArrayList<User> users = new ArrayList<>();

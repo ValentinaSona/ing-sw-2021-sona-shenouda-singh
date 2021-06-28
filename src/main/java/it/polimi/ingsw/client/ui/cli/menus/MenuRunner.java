@@ -359,7 +359,7 @@ public class MenuRunner {
         cli.printMessage("\nSlot 3: ");
         if (slot.peek() != null)
 
-            cli.printMessage("\n\t" + slot.peek().toString()+ "\tHidden cards value: " + slot.hiddenVP()+" VP " + slot.hiddenColors() );
+            cli.printMessage("\n" + slot.peek().toString()+ "\tHidden cards value: " + slot.hiddenVP()+" VP " + slot.hiddenColors() );
 
         else
             cli.printMessage("empty \n");

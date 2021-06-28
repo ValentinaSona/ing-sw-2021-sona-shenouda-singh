@@ -208,16 +208,27 @@ public class UIController implements LambdaObserver{
         send(new DisconnectionMessage());
     }
 
-    // da chiamare dopo aver fatto  il setNickname solito se fallisce arriva un disconnectionMessage()
+    /**
+     * Called instead of joinLobby() after receiving the OK_NICK when restoring a game from file.
+     * Sets the loadFromGame parameter to true, used by Lobby.handleJoiningRequest() to differentiate new games from restored ones.
+     * If it fails, a disconnectionMessage is received.
+     */
     public void resumeGameFromFile(){
         send(new ClientJoinLobbyMessage(true));
     }
 
-    //da chiamare se e solo se si riceve il messaggio di setCount in ritorno si ottiene il messaggio
-    //StatusMessage.OK_COUNT oppure StatusMessage.CLIENT_ERROR
-    public void loadGameFromFile(){send(new ClientLoadGameMessage());}
     /**
-     * For ease of testing only!
+     * Called instead of setCreation upon receiving the SET_COUNT when restoring a game from file (only by the first player).
+     * Sets the size to the one of the original game.
+     * If it succeeds OK_COUNT is received, while CLIENT_ERROR is received in case of failure.
+     * Once everyone has joined, a ServerReconnectionMessage followed by the appropriate SeverStartTurnMessage are received.
+     */
+    public void loadGameFromFile(){send(new ClientLoadGameMessage());}
+
+
+    /**
+     * For ease of testing only! This special message triggers the end of the game, no matter the stage.
+     * Called by the 1492 hidden code.
      */
     public void endGame(){send(new ClientEndGameMessage());}
 

@@ -11,6 +11,7 @@ import javafx.stage.Screen;
 import javafx.stage.Stage;
 
 import java.io.File;
+import java.io.IOException;
 import java.net.URL;
 
 
@@ -25,8 +26,21 @@ public class GUI extends Application implements Ui {
 
         Rectangle2D screenBounds = Screen.getPrimary().getBounds();
         GUIHelper.getInstance().setResolution(screenBounds.getHeight() * Screen.getPrimary().getOutputScaleY());
-        URL url = new File("src/main/resources/fxml/mainScreen.fxml").toURI().toURL();
-        Parent root = FXMLLoader.load(url);
+
+        Parent root = null;
+        try {
+            URL url = new File("src/main/resources/fxml/mainScreen.fxml").toURI().toURL();
+            root = FXMLLoader.load(url);
+        } catch (IOException e) {
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getClassLoader().getResource("fxml/mainScreen.fxml"));
+            try {
+                 root = fxmlLoader.load();
+            } catch (IOException ioException) {
+                ioException.printStackTrace();
+            }
+        }
+
+
         primaryStage.setTitle("Client");
         Scene scene = new Scene(root);
         scene.getStylesheets().add("css/mainText.css");
