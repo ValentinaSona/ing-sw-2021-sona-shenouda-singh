@@ -267,7 +267,8 @@ public class CLIMessageHandler {
             if (message.getUser().getNickName().equals(MatchSettings.getInstance().getClientNickname()))
                 cli.printMessage("[!] A vatican report has been triggered. Check the faith tracks to see the results!");
             else
-                cli.printMessage("[!] " + message.getUser().getNickName() + " has received " + message.getFaith() + " faith points and triggered a vatican report! Check your faith track!");
+                if (message.getFaith()!= 0)
+                    cli.printMessage("[!] " + message.getUser().getNickName() + " has received " + message.getFaith() + " faith points and triggered a vatican report! Check your faith track!");
         } else {
             if (message.getUser().getNickName().equals(MatchSettings.getInstance().getClientNickname()))
                 cli.printMessage("[" + CHECK_MARK + "] You have received " + message.getFaith() + " faith points.");
@@ -353,8 +354,8 @@ public class CLIMessageHandler {
         MenuRunner.getInstance().setState(MenuStates.END);
 
         switch (message.getCause()){
-            case FAITH_END -> cli.printMessage("\n[!] A player has triggered the 3rd Vatican Report! The game has ended- check the scores to se who won!");
-            case SEVENTH_CARD -> cli.printMessage("\n[!] A player has acquired 7 development cards! The game has ended - check the scores to se who won!");
+            case FAITH_END -> cli.printMessage("\n[!] A player has triggered the 3rd Vatican Report! The game has ended- check the scores to see who won!");
+            case SEVENTH_CARD -> cli.printMessage("\n[!] A player has acquired 7 development cards! The game has ended - check the scores to see who won!");
             case LORENZO_FAITH -> cli.printMessage("\n[!] Lorenzo has reached the end of his faith track. You lost!");
             case LORENZO_DISCARD -> cli.printMessage("\n[!] Lorenzo has discarded all the cards of one color. You lost!");
             case DEBUG -> cli.printMessage("\n[!] A player has ended the game with a secret debug code!");

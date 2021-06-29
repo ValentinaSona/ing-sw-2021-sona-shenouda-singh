@@ -320,7 +320,7 @@ public class ResourceController{
                 }
 
                 for (Id depotId : standardDepots) {
-                    if (depotId != action.getSlotId()) {
+                    if (depotId != action.getSlotId() && action.getSlotId() != Id.S_DEPOT_1 && action.getSlotId()!= Id.S_DEPOT_2) {
                         if (warehouse.get(depotId.getValue()).getResource() != null && warehouse.get(depotId.getValue()).getResource().getResourceType() == action.getResource().getResourceType()) {
 
                             // If one of the other standard depots isn't empty and contains a resource of the same type as the one we're trying to deposit the action is illegal.
@@ -448,16 +448,23 @@ public class ResourceController{
 
                     for (Resource resource: dev.productionCost()){
                         if (spent.containsKey(resource.getResourceType())) {
+
                             spent.get(resource.getResourceType()).add(resource);
-                        } else spent.put(resource.getResourceType(), resource);
+                        } else spent.put(resource.getResourceType(), new Resource(resource.getQuantity(), resource.getResourceType()));
                     }
+
 
                     Resource[] productionOut = dev.activateProduction();
 
                     for (Resource resource: productionOut){
+
                         if (gained.containsKey(resource.getResourceType())) {
+
+
                             gained.get(resource.getResourceType()).add(resource);
-                        } else gained.put(resource.getResourceType(), resource);
+
+                        } else gained.put(resource.getResourceType(), new Resource(resource.getQuantity(), resource.getResourceType()));
+
 
                         if (resource.getResourceType()== ResourceType.FAITH){
                             addFaithPoints(player, resource);

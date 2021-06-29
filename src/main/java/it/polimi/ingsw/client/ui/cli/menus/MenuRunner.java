@@ -233,6 +233,7 @@ public class MenuRunner {
     public void printPlayedLeaders(PlayerView view){
         var cards = view.getLeaderCards();
         int i = 0;
+        if (cards == null) { cli.printMessage("[X] You have played no leader cards"); return;}
         for (LeaderCard card : cards){
             if (card != null && card.isActive()) {
                 cli.printMessage(card);
