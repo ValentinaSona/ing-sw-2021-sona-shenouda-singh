@@ -201,6 +201,8 @@ public class BoardGUIController extends AbstractGUIController implements GameGUI
 
         var tiles = playerView.getFaithTrackView().getPopeFavorTiles();
 
+        Stream.of(tilePane).forEach(e -> e.getChildren().clear());
+
         for (int i = 0; i < 3; i++) {
             var im = GUIHelper.getInstance().getImage(tiles[i], i);
             if (im != null) tilePane[i].getChildren().add(new ImageView(im));
@@ -534,17 +536,6 @@ public class BoardGUIController extends AbstractGUIController implements GameGUI
                     box2.getChildren().add(im);
                 }
             }
-
-            /*
-            if (cards != null) {
-                cards.stream().filter(c -> c != null && c.isActive())
-                        .forEach( e -> {
-                            var im = new ImageView(GUIHelper.getInstance().getAbilityImageFromLeader(e));
-                            var effect = new DropShadow();
-                            im.setEffect(effect);
-                            abilityBox.getChildren().add(im);
-                        });
-            } */
         });
 
     }

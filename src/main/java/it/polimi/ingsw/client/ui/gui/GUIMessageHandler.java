@@ -5,17 +5,22 @@ import it.polimi.ingsw.client.ui.controller.DispatcherController;
 import it.polimi.ingsw.client.ui.controller.UIController;
 import it.polimi.ingsw.client.ui.controller.UiControllerInterface;
 import it.polimi.ingsw.client.ui.gui.JFXControllers.*;
+import it.polimi.ingsw.server.model.Game;
 import it.polimi.ingsw.utils.networking.transmittables.StatusMessage;
 import it.polimi.ingsw.utils.networking.transmittables.resilienza.ServerGameReconnectionMessage;
 import it.polimi.ingsw.utils.networking.transmittables.servermessages.*;
 import javafx.application.Platform;
 import javafx.stage.Stage;
 
+import static it.polimi.ingsw.client.ui.cli.CLIHelper.CHECK_MARK;
+
 public class GUIMessageHandler {
 
     private static GUIMessageHandler singleton;
     private UiControllerInterface currentController;
     private GameGUIControllerInterface currentGameController;
+
+    GameLog log;
 
     public void setCurrentController(UiControllerInterface currentController) {
         GUIHelper.getInstance().setCurrentController(currentController);
@@ -30,6 +35,10 @@ public class GUIMessageHandler {
     public static GUIMessageHandler getInstance() {
         if(singleton==null) singleton = new GUIMessageHandler();
         return singleton;
+    }
+
+    private GUIMessageHandler() {
+        log = GameLog.getInstance();
     }
 
     public void handleStatusMessage(StatusMessage message) {
@@ -88,25 +97,27 @@ public class GUIMessageHandler {
 
     public void handleServerStartTurnMessage(ServerStartTurnMessage message) {
 
-            // Game is in setup phase
-            if (GUIHelper.getInstance().getCurrentScreen() == ScreenName.STARTING_CHOICE) Platform.runLater( () -> ((LeaderSelectionGUIController)currentController).goToGame());
+        GUIHelper.getInstance().setCurrAction(CurrAction.IDLE);
 
-            else if (GUIHelper.getInstance().getCurrentScreen() == ScreenName.LOBBY && GUIHelper.getInstance().isResuming()) Platform.runLater(() -> GUIHelper.getInstance().setScreen(ScreenName.PERSONAL_BOARD));
+        // Game is in setup phase
+        if (GUIHelper.getInstance().getCurrentScreen() == ScreenName.STARTING_CHOICE) Platform.runLater( () -> ((LeaderSelectionGUIController)currentController).goToGame());
 
-            synchronized (GUIMessageHandler.getInstance()) {
-                while(currentGameController == null) {
-                    try {
-                        GUIMessageHandler.getInstance().wait();
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
+        else if (GUIHelper.getInstance().getCurrentScreen() == ScreenName.LOBBY && GUIHelper.getInstance().isResuming()) Platform.runLater(() -> GUIHelper.getInstance().setScreen(ScreenName.PERSONAL_BOARD));
+
+        synchronized (GUIMessageHandler.getInstance()) {
+            while(currentGameController == null) {
+                try {
+                    GUIMessageHandler.getInstance().wait();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
                 }
             }
+        }
 
-            // Game has begun
-            GUIHelper.getInstance().setTurn(message.getStartingTurn().getNickName().equals(MatchSettings.getInstance().getClientNickname()));
-            GameLog.getInstance().update(LogUpdates.TURN, message.getStartingTurn());
-            currentGameController.update();
+        // Game has begun
+        GUIHelper.getInstance().setTurn(message.getStartingTurn().getNickName().equals(MatchSettings.getInstance().getClientNickname()));
+        log.update(LogUpdates.TURN, message.getStartingTurn());
+        currentGameController.update();
 
 
     }
@@ -119,7 +130,7 @@ public class GUIMessageHandler {
 
     public void handleServerBoughtMarblesMessage(ServerBoughtMarblesMessage message) {
         if (!message.getUser().getNickName().equals(MatchSettings.getInstance().getClientNickname()))
-            GameLog.getInstance().update(LogUpdates.BUY_MARKET, message.getUser(), message.getBoughtResources());
+            log.update(LogUpdates.BUY_MARKET, message.getUser(), message.getBoughtResources());
             Platform.runLater(() -> GUIHelper.getInstance().setScreen(ScreenName.PERSONAL_BOARD));
 
 
@@ -154,17 +165,17 @@ public class GUIMessageHandler {
     public void handleServerActivateLeaderCardAbilityMessage(ServerActivateLeaderCardAbilityMessage message) {
         GUIHelper.getInstance().abilityActivation(message.getAbility());
         Platform.runLater(() -> currentGameController.update());
-        GameLog.getInstance().update(LogUpdates.ABILITY_ACTIVATION, message.getUser());
+        log.update(LogUpdates.ABILITY_ACTIVATION, message.getUser());
     }
 
     public void handleServerThrowLeaderCardAbilityMessage(ServerThrowLeaderCardMessage message) {
         Platform.runLater(() -> currentGameController.update());
-        GameLog.getInstance().update(LogUpdates.CARD_THROW, message.getUser());
+        log.update(LogUpdates.CARD_THROW, message.getUser());
     }
 
     public void handleServerActivateProductionMessage(ServerActivateProductionMessage message) {
         SelectedProductions.getInstance().reset();
-        GameLog.getInstance().update(LogUpdates.PRODUCTION_ACTIVATED, message);
+        log.update(LogUpdates.PRODUCTION_ACTIVATED, message);
         Platform.runLater(() -> currentGameController.update());
     }
 
@@ -189,6 +200,7 @@ public class GUIMessageHandler {
     }
 
     public void handleServerFaithTrackMessage(ServerFaithTrackMessage message) {
+        log.update(LogUpdates.FAITH_TRACK, message);
         Platform.runLater(() -> currentGameController.update());
     }
 
@@ -225,7 +237,7 @@ public class GUIMessageHandler {
 
     public void handleServerChooseWhiteMarblesMessage(ServerChooseWhiteMarblesMessage message) {
         if (message.getUser().getNickName().equals(MatchSettings.getInstance().getClientNickname())) {
-            GameLog.getInstance().update(LogUpdates.CHOOSE_WHITE);
+            log.update(LogUpdates.CHOOSE_WHITE);
             Platform.runLater(() -> ((MarketGUIController) currentController).startTwoCardSelection());
         }
     }

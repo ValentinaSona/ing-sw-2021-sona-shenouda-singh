@@ -49,7 +49,7 @@
                   </ImageView>
                         <Button alignment="CENTER" mnemonicParsing="false" prefHeight="120.0" prefWidth="170.0" styleClass="darkButton" text="Leader&#10;Cards" textAlignment="CENTER" />
                         <Button fx:id="activateProd" alignment="CENTER" disable="true" mnemonicParsing="false" prefHeight="120.0" prefWidth="240.0" styleClass="darkButton" text="Activate&#10;Production" textAlignment="CENTER" />
-                        <Button fx:id="end" alignment="CENTER" disable="true" mnemonicParsing="false" nodeOrientation="LEFT_TO_RIGHT" prefHeight="120.0" prefWidth="170.0" styleClass="darkButton" text="End&#10;Turn" textAlignment="CENTER" />
+                        <Button fx:id="end" alignment="CENTER" disable="true" mnemonicParsing="false" nodeOrientation="LEFT_TO_RIGHT" onAction="#endTurn" prefHeight="120.0" prefWidth="170.0" styleClass="darkButton" text="End&#10;Turn" textAlignment="CENTER" />
                     </children>
                 </HBox>
                 <GridPane fx:id="faithGrid" maxHeight="185.0" maxWidth="1165.0" StackPane.alignment="CENTER_LEFT">

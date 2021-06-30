@@ -60,7 +60,7 @@
                   </ImageView>
                   <Button alignment="CENTER" mnemonicParsing="false" onAction="#goToLeader" prefHeight="120.0" prefWidth="170.0" styleClass="darkButton" text="Leader&#10;Cards" textAlignment="CENTER" />
                   <Button alignment="CENTER" disable="true" mnemonicParsing="false" prefHeight="120.0" prefWidth="240.0" styleClass="darkButton" text="Activate&#10;Production" textAlignment="CENTER" />
-                  <Button fx:id="end" alignment="CENTER" mnemonicParsing="false" nodeOrientation="LEFT_TO_RIGHT" prefHeight="120.0" prefWidth="170.0" styleClass="darkButton" text="End&#10;Turn" textAlignment="CENTER" />
+                  <Button fx:id="end" alignment="CENTER" mnemonicParsing="false" nodeOrientation="LEFT_TO_RIGHT" onAction="#endTurn" prefHeight="120.0" prefWidth="170.0" styleClass="darkButton" text="End&#10;Turn" textAlignment="CENTER" />
                </children>
                <StackPane.margin>
                   <Insets left="30.0" top="20.0" />

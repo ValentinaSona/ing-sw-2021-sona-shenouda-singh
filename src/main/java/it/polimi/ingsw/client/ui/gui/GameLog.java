@@ -3,10 +3,7 @@ package it.polimi.ingsw.client.ui.gui;
 import it.polimi.ingsw.client.modelview.MatchSettings;
 import it.polimi.ingsw.server.controller.User;
 import it.polimi.ingsw.server.model.Resource;
-import it.polimi.ingsw.utils.networking.transmittables.servermessages.ServerActivateProductionMessage;
-import it.polimi.ingsw.utils.networking.transmittables.servermessages.ServerMessage;
-import it.polimi.ingsw.utils.networking.transmittables.servermessages.ServerSoloDiscardMessage;
-import it.polimi.ingsw.utils.networking.transmittables.servermessages.ServerSoloMoveMessage;
+import it.polimi.ingsw.utils.networking.transmittables.servermessages.*;
 import javafx.application.Platform;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -17,9 +14,12 @@ import javafx.scene.text.TextFlow;
 import java.util.ArrayList;
 import java.util.List;
 
+import static it.polimi.ingsw.client.ui.cli.CLIHelper.CHECK_MARK;
+
 public class GameLog {
 
     private static int logLenght = 4;
+    private static String warning = "#ffb545";
 
     private static GameLog singleton;
     private TextFlow log;
@@ -81,6 +81,10 @@ public class GameLog {
                 activity += getResRegister(resources);
 
                 activity += " from the market";
+
+                if (user.getNickName().equals(MatchSettings.getInstance().getClientNickname())) {
+                    activity += ". You can drag the resources in the depots you want to put them";
+                }
             }
 
             add(activity);
@@ -134,7 +138,33 @@ public class GameLog {
             case BLACK_CROSS -> {
                 ServerSoloMoveMessage newMessage = (ServerSoloMoveMessage) message;
 
-                activity = "Lorenzo has advanced on the faith track ";
+                if (newMessage.isShuffled()) activity = "Lorenzo has gained 1 faith points and has shuffled his actions";
+
+                activity = "Lorenzo has gained 2 faith points";
+            }
+
+            case FAITH_TRACK -> {
+                var newMessage = (ServerFaithTrackMessage) message;
+                if(newMessage.getUser()==null){
+                    if (newMessage.isReport()) {
+                        add("Lorenzo has received " + newMessage.getFaith() + " faith points and triggered a vatican report", warning);
+                    } else
+                        add("Lorenzo has received " + newMessage.getFaith()+ " faith points");
+                    return;
+                }
+
+                if (newMessage.isReport()) {
+                    if (newMessage.getUser().getNickName().equals(MatchSettings.getInstance().getClientNickname()))
+                        add("A vatican report has been triggered", warning);
+                    else
+                    if (newMessage.getFaith()!= 0)
+                        add(newMessage.getUser().getNickName() + " has received " + newMessage.getFaith() + " faith points and triggered a vatican report");
+                } else {
+                    if (newMessage.getUser().getNickName().equals(MatchSettings.getInstance().getClientNickname()))
+                        add("You have received " + newMessage.getFaith() + " faith points.");
+                    else
+                        add(newMessage.getUser().getNickName() + " has received " + newMessage.getFaith() + " faith points.");
+                }
             }
         }
 
