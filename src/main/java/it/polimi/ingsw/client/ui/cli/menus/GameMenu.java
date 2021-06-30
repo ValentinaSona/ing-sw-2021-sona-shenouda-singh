@@ -164,7 +164,6 @@ public class GameMenu {
             prodId = null;
             if (!productions.contains(slots[choice-1])){
                 productions.add(slots[choice-1]);
-                options[choice - 1] = options[choice - 1] + " - selected";
                 prodId = slots[choice-1];
             } else {
                 cli.printMessage("[X] Production already selected.");
@@ -296,7 +295,9 @@ public class GameMenu {
             }
 
             if (runner.getCurrentAction() == GameActions.MENU){
-
+                productions.remove(slots[choice-1]);
+            } else {
+                options[choice - 1] = options[choice - 1] + " - selected";
             }
 
             if (productions.size() == (options.length - empty - 1)) break;
@@ -304,7 +305,7 @@ public class GameMenu {
         } while(true);
 
 
-
+        if (productions.isEmpty()){return;}
 
         runner.setContextAction(GameActions.ACTIVATE_PRODUCTION);
         runner.setCurrentAction(GameActions.WAITING);
@@ -337,7 +338,7 @@ public class GameMenu {
         int[] choice = cli.getDevelopmentRowCol();
 
 
-        // This card is already discounted if necessary!
+        // IS THIS DISCOUNTED OR NOT? maybe it was the same other bug.
         var card = GameView.getInstance().getDevelopmentCardsMarket().getTray()[choice[0]][choice[1]];
 
 
@@ -377,7 +378,17 @@ public class GameMenu {
             for (Resource res :card.getCost()){
                 cost.add(new Resource(res.getQuantity(), res.getResourceType()));
             }
-
+            for (LeaderCard discount: discounts){
+                var sale = ((DiscountAbility)discount.getSpecialAbility()).getDiscount();
+                for (Resource resource : cost){
+                    if (resource.getResourceType() == sale.getResourceType()){
+                        resource.sub(sale);
+                        // This never happens with the original set of cards, but it's good practice to check.
+                        if (resource.getQuantity()<=0) cost.remove(resource);
+                        break;
+                    }
+                }
+            }
             // Various print to deliver info to the player.
             cli.printMessage("[" + CHECK_MARK + "] Selected card: \n" + card);
             runner.printDepots();

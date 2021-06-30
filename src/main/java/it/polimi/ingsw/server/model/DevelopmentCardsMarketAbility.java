@@ -44,7 +44,11 @@ public class DevelopmentCardsMarketAbility implements DevMarket {
 
         if (abilityMap.containsKey(player) && card != null) {
 
-            Resource[] cost = card.getCost();
+            Resource[] cost = new Resource[card.getCost().length];
+
+            for (int i = 0; i < card.getCost().length; i++){
+                cost[i] = new Resource(card.getCost()[i].getQuantity(),card.getCost()[i].getResourceType());
+            }
 
             for(Resource r : abilityMap.get(player)) {
                 for(Resource cardCost : cost) {
@@ -52,7 +56,7 @@ public class DevelopmentCardsMarketAbility implements DevMarket {
                 }
             }
 
-            return Arrays.equals(cost, card.getCost()) ? card : new DevelopmentCard(cost, card);
+            return new DevelopmentCard(cost, card);
         }
 
         else return card;

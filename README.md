@@ -23,6 +23,7 @@
 
 The program requires one command line argument amongst `cli`, `gui`, or `server` to run.
 The CLI uses UTF-8 characters and ANSI color escapes, therefore requiring the terminal emulator to have these features enabled, and a font that contains UTF-8 characters selected.
+For windows, this has been tested with Git-for-Windows' Git Bash terminal emulator.
 
 The clients can be run from anywhere, while the server requires that it is run in a folder that has `./saved_games` as a sub-folder to support persistence.
 
@@ -34,7 +35,7 @@ The clients can be run from anywhere, while the server requires that it is run i
 `\path\to\java -jar Masters.jar server`
 
 ## Testing information
-From a cli client and while in the main game menu, selecting `1492` instead of one of the displayed options causes the game to end as if a victory condition had been met.  
+From a cli client and while in the main game menu, selecting `1492` instead of one of the displayed options causes the game to end for all players (gui clients included) as if a victory condition had been met.  
 
 The precompiled jar file supplied in the `\deliverables` folder uses localhost as the server url and a preselected port. To change this behaviour either:
 + Change the values in `it/polimi/ingsw/utils/Constant.java` and recompile the program with `mvn package`
@@ -47,3 +48,11 @@ The precompiled jar file supplied in the `\deliverables` folder uses localhost a
 `\path\to\java -jar Masters.jar server 127.0.0.0 9017`
 
 No checks are implemented to verify whether the supplied arguments are correct.
+
+
+To test specific game situations, one may save a game and modify the save files on the server - they are easily readable since they are written in json. 
+Given that the use-case of this feature is that of a remote server to which the player has no access, no checks are implemented to assure that the files are valid and have not been tampered with. 
+So, while useful for testing, no guarantees of any kind are given that this endeavor will not result in unplayable and/or illegal game states.
+
+One notable example: setting one's leader cards to active, while not editing the ability maps in the markets or adding the depot/production to the respective lists (or vice versa) renders the abilities unattainable and/or malfunctioning. 
+

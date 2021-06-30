@@ -1,5 +1,9 @@
 package it.polimi.ingsw.client.ui.cli;
 
+/**
+ * Contains all the unicode ANSI and special strings used throughout the CLI.
+ */
+
 public class CLIHelper {
     public static final String ANSI_RED = "\033[31m";
     public static final String ANSI_BLACK = "\033[030m";

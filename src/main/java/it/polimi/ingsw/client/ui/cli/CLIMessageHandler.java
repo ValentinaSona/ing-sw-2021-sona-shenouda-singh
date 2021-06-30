@@ -13,6 +13,11 @@ import java.util.stream.Collectors;
 
 import static it.polimi.ingsw.client.ui.cli.CLIHelper.CHECK_MARK;
 
+/**
+ * Singleton class containing the CLI-specific methods for handling the server messages.
+ * They are invoked by the DispatcherController after the UI-agnostic handling of the messages.
+ */
+
 public class CLIMessageHandler {
 
     private static CLIMessageHandler singleton;
@@ -36,7 +41,6 @@ public class CLIMessageHandler {
 
     /**
      * Handles status messages. Directly handles unique ones, invokes apposite functions for other ones.
-     *
      * @param msg status message to be handled.
      */
     public void handleStatusMessage(StatusMessage msg) {
@@ -88,6 +92,9 @@ public class CLIMessageHandler {
 
     }
 
+    /**
+     * Various situations in which the SELECTION_ERROR status message incurs.
+     */
     private void handleSelectionError() {
         if (MenuRunner.getInstance().getContextAction() == GameActions.SELECT_CARD)
             MenuRunner.getInstance().sendResponse(GameActions.SELECT_CARD, GameActions.MENU, "[X] This card cannot be placed on top of this slot.");
@@ -96,7 +103,9 @@ public class CLIMessageHandler {
         else if (MenuRunner.getInstance().getContextAction() == GameActions.SELECT_PRODUCTION)
             MenuRunner.getInstance().sendResponse(GameActions.SELECT_PRODUCTION, GameActions.MENU, "[X] The resources selected are not sufficient to activate this production.");
     }
-
+    /**
+     * Various situations in which the CONTINUE status message incurs.
+     */
     private void handleContinue() {
         if (MenuRunner.getInstance().getContextAction() == GameActions.TIDY_WAREHOUSE)
             MenuRunner.getInstance().sendResponse(GameActions.TIDY_WAREHOUSE, "[X] These depots are both empty! Did you pick the right ones?");
@@ -104,7 +113,9 @@ public class CLIMessageHandler {
             MenuRunner.getInstance().sendResponse(GameActions.SELECT_CARD, GameActions.BUY_CARD, "[" + CHECK_MARK + "] Select the resources needed to pay.");
 
     }
-
+    /**
+     * Various situations in which the REQUIREMENTS_ERROR status message incurs.
+     */
     private void handleRequirementsError() {
         if (MenuRunner.getInstance().getContextAction() == GameActions.TIDY_WAREHOUSE)
             MenuRunner.getInstance().sendResponse(GameActions.TIDY_WAREHOUSE, "[X] These two depots cannot be swapped.");
@@ -124,6 +135,9 @@ public class CLIMessageHandler {
 
     }
 
+    /**
+     * Various situations in which the CLIENT_ERROR status message incurs.
+     */
     private void handleClientError() {
         if (MenuRunner.getInstance().getContextAction() == GameActions.TIDY_WAREHOUSE || MenuRunner.getInstance().getContextAction() == GameActions.BUY_MARBLES)
             MenuRunner.getInstance().sendResponse(GameActions.TIDY_WAREHOUSE, "[X] This operation is unavailable right now.");
@@ -141,6 +155,9 @@ public class CLIMessageHandler {
             MenuRunner.getInstance().sendResponse(GameActions.DEPOSIT_RESOURCES, "[X] This resource is not amongst the obtained ones.");
         else if (MenuRunner.getInstance().getState() == MenuStates.MAIN)
             MenuRunner.getInstance().sendResponse(GameActions.MENU, GameActions.END_TURN, "[X] This nickname is already taken. Try to join with a different one.");
+        else  if (MenuRunner.getInstance().getContextAction() == GameActions.END_TURN)
+            MenuRunner.getInstance().sendResponse(GameActions.END_TURN, "[X] You cannot end your turn without buying from a market or activating your productions");
+
     }
 
     public void handleUpdateLobbyMessage(ServerUpdateLobbyMessage message) {
@@ -169,7 +186,8 @@ public class CLIMessageHandler {
     /**
      * This message is received by ALL users. Only the user indicated in the message proceeds to handle its contents.
      * Other users are notified that another player is choosing their cards.
-     *
+     * It's an interrupting method that refreshes a player's menu options (see CLI.getChoice()).
+     * It also wakes up the MenuRunner so that it enters the setup state.
      * @param message contains resource number, 4 leader cards, a faith track and the addressed user.
      */
     public void handleServerSetupUserMessage(ServerSetupUserMessage message) {
@@ -208,6 +226,12 @@ public class CLIMessageHandler {
 
     }
 
+    /**
+     * Received by all users at the start of someone's turn
+     * It's an interrupting method that refreshes a player's menu options (see CLI.getChoice()).
+     * It also wakes up the MenuRunner so that it enters the GAME state. (If it's not in the REJOIN state, in which case it is already awake).
+     * @param message handled message.
+     */
     public void handleServerStartTurnMessage(ServerStartTurnMessage message) {
         // If it's the first turn.
         if (MenuRunner.getInstance().getState() == MenuStates.SETUP)
@@ -233,7 +257,6 @@ public class CLIMessageHandler {
 
 
     }
-
 
     public void handleServerWarehouseMessage(ServerWarehouseMessage message) {
 
@@ -281,7 +304,6 @@ public class CLIMessageHandler {
                 cli.printMessage("[" + CHECK_MARK + "] " + message.getUser().getNickName() + " has received " + message.getFaith() + " faith points.");
         }
     }
-
 
     public void handleServerDepositActionMessage(ServerDepositActionMessage message) {
         if (message.getUser().getNickName().equals(MatchSettings.getInstance().getClientNickname()))

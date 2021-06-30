@@ -40,7 +40,7 @@ public class TurnController{
         return null;
     }
 
-    /** TODO: should also be called when timeout kicks in in case of disconnection.
+    /**
      * Called when the user communicates that their turn has ended.
      * @param view the player's corresponding RealRemoteViewHandler that will handle status messages to be sent back to the view.
      * @param user the User corresponding to the player making the action.
@@ -49,13 +49,10 @@ public class TurnController{
 
         Player endingPlayer = model.getPlayerFromUser(user);
 
-        if( !(endingPlayer.getTurn())  ){
+        if( !(endingPlayer.getTurn())  || endingPlayer.getMainAction() ){
             view.handleStatusMessage(StatusMessage.CLIENT_ERROR);
         }else{
-            endingPlayer.toggleTurn();;
-            if(endingPlayer.getMainAction()){
-                endingPlayer.toggleMainAction();
-            }
+            endingPlayer.toggleTurn();
 
 
             List<Player> players = model.getPlayers();
@@ -165,7 +162,7 @@ public class TurnController{
             resources = 2;
             faithPoints = 1;
         }else{
-            new RuntimeException("This should never happen");
+            throw new RuntimeException("This should never happen");
         }
 
 

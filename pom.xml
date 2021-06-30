@@ -9,7 +9,7 @@
   <groupId>it.polimi.ingsw</groupId>
   <artifactId>GC5</artifactId>
   <packaging>jar</packaging>
-  <version>1.0-SNAPSHOT</version>
+  <version>1.0</version>
 
   <name>GC05</name>
   <url>https://github.com/ValentinaSona/ing-sw-2021-sona-shenouda-singh</url>

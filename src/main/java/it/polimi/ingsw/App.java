@@ -7,15 +7,15 @@ import it.polimi.ingsw.client.ui.controller.DispatcherController;
 import it.polimi.ingsw.client.ui.gui.GUI;
 import it.polimi.ingsw.server.Server;
 import it.polimi.ingsw.utils.Constant;
-import javafx.application.Application;
 
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- * Program's main argument.
- *
+ * Program's main class that handles the command line arguments.
+ * Launches the two types of clients and the server and initializes the logger.
+ * Optionally changes the default port and hostname of the server.
  */
 public class App 
 {
@@ -32,7 +32,7 @@ public class App
         switch (args[0]) {
             case "gui" -> {
                 Client client = new Client(new GUI());
-                //mi metto semplicemente ad aspettare che vengano messi messaggi nella coda
+                //The dispatcher controller
                 //per dire al uiController di processarli
                 DispatcherController.getInstance(true);
                 client.getChosenUi().start();
