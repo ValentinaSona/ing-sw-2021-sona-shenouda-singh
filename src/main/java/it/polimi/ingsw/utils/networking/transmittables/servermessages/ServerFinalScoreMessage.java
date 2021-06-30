@@ -1,6 +1,5 @@
 package it.polimi.ingsw.utils.networking.transmittables.servermessages;
 
-import it.polimi.ingsw.client.modelview.DevMarketView;
 import it.polimi.ingsw.client.ui.controller.DispatcherController;
 import it.polimi.ingsw.server.controller.User;
 import it.polimi.ingsw.server.exception.EndOfGameCause;
@@ -10,12 +9,10 @@ import java.util.Map;
 
 public class ServerFinalScoreMessage  implements ServerMessage, ClientHandleable {
         private final Map<User, Integer> rank;
-        private final EndOfGameCause cause;
 
-        public ServerFinalScoreMessage(Map<User, Integer> rank, EndOfGameCause cause){
+        public ServerFinalScoreMessage(Map<User, Integer> rank){
 
             this.rank = rank;
-            this.cause = cause;
         }
 
         @Override
@@ -23,10 +20,11 @@ public class ServerFinalScoreMessage  implements ServerMessage, ClientHandleable
             handler.handleFinalScore(this);
             return true;
         }
+        //TODO remove this
+        public EndOfGameCause getCause(){
+            return EndOfGameCause.DEBUG;
+        }
 
-    public EndOfGameCause getCause() {
-        return cause;
-    }
 
     public Map<User, Integer> getRank() {
             return rank;

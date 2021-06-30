@@ -109,8 +109,8 @@ public class ResourceController{
             }
 
             if (vaticanReportException.getReport()==3) {
-                if (model.isSolo() &&  model.getLorenzo().getFaithTrack().getFaithMarker() >= 24) throw new EndOfGameException(EndOfGameCause.LORENZO_FAITH);
-                throw new EndOfGameException(EndOfGameCause.FAITH_END);
+                if (model.isSolo() &&  model.getLorenzo().getFaithTrack().getFaithMarker() >= 24) throw new EndOfGameException(EndOfGameCause.LORENZO_FAITH, null);
+                throw new EndOfGameException(EndOfGameCause.FAITH_END, model.getUserFromPlayer(player));
             }
 
         }

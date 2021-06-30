@@ -105,7 +105,7 @@ public class FaithTrack {
 		else if (faithMarker >=9) return 4 + tiles;
 		else if (faithMarker >=6) return 2 + tiles;
 		else if (faithMarker >=2) return 1 + tiles;
-		else return 0 + tiles;
+		else return tiles;
 
 	}
 

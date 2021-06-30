@@ -17,11 +17,14 @@ public class TurnController{
     private Game model;
     private Controller controller;
 
+    private boolean endGame;
+
     /*  Called when a player ends their turn.
             Modifies currentPlayer and playerList for all controller and resets players' actions as needed.
         */
     private TurnController(Game model){
         this.model = model;
+        endGame = false;
     }
 
     public static TurnController getInstance(Game model){
@@ -40,6 +43,10 @@ public class TurnController{
         return null;
     }
 
+    public void setEndGame(boolean endGame) {
+        this.endGame = endGame;
+    }
+
     /**
      * Called when the user communicates that their turn has ended.
      * @param view the player's corresponding RealRemoteViewHandler that will handle status messages to be sent back to the view.
@@ -53,9 +60,12 @@ public class TurnController{
             view.handleStatusMessage(StatusMessage.CLIENT_ERROR);
         }else{
             endingPlayer.toggleTurn();
-
-
             List<Player> players = model.getPlayers();
+
+            if ( endGame && players.indexOf(endingPlayer) == ( players.size() - 1 ) ) {
+                endOfGame();
+            }
+
             int startingIdx = players.indexOf(endingPlayer);
 
             int idx =(startingIdx == players.size()-1)? 0: startingIdx+1;
@@ -79,6 +89,9 @@ public class TurnController{
             Player startingPlayer = model.getCurrentPlayer();
             startingPlayer.toggleTurn();
             startingPlayer.toggleMainAction();
+
+
+
             model.notify(new ServerStartTurnMessage(
                     model.getUserFromPlayer(startingPlayer),
                     model.getUserFromPlayer(endingPlayer)
@@ -100,7 +113,8 @@ public class TurnController{
             try {
                 LorenzoAction();
             } catch (EndOfGameException e) {
-                endOfGame(e);
+                model.notify(new ServerLastTurnsMessage(null, e.getEndCause()));
+                endOfGame();
             }
         }
 
@@ -228,7 +242,7 @@ public class TurnController{
                     model.getLorenzo().getFaithTrack().validatePopeFavor(e.getReport());
                     model.notify( new ServerFaithTrackMessage(true, player.getVisibleFaithTrack(), 2, null ) );
 
-                    if (e.getReport()==3) throw new EndOfGameException(EndOfGameCause.LORENZO_FAITH);
+                    if (e.getReport()==3) throw new EndOfGameException(EndOfGameCause.LORENZO_FAITH, null);
 
                 }
 
@@ -244,7 +258,7 @@ public class TurnController{
 
                     // This null needs to be handled client side but shouldn't be a problem as it's expected of singleplayer.
                     model.notify( new ServerFaithTrackMessage( true, player.getVisibleFaithTrack(), 1,null ) );
-                    if (e.getReport()==3) throw new EndOfGameException(EndOfGameCause.LORENZO_FAITH);
+                    if (e.getReport()==3) throw new EndOfGameException(EndOfGameCause.LORENZO_FAITH, null);
                 }
                 model.getLorenzo().shuffle();
 
@@ -277,11 +291,8 @@ public class TurnController{
 
     /**
      * Called when the game is done.
-     * @param e
      */
-    public void endOfGame(EndOfGameException e){
-
-
+    public void endOfGame(){
 
         Map<User, Integer> scores = new LinkedHashMap<>();
 
@@ -297,7 +308,7 @@ public class TurnController{
         while(rank.size()< size){
             highest.setValue(0);
             for (Player player: model.getPlayers()){
-                if (scores.containsKey(model.getUserFromPlayer(player)) && scores.get(model.getUserFromPlayer(player)) >= highest.getValue()){
+                if (scores.containsKey(model.getUserFromPlayer(player)) && (scores.get(model.getUserFromPlayer(player)) >= highest.getValue())){
                     highest = new AbstractMap.SimpleEntry<User,Integer>(model.getUserFromPlayer(player),scores.get(model.getUserFromPlayer(player)));
                 }
             }
@@ -305,7 +316,7 @@ public class TurnController{
             rank.put(highest.getKey(),highest.getValue());
         }
 
-        model.notify(new ServerFinalScoreMessage(rank, e.getEndCause()));
+        model.notify(new ServerFinalScoreMessage(rank));
 
     }
 

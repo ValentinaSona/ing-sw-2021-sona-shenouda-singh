@@ -337,9 +337,7 @@ public class DispatcherController implements Runnable, LambdaObserver {
 
 
     public void handleActivateProduction(ServerActivateProductionMessage message){
-        if(message.getUser().getNickName().equals(MatchSettings.getInstance().getClientNickname()))
-            GameView.getInstance().getPlayerFromUser(message.getUser()).setStrongboxView(message.getStrongboxView());
-
+        GameView.getInstance().getPlayerFromUser(message.getUser()).setStrongboxView(message.getStrongboxView());
         GameView.getInstance().getCurrentPlayer().setMainAction(false);
         if(gui){
             GUIMessageHandler.getInstance().handleServerActivateProductionMessage(message);
@@ -433,6 +431,15 @@ public class DispatcherController implements Runnable, LambdaObserver {
             GUIMessageHandler.getInstance().handleStatusMessage(message);
         }else{
             CLIMessageHandler.getInstance().handleStatusMessage(message);
+        }
+    }
+
+    //TODO
+    public void handleLastTurns(ServerLastTurnsMessage message) {
+        if(gui){
+
+        }else{
+            CLIMessageHandler.getInstance().handleLastTurns(message);
         }
     }
 }

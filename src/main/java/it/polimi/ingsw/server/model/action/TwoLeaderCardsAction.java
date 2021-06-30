@@ -33,7 +33,7 @@ public class TwoLeaderCardsAction implements Action{
             );
         } catch (EndOfGameException e) {
             e.printStackTrace();
-            controller.turnController.endOfGame(e);
+            controller.turnController.endOfGame();
         }
     }
 

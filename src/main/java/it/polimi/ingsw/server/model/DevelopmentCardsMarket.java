@@ -127,7 +127,7 @@ public class DevelopmentCardsMarket implements  DevMarket {
 				// Remove the card
 				decks[i][type].pickCard();
 				// If no cards of third level are left of that type, the game has been lost.
-				if (decks[2][type].isEmpty()) throw new EndOfGameException(EndOfGameCause.LORENZO_DISCARD);
+				if (decks[2][type].isEmpty()) throw new EndOfGameException(EndOfGameCause.LORENZO_DISCARD, null);
 				// Only discard once
 				return;
 			}

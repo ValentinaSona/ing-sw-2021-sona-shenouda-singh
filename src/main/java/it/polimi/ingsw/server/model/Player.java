@@ -413,10 +413,11 @@ public class Player extends LambdaObservable<Transmittable> {
 			if (card.isActive()) vp += card.getVictoryPoints();
 		}
 
+		int total = 0;
 		for (Resource resource : getTotalResources()){
-			vp += resource.getQuantity()%5;
+			total += resource.getQuantity();
 		}
-
+		vp += total/5;
 		return vp;
 
 

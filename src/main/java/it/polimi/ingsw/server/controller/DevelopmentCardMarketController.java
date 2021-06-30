@@ -116,7 +116,7 @@ public class DevelopmentCardMarketController{
                     cards += devSlot.getSlot().size();
                 }
 
-                if (cards >= 7) throw new EndOfGameException(EndOfGameCause.SEVENTH_CARD);
+                if (cards >= 7) throw new EndOfGameException(EndOfGameCause.SEVENTH_CARD, user);
 
 
             } catch (NotSufficientResourceException e) {

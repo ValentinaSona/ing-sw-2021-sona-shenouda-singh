@@ -1,6 +1,7 @@
 package it.polimi.ingsw.client.ui.cli;
 
 import it.polimi.ingsw.client.modelview.MatchSettings;
+import it.polimi.ingsw.server.controller.User;
 import it.polimi.ingsw.utils.GameActions;
 import it.polimi.ingsw.client.ui.cli.menus.MenuRunner;
 import it.polimi.ingsw.client.ui.cli.menus.MenuStates;
@@ -169,8 +170,8 @@ public class CLIMessageHandler {
     public void handleServerSetupGameMessage(ServerSetupGameMessage message) {
 
         String players = message.getUsers().stream()
-                .map(String::valueOf)
-                .collect(Collectors.joining(" , ", "", ""));
+                .map(User::getNickName)
+                .collect(Collectors.joining(", ", "", ""));
         if (!MenuRunner.getInstance().isSolo()) {
             cli.printMessage("[" + CHECK_MARK + "] The lobby is full! The game is starting!");
             cli.printMessage("[" + CHECK_MARK + "] Players:" + players);
@@ -380,13 +381,7 @@ public class CLIMessageHandler {
     public void handleServerFinalScoreMessage(ServerFinalScoreMessage message) {
         MenuRunner.getInstance().setState(MenuStates.END);
 
-        switch (message.getCause()){
-            case FAITH_END -> cli.printMessage("\n[!] A player has triggered the 3rd Vatican Report! The game has ended- check the scores to see who won!");
-            case SEVENTH_CARD -> cli.printMessage("\n[!] A player has acquired 7 development cards! The game has ended - check the scores to see who won!");
-            case LORENZO_FAITH -> cli.printMessage("\n[!] Lorenzo has reached the end of his faith track. You lost!");
-            case LORENZO_DISCARD -> cli.printMessage("\n[!] Lorenzo has discarded all the cards of one color. You lost!");
-            case DEBUG -> cli.printMessage("\n[!] A player has ended the game with a secret debug code!");
-        }
+
 
         cli.printMessage("[!] Here is the final score!");
         message.getRank().forEach((u,s) -> cli.printMessage(u.getNickName() + " : "+ s));
@@ -459,5 +454,24 @@ public class CLIMessageHandler {
         cli.printMessage("[!] The game has been stopped by a player. To continue it, all of the current players must resume playing with the same nickname.");
 
         MenuRunner.getInstance().setState(MenuStates.SAVING);
+    }
+
+    public void handleLastTurns(ServerLastTurnsMessage message) {
+
+        switch (message.getCause()){
+            case FAITH_END -> cli.printMessage("\n[!] A player has triggered the 3rd Vatican Report!");
+            case SEVENTH_CARD -> cli.printMessage("\n[!] A player has acquired 7 development cards!");
+            case LORENZO_FAITH -> cli.printMessage("\n[!] Lorenzo has reached the end of his faith track. You lost!");
+            case LORENZO_DISCARD -> cli.printMessage("\n[!] Lorenzo has discarded all the cards of one color. You lost!");
+            case DEBUG -> cli.printMessage("\n[!] A player has ended the game with a secret debug code!");
+        }
+
+        if (message.getLastUsers() == null) return;
+
+        String players = message.getLastUsers().stream()
+                .map(User::getNickName)
+                .collect(Collectors.joining(", ", "", ""));
+
+        cli.printMessage("[ ] These users will now play their last turn: " + players);
     }
 }
