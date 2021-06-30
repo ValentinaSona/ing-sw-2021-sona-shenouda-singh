@@ -43,11 +43,16 @@ public class GUIMessageHandler {
 
     public void handleStatusMessage(StatusMessage message) {
 
-        System.out.println(message);
-
         Platform.runLater(() -> {
             switch(GUIHelper.getInstance().getCurrAction()){
-                case SELECTED_SLOT -> ((BoardGUIController)currentController).startDevResSelection();
+                case SELECTING_SLOT -> log.update(LogUpdates.DEV_SLOT);
+                case SELECTED_SLOT -> {
+                    ((BoardGUIController)currentController).startDevResSelection();
+                    log.update(LogUpdates.DEV_RES);
+                }
+                case DEV_CONFIRMATION -> {
+                    if(message == StatusMessage.SELECTION_ERROR) log.update(LogUpdates.DEV_RES_ERROR);
+                }
                 case CHOOSING_NICK -> {
                     if (message == StatusMessage.CLIENT_ERROR) ((MainMenuGUIController)currentController).sameNick();
                 }
@@ -129,11 +134,8 @@ public class GUIMessageHandler {
     }
 
     public void handleServerBoughtMarblesMessage(ServerBoughtMarblesMessage message) {
-        if (!message.getUser().getNickName().equals(MatchSettings.getInstance().getClientNickname()))
-            log.update(LogUpdates.BUY_MARKET, message.getUser(), message.getBoughtResources());
-            Platform.runLater(() -> GUIHelper.getInstance().setScreen(ScreenName.PERSONAL_BOARD));
-
-
+        log.update(LogUpdates.BUY_MARKET, message.getUser(), message.getBoughtResources());
+        Platform.runLater(() -> GUIHelper.getInstance().setScreen(ScreenName.PERSONAL_BOARD));
     }
 
     public void handleServerDepositActionMessage(ServerDepositActionMessage message) {
@@ -151,6 +153,7 @@ public class GUIMessageHandler {
 
     public void handleServerBuyDevelopmentCardMessage(ServerBuyDevelopmentCardMessage message) {
         Platform.runLater(() -> currentGameController.update());
+        log.update(LogUpdates.BUY_DEV, message);
     }
 
     public void handleServerDepositIntoSlotMessage(ServerDepositIntoSlotMessage message) {

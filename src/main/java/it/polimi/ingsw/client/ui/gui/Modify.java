@@ -20,11 +20,20 @@ public class Modify {
             image.setOpacity(0.5);
             image.setOnMouseReleased(e -> {
 
-                if (!map.containsKey(id)) map.put(id, GUIHelper.getInstance().getResFromImage((image.getImage())));
-                else map.get(id).setQuantity(map.get(id).getQuantity()+1);
+                if(image.getOpacity() == 0.5) {
+                    if (!map.containsKey(id)) map.put(id, GUIHelper.getInstance().getResFromImage((image.getImage())));
+                    else map.get(id).setQuantity(map.get(id).getQuantity()+1);
 
-                image.setDisable(true);
-                image.setOpacity(1);
+                    image.setOpacity(1);
+                }
+                else if (image.getOpacity() == 1){
+                    if (map.get(id).getQuantity() > 1) {
+                        map.get(id).setQuantity(map.get(id).getQuantity()-1);
+                    }
+                    else map.remove(id);
+
+                    image.setOpacity(0.5);
+                }
             });
         }
 

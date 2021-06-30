@@ -60,7 +60,6 @@ public class BoardGUIController extends AbstractGUIController implements GameGUI
     private GridPane strongboxGrid;
     @FXML
     private ImageView boardSelectionDialog, selectedBoardRes;
-    private boolean boardProdSelected, selecting;
     @FXML
     private VBox boardSelectionResources;
     @FXML
@@ -264,7 +263,7 @@ public class BoardGUIController extends AbstractGUIController implements GameGUI
 
         if (GUIHelper.getInstance().isChoosingTemp()) {
 
-            if (GUIHelper.getInstance().getClientView().getTempResources().isEmpty() || GUIHelper.getInstance().getClientView().getTempResources() == null) {
+            if (GUIHelper.getInstance().getClientView().getTempResources() != null && GUIHelper.getInstance().getClientView().getTempResources().isEmpty()) {
                 tempWindow.setOpacity(0);
                 tempBlock.setOpacity(0);
                 tempBox.setOpacity(0);

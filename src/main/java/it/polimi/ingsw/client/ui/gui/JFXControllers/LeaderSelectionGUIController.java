@@ -471,5 +471,13 @@ public class LeaderSelectionGUIController extends AbstractGUIController implemen
         stage.setMinWidth(1920);
         stage.setMinHeight(1080);
     }
+
+    public void exitDialog1(MouseEvent mouseEvent) {
+        if(!clicked1) resChoice1.setImage(new Image("assets/game/Choose.png"));
+    }
+
+    public void exitDialog2(MouseEvent mouseEvent) {
+        if(!clicked2) resChoice2.setImage(new Image("assets/game/Choose.png"));
+    }
 }
 
