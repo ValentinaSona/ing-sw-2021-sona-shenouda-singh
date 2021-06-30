@@ -18,7 +18,7 @@ import static it.polimi.ingsw.client.ui.cli.CLIHelper.CHECK_MARK;
 
 public class GameLog {
 
-    private static int logLenght = 4;
+    private static int logLenght = 2;
     private static String warning = "#ffb545";
 
     private static GameLog singleton;
@@ -158,13 +158,22 @@ public class GameLog {
                         add("A vatican report has been triggered", warning);
                     else
                     if (newMessage.getFaith()!= 0)
-                        add(newMessage.getUser().getNickName() + " has received " + newMessage.getFaith() + " faith points and triggered a vatican report");
+                        add(newMessage.getUser().getNickName() + " has received " + newMessage.getFaith() + " faith point and triggered a vatican report");
                 } else {
                     if (newMessage.getUser().getNickName().equals(MatchSettings.getInstance().getClientNickname()))
-                        add("You have received " + newMessage.getFaith() + " faith points.");
+                        add("You have received " + newMessage.getFaith() + " faith points");
                     else
-                        add(newMessage.getUser().getNickName() + " has received " + newMessage.getFaith() + " faith points.");
+                        add(newMessage.getUser().getNickName() + " has received " + newMessage.getFaith() + " faith point");
                 }
+                return;
+            }
+            case BUY_DEV -> {
+                var newMessage = (ServerBuyDevelopmentCardMessage) message;
+                if (newMessage.getUser().getNickName().equals(MatchSettings.getInstance().getClientNickname()))
+                    activity += "You bought";
+                else activity += newMessage.getUser().getNickName() + " has bought";
+
+                activity += " a " + newMessage.getCard().getType().toString().toLowerCase() + " level " + newMessage.getCard().getLevel() + " card";
             }
         }
 
@@ -179,12 +188,17 @@ public class GameLog {
             case RECONNECTION -> add("A player has reconnected");
             case CHOOSE_WHITE -> add("You must choose which ability you want to use for each white marble. Drag the ability you want to use and drop it on the correspondent resource!");
             case HES_RUNNING_AWAY -> add("Please choose how you wish to convert the marbles", "red");
+            case DEV_SLOT -> add("Click on the slot where you want to put the card");
+            case DEV_RES -> add("Select the resources you want to use to pay the card and click the \"confirm\" button");
+            case DEV_RES_ERROR -> add("Wrong selection of resources", "red");
         }
     }
 
     private void add(String text) {
         Platform.runLater(() -> {
-            if(log.getChildren().size() > logLenght) log.getChildren().remove(0);
+            if(log.getChildren().size() > logLenght) {
+                log.getChildren().remove(0);
+            }
 
             var line = new Text(text + "\n\n");
             line.setStyle("-fx-fill: #5a9cf2");
@@ -195,7 +209,9 @@ public class GameLog {
 
     private void add(String text, String color) {
         Platform.runLater(() -> {
-            if(log.getChildren().size() > logLenght) log.getChildren().remove(0);
+            if(log.getChildren().size() > logLenght) {
+                log.getChildren().remove(0);
+            }
 
             var line = new Text(text + "\n\n");
             line.setStyle("-fx-fill: " + color);

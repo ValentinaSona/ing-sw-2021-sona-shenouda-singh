@@ -103,7 +103,7 @@
                   <Image url="@../assets/game/focus_strongbox.png" />
                </image>
                <StackPane.margin>
-                  <Insets left="61.0" top="677.0" />
+                  <Insets left="61.0" top="679.0" />
                </StackPane.margin>
             </ImageView>
             <GridPane fx:id="productionGrid" alignment="CENTER" maxHeight="488.0" maxWidth="730.0" prefHeight="478.0" prefWidth="730.0" StackPane.alignment="CENTER_LEFT">

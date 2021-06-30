@@ -345,6 +345,8 @@ public class GUIHelper {
     }
 
     public ImageView getDevVisualizer() {
+        devVisualizer.setImage(null);
+        chosenCard = false;
         return devVisualizer;
     }
 

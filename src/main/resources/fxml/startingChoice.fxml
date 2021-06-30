@@ -14,7 +14,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.shape.Rectangle?>
 
-<BorderPane fx:id="mainPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="1080.0" minWidth="1920.0" prefHeight="1080.0" prefWidth="1920.0" xmlns="http://javafx.com/javafx/15.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.client.ui.gui.JFXControllers.LeaderSelectionGUIController">
+<BorderPane fx:id="mainPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="1080.0" minWidth="1920.0" prefHeight="1080.0" prefWidth="1920.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.client.ui.gui.JFXControllers.LeaderSelectionGUIController">
     <right>
         <StackPane minWidth="150.0" prefHeight="1080.0" prefWidth="420.0" BorderPane.alignment="CENTER">
             <children>
@@ -114,7 +114,7 @@
                         <Insets right="130.0" top="600.0" />
                     </StackPane.margin>
                 </Button>
-                <ImageView fx:id="choiceDialog1" fitHeight="201.0" fitWidth="455.0" opacity="0.75" pickOnBounds="true" preserveRatio="true" StackPane.alignment="BOTTOM_LEFT">
+                <ImageView fx:id="choiceDialog1" fitHeight="201.0" fitWidth="455.0" onMouseExited="#exitDialog1" opacity="0.75" pickOnBounds="true" preserveRatio="true" StackPane.alignment="BOTTOM_LEFT">
                     <image>
                         <Image url="@../assets/game/Selection.png" />
                     </image>
@@ -122,7 +122,7 @@
                         <Insets bottom="190.0" left="420.0" />
                     </StackPane.margin>
                 </ImageView>
-                <ImageView fx:id="choiceDialog2" fitHeight="201.0" fitWidth="455.0" opacity="0.75" pickOnBounds="true" preserveRatio="true" StackPane.alignment="BOTTOM_LEFT">
+                <ImageView fx:id="choiceDialog2" fitHeight="201.0" fitWidth="455.0" onMouseExited="#exitDialog2" opacity="0.75" pickOnBounds="true" preserveRatio="true" StackPane.alignment="BOTTOM_LEFT">
                     <image>
                         <Image url="@../assets/game/Selection.png" />
                     </image>

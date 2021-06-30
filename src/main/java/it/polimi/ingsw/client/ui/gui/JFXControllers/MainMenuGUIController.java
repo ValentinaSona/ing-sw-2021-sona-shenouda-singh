@@ -58,7 +58,8 @@ public class MainMenuGUIController extends AbstractGUIController {
     }
 
     public void backToMulti(MouseEvent mouseEvent) {
-        change(ScreenName.MULTIPLAYER);
+        if(!GUIHelper.getInstance().isSolo()) change(ScreenName.MULTIPLAYER);
+        else change(ScreenName.SINGLEPLAYER);
     }
 
     @FXML
@@ -113,6 +114,7 @@ public class MainMenuGUIController extends AbstractGUIController {
             joinButton.setOpacity(1);
             joinButton.setDisable(false);
             nicknameField.setEditable(true);
+            backArrow.setDisable(false);
         }
         else {
             MatchSettings.getInstance().setClientNickname(nicknameField.getText());
