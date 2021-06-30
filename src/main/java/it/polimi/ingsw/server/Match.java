@@ -146,8 +146,7 @@ public class Match implements Runnable{
 
     }
 
-    public void endGameDuringSetup(){
-        model.notify(new DisconnectionGameSetupMessage());
+    private void destroyEveryThing(){
         Game.destroy();
         Controller.destroy();
         setActive(false);
@@ -155,6 +154,16 @@ public class Match implements Runnable{
         lobby.setLobbyState(LobbyState.LOBBY_SETUP);
         remoteViewList.forEach((remoteView)-> remoteView.requestDisconnection());
         remoteViewList.clear();
+    }
+
+    public void endGameDuringSetup(){
+        model.notify(new DisconnectionGameSetupMessage());
+        destroyEveryThing();
+    }
+
+    public void endGame(){
+        model.notify(new DisconnectionMessage());
+        destroyEveryThing();
     }
 
     public void saveToFile(){
