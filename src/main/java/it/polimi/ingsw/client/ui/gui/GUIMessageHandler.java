@@ -1,20 +1,15 @@
 package it.polimi.ingsw.client.ui.gui;
 
-import it.polimi.ingsw.client.modelview.GameView;
 import it.polimi.ingsw.client.modelview.MatchSettings;
-import it.polimi.ingsw.client.ui.cli.CLIMessageHandler;
 import it.polimi.ingsw.client.ui.controller.DispatcherController;
 import it.polimi.ingsw.client.ui.controller.UIController;
 import it.polimi.ingsw.client.ui.controller.UiControllerInterface;
 import it.polimi.ingsw.client.ui.gui.JFXControllers.*;
 import it.polimi.ingsw.utils.networking.transmittables.StatusMessage;
-import it.polimi.ingsw.utils.networking.transmittables.resilienza.DisconnectionGameSetupMessage;
 import it.polimi.ingsw.utils.networking.transmittables.resilienza.ServerGameReconnectionMessage;
 import it.polimi.ingsw.utils.networking.transmittables.servermessages.*;
 import javafx.application.Platform;
 import javafx.stage.Stage;
-
-import java.util.concurrent.TimeUnit;
 
 public class GUIMessageHandler {
 
@@ -96,6 +91,8 @@ public class GUIMessageHandler {
             // Game is in setup phase
             if (GUIHelper.getInstance().getCurrentScreen() == ScreenName.STARTING_CHOICE) Platform.runLater( () -> ((LeaderSelectionGUIController)currentController).goToGame());
 
+            else if (GUIHelper.getInstance().getCurrentScreen() == ScreenName.LOBBY && GUIHelper.getInstance().isResuming()) Platform.runLater(() -> GUIHelper.getInstance().setScreen(ScreenName.PERSONAL_BOARD));
+
             synchronized (GUIMessageHandler.getInstance()) {
                 while(currentGameController == null) {
                     try {
@@ -172,7 +169,8 @@ public class GUIMessageHandler {
     }
 
     public void handleServerFinalScoreMessage(ServerFinalScoreMessage message) {
-        GUIHelper.getInstance().setScreen(ScreenName.END_OF_GAME);
+        Platform.runLater(() -> GUIHelper.getInstance().setScreen(ScreenName.END_OF_GAME));
+        GUIHelper.getInstance().setFinalScore(message);
     }
 
     public void handleServerServerSoloDiscardMessage(ServerSoloDiscardMessage message) {
@@ -199,17 +197,48 @@ public class GUIMessageHandler {
             GUIHelper.getInstance().setScreenshot(GUIHelper.getInstance().getCurrentScene().snapshot(null));
             GUIHelper.getInstance().setScreen(ScreenName.WARNING);
         });
-        try {
-            Thread.sleep(4000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-
-        GUIHelper.getInstance().setScreen(ScreenName.MAIN_MENU);
 
     }
 
     public void handleServerGameReconnectionMessage(ServerGameReconnectionMessage message) {
-        GameLog.getInstance().update(LogUpdates.RECONNECTION);
+        GUIHelper.getInstance().restoreNickList(message.getPlayerViews());
+        for (var p : message.getPlayerViews()) {
+            if (p.getNickname().equals(MatchSettings.getInstance().getClientNickname())) {
+                GUIHelper.getInstance().setClientView(p);
+            }
+            if (GUIHelper.getInstance().isReconnecting()) {
+                Platform.runLater(() -> {
+                    var stage = (Stage) GUIHelper.getInstance().getCurrentScene().getWindow();
+                    if (GUIHelper.getInstance().getResolution() > 1080) {
+                        stage.setWidth(1920);
+                        stage.setHeight(1080);
+                        GUIHelper.getInstance().centerScreen(stage);
+                    }
+                    else {
+                        stage.setMaximized(true);
+                    }
+                    GUIHelper.getInstance().setScreen(ScreenName.PERSONAL_BOARD);
+                });
+            }
+        }
+    }
+
+    public void handleServerChooseWhiteMarblesMessage(ServerChooseWhiteMarblesMessage message) {
+        if (message.getUser().getNickName().equals(MatchSettings.getInstance().getClientNickname())) {
+            GameLog.getInstance().update(LogUpdates.CHOOSE_WHITE);
+            Platform.runLater(() -> ((MarketGUIController) currentController).startTwoCardSelection());
+        }
+    }
+
+    public void handleGameSaving() {
+        GUIHelper.getInstance().setCurrAction(CurrAction.SAVING_GAME);
+        Platform.runLater(() -> {
+            GUIHelper.getInstance().setScreenshot(GUIHelper.getInstance().getCurrentScene().snapshot(null));
+            GUIHelper.getInstance().setScreen(ScreenName.WARNING);
+        });
+    }
+
+    public void handleServerDisconnectionMessage() {
+        Platform.runLater(() -> ((MainMenuGUIController)currentController).noGameFound());
     }
 }

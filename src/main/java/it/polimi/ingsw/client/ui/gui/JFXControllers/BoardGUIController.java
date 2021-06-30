@@ -1,9 +1,6 @@
 package it.polimi.ingsw.client.ui.gui.JFXControllers;
 
-import it.polimi.ingsw.client.modelview.DepotView;
-import it.polimi.ingsw.client.modelview.DevelopmentCardSlotView;
-import it.polimi.ingsw.client.modelview.GameView;
-import it.polimi.ingsw.client.modelview.PlayerView;
+import it.polimi.ingsw.client.modelview.*;
 import it.polimi.ingsw.client.ui.controller.UIController;
 import it.polimi.ingsw.client.ui.gui.*;
 import it.polimi.ingsw.server.model.DevelopmentCard;
@@ -265,7 +262,7 @@ public class BoardGUIController extends AbstractGUIController implements GameGUI
 
         if (GUIHelper.getInstance().isChoosingTemp()) {
 
-            if (GUIHelper.getInstance().getClientView().getTempResources().isEmpty()) {
+            if (GUIHelper.getInstance().getClientView().getTempResources().isEmpty() || GUIHelper.getInstance().getClientView().getTempResources() == null) {
                 tempWindow.setOpacity(0);
                 tempBlock.setOpacity(0);
                 tempBox.setOpacity(0);
@@ -413,28 +410,16 @@ public class BoardGUIController extends AbstractGUIController implements GameGUI
 
             productionGrid.getChildren().clear();
 
-            productionGrid.add(selectSlot1, 0, 0);
-            productionGrid.add(selectSlot2, 1, 0);
-            productionGrid.add(selectSlot3, 2, 0);
-            /*
-            for(int i = 0; i < 3; i++) {
-                var card = ((DevelopmentCardSlotView)slots.get(i+1)).peek();
-                if (card != null) {
-                    var image = new ImageView(GUIHelper.getInstance().getImage(card, GUISizes.get().devSize(), GUISizes.get().devSizeY()));
-                    var effect = new DropShadow();
-                    image.setEffect(effect);
-                    GridPane.setValignment(image, VPos.CENTER);
-                    GridPane.setHalignment(image, HPos.CENTER);
-                    productionGrid.add(image, i, 0);
-                }
-
+            if (playerView.getNickname().equals(MatchSettings.getInstance().getClientNickname())) {
+                productionGrid.add(selectSlot1, 0, 0);
+                productionGrid.add(selectSlot2, 1, 0);
+                productionGrid.add(selectSlot3, 2, 0);
             }
-            */
 
             for(int i = 0; i < 3; i++) {
                 var slot = ((DevelopmentCardSlotView)slots.get(i+1)).getSlot();
                 if (!slot.isEmpty()) {
-                    int offset = (slot.size()-1)*GUISizes.get().devOffset();
+                    int offset = 0;
 
                     for (DevelopmentCard card : slot) {
                         var image = new ImageView(GUIHelper.getInstance().getImage(card, GUISizes.get().devSize(), GUISizes.get().devSizeY()));
@@ -445,7 +430,7 @@ public class BoardGUIController extends AbstractGUIController implements GameGUI
                         GridPane.setHalignment(image, HPos.CENTER);
                         productionGrid.add(image, i, 0);
 
-                        offset -= GUISizes.get().devOffset();
+                        offset += GUISizes.get().devOffset();
                     }
                 }
 
@@ -456,13 +441,15 @@ public class BoardGUIController extends AbstractGUIController implements GameGUI
                 confirmDev.setOpacity(0);
             }
 
-            productionGrid.add(slot1, 0, 0);
-            productionGrid.add(slot2, 1, 0);
-            productionGrid.add(slot3, 2, 0);
+            if (playerView.getNickname().equals(MatchSettings.getInstance().getClientNickname())) {
+                productionGrid.add(slot1, 0, 0);
+                productionGrid.add(slot2, 1, 0);
+                productionGrid.add(slot3, 2, 0);
 
-            slot1.setDisable(true);
-            slot2.setDisable(true);
-            slot3.setDisable(true);
+                slot1.setDisable(true);
+                slot2.setDisable(true);
+                slot3.setDisable(true);
+            }
 
             if (GUIHelper.getInstance().getCurrAction() == CurrAction.SELECTING_SLOT) {
                 slot1.setDisable(false);

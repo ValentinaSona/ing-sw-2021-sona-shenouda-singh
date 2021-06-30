@@ -25,6 +25,7 @@ public class GUI extends Application implements Ui {
     public void start(Stage primaryStage) throws Exception{
 
         Rectangle2D screenBounds = Screen.getPrimary().getBounds();
+        GUIHelper.getInstance().setBounds(screenBounds);
         GUIHelper.getInstance().setResolution(screenBounds.getHeight() * Screen.getPrimary().getOutputScaleY());
 
         Parent root = null;
@@ -46,10 +47,22 @@ public class GUI extends Application implements Ui {
         scene.getStylesheets().add("css/mainText.css");
         scene.getStylesheets().add("css/standardBackground.css");
         GUIHelper.getInstance().setCurrentScene(scene);
+
+        primaryStage.setWidth(1280);
+        primaryStage.setHeight(720);
+
         primaryStage.setFullScreenExitHint("");
         primaryStage.setScene(scene);
-        primaryStage.setMinWidth(1280);
-        primaryStage.setMinHeight(720);
+
+        GUIHelper.getInstance().addStyleSheets(new String[]{
+                "buttons.css",
+                "gameLog.css",
+                "gameTabs.css",
+                "list.css",
+                "mainText.css",
+                "scroll.css",
+                "standardBackground.css"
+        });
 
         primaryStage.setOnCloseRequest(t -> {
             Platform.exit();

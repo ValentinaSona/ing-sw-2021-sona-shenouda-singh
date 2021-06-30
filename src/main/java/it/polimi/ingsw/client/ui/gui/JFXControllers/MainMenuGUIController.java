@@ -48,6 +48,8 @@ public class MainMenuGUIController extends AbstractGUIController {
     }
 
     public void joinGame(MouseEvent mouseEvent) {
+        GUIHelper.getInstance().setResuming(false);
+        GUIHelper.getInstance().setReconnecting(false);
         change(ScreenName.JOIN_GAME);
     }
 
@@ -63,6 +65,9 @@ public class MainMenuGUIController extends AbstractGUIController {
     public void initialize() {
         GUIHelper.getInstance().setCurrentScreen(ScreenName.MAIN_MENU);
         GUIHelper.getInstance().setCurrAction(CurrAction.CHOOSING_NICK);
+
+        if(chooseNick != null && (GUIHelper.getInstance().isReconnecting() || GUIHelper.getInstance().isResuming()))
+            chooseNick.setText("Insert the nickname you had before");
     }
 
     public void goToJoin(ActionEvent actionEvent) {
@@ -83,6 +88,7 @@ public class MainMenuGUIController extends AbstractGUIController {
 
                 try {
                     if (GUIHelper.getInstance().isLocal()) UIController.getInstance().startLocalSinglePlayerGame(nicknameField.getText());
+                    else if (GUIHelper.getInstance().isReconnecting()) UIController.getInstance().reconnectToServer(nicknameField.getText(), Constant.hostIp(), Constant.port());
                     else UIController.getInstance().sendNickname(nicknameField.getText(), Constant.hostIp(), Constant.port());
                 } catch (IOException e) {
                     chooseNick.setText("Failed to connect...");
@@ -179,17 +185,19 @@ public class MainMenuGUIController extends AbstractGUIController {
         Platform.runLater(() -> {
             if(message.equals(StatusMessage.OK_NICK)){
                 //posso validare il nickname
-                handleNicknameConfirmation(true);
+                if(!GUIHelper.getInstance().isResuming()) handleNicknameConfirmation(true);
+                else UIController.getInstance().resumeGameFromFile();
             }else if(message.equals(StatusMessage.SET_COUNT)){
                 //posso settare il numero di player
-                handleJoinLobbyConfirmation(true);
+                if(!GUIHelper.getInstance().isResuming()) handleJoinLobbyConfirmation(true);
+                else UIController.getInstance().loadGameFromFile();
             }else if(message.equals(StatusMessage.JOIN_LOBBY)){
                 //posso settare il numero di player
                 handleJoinLobbyConfirmation(false);
             }else if(message.equals(StatusMessage.CLIENT_ERROR)){
                 handleNicknameConfirmation(false);
             }else if (message.equals(StatusMessage.OK_COUNT)) {
-                if (GUIHelper.getInstance().isSolo()) change(ScreenName.LOBBY);
+                if (GUIHelper.getInstance().isSolo() || GUIHelper.getInstance().isResuming()) change(ScreenName.LOBBY);
                 else chooseNick.setText("An error occurred");
             }
         });
@@ -202,12 +210,14 @@ public class MainMenuGUIController extends AbstractGUIController {
     public void goToOnlineSingleplayer(MouseEvent mouseEvent) {
         GUIHelper.getInstance().setLocal(false);
         GUIHelper.getInstance().setSolo(true);
+        GUIHelper.getInstance().setResuming(false);
         change(ScreenName.JOIN_SINGLEPLAYER);
     }
 
     public void goToLocalSingleplayer(MouseEvent mouseEvent) {
         GUIHelper.getInstance().setLocal(true);
         GUIHelper.getInstance().setSolo(true);
+        GUIHelper.getInstance().setResuming(false);
         change(ScreenName.JOIN_SINGLEPLAYER);
     }
 
@@ -235,5 +245,25 @@ public class MainMenuGUIController extends AbstractGUIController {
 
     public void sameNick() {
         chooseNick.setText("This nickname is already taken!");
+    }
+
+    public void resume(MouseEvent mouseEvent) {
+        GUIHelper.getInstance().setResuming(true);
+        change(ScreenName.JOIN_GAME);
+    }
+
+    public void resumeSingle(MouseEvent mouseEvent) {
+        GUIHelper.getInstance().setResuming(true);
+        change(ScreenName.JOIN_GAME);
+    }
+
+    public void reconnect(MouseEvent mouseEvent) {
+        GUIHelper.getInstance().setReconnecting(true);
+        change(ScreenName.JOIN_GAME);
+    }
+
+    public void noGameFound() {
+        chooseNick.setText("No game found");
+        handleNicknameConfirmation(false);
     }
 }

@@ -19,7 +19,7 @@ import java.util.stream.Stream;
 
 public class SavedState {
     private static boolean flag = false;
-    private static final String pathToSavedGame = "./saved_game"; //TODO IMPORTANTE!!! DA DEFINIRE BENE ALTRIMENTI NON FUNZIONA NULLA
+    private static final String pathToSavedGame = "./saved_game";
 
     private final PlayersOrder order;
     private final SavedResourceMarket savedMarket;

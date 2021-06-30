@@ -21,6 +21,8 @@
                      <children>
                         <Label onMouseReleased="#goToOnlineSingleplayer" styleClass="title" text="ONLINE" />
                         <Label onMouseReleased="#goToLocalSingleplayer" styleClass="title" text="LOCAL" />
+                        <Label onMouseReleased="#resumeSingle" styleClass="title" text="RESUME" />
+                        <Label onMouseReleased="#reconnect" styleClass="title" text="RECONNECT" />
                      </children>
                   </VBox>
                </children>

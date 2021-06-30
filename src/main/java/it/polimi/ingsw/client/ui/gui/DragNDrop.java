@@ -2,7 +2,9 @@ package it.polimi.ingsw.client.ui.gui;
 
 import it.polimi.ingsw.client.modelview.DepotView;
 import it.polimi.ingsw.client.ui.controller.UIController;
+import it.polimi.ingsw.client.ui.gui.JFXControllers.MarketGUIController;
 import it.polimi.ingsw.server.model.Id;
+import it.polimi.ingsw.server.model.Resource;
 import it.polimi.ingsw.server.model.ResourceType;
 import javafx.application.Platform;
 import javafx.event.Event;
@@ -158,15 +160,68 @@ public class DragNDrop {
         });
     }
 
-    public void setDroppableResource(HBox target, Id id) {
-        target.setOnDragDropped(event -> {
-
-            UIController.getInstance().depositIntoWarehouse(id, GUIHelper.getInstance().getResFromImage(currentDraggedImage));
-
-            event.setDropCompleted(true);
-
+    public void setMarketWhiteDroppable(ImageView target, VBox box, Resource[] res) {
+        target.setOnDragOver(event -> {
+            if (event.getGestureSource() != target) {
+                event.acceptTransferModes(TransferMode.COPY_OR_MOVE);
+            }
             event.consume();
         });
+
+        target.setOnDragEntered(Event::consume);
+
+        target.setOnDragExited(Event::consume);
+
+        target.setOnDragDropped(event -> {
+            /* data dropped */
+
+            int index = 0;
+
+            for (int i = 0; i < res.length; i ++) {
+                if (((ImageView)box.getChildren().get(i)).equals(target)) break;
+                if (GUIHelper.getInstance().getResFromImage( ( (ImageView) box.getChildren().get(i) ).getImage() ).getResourceType().equals(ResourceType.JOLLY)) index++;
+            }
+
+            if (currentDraggedImage != null) {
+                res[index] = GUIHelper.getInstance().getResFromImage(currentDraggedImage);
+                target.setImage(currentDraggedImage);
+                target.setFitWidth(GUISizes.get().chosenMarbles());
+                target.setPreserveRatio(true);
+            }
+        });
+    }
+
+    public void setMarketWhiteDraggable(ImageView source, boolean active) {
+        if(active) {
+            Group root = new Group();
+
+            source.setOnDragDetected(event -> {
+                /* drag was detected, start drag-and-drop gesture */
+
+                /* allow any transfer mode */
+                Dragboard db = source.startDragAndDrop(TransferMode.ANY);
+
+                var tempIm = source.getImage();
+
+                db.setDragView(tempIm);
+
+                ClipboardContent content = new ClipboardContent();
+
+                content.putImage(tempIm);
+                db.setContent(content);
+
+                currentDraggedImage = tempIm;
+
+                event.consume();
+            });
+
+            /* the drag-and-drop gesture ended */
+            source.setOnDragDone(e -> Platform.runLater(() -> ((MarketGUIController)GUIHelper.getInstance().getCurrentGameController()).acceptChoice()));
+        }
+        else {
+            source.setOnDragDetected(event -> {});
+            source.setOnDragDone(event -> {});
+        }
     }
 
 }

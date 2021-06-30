@@ -11,6 +11,7 @@ import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
+import javafx.scene.CacheHint;
 import javafx.scene.control.Button;
 import javafx.scene.effect.GaussianBlur;
 import javafx.scene.image.ImageView;
@@ -37,6 +38,10 @@ public class LeaderShowGUIController extends AbstractGUIController implements Ga
         BackgroundImage backIm = new BackgroundImage(GUIHelper.getInstance().getScreenShot(),
                 BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER,
                 size);
+
+        // Using cache to improve performance
+        backRegion.setCache(true);
+        backRegion.setCacheHint(CacheHint.DEFAULT);
 
         var background = new Background(backIm);
         backRegion.setBackground(background);

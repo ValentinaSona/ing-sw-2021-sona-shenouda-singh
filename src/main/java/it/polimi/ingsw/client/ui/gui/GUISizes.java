@@ -30,6 +30,9 @@ public class GUISizes {
 
     private int faithTrack;
 
+    private int chosenMarbles;
+    private int abilityMarbles;
+
     public static GUISizes get() {
         if (singleton == null) singleton = new GUISizes();
         return  singleton;
@@ -66,6 +69,9 @@ public class GUISizes {
         logSpacing = 8;
 
         faithTrack = 62;
+
+        chosenMarbles = 130;
+        abilityMarbles = 90;
 
     }
 
@@ -106,4 +112,7 @@ public class GUISizes {
     public int depotRes() {
         return depotRes;
     }
+
+    public int chosenMarbles() { return  chosenMarbles; }
+    public int abilityMarbles() { return abilityMarbles; }
 }

@@ -144,9 +144,11 @@ public class GameLog {
 
     public void update(LogUpdates logUpdates) {
         switch(logUpdates){
-            case DEV_NOT_RICH -> addError("You don't have enough resources to buy this card");
+            case DEV_NOT_RICH -> add("You don't have enough resources to buy this card", "red");
             case DISCONNECTION -> add("A player has disconnected");
             case RECONNECTION -> add("A player has reconnected");
+            case CHOOSE_WHITE -> add("You must choose which ability you want to use for each white marble. Drag the ability you want to use and drop it on the correspondent resource!");
+            case HES_RUNNING_AWAY -> add("Please choose how you wish to convert the marbles", "red");
         }
     }
 
@@ -161,12 +163,12 @@ public class GameLog {
         });
     }
 
-    private void addError(String text) {
+    private void add(String text, String color) {
         Platform.runLater(() -> {
             if(log.getChildren().size() > logLenght) log.getChildren().remove(0);
 
             var line = new Text(text + "\n\n");
-            line.setStyle("-fx-fill: red");
+            line.setStyle("-fx-fill: " + color);
 
             log.getChildren().add(line);
         });

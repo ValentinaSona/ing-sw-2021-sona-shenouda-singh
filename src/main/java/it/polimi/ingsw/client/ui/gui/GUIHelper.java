@@ -7,11 +7,14 @@ import it.polimi.ingsw.client.ui.gui.JFXControllers.GameGUIControllerInterface;
 import it.polimi.ingsw.client.ui.gui.JFXControllers.ScreenName;
 import it.polimi.ingsw.client.ui.gui.JFXControllers.SelectedProductions;
 import it.polimi.ingsw.server.controller.User;
+import it.polimi.ingsw.server.exception.EndOfGameCause;
 import it.polimi.ingsw.server.model.*;
+import it.polimi.ingsw.utils.networking.transmittables.servermessages.ServerFinalScoreMessage;
 import javafx.animation.*;
 import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
+import javafx.geometry.Rectangle2D;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -20,6 +23,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.scene.transform.Rotate;
+import javafx.stage.Stage;
 import javafx.util.Duration;
 
 import java.io.File;
@@ -28,14 +32,20 @@ import java.net.URL;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 public class GUIHelper {
+
+    private Rectangle2D bounds;
 
     private boolean setUpPhase;
 
     private boolean local;
     private boolean solo;
+
+    private boolean resuming;
+    private boolean reconnecting;
 
     private Background background;
     private Scene currentScene;
@@ -61,9 +71,14 @@ public class GUIHelper {
     private int selectedI, selectedJ;
     private boolean selectSlot;
 
+    private Resource[] twoLeaderCardSelected;
+
     private Id selectedSlot;
 
     CurrAction currAction;
+
+    private Map<String, Integer> rank;
+    private EndOfGameCause cause;
 
     private GUIHelper() {
         currAction = CurrAction.IDLE;
@@ -225,6 +240,12 @@ public class GUIHelper {
         others = nickList.stream().filter(e -> !e.equals(MatchSettings.getInstance().getClientNickname())).collect(Collectors.toList());
     }
 
+    public void restoreNickList(List<PlayerView> players) {
+        nickList = players.stream().map(PlayerView::getNickname).collect(Collectors.toList());
+        clientIndex = nickList.indexOf(MatchSettings.getInstance().getClientNickname());
+        others = nickList.stream().filter(e -> !e.equals(MatchSettings.getInstance().getClientNickname())).collect(Collectors.toList());
+    }
+
     public List<String> getNickList() {
         return nickList;
     }
@@ -248,7 +269,8 @@ public class GUIHelper {
     public Resource getResFromImage(Image image) {
         String[] path = image.getUrl().split("/");
         String[] name = path[path.length-1].split("\\.");
-        return new Resource(1, ResourceType.valueOf(name[0].toUpperCase()));
+        if (name[0].equals("nores")) return new Resource(1, ResourceType.JOLLY);
+        else return new Resource(1, ResourceType.valueOf(name[0].toUpperCase()));
     }
 
     public void setClientView(PlayerView p) {
@@ -300,14 +322,22 @@ public class GUIHelper {
                 ioException.printStackTrace();
             }
         }
-
+        /*
         String[] stylesheets = screen.css();
 
         for (String css : stylesheets) {
             scene.getStylesheets().add("css/" + css);
         }
+        */
         setPrevScreen(getCurrentScreen());
         setCurrentScreen(screen);
+    }
+
+    public void addStyleSheets(String[] sheets) {
+        Scene scene = getCurrentScene();
+        for (String css : sheets) {
+            scene.getStylesheets().add("css/" + css);
+        }
     }
 
     private void setPrevScreen(ScreenName prevScreen) {
@@ -447,5 +477,49 @@ public class GUIHelper {
             return resource == depot.getResource().getResourceType();
         }
         else return false;
+    }
+
+    public boolean isResuming() {
+        return resuming;
+    }
+
+    public void setResuming(boolean resuming) {
+        this.resuming = resuming;
+        if (resuming) reconnecting = false;
+    }
+
+    public boolean isReconnecting() {
+        return reconnecting;
+    }
+
+    public void setReconnecting(boolean reconnecting) {
+        this.reconnecting = reconnecting;
+        if(reconnecting) resuming = false;
+    }
+
+    public Rectangle2D getBounds() {
+        return bounds;
+    }
+
+    public void setBounds(Rectangle2D bounds) {
+        this.bounds = bounds;
+    }
+
+    public void centerScreen(Stage stage) {
+        stage.setX((bounds.getWidth() - stage.getWidth()) / 2);
+        stage.setY((bounds.getHeight() - stage.getHeight()) / 2);
+    }
+
+    public void setFinalScore(ServerFinalScoreMessage message) {
+        this.rank = message.getRank().entrySet().stream().collect(Collectors.toMap(e -> e.getKey().getNickName(), Map.Entry::getValue));
+        this.cause = message.getCause();
+    }
+
+    public Map<String, Integer> getRank() {
+        return rank;
+    }
+
+    public EndOfGameCause getCause() {
+        return cause;
     }
 }

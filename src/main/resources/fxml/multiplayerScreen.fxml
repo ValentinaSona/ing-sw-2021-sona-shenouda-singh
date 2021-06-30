@@ -25,12 +25,12 @@
                                       <Font size="42.0" />
                                   </font>
                               </Label>
-                              <Label styleClass="title" text="RESUME">
+                              <Label onMouseReleased="#resume" styleClass="title" text="RESUME">
                                   <font>
                                       <Font size="42.0" />
                                   </font>
                               </Label>
-                        <Label styleClass="title" text="RECONNECT">
+                        <Label onMouseReleased="#reconnect" styleClass="title" text="RECONNECT">
                            <font>
                               <Font size="42.0" />
                            </font>

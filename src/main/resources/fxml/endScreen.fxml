@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.StackPane?>
@@ -16,13 +18,14 @@
                     <children>
                         <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0" spacing="20.0">
                             <children>
-                                <Label styleClass="normalLabel" text="I still have to implement this">
+                                <Label fx:id="winner" styleClass="normalLabel" text="X wins!">
                                     <font>
                                         <Font size="42.0" />
                                     </font>
                                 </Label>
-                        <Label styleClass="normalLabel" text="pls don't t kill me" />
-                        <Label styleClass="normalLabel" text="The game is over btw" />
+                        <Label fx:id="cause" styleClass="smallLabel" text="cause" />
+                        <ListView fx:id="list" maxWidth="450.0" prefHeight="334.0" prefWidth="650.0" />
+                        <Button fx:id="end" mnemonicParsing="false" styleClass="basicButton" text="Quit" />
                             </children>
                         </VBox>
                     </children>

@@ -2,7 +2,10 @@ package it.polimi.ingsw.client.ui.gui.JFXControllers;
 
 import it.polimi.ingsw.client.modelview.GameView;
 import it.polimi.ingsw.client.modelview.MatchSettings;
+import it.polimi.ingsw.client.ui.gui.CurrAction;
 import it.polimi.ingsw.client.ui.gui.GUIHelper;
+import it.polimi.ingsw.client.ui.gui.GameLog;
+import it.polimi.ingsw.client.ui.gui.LogUpdates;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
@@ -28,7 +31,10 @@ public class GameTemplate {
         playerTab.setMaxWidth(380);
         tabsPlayer.getChildren().add(playerTab);
 
-        playerTab.setOnAction(e -> GUIHelper.getInstance().setScreen(ScreenName.PERSONAL_BOARD));
+        playerTab.setOnAction(e -> {
+            if (GUIHelper.getInstance().getCurrAction() == CurrAction.TWO_LEADER) GameLog.getInstance().update(LogUpdates.HES_RUNNING_AWAY);
+            else GUIHelper.getInstance().setScreen(ScreenName.PERSONAL_BOARD);
+        });
 
         for (String player : players) {
             var tab = new Button();
@@ -37,7 +43,10 @@ public class GameTemplate {
             tab.setMaxWidth(380);
             tabsPlayer.getChildren().add(tab);
 
-            tab.setOnAction(e -> GUIHelper.getInstance().getCurrentGameController().goToOtherBoard(e));
+            tab.setOnAction(e -> {
+                if (GUIHelper.getInstance().getCurrAction() == CurrAction.TWO_LEADER) GameLog.getInstance().update(LogUpdates.HES_RUNNING_AWAY);
+                else GUIHelper.getInstance().getCurrentGameController().goToOtherBoard(e);
+            });
 
         }
         tabsPlayer.setAlignment(Pos.TOP_RIGHT);
@@ -52,7 +61,10 @@ public class GameTemplate {
         marketButton.setId("marketButton");
         marketButton.setMaxWidth(380);
 
-        marketButton.setOnAction(e -> GUIHelper.getInstance().getCurrentGameController().goToMarket());
+        marketButton.setOnAction(e -> {
+            if (GUIHelper.getInstance().getCurrAction() == CurrAction.TWO_LEADER) GameLog.getInstance().update(LogUpdates.HES_RUNNING_AWAY);
+            else GUIHelper.getInstance().getCurrentGameController().goToMarket();
+        });
 
         VBox.setMargin(marketButton, new Insets(40, 0, 0, 0));
 
@@ -61,7 +73,10 @@ public class GameTemplate {
         devButton.setId("devButton");
         devButton.setMaxWidth(380);
 
-        devButton.setOnAction(e -> GUIHelper.getInstance().getCurrentGameController().goToDev());
+        devButton.setOnAction(e -> {
+            if (GUIHelper.getInstance().getCurrAction() == CurrAction.TWO_LEADER) GameLog.getInstance().update(LogUpdates.HES_RUNNING_AWAY);
+            else GUIHelper.getInstance().getCurrentGameController().goToDev();
+        });
 
         tabsPlayer.getChildren().add(marketButton);
         tabsPlayer.getChildren().add(devButton);

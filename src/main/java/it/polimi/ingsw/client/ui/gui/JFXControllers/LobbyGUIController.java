@@ -81,6 +81,8 @@ public class LobbyGUIController extends AbstractGUIController implements UiContr
             if (GUIHelper.getInstance().getResolution() > 1080) {
                 stage.setWidth(1920);
                 stage.setHeight(1080);
+
+                GUIHelper.getInstance().centerScreen(stage);
             }
 
             else stage.setMaximized(true);

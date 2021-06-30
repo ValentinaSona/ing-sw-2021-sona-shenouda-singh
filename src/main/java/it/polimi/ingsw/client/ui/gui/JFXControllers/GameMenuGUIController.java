@@ -1,12 +1,15 @@
 package it.polimi.ingsw.client.ui.gui.JFXControllers;
 
+import it.polimi.ingsw.client.ui.controller.UIController;
 import it.polimi.ingsw.client.ui.gui.GUIHelper;
 import it.polimi.ingsw.client.ui.gui.GUIMessageHandler;
 import it.polimi.ingsw.utils.networking.transmittables.StatusMessage;
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.effect.GaussianBlur;
 import javafx.scene.layout.*;
+import javafx.stage.Stage;
 
 public class GameMenuGUIController extends AbstractGUIController implements GameGUIControllerInterface{
 
@@ -60,12 +63,16 @@ public class GameMenuGUIController extends AbstractGUIController implements Game
     }
 
     public void saveGame(ActionEvent actionEvent) {
+        UIController.getInstance().saveGame();
     }
 
     public void toggleFS(ActionEvent actionEvent) {
+        var stage = (Stage) GUIHelper.getInstance().getCurrentScene().getWindow();
+        stage.setFullScreen(!stage.isFullScreen());
     }
 
     public void leave(ActionEvent actionEvent) {
+        Platform.exit();
     }
 
     public void goBack(ActionEvent actionEvent) {

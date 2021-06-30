@@ -357,7 +357,7 @@ public class DispatcherController implements Runnable, LambdaObserver {
         //METODO solo per partita in multiplayer
         UIController.getInstance().getClientConnection().closeConnection();
         if(gui){
-            //decido cosa fare una volta disconnesso
+            GUIMessageHandler.getInstance().handleServerDisconnectionMessage();
         }else{
             CLIMessageHandler.getInstance().handleServerDisconnectionMessage();
         }
@@ -366,7 +366,7 @@ public class DispatcherController implements Runnable, LambdaObserver {
 
     public void handleChooseWhiteMarbles(ServerChooseWhiteMarblesMessage message){
         if(gui){
-
+            GUIMessageHandler.getInstance().handleServerChooseWhiteMarblesMessage(message);
         }else{
             CLIMessageHandler.getInstance().handleServerChooseWhiteMarblesMessage(message);
         }
@@ -419,7 +419,7 @@ public class DispatcherController implements Runnable, LambdaObserver {
         UIController.getInstance().getClientConnection().closeConnection();
 
         if(gui){
-
+            GUIMessageHandler.getInstance().handleGameSaving();
         }else{
             CLIMessageHandler.getInstance().handleGameSaving();
         }

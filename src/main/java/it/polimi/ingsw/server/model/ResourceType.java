@@ -9,5 +9,16 @@ public enum ResourceType {
 		return Enum.valueOf(ResourceType.class, input.toUpperCase());
 	}
 
+	public MarketMarble convertToMarble(){
+		return switch (this) {
+			case FAITH -> MarketMarble.RED;
+			case SHIELD -> MarketMarble.BLUE;
+			case SERVANT -> MarketMarble.PURPLE;
+			case COIN -> MarketMarble.YELLOW;
+			case STONE -> MarketMarble.GREY;
+			case JOLLY -> null;
+		};
+	}
+
 
 }
