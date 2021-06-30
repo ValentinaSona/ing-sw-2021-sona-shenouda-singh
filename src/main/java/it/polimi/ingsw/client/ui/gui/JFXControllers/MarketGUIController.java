@@ -109,6 +109,7 @@ public class MarketGUIController extends AbstractGUIController implements GameGU
         if(turn) {
             end.setDisable(GUIHelper.getInstance().getClientView().isMainAction());
         }
+        end.setDisable(! (!GUIHelper.getInstance().getClientView().isMainAction() && GUIHelper.getInstance().getClientView().isMyTurn()));
     }
 
     public void showMarbles(int rowCol) {
@@ -190,5 +191,10 @@ public class MarketGUIController extends AbstractGUIController implements GameGU
             GUIHelper.getInstance().setCurrAction(CurrAction.IDLE);
             UIController.getInstance().convertWhiteMarbles(output);
         }
+    }
+
+    public void endTurn(ActionEvent actionEvent) {
+        UIController.getInstance().endTurn();
+        SelectedProductions.getInstance().reset();
     }
 }

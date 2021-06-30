@@ -185,12 +185,12 @@
                   <Insets bottom="430.0" left="333.0" />
                </StackPane.margin>
             </StackPane>
-            <StackPane fx:id="popeTile2" maxHeight="95.0" maxWidth="95.0" prefHeight="150.0" prefWidth="200.0" StackPane.alignment="CENTER_LEFT">
+            <StackPane fx:id="popeTile3" maxHeight="95.0" maxWidth="95.0" prefHeight="150.0" prefWidth="200.0" StackPane.alignment="CENTER_LEFT">
                <StackPane.margin>
                   <Insets bottom="435.0" left="1007.0" />
                </StackPane.margin>
             </StackPane>
-            <StackPane fx:id="popeTile3" maxHeight="95.0" maxWidth="95.0" prefHeight="150.0" prefWidth="200.0" StackPane.alignment="CENTER_LEFT">
+            <StackPane fx:id="popeTile2" maxHeight="95.0" maxWidth="95.0" prefHeight="150.0" prefWidth="200.0" StackPane.alignment="CENTER_LEFT">
                <StackPane.margin>
                   <Insets bottom="560.0" left="640.0" />
                </StackPane.margin>

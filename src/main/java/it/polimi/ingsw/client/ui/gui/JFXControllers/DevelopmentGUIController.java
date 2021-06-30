@@ -1,6 +1,7 @@
 package it.polimi.ingsw.client.ui.gui.JFXControllers;
 
 import it.polimi.ingsw.client.modelview.GameView;
+import it.polimi.ingsw.client.ui.controller.UIController;
 import it.polimi.ingsw.client.ui.gui.CurrAction;
 import it.polimi.ingsw.client.ui.gui.GUIHelper;
 import it.polimi.ingsw.client.ui.gui.GameLog;
@@ -75,6 +76,8 @@ public class DevelopmentGUIController extends AbstractGUIController implements G
         }
         else inkwell.setOpacity(0);
 
+        end.setDisable(! (!GUIHelper.getInstance().getClientView().isMainAction() && GUIHelper.getInstance().getClientView().isMyTurn()));
+
         updateDevelopment();
     }
 
@@ -107,5 +110,10 @@ public class DevelopmentGUIController extends AbstractGUIController implements G
     public void openMenu(ActionEvent actionEvent) {
         GUIHelper.getInstance().setScreenshot(GUIHelper.getInstance().getCurrentScene().snapshot(null));
         change(ScreenName.GAME_MENU);
+    }
+
+    public void endTurn(ActionEvent actionEvent) {
+        UIController.getInstance().endTurn();
+        SelectedProductions.getInstance().reset();
     }
 }

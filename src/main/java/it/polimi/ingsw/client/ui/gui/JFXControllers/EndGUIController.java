@@ -3,6 +3,8 @@ package it.polimi.ingsw.client.ui.gui.JFXControllers;
 import it.polimi.ingsw.client.modelview.MatchSettings;
 import it.polimi.ingsw.client.ui.gui.GUIHelper;
 import it.polimi.ingsw.server.exception.EndOfGameCause;
+import javafx.application.Platform;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
@@ -64,4 +66,7 @@ public class EndGUIController {
         }
     }
 
+    public void quit(ActionEvent actionEvent) {
+        Platform.exit();
+    }
 }
