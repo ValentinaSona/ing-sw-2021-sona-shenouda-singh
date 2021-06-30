@@ -7,6 +7,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.image.Image;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 
@@ -18,12 +19,12 @@ import java.net.URL;
 public class GUI extends Application implements Ui {
 
     public void start(){
+        System.setProperty("prism.allowhidpi", "false");
         launch();
     }
 
     @Override
     public void start(Stage primaryStage) throws Exception{
-
         Rectangle2D screenBounds = Screen.getPrimary().getBounds();
         GUIHelper.getInstance().setBounds(screenBounds);
         GUIHelper.getInstance().setResolution(screenBounds.getHeight() * Screen.getPrimary().getOutputScaleY());
@@ -41,9 +42,11 @@ public class GUI extends Application implements Ui {
             }
         }
 
+        primaryStage.getIcons().add(new Image("assets/icon.png"));
 
         primaryStage.setTitle("Client");
         Scene scene = new Scene(root);
+
         scene.getStylesheets().add("css/mainText.css");
         scene.getStylesheets().add("css/standardBackground.css");
         GUIHelper.getInstance().setCurrentScene(scene);
