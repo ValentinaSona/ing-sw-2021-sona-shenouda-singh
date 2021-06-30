@@ -57,6 +57,7 @@ public class Server {
 
                 currentConnection.addObserver(setupHandler, (observer, transmittable) ->
                         ( (ConnectionSetupHandler) observer).update(transmittable) );
+
                 executorService.submit(currentConnection);
             }catch(IOException e){
                 e.printStackTrace();

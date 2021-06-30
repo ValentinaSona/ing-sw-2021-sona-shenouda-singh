@@ -7,6 +7,7 @@ import it.polimi.ingsw.utils.networking.transmittables.StatusMessage;
 import it.polimi.ingsw.utils.networking.transmittables.clientmessages.setup.ClientJoinLobbyMessage;
 import it.polimi.ingsw.utils.networking.transmittables.servermessages.ServerUpdateLobbyMessage;
 import it.polimi.ingsw.utils.persistence.SavedState;
+import org.mockito.BDDMockito;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
@@ -116,6 +117,8 @@ public class Lobby {
 
             toRemove.forEach(con->handleLobbyDisconnection(con));
 
+            if(getCurrentLobbyPlayerCount() > 0)
+                updateMessage();
             //all the player that were connected to the lobby included the one who asked to resume the game
             //were not part of the previous game
 
@@ -199,10 +202,12 @@ public class Lobby {
             }
 
         }
+
         if(firstConnection != null && (isLoadGameFromFile() != message.isLoadFromGame())){
             //the lobby is waiting for players in  order to create a new game and not to load it
             handleLobbyDisconnection(connection);
         }
+
         synchronized (lobbyRequestingConnections){
             lobbyRequestingConnections.add(connection);
             LOGGER.log(Level.INFO, nickname+" joined successfully the lobby");
@@ -245,6 +250,9 @@ public class Lobby {
     public void start(){
         while(isActive()){
             firstConnection = null;
+            lobbyRequestingConnections.clear();
+            registeredNicknamesMap.clear();
+            currentLobbyPlayerCount = 0;
 
             LOGGER.log(Level.INFO,"waiting for first connection");
             this.waitForFirstConnection();
@@ -347,7 +355,8 @@ public class Lobby {
 
                 }
             } catch (InterruptedException e) {
-                Thread.currentThread().interrupt();
+                //the activeMatchBoolean has been modified
+                Thread.currentThread().setName("Lobby");
             }
         }
     }
@@ -377,6 +386,7 @@ public class Lobby {
                     playerCountLock.wait();
                 } catch (InterruptedException e) {
                     Thread.currentThread().interrupt();
+                    LOGGER.log(Level.SEVERE, e.getMessage());
                 }
             }
         }

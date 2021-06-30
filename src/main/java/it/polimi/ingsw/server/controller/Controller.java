@@ -137,6 +137,7 @@ public class Controller implements LambdaObserver {
     public boolean getLocal(){
         return local;
     }
+
     public void loadFromFile(List<RealRemoteViewHandler> viewList){
 
         ArrayList<User> users = new ArrayList<>();
