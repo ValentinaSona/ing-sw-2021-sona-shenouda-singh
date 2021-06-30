@@ -1,10 +1,13 @@
 # Progetto di ingegneria del Software 2020/2021: Masters of Renaissance
 
-Professor: Gianpaolo Cugola
-Group code: GC05
-Group composition: Antony Shenouda, Raul Singh, Valentina Sona.
+**Professor:** Gianpaolo Cugola
+
+**Group code:** GC05
+
+**Group composition:** Antony Shenouda, Raul Singh, Valentina Sona.
 
 
+| Feature                             | Description                                                  |
 | ----------------------------------- | ------------------------------------------------------------ |
 | Full rules                          | Can play both multiplayer and solo games                     |
 | CLI + GUI + Socket                  | Both interfaces work over the network as required            |
@@ -25,11 +28,10 @@ The clients can be run from anywhere, while the server requires that it is run i
 
 
 `\path\to\java -jar Masters.jar cli`
+
 `\path\to\java -jar Masters.jar gui`
-```
-mdkir ./saved_games 
-\path\to\java -jar Masters.jar server
-```
+
+`\path\to\java -jar Masters.jar server`
 
 ## Testing information
 From a cli client and while in the main game menu, selecting `1492` instead of one of the displayed options causes the game to end as if a victory condition had been met.  
@@ -39,7 +41,9 @@ The precompiled jar file supplied in the `\deliverables` folder uses localhost a
 + Supply two additional command line arguments when running the program, `<hostname>` and `<port>` (needs to be done for the server and for every client) e.g: 
 
 `\path\to\java -jar Masters.jar cli 127.0.0.0 9017`
+
 `\path\to\java -jar Masters.jar gui 127.0.0.0 9017`
+
 `\path\to\java -jar Masters.jar server 127.0.0.0 9017`
 
 No checks are implemented to verify whether the supplied arguments are correct.
