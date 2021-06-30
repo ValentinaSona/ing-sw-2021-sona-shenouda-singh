@@ -351,6 +351,10 @@ public class DispatcherController implements Runnable, LambdaObserver {
         }
     }
 
+    /**
+     * This message is received only by the player that disconnects.
+     * @param message the disconnection message.
+     */
     public void handleDisconnection(DisconnectionMessage message){
         //METODO solo per partita in multiplayer
         UIController.getInstance().getClientConnection().closeConnection();
@@ -405,7 +409,9 @@ public class DispatcherController implements Runnable, LambdaObserver {
 
     }
 
-    // termian la partita perche un giocatore ha richiesto il salvataggio
+    /**
+     * Ends the game by closing the connection when a player as requested to save.
+     */
     public void handleGameSaving(){
         UIController.getInstance().getClientConnection().closeConnection();
 

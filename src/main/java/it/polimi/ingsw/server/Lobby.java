@@ -94,6 +94,12 @@ public class Lobby {
         }
     }
 
+    /**
+     * Called instead of setLobbyMaxPlayerCount by the ClientLoadGameMessage when restoring from file.
+     * Invokes the aforementioned method passing it the size of the saved game.
+     * @param connection the player sending the message.
+     * @return true if successful.
+     */
     public boolean handleResumeGame(Connection connection){
         if (firstConnection == null || connection != firstConnection) {
             return false;
@@ -149,6 +155,12 @@ public class Lobby {
         }
     }
 
+    /**
+     * Called by the ClientSetPlayersCountMessage sent by the first player (after they receive the SET_COUNT).
+     * @param playerCount the number of players expected in the game.
+     * @param connection the player's connection.
+     * @return true if successful, false if not.
+     */
     public boolean setLobbyMaxPlayerCount(int playerCount, Connection connection) {
 
         if (firstConnection == null || connection != firstConnection) {
@@ -204,7 +216,7 @@ public class Lobby {
         }
 
         if(firstConnection != null && (isLoadGameFromFile() != message.isLoadFromGame())){
-            //the lobby is waiting for players in  order to create a new game and not to load it
+            // The lobby is waiting for players in  order to create a new game and not to load it
             handleLobbyDisconnection(connection);
         }
 
@@ -256,7 +268,7 @@ public class Lobby {
 
             LOGGER.log(Level.INFO,"waiting for first connection");
             this.waitForFirstConnection();
-            //after the first player is arrived he has to choose the numOfPlayer for the game
+            // After the first player has arrived they has to choose the numOfPlayer for the game
             this.waitForCurrentPlayerCount();
 
             Map<Connection, String> participants = this.getAllParticipants();
@@ -375,14 +387,18 @@ public class Lobby {
         }
     }
 
+    /**
+     * Sends the SET_COUNT to the first player that connects, waits for the answer.
+     * The client must invoke setLobbyMaxPlayerCount() by sending a ClientSetPlayersCountMessage message to continue.
+     */
     private void waitForCurrentPlayerCount(){
         synchronized (playerCountLock){
             currentLobbyPlayerCount = 0;
-            //the operation is gone well but we need other info
+            // The operation has gone well but we need other info
             firstConnection.send(StatusMessage.SET_COUNT);
             while(currentLobbyPlayerCount == 0){
                 try {
-                    //waiting for the first player to call setLobbyMaxPlayerCount
+                    // waiting for the first player to call setLobbyMaxPlayerCount
                     playerCountLock.wait();
                 } catch (InterruptedException e) {
                     Thread.currentThread().interrupt();

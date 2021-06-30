@@ -14,6 +14,7 @@ import it.polimi.ingsw.server.model.ResourceType;
 import javafx.util.Pair;
 
 import java.io.*;
+import java.nio.charset.StandardCharsets;
 import java.util.Scanner;
 
 import static it.polimi.ingsw.client.ui.cli.CLIHelper.*;
@@ -35,7 +36,7 @@ public class CLI implements Ui {
 
     public CLI()  {
         input = new Scanner(System.in);
-        output = new PrintStream(System.out);
+        output = new PrintStream(System.out, true, StandardCharsets.UTF_8);
 
 
     }

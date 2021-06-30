@@ -7,6 +7,8 @@ public class GUISizes {
     private int devSize;
     private int devSizeY;
 
+    private int devOffset;
+
     private int leaderShowX;
     private int leaderShowY;
 
@@ -20,6 +22,7 @@ public class GUISizes {
     private int strongboxCols;
 
     private int strongBoxRes;
+    private int depotRes;
 
     private int logX;
     private int logY;
@@ -33,13 +36,15 @@ public class GUISizes {
     }
 
     private GUISizes() {
-        if (GUIHelper.getInstance().getResolution() > 992 ) setNormalScreen();
+        if (GUIHelper.getInstance().getResolution() > 1000 ) setNormalScreen();
     }
 
     private void setNormalScreen() {
 
         devSize = 187;
         devSizeY = 279;
+
+        devOffset = 120;
 
         marbles = 110;
 
@@ -54,6 +59,7 @@ public class GUISizes {
         strongboxCols = 6;
 
         strongBoxRes = 50;
+        depotRes = 62;
 
         logX = 400;
         logY = 350;
@@ -94,4 +100,10 @@ public class GUISizes {
     public int logSpacing() { return logSpacing; }
 
     public int faithTrack() { return faithTrack; }
+
+    public int devOffset() { return devOffset; }
+
+    public int depotRes() {
+        return depotRes;
+    }
 }

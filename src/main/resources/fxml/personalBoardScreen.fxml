@@ -170,12 +170,12 @@
                <children>
                   <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0" spacing="15.0">
                      <children>
-                        <Button fx:id="selectSpecialProd1" alignment="CENTER" mnemonicParsing="false" onAction="#confirmBoardProduction" styleClass="darkButton" text="Select" textAlignment="CENTER" />
+                        <Button fx:id="selectSpecialProd1" alignment="CENTER" mnemonicParsing="false" onAction="#selectSpecialProd1" prefHeight="57.0" prefWidth="115.0" styleClass="darkButton" text="Select" textAlignment="CENTER" />
                      </children>
                   </HBox>
                   <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0" spacing="15.0">
                      <children>
-                        <Button fx:id="selectSpecialProd2" alignment="CENTER" mnemonicParsing="false" onAction="#confirmBoardProduction" styleClass="darkButton" text="Select" textAlignment="CENTER" />
+                        <Button fx:id="selectSpecialProd2" alignment="CENTER" mnemonicParsing="false" onAction="#selectSpecialProd2" prefHeight="57.0" styleClass="darkButton" text="Select" textAlignment="CENTER" />
                      </children>
                   </HBox>
                </children>
@@ -339,6 +339,16 @@
                   <Insets left="1258.0" top="320.0" />
                </StackPane.margin>
             </VBox>
+            <HBox fx:id="specialDepot1" alignment="CENTER_LEFT" maxHeight="71.0" maxWidth="150.0" prefHeight="100.0" prefWidth="200.0" spacing="40.0" StackPane.alignment="CENTER_LEFT">
+               <StackPane.margin>
+                  <Insets bottom="250.0" left="1210.0" />
+               </StackPane.margin>
+            </HBox>
+            <HBox fx:id="specialDepot2" alignment="CENTER_LEFT" maxHeight="71.0" maxWidth="150.0" prefHeight="100.0" prefWidth="200.0" spacing="40.0" StackPane.alignment="CENTER_LEFT">
+               <StackPane.margin>
+                  <Insets bottom="50.0" left="1210.0" />
+               </StackPane.margin>
+            </HBox>
          </children>
       </StackPane>
    </center>

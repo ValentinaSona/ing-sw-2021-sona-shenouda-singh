@@ -1,6 +1,7 @@
 package it.polimi.ingsw.server.controller;
 
 import it.polimi.ingsw.server.exception.EndOfGameException;
+import it.polimi.ingsw.server.exception.InvalidDepotException;
 import it.polimi.ingsw.server.model.*;
 import it.polimi.ingsw.server.view.RealRemoteViewHandler;
 import it.polimi.ingsw.server.view.RemoteViewHandler;
@@ -23,6 +24,7 @@ class LeaderCardsControllerTest {
         controller = null;
         Game.destroy();
         MarketController.destroy();
+        ResourceController.destroy();
     }
 
     @Test
@@ -54,7 +56,11 @@ class LeaderCardsControllerTest {
 
 
         model.getPlayerFromUser(merlin).setLeaderCards(new LeaderCard[]{card, card2});
-        model.getPlayerFromUser(merlin).getStrongbox().addResources(new Resource(3, ResourceType.COIN));
+        try {
+            model.getPlayerFromUser(merlin).getStrongbox().addResources(new Resource(3, ResourceType.COIN));
+        } catch (InvalidDepotException e) {
+            e.printStackTrace();
+        }
 
         var message = new ClientActivateSpecialAbilityMessage(Id.LEADER_CARD_1);
         controller.activateSpecialAbility(message,view,merlin);
@@ -79,7 +85,4 @@ class LeaderCardsControllerTest {
 
     }
 
-    @Test
-    void throwLeaderCard() {
-    }
 }

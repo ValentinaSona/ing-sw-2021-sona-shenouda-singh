@@ -233,6 +233,7 @@ public class MenuRunner {
     public void printPlayedLeaders(PlayerView view){
         var cards = view.getLeaderCards();
         int i = 0;
+        if (cards == null) { cli.printMessage("[X] You have played no leader cards"); return;}
         for (LeaderCard card : cards){
             if (card != null && card.isActive()) {
                 cli.printMessage(card);
@@ -359,7 +360,7 @@ public class MenuRunner {
         cli.printMessage("\nSlot 3: ");
         if (slot.peek() != null)
 
-            cli.printMessage("\n\t" + slot.peek().toString()+ "\tHidden cards value: " + slot.hiddenVP()+" VP " + slot.hiddenColors() );
+            cli.printMessage("\n" + slot.peek().toString()+ "\tHidden cards value: " + slot.hiddenVP()+" VP " + slot.hiddenColors() );
 
         else
             cli.printMessage("empty \n");

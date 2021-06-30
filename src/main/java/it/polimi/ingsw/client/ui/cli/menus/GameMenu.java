@@ -174,12 +174,20 @@ public class GameMenu {
             runner.printStrongbox();
 
             if (prodId == Id.BOARD_PRODUCTION){
+
                 cli.printMessage("[ ] The board production converts two resources of your choice into one of your choice.");
                 int costResources = 2;
-                if (cli.getView().getTotalResources().length <2) {
+                int possessedRes = 0;
+
+                for (Resource res : cli.getView().getTotalResources()){
+                    possessedRes += res.getQuantity();
+                }
+
+                if (possessedRes <2) {
                     cli.printMessage("[X] You do not have the resources needed to activate this production.");
                     continue;
                 }
+
                 while (costResources > 0 ){
                     // TODO: total selected  - print map.
                     cli.printMessage("[ ] Select the resources to spend ("+ costResources+" more to select):");
@@ -279,6 +287,10 @@ public class GameMenu {
 
                 UIController.getInstance().depositResourcesIntoSlot(prodId, resIdMap, resource.getResourceType(), false);
                 runner.waitResponse();
+            }
+
+            if (runner.getCurrentAction() == GameActions.MENU){
+
             }
 
             if (productions.size() == (options.length - empty - 1)) break;
@@ -641,7 +653,7 @@ public class GameMenu {
 
             String resourcePrint = tempResources.stream()
                     .map(String::valueOf)
-                    .collect(Collectors.joining(" , ", "", ""));
+                    .collect(Collectors.joining(", ", "", ""));
 
 
             cli.printMessage("["+CHECK_MARK+"] You have received the following resources: "+ resourcePrint);
