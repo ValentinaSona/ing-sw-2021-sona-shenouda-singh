@@ -72,6 +72,8 @@ public class DevelopmentCardMarketController{
                 view.handleStatusMessage(StatusMessage.SELECTION_ERROR);
             } catch (NotSufficientResourceException e) {
                 view.handleStatusMessage(StatusMessage.REQUIREMENTS_ERROR);
+            } catch (NullPointerException e){
+                view.handleStatusMessage(StatusMessage.EMPTY_ERROR);
             }
         }
     }

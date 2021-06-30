@@ -73,6 +73,11 @@ public class CLIMessageHandler {
 
             case SELECTION_ERROR -> handleSelectionError();
 
+            case EMPTY_ERROR -> {
+                if (MenuRunner.getInstance().getContextAction() == GameActions.SELECT_CARD)
+                    MenuRunner.getInstance().sendResponse(GameActions.SELECT_CARD, GameActions.MENU, "[X] There are no cards in this deck.");
+            }
+
             case CONTINUE -> handleContinue();
 
             case RECONNECTION_OK ->  MenuRunner.getInstance().sendResponse(GameActions.MENU, "[" + CHECK_MARK + "] Rejoining the game!");
@@ -208,7 +213,7 @@ public class CLIMessageHandler {
         if (MenuRunner.getInstance().getState() == MenuStates.SETUP)
             cli.printMessage("[" + CHECK_MARK + "] The game is starting!");
 
-        MenuRunner.getInstance().setState(MenuStates.GAME, message);
+        if (MenuRunner.getInstance().getState() != MenuStates.REJOIN) MenuRunner.getInstance().setState(MenuStates.GAME, message);
         if (message.getStartingTurn().getNickName().equals(MatchSettings.getInstance().getClientNickname())) {
             cli.printMessage("[" + CHECK_MARK + "] It's your turn!");
 

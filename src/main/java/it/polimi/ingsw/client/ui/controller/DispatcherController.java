@@ -2,13 +2,11 @@ package it.polimi.ingsw.client.ui.controller;
 
 import it.polimi.ingsw.client.modelview.GameView;
 import it.polimi.ingsw.client.modelview.MatchSettings;
-import it.polimi.ingsw.client.ui.cli.CLI;
 import it.polimi.ingsw.client.ui.cli.CLIMessageHandler;
 import it.polimi.ingsw.client.ui.gui.GUIHelper;
 import it.polimi.ingsw.client.ui.gui.GUIMessageHandler;
 import it.polimi.ingsw.client.ui.gui.JFXControllers.ScreenName;
 import it.polimi.ingsw.server.controller.User;
-import it.polimi.ingsw.server.model.Game;
 import it.polimi.ingsw.server.model.LeaderCard;
 import it.polimi.ingsw.utils.networking.ClientHandleable;
 import it.polimi.ingsw.utils.networking.Transmittable;
@@ -400,6 +398,11 @@ public class DispatcherController implements Runnable, LambdaObserver {
         GameView.getInstance().setDevelopmentCardsMarket(message.getDevMarketView());
         GameView.getInstance().updatePlayerViews(message.getPlayerViews());
         GameView.getInstance().setCurrentPlayer(message.getCurrentPlayer());
+        GameView.getInstance().setBlackCross(message.getBlackCross());
+
+        MatchSettings.getInstance().setTotalUsers(userList.size());
+
+        if (GameView.getInstance().getPlayers().size()==1) MatchSettings.getInstance().setSolo(true);
 
         if(gui){
             GUIMessageHandler.getInstance().handleServerGameReconnectionMessage(message);

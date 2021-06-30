@@ -19,6 +19,10 @@ public enum StatusMessage implements Transmittable {
      */
     SELECTION_ERROR,
     /**
+     * Response message if the selected object is not present (e.g. empty deck).
+     */
+    EMPTY_ERROR,
+    /**
      * Response message if the command succeeded, but the other party needs additional information to complete it.
      */
     CONTINUE,

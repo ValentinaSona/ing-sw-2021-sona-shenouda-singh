@@ -291,4 +291,8 @@ public class UIController implements LambdaObserver{
     public Connection getClientConnection() {
         return clientConnection;
     }
+
+    public boolean isLocal() {
+        return local;
+    }
 }

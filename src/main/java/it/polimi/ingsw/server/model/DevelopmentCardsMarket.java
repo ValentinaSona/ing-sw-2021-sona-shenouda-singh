@@ -34,7 +34,12 @@ public class DevelopmentCardsMarket implements  DevMarket {
 	 * @return the card on top of the selected deck
 	 */
 	public DevelopmentCard getDevelopmentCard(Player player, int row, int col){
-		return decks[row][col].firstCard();
+
+		try {
+			return decks[row][col].firstCard();
+		} catch (RuntimeException e){
+			return null;
+		}
 	}
 	/**
 	 * Shuffles all the decks

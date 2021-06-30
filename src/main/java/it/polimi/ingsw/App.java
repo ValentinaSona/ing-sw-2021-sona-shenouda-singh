@@ -22,6 +22,13 @@ public class App
     private static final Logger LOGGER = Logger.getLogger(App.class.getName());
     public static void main( String[] args ) throws IOException {
         LOGGER.log(Level.INFO, "Logger initialized");
+
+        if (args.length == 3){
+            Constant.setHostIp(args[1]);
+            Constant.setPort(Integer.parseInt(args[2]));
+        }
+
+
         switch (args[0]) {
             case "gui" -> {
                 Client client = new Client(new GUI());

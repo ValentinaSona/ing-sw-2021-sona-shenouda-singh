@@ -152,6 +152,8 @@ public class Controller implements LambdaObserver {
             users.add(model.getUserFromPlayer(p));
         }
 
+        int blackCross = (model.isSolo()) ? model.getLorenzo().getBlackCross() : 0;
+
         List<PlayerView> playerViews = new ArrayList<>();
         model.getPlayers().forEach((p)->playerViews.add(p.getVisible()));
 
@@ -162,8 +164,8 @@ public class Controller implements LambdaObserver {
                     playerViews,
                     model.getCurrentPlayer().getVisible(),
                     model.getMarketInstance().getVisible(),
-                    model.getDevelopmentCardsMarket().getVisible()
-            );
+                    model.getDevelopmentCardsMarket().getVisible(),
+                    blackCross);
 
 
             Optional<Action> gameAction = p.getGameAction();
@@ -258,6 +260,9 @@ public class Controller implements LambdaObserver {
         Player player = model.getPlayerFromUser(user);
         player.setDisconnected(false);
 
+        int blackCross = (model.isSolo()) ? model.getLorenzo().getBlackCross() : 0;
+
+
         List<PlayerView> playerViews = new ArrayList<>();
         model.getPlayers().forEach((p)->playerViews.add(p.getVisible()));
         ServerGameReconnectionMessage message = new ServerGameReconnectionMessage(
@@ -265,8 +270,8 @@ public class Controller implements LambdaObserver {
                 playerViews,
                 model.getCurrentPlayer().getVisible(),
                 model.getMarketInstance().getVisible(),
-                model.getDevelopmentCardsMarket().getVisible()
-        );
+                model.getDevelopmentCardsMarket().getVisible(),
+                blackCross);
 
 
         Optional<Action> gameAction = player.getGameAction();

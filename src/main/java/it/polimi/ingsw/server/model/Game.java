@@ -115,7 +115,7 @@ public class Game extends LambdaObservable<Transmittable> {
         if (savedState.numOfPlayers() == 1){
             // If the game is a single player
             this.solo = true;
-            this.Lorenzo = new Lorenzo();
+            this.Lorenzo = savedState.getLorenzo();
 
         } else {
 

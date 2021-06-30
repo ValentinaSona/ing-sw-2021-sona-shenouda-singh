@@ -4,6 +4,7 @@ import it.polimi.ingsw.client.modelview.DevelopmentCardSlotView;
 import it.polimi.ingsw.client.modelview.GameView;
 import it.polimi.ingsw.client.modelview.SpecialProductionView;
 import it.polimi.ingsw.client.ui.cli.CLI;
+import it.polimi.ingsw.client.ui.controller.DispatcherController;
 import it.polimi.ingsw.client.ui.controller.UIController;
 import it.polimi.ingsw.server.model.*;
 import it.polimi.ingsw.utils.GameActions;
@@ -36,17 +37,22 @@ public class GameMenu {
         gameMenu();
     }
 
-    private String[] getGameOptions(){
-        if (cli.getView().isMyTurn()){
-            if (cli.getView().isMainAction()){
-
-                return new String[] {"See market / buy marbles", "See development card market / buy cards ", "See your board / activate productions", "See other players boards", "See faith tracks",  "Arrange warehouse", "Leader Action", "End Turn", "Save game and quit"};
+    private String[] getGameOptions() {
+        if (cli.getView().isMyTurn()) {
+            if (cli.getView().isMainAction()) {
+                if (UIController.getInstance().isLocal()) {
+                    return new String[]{"See market / buy marbles", "See development card market / buy cards ", "See your board / activate productions", "See other players boards", "See faith tracks", "Arrange warehouse", "Leader Action", "End Turn"};
+                } else {
+                    return new String[]{"See market / buy marbles", "See development card market / buy cards ", "See your board / activate productions", "See other players boards", "See faith tracks", "Arrange warehouse", "Leader Action", "End Turn", "Save game and quit"};
+                }
             } else {
-                return new String[] {"See market", "See development card market", "See your board", "See other players boards",  "See faith tracks", "Arrange warehouse", "Leader Action", "End Turn", "Save game and quit"};
+                if (UIController.getInstance().isLocal()) {
+                    return new String[]{"See market", "See development card market", "See your board", "See other players boards", "See faith tracks", "Arrange warehouse", "Leader Action", "End Turn",};
+                } else
+                    return new String[]{"See market", "See development card market", "See your board", "See other players boards", "See faith tracks", "Arrange warehouse", "Leader Action", "End Turn", "Save game and quit"};
             }
-
         } else {
-            return new String[] {"See market", "See development card market", "See your board", "See other players boards", "See faith tracks", "Arrange warehouse"};
+            return new String[]{"See market", "See development card market", "See your board", "See other players boards", "See faith tracks", "Arrange warehouse"};
         }
     }
 
@@ -331,6 +337,7 @@ public class GameMenu {
         int[] choice = cli.getDevelopmentRowCol();
 
 
+        // This card is already discounted if necessary!
         var card = GameView.getInstance().getDevelopmentCardsMarket().getTray()[choice[0]][choice[1]];
 
 
@@ -371,18 +378,6 @@ public class GameMenu {
                 cost.add(new Resource(res.getQuantity(), res.getResourceType()));
             }
 
-
-            for (LeaderCard discount: discounts){
-                var sale = ((DiscountAbility)discount.getSpecialAbility()).getDiscount();
-                for (Resource resource : cost){
-                    if (resource.getResourceType() == sale.getResourceType()){
-                        resource.sub(sale);
-                        // This never happens with the original set of cards, but it's good practice to check.
-                        if (resource.getQuantity()<=0) cost.remove(resource);
-                        break;
-                    }
-                }
-            }
             // Various print to deliver info to the player.
             cli.printMessage("[" + CHECK_MARK + "] Selected card: \n" + card);
             runner.printDepots();

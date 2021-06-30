@@ -16,15 +16,18 @@ public class ServerGameReconnectionMessage implements ServerMessage, ClientHandl
     private final PlayerView currentPlayer;
     private final MarketView marketView;
     private final DevMarketView devMarketView;
+    private final int blackCross;
 
 
-    public ServerGameReconnectionMessage(boolean pendingAction, List<PlayerView> playerViews, PlayerView currentPlayer, MarketView marketView, DevMarketView devMarketView) {
+    public ServerGameReconnectionMessage(boolean pendingAction, List<PlayerView> playerViews, PlayerView currentPlayer, MarketView marketView, DevMarketView devMarketView, int blackCross) {
         this.pendingAction = pendingAction;
         this.playerViews = playerViews;
         this.currentPlayer = currentPlayer;
         this.marketView = marketView;
         this.devMarketView = devMarketView;
+        this.blackCross = blackCross;
     }
+
 
 
     public void setPendingAction(boolean pendingAction){
@@ -49,6 +52,8 @@ public class ServerGameReconnectionMessage implements ServerMessage, ClientHandl
     public DevMarketView getDevMarketView() {
         return devMarketView;
     }
+
+    public int getBlackCross() { return blackCross; }
 
     @Override
     public boolean handleMessage(DispatcherController handler) {

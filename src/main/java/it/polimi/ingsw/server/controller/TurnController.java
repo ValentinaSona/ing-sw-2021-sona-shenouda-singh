@@ -99,6 +99,14 @@ public class TurnController{
         }
         endingPlayer.setDisconnected(true);
 
+        if (model.isSolo()) {
+            try {
+                LorenzoAction();
+            } catch (EndOfGameException e) {
+                endOfGame(e);
+            }
+        }
+
         if(model.isSolo()){
             model.setGameState(GameState.WAITING_FOR_SOMEONE);
         }else if(model.getPlayers().stream().anyMatch(p-> !p.isDisconnected())){

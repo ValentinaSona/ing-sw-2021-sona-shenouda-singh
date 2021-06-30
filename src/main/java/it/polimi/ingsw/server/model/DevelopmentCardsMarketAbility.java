@@ -42,7 +42,7 @@ public class DevelopmentCardsMarketAbility implements DevMarket {
 
         DevelopmentCard card = cardsMarket.getDevelopmentCard(player, row, col);
 
-        if (abilityMap.containsKey(player)) {
+        if (abilityMap.containsKey(player) && card != null) {
 
             Resource[] cost = card.getCost();
 

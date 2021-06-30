@@ -25,6 +25,7 @@ public class SavedState {
     private final SavedResourceMarket savedMarket;
     private final SavedDevMarket savedDevMarket;
     private final List<Player> savedPlayers;
+    private final Lorenzo lorenzo;
 
     private static final RuntimeTypeAdapterFactory<SpecialAbility> leaderAdapterFactory = RuntimeTypeAdapterFactory
             .of(SpecialAbility.class, "SpecialAbilityType")
@@ -47,13 +48,15 @@ public class SavedState {
 
 
 
-    public SavedState(PlayersOrder order, SavedResourceMarket savedMarket, SavedDevMarket savedDevMarket, List<PlayerView> savedPlayers, Map<String, List<LeaderCard>> savedLeaderCards, Map<String,List<Slot>> savedSlot) {
+    public SavedState(PlayersOrder order, SavedResourceMarket savedMarket, SavedDevMarket savedDevMarket, List<PlayerView> savedPlayers, Map<String, List<LeaderCard>> savedLeaderCards, Map<String,List<Slot>> savedSlot, Lorenzo lorenzo) {
         this.order = order;
         this.savedMarket = savedMarket;
         this.savedDevMarket = savedDevMarket;
         savedPlayers.forEach(elem -> elem.setLeaderCards(savedLeaderCards.get(elem.getNickname())));
 
         this.savedPlayers = savedPlayers.stream().map(e -> new Player(e, savedSlot.get(e.getNickname()))).collect(Collectors.toList());
+
+        this.lorenzo = lorenzo;
     }
 
     public static void load() {
@@ -68,6 +71,8 @@ public class SavedState {
             List<PlayerLeaderCards> leaderCardsFile =  Stream.of(gson.fromJson(new FileReader(pathToSavedGame + "/leader_cards.json"), PlayerLeaderCards[].class)).collect(Collectors.toList());
             List<PlayerSlot> slotFile = Stream.of(gson.fromJson(new FileReader(pathToSavedGame + "/slots.json"), PlayerSlot[].class)).collect(Collectors.toList());
 
+            Lorenzo lorenzo = gson.fromJson(new FileReader(pathToSavedGame + "/lorenzo.json"), Lorenzo.class);
+
             Map<String, List<LeaderCard>> playerLeaderMap = leaderCardsFile.stream().collect(Collectors.toMap(
                     PlayerLeaderCards::getPlayer,
                     PlayerLeaderCards::getLeaderCards
@@ -78,7 +83,8 @@ public class SavedState {
                     PlayerSlot::getSlots
             ));
 
-            Game.restore(new SavedState(orderFile, marketFile, devMarketFile, players, playerLeaderMap, playerSlotMap));
+
+            Game.restore(new SavedState(orderFile, marketFile, devMarketFile, players, playerLeaderMap, playerSlotMap, lorenzo));
 
         } catch (FileNotFoundException e) {
             e.printStackTrace();
@@ -114,7 +120,7 @@ public class SavedState {
         write(game.getPlayers().stream().map(PlayerView::new).collect(Collectors.toList()), "/players.json");
         write(game.getPlayers().stream().map(e -> new PlayerLeaderCards(e.getNickname(), e.getLeaderCards())).collect(Collectors.toList()), "/leader_cards.json");
         write(game.getPlayers().stream().map(PlayerSlot::new).collect(Collectors.toList()), "/slots.json");
-
+        write(game.getLorenzo(), "/lorenzo.json");
     }
 
     public static void write (Object source, String path) {
@@ -147,6 +153,8 @@ public class SavedState {
     public List<Player> getSavedPlayers() {
         return savedPlayers;
     }
+
+    public Lorenzo getLorenzo() { return lorenzo; }
 
     public Map<Player, List<MarketMarble>> getMarketMap() {
         return savedMarket.getSavedAbilityMap().entrySet().stream().collect(Collectors.toMap(
