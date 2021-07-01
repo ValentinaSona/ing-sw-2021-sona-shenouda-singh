@@ -212,6 +212,7 @@ public class MainMenuGUIController extends AbstractGUIController {
         GUIHelper.getInstance().setLocal(false);
         GUIHelper.getInstance().setSolo(true);
         GUIHelper.getInstance().setResuming(false);
+        GUIHelper.getInstance().setReconnecting(false);
         change(ScreenName.JOIN_SINGLEPLAYER);
     }
 
@@ -219,6 +220,7 @@ public class MainMenuGUIController extends AbstractGUIController {
         GUIHelper.getInstance().setLocal(true);
         GUIHelper.getInstance().setSolo(true);
         GUIHelper.getInstance().setResuming(false);
+        GUIHelper.getInstance().setReconnecting(false);
         change(ScreenName.JOIN_SINGLEPLAYER);
     }
 
@@ -250,11 +252,13 @@ public class MainMenuGUIController extends AbstractGUIController {
 
     public void resume(MouseEvent mouseEvent) {
         GUIHelper.getInstance().setResuming(true);
+        GUIHelper.getInstance().setReconnecting(false);
         change(ScreenName.JOIN_GAME);
     }
 
     public void resumeSingle(MouseEvent mouseEvent) {
         GUIHelper.getInstance().setResuming(true);
+        GUIHelper.getInstance().setReconnecting(false);
         change(ScreenName.JOIN_GAME);
     }
 
