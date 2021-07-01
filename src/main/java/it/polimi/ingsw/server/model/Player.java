@@ -2,15 +2,11 @@ package it.polimi.ingsw.server.model;
 
 import it.polimi.ingsw.client.modelview.*;
 import it.polimi.ingsw.server.model.action.Action;
-import it.polimi.ingsw.utils.GameActions;
-import it.polimi.ingsw.utils.networking.Transmittable;
-import it.polimi.ingsw.utils.observer.LambdaObservable;
-
 import java.util.*;
 import java.util.stream.Collectors;
 
-//TODO does player really need to be observable??
-public class Player extends LambdaObservable<Transmittable> {
+
+public class Player{
 
 	private Optional<Action> gameAction = Optional.empty();
 	/**
@@ -387,7 +383,7 @@ public class Player extends LambdaObservable<Transmittable> {
 		return list;
 	}
 
-	//TODO
+
 	public PlayerView getVisible(){
 
 		return new PlayerView(this);

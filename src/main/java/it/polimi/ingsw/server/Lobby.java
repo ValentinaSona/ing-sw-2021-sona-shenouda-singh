@@ -13,6 +13,7 @@ import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.LinkedBlockingDeque;
 import java.util.logging.Level;
+import java.util.logging.LogManager;
 import java.util.logging.Logger;
 
 /**
@@ -127,8 +128,6 @@ public class Lobby {
                 updateMessage();
             //all the player that were connected to the lobby included the one who asked to resume the game
             //were not part of the previous game
-
-            //TODO .. per quanto mi riguarda resterei anche in attesa di nuovi giocatori
 
             return true;
         }

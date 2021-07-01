@@ -4,7 +4,7 @@ import it.polimi.ingsw.server.exception.NotSufficientResourceException;
 
 
 import java.util.HashMap;
-//TODO replace  update() calls with notify() of the lambdaObservable class
+
 
 public class SpecialProduction extends Slot {
     private Production specialProduction;

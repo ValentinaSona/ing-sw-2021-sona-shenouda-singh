@@ -2,8 +2,6 @@ package it.polimi.ingsw.server.model;
 
 import it.polimi.ingsw.server.exception.InvalidDepotException;
 
-//TODO replace  update() calls with notify() of the lambdaObservable class
-
 public class SpecialDepot extends Depot {
 
     public SpecialDepot(int capacity, Id id, ResourceType resourceType){

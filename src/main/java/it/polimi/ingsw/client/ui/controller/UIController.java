@@ -106,7 +106,6 @@ public class UIController implements LambdaObserver{
                     controller.dispatchViewClientMessage();
                 }catch (Exception e) {
                     e.printStackTrace();
-                    //TODO devo gestire l'errore disconnettendo tutti i giocatori
                 }
             }
         };

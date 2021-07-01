@@ -10,6 +10,7 @@ import it.polimi.ingsw.utils.Constant;
 
 import java.io.IOException;
 import java.util.logging.Level;
+import java.util.logging.LogManager;
 import java.util.logging.Logger;
 
 /**
@@ -21,6 +22,8 @@ public class App
 {
     private static final Logger LOGGER = Logger.getLogger(App.class.getName());
     public static void main( String[] args ) throws IOException {
+        //called to disable all logging messages
+        LogManager.getLogManager().reset();
         LOGGER.log(Level.INFO, "Logger initialized");
 
         if (args.length == 3){

@@ -8,7 +8,7 @@ import it.polimi.ingsw.utils.networking.Transmittable;
 import it.polimi.ingsw.utils.observer.LambdaObservable;
 
 import static it.polimi.ingsw.server.model.ResourceType.*;
-//TODO replace  delete update()
+
 public class Strongbox{
 
     private final Resource shield;
