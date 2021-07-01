@@ -115,6 +115,8 @@ public class DispatcherController implements Runnable, LambdaObserver {
         GameView.getInstance().setMarketInstance(message.getMarketView());
         GameView.getInstance().setDevelopmentCardsMarket(message.getDevMarketView());
 
+
+
         if(gui){
             GUIMessageHandler.getInstance().handleSetupGameMessage(message);
         }else{
@@ -123,6 +125,8 @@ public class DispatcherController implements Runnable, LambdaObserver {
     }
 
     public void handleUpdateLobby(ServerUpdateLobbyMessage message){
+
+        MatchSettings.getInstance().setTotalUsers(message.getNumOfPlayer());
         if(gui){
             GUIMessageHandler.getInstance().handleUpdateLobbyMessage(message);
         }else{
