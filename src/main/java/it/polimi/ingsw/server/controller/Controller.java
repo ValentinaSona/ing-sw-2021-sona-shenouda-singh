@@ -178,7 +178,7 @@ public class Controller implements LambdaObserver {
 
         Player currentPlayer = model.getCurrentPlayer();
         int currentPlayerIdx = players.indexOf(currentPlayer);
-        Player endingPlayer = (currentPlayerIdx == 0) ? players.get(players.size()-1) : players.get(currentPlayerIdx+1);
+        Player endingPlayer = (currentPlayerIdx == 0) ? players.get(players.size()-1) : players.get(currentPlayerIdx-1);
 
         model.notify(new ServerStartTurnMessage(
                 model.getUserFromPlayer(currentPlayer),
