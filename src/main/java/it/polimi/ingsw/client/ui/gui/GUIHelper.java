@@ -34,15 +34,12 @@ public class GUIHelper {
 
     private Rectangle2D bounds;
 
-    private boolean setUpPhase;
-
     private boolean local;
     private boolean solo;
 
     private boolean resuming;
     private boolean reconnecting;
 
-    private Background background;
     private Scene currentScene;
     private List<String> nickList;
     private List<String> others;
@@ -64,7 +61,6 @@ public class GUIHelper {
 
     private boolean chosenCard;
     private int selectedI, selectedJ;
-    private boolean selectSlot;
 
 
     private Id selectedSlot;
@@ -75,48 +71,17 @@ public class GUIHelper {
 
     private GUIHelper() {
         currAction = CurrAction.IDLE;
-        selectSlot = false;
         choosingTemp = false;
         chosenCard = false;
         devVisualizer = new ImageView();
         devVisualizer.setFitWidth(400);
         devVisualizer.setPreserveRatio(true);
         StackPane.setMargin(devVisualizer, new Insets(0, 0, 0, 1000));
-
-        setUpPhase = true;
     }
 
     public static GUIHelper getInstance() {
         if (singleton == null) singleton = new GUIHelper();
         return singleton;
-    }
-
-    public void setTurn(boolean turn) {
-        this.turn = turn;
-    }
-
-    public boolean getTurn() {
-        return turn;
-    }
-
-    public void setCurrentController(UiControllerInterface currentController) {
-        this.currentController = currentController;
-    }
-
-    public void setCurrentGameController(GameGUIControllerInterface controller) {
-        currentGameController = controller;
-    }
-
-    public GameGUIControllerInterface getCurrentGameController() {
-        return currentGameController;
-    }
-
-    public void setCurrentScene(Scene currentScene) {
-        this.currentScene = currentScene;
-    }
-
-    public Scene getCurrentScene() {
-        return currentScene;
     }
 
     /**
@@ -479,6 +444,55 @@ public class GUIHelper {
         else return new Image("assets/game/resources/nores.png", x, y, false, false);
     }
 
+    /**
+     * Converts a leader card into the corresponding ability tag
+     * @param card the activated card
+     * @return an Image of the ability tag
+     */
+    public Image getAbilityImageFromLeader(LeaderCard card) {
+        return new Image("assets/game/leader_cards/abilities/" + card.getId() + ".png", GUISizes.get().abilityX(), GUISizes.get().abilityY(), false, false);
+    }
+
+    /**
+     * Converts an Image into the corresponding resource
+     * @param image the Image to convert
+     * @return the corresponding resource with a quantity of 1
+     */
+    public Resource getResFromImage(Image image) {
+        String[] path = image.getUrl().split("/");
+        String[] name = path[path.length-1].split("\\.");
+        if (name[0].equals("nores")) return new Resource(1, ResourceType.JOLLY);
+        else return new Resource(1, ResourceType.valueOf(name[0].toUpperCase()));
+    }
+
+    public void setTurn(boolean turn) {
+        this.turn = turn;
+    }
+
+    public boolean getTurn() {
+        return turn;
+    }
+
+    public void setCurrentController(UiControllerInterface currentController) {
+        this.currentController = currentController;
+    }
+
+    public void setCurrentGameController(GameGUIControllerInterface controller) {
+        currentGameController = controller;
+    }
+
+    public GameGUIControllerInterface getCurrentGameController() {
+        return currentGameController;
+    }
+
+    public void setCurrentScene(Scene currentScene) {
+        this.currentScene = currentScene;
+    }
+
+    public Scene getCurrentScene() {
+        return currentScene;
+    }
+
     private void setPrevScreen(ScreenName prevScreen) {
         this.prevScreen = prevScreen;
     }
@@ -505,14 +519,6 @@ public class GUIHelper {
 
     public ScreenName getPrevScreen() {
         return prevScreen;
-    }
-
-    public boolean isSetUpDone() {
-        return setUpPhase;
-    }
-
-    public void setSetUpDone (boolean setUpPhase) {
-        this.setUpPhase = setUpPhase;
     }
 
     public boolean isChoosingTemp() {
@@ -551,14 +557,6 @@ public class GUIHelper {
         this.chosenCard = chosenCard;
     }
 
-    public Image getAbilityImageFromLeader(LeaderCard card) {
-        return new Image("assets/game/leader_cards/abilities/" + card.getId() + ".png", GUISizes.get().abilityX(), GUISizes.get().abilityY(), false, false);
-    }
-
-    public List<String> getNickList() {
-        return nickList;
-    }
-
     public List<String> getOthers() {
         return others;
     }
@@ -573,13 +571,6 @@ public class GUIHelper {
 
     public void setCurrentScreen(ScreenName currentScreen) {
         this.currentScreen = currentScreen;
-    }
-
-    public Resource getResFromImage(Image image) {
-        String[] path = image.getUrl().split("/");
-        String[] name = path[path.length-1].split("\\.");
-        if (name[0].equals("nores")) return new Resource(1, ResourceType.JOLLY);
-        else return new Resource(1, ResourceType.valueOf(name[0].toUpperCase()));
     }
 
     public void setClientView(PlayerView p) {
@@ -624,15 +615,9 @@ public class GUIHelper {
         if(reconnecting) resuming = false;
     }
 
-    public Rectangle2D getBounds() {
-        return bounds;
-    }
-
     public void setBounds(Rectangle2D bounds) {
         this.bounds = bounds;
     }
-
-
 
     public void setFinalScore(ServerFinalScoreMessage message) {
         this.rank = message.getRank().entrySet().stream().collect(Collectors.toMap(e -> e.getKey().getNickName(), Map.Entry::getValue));

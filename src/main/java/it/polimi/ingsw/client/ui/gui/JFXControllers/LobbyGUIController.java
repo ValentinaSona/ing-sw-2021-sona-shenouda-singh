@@ -50,8 +50,6 @@ public class LobbyGUIController extends AbstractGUIController implements UiContr
 
         timeline = GUIHelper.loadingWheel(loading);
 
-        GUIHelper.getInstance().setSetUpDone(false);
-
         synchronized (GUIMessageHandler.getInstance()) {
             GUIMessageHandler.getInstance().notifyAll();
         }
