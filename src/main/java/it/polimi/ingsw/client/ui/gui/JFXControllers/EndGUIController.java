@@ -26,7 +26,9 @@ public class EndGUIController {
     @FXML
     public void initialize() {
 
-        var header = new Text(String.format("%-24s %s", "Player", "Score"));
+        list.setStyle("-fx-font-family: 'monospaced'; -fx-font-style: bold");
+
+        var header = new Text(String.format("%-22s %s", "Player", "Score"));
         header.setStyle("-fx-fill: #063154;");
 
         list.getItems().add(header);
@@ -40,7 +42,7 @@ public class EndGUIController {
         Collections.reverse(scores);
 
         scores.forEach(e -> {
-            var text = new Text(String.format("%-25s %s", e.getKey(), e.getValue()));
+            var text = new Text(String.format("%-22s %s", e.getKey(), e.getValue()));
             if(e.getKey().equals(MatchSettings.getInstance().getClientNickname()) && !GUIHelper.getInstance().isSolo()) text.setStyle("-fx-fill: #0c361a");
             else text.setStyle("-fx-fill: white");
             list.getItems().add(text);

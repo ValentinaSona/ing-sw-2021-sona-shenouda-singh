@@ -77,8 +77,6 @@ public class MarketGUIController extends AbstractGUIController implements GameGU
         change(ScreenName.PERSONAL_BOARD);
     }
 
-    //TODO
-
     @Override
     public void handleStatusMessage(StatusMessage message) {
 

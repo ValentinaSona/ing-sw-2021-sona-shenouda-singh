@@ -201,7 +201,6 @@ public class LeaderSelectionGUIController extends AbstractGUIController implemen
 
     }
 
-    //TODO
     @Override
     public void handleStatusMessage(StatusMessage message) {
 

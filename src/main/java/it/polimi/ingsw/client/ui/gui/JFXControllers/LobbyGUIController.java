@@ -95,7 +95,6 @@ public class LobbyGUIController extends AbstractGUIController implements UiContr
         DispatcherController.getInstance().notifyAll();
     }
 
-    //TODO
     @Override
     public void handleStatusMessage(StatusMessage message) {
 

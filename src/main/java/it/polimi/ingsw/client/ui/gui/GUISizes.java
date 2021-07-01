@@ -39,7 +39,7 @@ public class GUISizes {
     }
 
     private GUISizes() {
-        if (GUIHelper.getInstance().getResolution() > 1000 ) setNormalScreen();
+        setNormalScreen();
     }
 
     private void setNormalScreen() {

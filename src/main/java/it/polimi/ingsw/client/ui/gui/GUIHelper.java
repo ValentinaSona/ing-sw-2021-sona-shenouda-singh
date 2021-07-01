@@ -6,7 +6,6 @@ import it.polimi.ingsw.client.ui.gui.JFXControllers.DevelopmentGUIController;
 import it.polimi.ingsw.client.ui.gui.JFXControllers.GameGUIControllerInterface;
 import it.polimi.ingsw.client.ui.gui.JFXControllers.ScreenName;
 import it.polimi.ingsw.server.controller.User;
-import it.polimi.ingsw.server.exception.EndOfGameCause;
 import it.polimi.ingsw.server.model.*;
 import it.polimi.ingsw.utils.networking.transmittables.servermessages.ServerFinalScoreMessage;
 import javafx.animation.*;
@@ -455,10 +454,6 @@ public class GUIHelper {
 
     public void setSolo(boolean solo) {
         this.solo = solo;
-    }
-
-    public void abilityActivation(LeaderCard card) {
-        // TODO ability
     }
 
     public boolean activeSpecialDepot(PlayerView player, int index) {

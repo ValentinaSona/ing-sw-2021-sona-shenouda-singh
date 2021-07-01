@@ -108,7 +108,6 @@ public class MainMenuGUIController extends AbstractGUIController {
 
     public void handleNicknameConfirmation(boolean success){
         if(!success) {
-            // TODO mostrare messaggio di errore
             joining.setOpacity(0);
             chooseNick.setOpacity(1);
             joinButton.setOpacity(1);

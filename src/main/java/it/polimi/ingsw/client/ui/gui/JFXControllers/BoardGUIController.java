@@ -187,7 +187,6 @@ public class BoardGUIController extends AbstractGUIController implements GameGUI
         this.playerView = playerView;
     }
 
-    //TODO
     @Override
     public void handleStatusMessage(StatusMessage message) {
 

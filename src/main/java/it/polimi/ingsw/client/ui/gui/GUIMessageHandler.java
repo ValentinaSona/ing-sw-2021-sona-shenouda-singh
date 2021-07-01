@@ -163,7 +163,6 @@ public class GUIMessageHandler {
     }
 
     public void handleServerActivateLeaderCardAbilityMessage(ServerActivateLeaderCardAbilityMessage message) {
-        GUIHelper.getInstance().abilityActivation(message.getAbility());
         Platform.runLater(() -> currentGameController.update());
         log.update(LogUpdates.ABILITY_ACTIVATION, message.getUser());
     }

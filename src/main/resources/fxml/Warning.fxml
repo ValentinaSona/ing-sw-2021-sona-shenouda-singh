@@ -7,7 +7,7 @@
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 
-<StackPane fx:id="backPane" minHeight="1080.0" minWidth="1920.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.client.ui.gui.JFXControllers.WarningGUIController">
+<StackPane fx:id="backPane" minHeight="1080.0" minWidth="1920.0" xmlns="http://javafx.com/javafx/15.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.client.ui.gui.JFXControllers.WarningGUIController">
     <children>
         <Region fx:id="backRegion" prefHeight="200.0" prefWidth="200.0" />
         <VBox alignment="CENTER" spacing="60.0">
