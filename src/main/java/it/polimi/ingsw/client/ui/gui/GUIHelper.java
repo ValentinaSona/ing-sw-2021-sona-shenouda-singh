@@ -355,6 +355,12 @@ public class GUIHelper {
         return selected;
     }
 
+    /**
+     * Places a certain image view on the faith track
+     * @param faith the faith value
+     * @param faithGrid the GridPane of the faith track
+     * @param faithImage the image to be placed
+     */
     public void placeFaithTrack(int faith, GridPane faithGrid, ImageView faithImage) {
         if (faith <= 2) faithGrid.add(faithImage, faith, 2);
         else if (faith == 3) faithGrid.add(faithImage, 2, 1);

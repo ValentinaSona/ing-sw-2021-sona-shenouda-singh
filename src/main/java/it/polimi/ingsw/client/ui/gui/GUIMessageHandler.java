@@ -250,7 +250,7 @@ public class GUIMessageHandler {
     }
 
     public void handleServerDisconnectionMessage() {
-        Platform.runLater(() -> ((MainMenuGUIController)currentController).noGameFound());
+        if (GUIHelper.getInstance().getCurrentScreen() != ScreenName.GAME_MENU) Platform.runLater(() -> ((MainMenuGUIController)currentController).noGameFound());
     }
 
     public void handleLastTurns(ServerLastTurnsMessage message) {

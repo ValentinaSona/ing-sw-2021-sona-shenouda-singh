@@ -41,5 +41,6 @@ public class WarningGUIController extends AbstractGUIController {
 
     public void quit(ActionEvent actionEvent) {
         Platform.exit();
+        System.exit(0);
     }
 }

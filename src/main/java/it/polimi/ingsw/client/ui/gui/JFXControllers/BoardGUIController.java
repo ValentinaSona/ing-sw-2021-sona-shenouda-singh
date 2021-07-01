@@ -534,13 +534,13 @@ public class BoardGUIController extends AbstractGUIController implements GameGUI
             box2.getChildren().add(selectSpecialProd2);
 
             if (cards != null) {
-                if (cards.get(0) != null && cards.get(0).isActive()) {
+                if (cards.size() > 0 && cards.get(0) != null && cards.get(0).isActive()) {
                     var im = new ImageView(GUIHelper.getInstance().getAbilityImageFromLeader(cards.get(0)));
                     var effect = new DropShadow();
                     im.setEffect(effect);
                     box1.getChildren().add(im);
                 }
-                if (cards.get(1) != null && cards.get(1).isActive()) {
+                if (cards.size() > 1 && cards.get(1) != null && cards.get(1).isActive()) {
                     var im = new ImageView(GUIHelper.getInstance().getAbilityImageFromLeader(cards.get(1)));
                     var effect = new DropShadow();
                     im.setEffect(effect);
