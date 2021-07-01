@@ -60,7 +60,19 @@ public class GUIMessageHandler {
     }
 
     public void handleUpdateLobbyMessage(ServerUpdateLobbyMessage message) {
-        Platform.runLater(() -> ((LobbyGUIController)currentController).lobbyUpdate(message));
+        if (GUIHelper.getInstance().isResuming()) Platform.runLater(() -> GUIHelper.getInstance().setScreen(ScreenName.LOBBY));
+        synchronized (GUIMessageHandler.getInstance()){
+            while (GUIHelper.getInstance().getCurrentScreen() != ScreenName.LOBBY) {
+                try {
+                    GUIMessageHandler.getInstance().wait();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        Platform.runLater(() -> {
+            ((LobbyGUIController)currentController).lobbyUpdate(message);
+        });
     }
 
     public void handleSetupGameMessage(ServerSetupGameMessage message) {
@@ -248,9 +260,10 @@ public class GUIMessageHandler {
             GUIHelper.getInstance().setScreen(ScreenName.WARNING);
         });
     }
-
+    // TODO handle classcastexception
     public void handleServerDisconnectionMessage() {
-        if (GUIHelper.getInstance().getCurrentScreen() != ScreenName.GAME_MENU) Platform.runLater(() -> ((MainMenuGUIController)currentController).noGameFound());
+        if (GUIHelper.getInstance().getCurrentScreen() == ScreenName.JOIN_GAME || GUIHelper.getInstance().getCurrentScreen() == ScreenName.JOIN_SINGLEPLAYER)
+            Platform.runLater(() -> ((MainMenuGUIController)currentController).noGameFound());
     }
 
     public void handleLastTurns(ServerLastTurnsMessage message) {

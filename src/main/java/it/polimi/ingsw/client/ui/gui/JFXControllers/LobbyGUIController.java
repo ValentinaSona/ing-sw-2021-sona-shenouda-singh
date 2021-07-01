@@ -6,6 +6,7 @@ import it.polimi.ingsw.client.ui.controller.DispatcherController;
 import it.polimi.ingsw.client.ui.controller.LobbyMenuController;
 import it.polimi.ingsw.client.ui.controller.UiControllerInterface;
 import it.polimi.ingsw.client.ui.gui.GUIHelper;
+import it.polimi.ingsw.client.ui.gui.GUIMessageHandler;
 import it.polimi.ingsw.server.controller.User;
 
 import it.polimi.ingsw.utils.networking.transmittables.StatusMessage;
@@ -50,6 +51,10 @@ public class LobbyGUIController extends AbstractGUIController implements UiContr
         timeline = GUIHelper.loadingWheel(loading);
 
         GUIHelper.getInstance().setSetUpDone(false);
+
+        synchronized (GUIMessageHandler.getInstance()) {
+            GUIMessageHandler.getInstance().notifyAll();
+        }
     }
 
     private void updatePlayersHeader() {
