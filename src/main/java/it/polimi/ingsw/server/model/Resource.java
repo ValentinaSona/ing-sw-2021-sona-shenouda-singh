@@ -15,6 +15,11 @@ public class Resource implements Serializable {
 		this.quantity = quantity;
 	}
 
+	public Resource(Resource resource) {
+		quantity = resource.getQuantity();
+		resourceType = resource.getResourceType();
+	}
+
 	public int getQuantity() {
 		return quantity;
 	}

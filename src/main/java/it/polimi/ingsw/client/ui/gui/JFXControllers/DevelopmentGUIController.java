@@ -95,7 +95,8 @@ public class DevelopmentGUIController extends AbstractGUIController implements G
 
     public void buyCard(ActionEvent actionEvent) {
         var price = GameView.getInstance().getDevelopmentCardsMarket().getTray()[GUIHelper.getInstance().getSelectedI()][GUIHelper.getInstance().getSelectedJ()].getCost();
-        if (GUIHelper.getInstance().getClientView().canPay(price)) {
+        var discountedPrice = GUIHelper.getInstance().discountPrice(price);
+        if (GUIHelper.getInstance().getClientView().canPay(discountedPrice)) {
             change(ScreenName.PERSONAL_BOARD);
             GUIHelper.getInstance().setCurrAction(CurrAction.SELECTING_SLOT);
         }

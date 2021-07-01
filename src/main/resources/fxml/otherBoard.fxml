@@ -151,12 +151,12 @@
                   <Insets bottom="150.0" left="1050.0" />
                </StackPane.margin>
             </VBox>
-            <HBox fx:id="specialDepot1" alignment="CENTER_LEFT" maxHeight="71.0" maxWidth="150.0" prefHeight="100.0" prefWidth="200.0" spacing="40.0" StackPane.alignment="CENTER_LEFT">
+            <HBox fx:id="specialDepot1" alignment="CENTER_LEFT" maxHeight="71.0" maxWidth="150.0" prefHeight="100.0" prefWidth="200.0" spacing="28.0" StackPane.alignment="CENTER_LEFT">
                <StackPane.margin>
                   <Insets bottom="250.0" left="1210.0" />
                </StackPane.margin>
             </HBox>
-            <HBox fx:id="specialDepot2" alignment="CENTER_LEFT" maxHeight="71.0" maxWidth="150.0" prefHeight="100.0" prefWidth="200.0" spacing="40.0" StackPane.alignment="CENTER_LEFT">
+            <HBox fx:id="specialDepot2" alignment="CENTER_LEFT" maxHeight="71.0" maxWidth="150.0" prefHeight="100.0" prefWidth="200.0" spacing="28.0" StackPane.alignment="CENTER_LEFT">
                <StackPane.margin>
                   <Insets bottom="50.0" left="1210.0" />
                </StackPane.margin>

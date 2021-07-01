@@ -47,6 +47,9 @@ public class GUI extends Application implements Ui {
         primaryStage.setTitle("Client");
         Scene scene = new Scene(root, 1280, 720);
 
+        primaryStage.setMinHeight(720);
+        primaryStage.setMinWidth(1280);
+
         scene.getStylesheets().add("css/mainText.css");
         scene.getStylesheets().add("css/standardBackground.css");
         GUIHelper.getInstance().setCurrentScene(scene);

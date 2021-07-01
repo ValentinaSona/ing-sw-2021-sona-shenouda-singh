@@ -30,6 +30,21 @@ public class DevelopmentCard implements Serializable {
 		this.production = production;
 	}
 
+	public DevelopmentCard(DevelopmentCard card){
+		id = card.getId();
+		var cardCost = new Resource[card.getCost().length];
+
+		for (int i = 0; i < card.getCost().length; i++) {
+			cardCost[i] = new Resource(card.getCost()[i]);
+		}
+
+		cost = cardCost;
+		type = card.getType();
+		level = card.getLevel();
+		victoryPoints = card.getVictoryPoints();
+		production = new Production(card.getProduction());
+	}
+
 	@Override
 	public boolean equals(Object o) {
 		if (this == o) return true;

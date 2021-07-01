@@ -144,7 +144,13 @@ public class GUIMessageHandler {
 
     public void handleServerBoughtMarblesMessage(ServerBoughtMarblesMessage message) {
         log.update(LogUpdates.BUY_MARKET, message.getUser(), message.getBoughtResources());
-        Platform.runLater(() -> GUIHelper.getInstance().setScreen(ScreenName.PERSONAL_BOARD));
+        Platform.runLater(() -> {
+            if(message.getUser().getNickName().equals(MatchSettings.getInstance().getClientNickname()))
+                GUIHelper.getInstance().setScreen(ScreenName.PERSONAL_BOARD);
+
+            else currentGameController.update();
+        });
+
     }
 
     public void handleServerDepositActionMessage(ServerDepositActionMessage message) {

@@ -16,7 +16,22 @@ public class Production implements Serializable {
 
 	}
 
-	public Resource[] getProductionCost() {
+    public Production(Production production) {
+		var cost = new Resource[production.getProductionCost().length];
+		var out = new Resource[production.getProductionOut().length];
+
+		for (int i = 0; i < production.getProductionCost().length; i++) {
+			cost[i] = new Resource(production.getProductionCost()[i]);
+		}
+		for (int i = 0; i < production.getProductionOut().length; i++) {
+			out[i] = new Resource(production.getProductionOut()[i]);
+		}
+
+		productionCost = cost;
+		productionOut = out;
+    }
+
+    public Resource[] getProductionCost() {
 		return  productionCost;
 	}
 

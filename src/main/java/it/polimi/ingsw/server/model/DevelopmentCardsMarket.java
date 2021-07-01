@@ -77,7 +77,7 @@ public class DevelopmentCardsMarket implements  DevMarket {
 			for(int j = 0; j < 4; j++) {
 
 				try{
-					view[i][j] = decks[i][j].firstCard();
+					view[i][j] = new DevelopmentCard(decks[i][j].firstCard());
 				} catch (RuntimeException e) {
 					view[i][j] = null;
 				}
