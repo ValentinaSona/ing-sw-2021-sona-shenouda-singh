@@ -175,6 +175,37 @@ public class GameLog {
 
                 activity += " a " + newMessage.getCard().getType().toString().toLowerCase() + " level " + newMessage.getCard().getLevel() + " card";
             }
+            case END -> {
+                var newMessage = (ServerLastTurnsMessage) message;
+                switch(newMessage.getCause()){
+                    case LORENZO_DISCARD -> add("Lorenzo has discarded a column of development cards. Play your last turn", warning);
+                    case LORENZO_FAITH -> add("Lorenzo has completed the faith track, play your last turn", warning);
+                    case SEVENTH_CARD -> {
+                        activity += "A player has bought the 7th development card. ";
+                        activity += newMessage.getLastUsers().get(0);
+
+                        for(int i = 1; i < newMessage.getLastUsers().size(); i++) {
+                            activity += ", " + newMessage.getLastUsers().get(i).getNickName();
+                        }
+                        activity += " must play their last turn";
+
+                        add(activity, warning);
+                    }
+                    case FAITH_END -> {
+                        activity += "A player has completed the faith track. ";
+                        activity += newMessage.getLastUsers().get(0);
+
+                        for(int i = 1; i < newMessage.getLastUsers().size(); i++) {
+                            activity += ", " + newMessage.getLastUsers().get(i).getNickName();
+                        }
+                        activity += " must play their last turn";
+
+                        add(activity, warning);
+                    }
+                    case DEBUG -> add("Debug", warning);
+                }
+                return;
+            }
         }
 
         add(activity);

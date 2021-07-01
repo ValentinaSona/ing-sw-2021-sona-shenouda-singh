@@ -3,10 +3,7 @@ package it.polimi.ingsw.client.ui.gui.JFXControllers;
 import it.polimi.ingsw.client.modelview.*;
 import it.polimi.ingsw.client.ui.controller.UIController;
 import it.polimi.ingsw.client.ui.gui.*;
-import it.polimi.ingsw.server.model.DevelopmentCard;
-import it.polimi.ingsw.server.model.Id;
-import it.polimi.ingsw.server.model.Resource;
-import it.polimi.ingsw.server.model.ResourceType;
+import it.polimi.ingsw.server.model.*;
 import it.polimi.ingsw.utils.networking.transmittables.StatusMessage;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
@@ -115,13 +112,25 @@ public class BoardGUIController extends AbstractGUIController implements GameGUI
         DragNDrop.getInstance().setDroppable(depot3, Id.DEPOT_3);
 
         if (GUIHelper.getInstance().activeSpecialDepot(playerView, 0)) {
-            DragNDrop.getInstance().setDepotDraggable(specialDepot1, Id.S_DEPOT_1, true);
-            DragNDrop.getInstance().setDroppable(specialDepot1, Id.S_DEPOT_1);
+            if (((ExtraDepotAbility) playerView.getLeaderCards().get(0).getSpecialAbility()).getType() == playerView.getWarehouse().get(3).getResource().getResourceType() ) {
+                DragNDrop.getInstance().setDepotDraggable(specialDepot1, Id.S_DEPOT_1, true);
+                DragNDrop.getInstance().setDroppable(specialDepot1, Id.S_DEPOT_1);
+            }
+            else {
+                DragNDrop.getInstance().setDepotDraggable(specialDepot1, Id.S_DEPOT_2, true);
+                DragNDrop.getInstance().setDroppable(specialDepot1, Id.S_DEPOT_2);
+            }
         }
 
         if (GUIHelper.getInstance().activeSpecialDepot(playerView, 1)) {
-            DragNDrop.getInstance().setDepotDraggable(specialDepot2, Id.S_DEPOT_2, true);
-            DragNDrop.getInstance().setDroppable(specialDepot2, Id.S_DEPOT_2);
+            if (((ExtraDepotAbility) playerView.getLeaderCards().get(1).getSpecialAbility()).getType() == playerView.getWarehouse().get(3).getResource().getResourceType() ) {
+                DragNDrop.getInstance().setDepotDraggable(specialDepot2, Id.S_DEPOT_1, true);
+                DragNDrop.getInstance().setDroppable(specialDepot2, Id.S_DEPOT_1);
+            }
+            else {
+                DragNDrop.getInstance().setDepotDraggable(specialDepot2, Id.S_DEPOT_2, true);
+                DragNDrop.getInstance().setDroppable(specialDepot2, Id.S_DEPOT_2);
+            }
         }
     }
 
@@ -142,6 +151,8 @@ public class BoardGUIController extends AbstractGUIController implements GameGUI
         resChoiceMap = new HashMap<>();
 
         if (GUIHelper.getInstance().getCurrAction() == CurrAction.SELECTED_SLOT) startDevResSelection();
+
+        SelectedProductions.getInstance().adjust();
 
         Stream.of(prodButtons).forEach(this::disableNode);
     }
@@ -301,7 +312,7 @@ public class BoardGUIController extends AbstractGUIController implements GameGUI
             int i = 0;
 
             for(int counter = 0, j = 0; counter < coins.getQuantity(); counter++, j++) {
-                if (j == GUISizes.get().strongboxCols()) {
+                if (j == GUISizes.get().strongboxCols() || (j==5 && i==0)) {
                     j = 0;
                     i++;
                 }
@@ -315,7 +326,7 @@ public class BoardGUIController extends AbstractGUIController implements GameGUI
             if (coins.getQuantity() > 0) i++;
 
             for(int counter = 0, j = 0; counter < shields.getQuantity(); counter++, j++) {
-                if (j == GUISizes.get().strongboxCols()) {
+                if (j == GUISizes.get().strongboxCols() || (j==5 && i==0)) {
                     j = 0;
                     i++;
                 }
@@ -329,7 +340,7 @@ public class BoardGUIController extends AbstractGUIController implements GameGUI
             if (shields.getQuantity() > 0) i++;
 
             for(int counter = 0, j = 0; counter < servants.getQuantity(); counter++, j++) {
-                if (j == GUISizes.get().strongboxCols()) {
+                if (j == GUISizes.get().strongboxCols() || (j==5 && i==0)) {
                     j = 0;
                     i++;
                 }
@@ -343,7 +354,7 @@ public class BoardGUIController extends AbstractGUIController implements GameGUI
             if (servants.getQuantity() > 0) i++;
 
             for(int counter = 0, j = 0; counter < stones.getQuantity(); counter++, j++) {
-                if (j == GUISizes.get().strongboxCols()) {
+                if (j == GUISizes.get().strongboxCols() || (j==5 && i==0)) {
                     j = 0;
                     i++;
                 }
@@ -615,7 +626,9 @@ public class BoardGUIController extends AbstractGUIController implements GameGUI
 
     public void startDevResSelection() {
         Modify.makeDepotResourcesSelectable(depotBox, resChoiceMap, true);
-        Modify.makeSpecialDepotSelectable(specialDepot1, specialDepot2, resChoiceMap, true);
+
+        makeSpecialSelectable();
+
         updateStrongbox();
         if (strongboxGrid.getChildren().size() > 1) {
 
@@ -649,6 +662,7 @@ public class BoardGUIController extends AbstractGUIController implements GameGUI
             Modify.makeDepotResourcesSelectable(depotBox, resChoiceMap, true);
             showStrongbox(null);
             Modify.makeStrongboxSelectable(strongboxGrid, resChoiceMap, true);
+            makeSpecialSelectable();
             enableNode(boardSelectionDialog, 0.75);
             enableNode(boardSelectionResources);
             SelectedProductions.getInstance().set(0, ProductionState.SELECTED);
@@ -674,6 +688,7 @@ public class BoardGUIController extends AbstractGUIController implements GameGUI
             Modify.makeDepotResourcesSelectable(depotBox, resChoiceMap, true);
             showStrongbox(null);
             Modify.makeStrongboxSelectable(strongboxGrid, resChoiceMap, true);
+            makeSpecialSelectable();
             SelectedProductions.getInstance().set(1, ProductionState.SELECTED);
             updateProductions();
         }
@@ -694,6 +709,7 @@ public class BoardGUIController extends AbstractGUIController implements GameGUI
             Modify.makeDepotResourcesSelectable(depotBox, resChoiceMap, true);
             showStrongbox(null);
             Modify.makeStrongboxSelectable(strongboxGrid, resChoiceMap, true);
+            makeSpecialSelectable();
             SelectedProductions.getInstance().set(2, ProductionState.SELECTED);
             updateProductions();
         }
@@ -714,6 +730,7 @@ public class BoardGUIController extends AbstractGUIController implements GameGUI
             Modify.makeDepotResourcesSelectable(depotBox, resChoiceMap, true);
             showStrongbox(null);
             Modify.makeStrongboxSelectable(strongboxGrid, resChoiceMap, true);
+            makeSpecialSelectable();
             SelectedProductions.getInstance().set(3, ProductionState.SELECTED);
             updateProductions();
         }
@@ -734,6 +751,7 @@ public class BoardGUIController extends AbstractGUIController implements GameGUI
             Modify.makeDepotResourcesSelectable(depotBox, resChoiceMap, true);
             showStrongbox(null);
             Modify.makeStrongboxSelectable(strongboxGrid, resChoiceMap, true);
+            makeSpecialSelectable();
             enableNode(special1Dialog, 0.75);
             enableNode(special1Resources);
             SelectedProductions.getInstance().set(4, ProductionState.SELECTED);
@@ -759,6 +777,7 @@ public class BoardGUIController extends AbstractGUIController implements GameGUI
             Modify.makeDepotResourcesSelectable(depotBox, resChoiceMap, true);
             showStrongbox(null);
             Modify.makeStrongboxSelectable(strongboxGrid, resChoiceMap, true);
+            makeSpecialSelectable();
             enableNode(special2Dialog, 0.75);
             enableNode(special2Resources);
             SelectedProductions.getInstance().set(5, ProductionState.SELECTED);
@@ -798,5 +817,18 @@ public class BoardGUIController extends AbstractGUIController implements GameGUI
     public void openMenu(ActionEvent actionEvent) {
         GUIHelper.getInstance().setScreenshot(GUIHelper.getInstance().getCurrentScene().snapshot(null));
         change(ScreenName.GAME_MENU);
+    }
+
+    public void makeSpecialSelectable() {
+        if (GUIHelper.getInstance().activeSpecialDepot(playerView, 0)) {
+            if (playerView.getWarehouse().get(3).getResource().getResourceType() == ((ExtraDepotAbility) playerView.getLeaderCards().get(0).getSpecialAbility()).getType())
+                Modify.makeSpecialDepotSelectable(specialDepot1, specialDepot2, resChoiceMap, true);
+            else Modify.makeSpecialDepotSelectable(specialDepot2, specialDepot1, resChoiceMap, true);
+        }
+        else if (GUIHelper.getInstance().activeSpecialDepot(playerView, 1)) {
+            if (playerView.getWarehouse().get(3).getResource().getResourceType() == ((ExtraDepotAbility) playerView.getLeaderCards().get(1).getSpecialAbility()).getType())
+                Modify.makeSpecialDepotSelectable(specialDepot2, specialDepot1, resChoiceMap, true);
+            else Modify.makeSpecialDepotSelectable(specialDepot1, specialDepot2, resChoiceMap, true);
+        }
     }
 }

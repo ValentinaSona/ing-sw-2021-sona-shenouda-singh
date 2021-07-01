@@ -256,4 +256,8 @@ public class GUIMessageHandler {
     public void handleServerDisconnectionMessage() {
         Platform.runLater(() -> ((MainMenuGUIController)currentController).noGameFound());
     }
+
+    public void handleLastTurns(ServerLastTurnsMessage message) {
+        log.update(LogUpdates.END, message);
+    }
 }

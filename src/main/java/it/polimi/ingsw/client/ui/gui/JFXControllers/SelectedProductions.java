@@ -78,6 +78,14 @@ public class SelectedProductions {
         }
     }
 
+    public void adjust() {
+        for (var p : productions) {
+            if(p == ProductionState.SELECTED) {
+                productions.set(productions.indexOf(p), ProductionState.IDLE);
+            }
+        }
+    }
+
     public void reset() {
         for (var p : productions) {
             if(p != ProductionState.EMPTY && p != ProductionState.IDLE) {

@@ -18,6 +18,7 @@ public enum LogUpdates {
     RECONNECTION,
     CHOOSE_WHITE,
     HES_RUNNING_AWAY,
-    FAITH_TRACK;
+    FAITH_TRACK,
+    END;
 
 }

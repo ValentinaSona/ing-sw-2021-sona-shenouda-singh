@@ -58,10 +58,10 @@ public class Modify {
 
     public static void makeSpecialDepotSelectable(HBox depot1, HBox depot2,  Map<Id, Resource> map, boolean active) {
         for (Node n : depot1.getChildren()) {
-            makeSelectable((ImageView) n, Id.LEADER_CARD_1, map, active);
+            makeSelectable((ImageView) n, Id.S_DEPOT_1, map, active);
         }
         for (Node n : depot2.getChildren()) {
-            makeSelectable((ImageView) n, Id.LEADER_CARD_2, map, active);
+            makeSelectable((ImageView) n, Id.S_DEPOT_2, map, active);
         }
     }
 

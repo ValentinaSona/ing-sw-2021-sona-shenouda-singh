@@ -437,7 +437,7 @@ public class DispatcherController implements Runnable, LambdaObserver {
     //TODO
     public void handleLastTurns(ServerLastTurnsMessage message) {
         if(gui){
-
+            GUIMessageHandler.getInstance().handleLastTurns(message);
         }else{
             CLIMessageHandler.getInstance().handleLastTurns(message);
         }
