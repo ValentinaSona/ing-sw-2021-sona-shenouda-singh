@@ -45,14 +45,11 @@ public class GUI extends Application implements Ui {
         primaryStage.getIcons().add(new Image("assets/icon.png"));
 
         primaryStage.setTitle("Client");
-        Scene scene = new Scene(root);
+        Scene scene = new Scene(root, 1280, 720);
 
         scene.getStylesheets().add("css/mainText.css");
         scene.getStylesheets().add("css/standardBackground.css");
         GUIHelper.getInstance().setCurrentScene(scene);
-
-        primaryStage.setWidth(1280);
-        primaryStage.setHeight(720);
 
         primaryStage.setFullScreenExitHint("");
         primaryStage.setScene(scene);

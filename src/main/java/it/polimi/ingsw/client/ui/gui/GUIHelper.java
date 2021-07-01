@@ -299,6 +299,10 @@ public class GUIHelper {
         return new Image("assets/game/pope_tiles/" + index + "_" + tile.toString().toLowerCase() + ".png", GUISizes.get().popeTile(), GUISizes.get().popeTile(), false, false);
     }
 
+    /**
+     * Changes the current screen to another one, saving both the old screen and the new one
+     * @param screen the new scene screen
+     */
     public void setScreen(ScreenName screen) {
         Scene scene = GUIHelper.getInstance().getCurrentScene();
 
@@ -315,17 +319,15 @@ public class GUIHelper {
                 ioException.printStackTrace();
             }
         }
-        /*
-        String[] stylesheets = screen.css();
 
-        for (String css : stylesheets) {
-            scene.getStylesheets().add("css/" + css);
-        }
-        */
         setPrevScreen(getCurrentScreen());
         setCurrentScreen(screen);
     }
 
+    /**
+     * Adds stylesheets to the current scene
+     * @param sheets an array containing the names of the stylesheets
+     */
     public void addStyleSheets(String[] sheets) {
         Scene scene = getCurrentScene();
         for (String css : sheets) {
@@ -458,6 +460,7 @@ public class GUIHelper {
 
     public boolean activeSpecialDepot(PlayerView player, int index) {
         var cards = player.getLeaderCards();
+        if (cards.size() < index + 1) return  false;
         return cards.get(index).isActive() && cards.get(index).getSpecialAbility() instanceof ExtraDepotAbility;
     }
 
