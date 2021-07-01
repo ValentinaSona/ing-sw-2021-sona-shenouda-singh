@@ -18,7 +18,7 @@ import static it.polimi.ingsw.client.ui.cli.CLIHelper.CHECK_MARK;
 
 public class GameLog {
 
-    private static int logLenght = 2;
+    private static int logLenght = 3;
     private static String warning = "#ffb545";
 
     private static GameLog singleton;
@@ -182,10 +182,11 @@ public class GameLog {
                     case LORENZO_FAITH -> add("Lorenzo has completed the faith track, play your last turn", warning);
                     case SEVENTH_CARD -> {
                         activity += "A player has bought the 7th development card. ";
-                        activity += newMessage.getLastUsers().get(0);
+                        activity += newMessage.getLastUsers().get(0).getNickName();
 
                         for(int i = 1; i < newMessage.getLastUsers().size(); i++) {
-                            activity += ", " + newMessage.getLastUsers().get(i).getNickName();
+                            activity += ", ";
+                            activity += newMessage.getLastUsers().get(i).getNickName();
                         }
                         activity += " must play their last turn";
 
@@ -193,14 +194,16 @@ public class GameLog {
                     }
                     case FAITH_END -> {
                         activity += "A player has completed the faith track. ";
-                        activity += newMessage.getLastUsers().get(0);
+                        if(newMessage.getLastUsers() != null) {
+                            activity += newMessage.getLastUsers().get(0).getNickName();
 
-                        for(int i = 1; i < newMessage.getLastUsers().size(); i++) {
-                            activity += ", " + newMessage.getLastUsers().get(i).getNickName();
+                            for(int i = 1; i < newMessage.getLastUsers().size(); i++) {
+                                activity += ", " + newMessage.getLastUsers().get(i).getNickName();
+                            }
+                            activity += " must play their last turn";
+
+                            add(activity, warning);
                         }
-                        activity += " must play their last turn";
-
-                        add(activity, warning);
                     }
                     case DEBUG -> add("Debug", warning);
                 }
@@ -217,12 +220,28 @@ public class GameLog {
             case DEV_NOT_RICH -> add("You don't have enough resources to buy this card", "red");
             case DISCONNECTION -> add("A player has disconnected");
             case RECONNECTION -> add("A player has reconnected");
-            case CHOOSE_WHITE -> add("You must choose which ability you want to use for each white marble. Drag the ability you want to use and drop it on the correspondent resource!");
+            case CHOOSE_WHITE -> {
+                addSimple("You must choose which ability you want to use for each white marble.");
+                add(" Drag the ability you want to use and drop it on the correspondent resource!");
+            }
             case HES_RUNNING_AWAY -> add("Please choose how you wish to convert the marbles", "red");
             case DEV_SLOT -> add("Click on the slot where you want to put the card");
             case DEV_RES -> add("Select the resources you want to use to pay the card and click the \"confirm\" button");
             case DEV_RES_ERROR -> add("Wrong selection of resources", "red");
         }
+    }
+
+    private void addSimple(String text) {
+        Platform.runLater(() -> {
+            if(log.getChildren().size() > logLenght) {
+                log.getChildren().remove(0);
+            }
+
+            var line = new Text(text);
+            line.setStyle("-fx-fill: #5a9cf2");
+
+            log.getChildren().add(line);
+        });
     }
 
     private void add(String text) {

@@ -23,7 +23,6 @@
                                         <Font size="42.0" />
                                     </font>
                                 </Label>
-                        <Label fx:id="cause" styleClass="smallLabel" text="cause" />
                         <ListView fx:id="list" maxWidth="450.0" prefHeight="334.0" prefWidth="650.0" />
                         <Button fx:id="end" mnemonicParsing="false" onAction="#quit" styleClass="basicButton" text="Quit" />
                             </children>

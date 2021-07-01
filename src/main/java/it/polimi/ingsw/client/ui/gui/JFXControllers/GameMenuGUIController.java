@@ -73,6 +73,7 @@ public class GameMenuGUIController extends AbstractGUIController implements Game
 
     public void leave(ActionEvent actionEvent) {
         Platform.exit();
+        System.exit(0);
     }
 
     public void goBack(ActionEvent actionEvent) {

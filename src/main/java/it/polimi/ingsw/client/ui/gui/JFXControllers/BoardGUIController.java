@@ -272,22 +272,24 @@ public class BoardGUIController extends AbstractGUIController implements GameGUI
 
 
 
-        if (GUIHelper.getInstance().isChoosingTemp()) {
+        if (playerView.equals(GUIHelper.getInstance().getClientView())) {
+            if (GUIHelper.getInstance().isChoosingTemp()) {
 
-            if (GUIHelper.getInstance().getClientView().getTempResources() != null && GUIHelper.getInstance().getClientView().getTempResources().isEmpty()) {
-                tempWindow.setOpacity(0);
-                tempBlock.setOpacity(0);
-                tempBox.setOpacity(0);
-                discard.setOpacity(0);
-                discard.setDisable(true);
+                if (GUIHelper.getInstance().getClientView().getTempResources() != null && GUIHelper.getInstance().getClientView().getTempResources().isEmpty()) {
+                    tempWindow.setOpacity(0);
+                    tempBlock.setOpacity(0);
+                    tempBox.setOpacity(0);
+                    discard.setOpacity(0);
+                    discard.setDisable(true);
 
-                tempBox.setOpacity(0);
+                    tempBox.setOpacity(0);
 
-                GUIHelper.getInstance().setChoosingTemp(false);
-            }
+                    GUIHelper.getInstance().setChoosingTemp(false);
+                }
 
-            else {
-                showTemp();
+                else {
+                    showTemp();
+                }
             }
         }
 

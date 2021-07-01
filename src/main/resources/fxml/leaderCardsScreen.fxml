@@ -13,7 +13,6 @@
       <Region fx:id="backRegion" prefHeight="200.0" prefWidth="200.0" />
       <VBox spacing="15.0">
          <children>
-                  <Button mnemonicParsing="false" onAction="#openMenu" prefHeight="90.0" prefWidth="150.0" styleClass="darkButton" text="Menu" />
             <Button contentDisplay="GRAPHIC_ONLY" mnemonicParsing="false" onAction="#goBack" prefHeight="90.0" prefWidth="150.0" styleClass="darkButton">
                <graphic>
                   <SVGPath content="M0,20,20,0,20,10,45,10,45,30,20,30,20,40" fill="WHITE" />

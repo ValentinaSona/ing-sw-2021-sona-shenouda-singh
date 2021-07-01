@@ -3,7 +3,7 @@ package it.polimi.ingsw.utils;
 public class Constant {
 
     private static int port = 9000;
-    private static String hostIp = "versus.ddnsfree.com";
+    private static String hostIp = "127.0.0.1";
 
     public static int port() {
         return  port;

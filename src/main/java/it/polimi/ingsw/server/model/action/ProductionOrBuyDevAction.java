@@ -17,7 +17,7 @@ public class ProductionOrBuyDevAction implements Action{
             controller.resourceController.activateProduction(new ClientActivateProductionMessage(),view,user);
         } catch (EndOfGameException e) {
             e.printStackTrace();
-            controller.turnController.endOfGame(e);
+            controller.turnController.endOfGame();
         }
     }
     @Override

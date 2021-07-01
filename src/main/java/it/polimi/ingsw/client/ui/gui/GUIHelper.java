@@ -5,7 +5,6 @@ import it.polimi.ingsw.client.ui.controller.UiControllerInterface;
 import it.polimi.ingsw.client.ui.gui.JFXControllers.DevelopmentGUIController;
 import it.polimi.ingsw.client.ui.gui.JFXControllers.GameGUIControllerInterface;
 import it.polimi.ingsw.client.ui.gui.JFXControllers.ScreenName;
-import it.polimi.ingsw.client.ui.gui.JFXControllers.SelectedProductions;
 import it.polimi.ingsw.server.controller.User;
 import it.polimi.ingsw.server.exception.EndOfGameCause;
 import it.polimi.ingsw.server.model.*;
@@ -15,7 +14,6 @@ import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
 import javafx.geometry.Rectangle2D;
-import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -29,10 +27,8 @@ import javafx.util.Duration;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 
 public class GUIHelper {
@@ -71,14 +67,12 @@ public class GUIHelper {
     private int selectedI, selectedJ;
     private boolean selectSlot;
 
-    private Resource[] twoLeaderCardSelected;
 
     private Id selectedSlot;
 
     CurrAction currAction;
 
     private Map<String, Integer> rank;
-    private EndOfGameCause cause;
 
     private GUIHelper() {
         currAction = CurrAction.IDLE;
@@ -368,7 +362,6 @@ public class GUIHelper {
         else if (faith <= 16) faithGrid.add(faithImage, faith-4, 2);
         else if (faith == 17) faithGrid.add(faithImage, 12, 1);
         else if (faith <= 24) faithGrid.add(faithImage, faith-6, 0);
-        else throw new RuntimeException("Faith out of bounds");
     }
 
     public void setSelectedPlayer(Object source) {
@@ -514,14 +507,9 @@ public class GUIHelper {
 
     public void setFinalScore(ServerFinalScoreMessage message) {
         this.rank = message.getRank().entrySet().stream().collect(Collectors.toMap(e -> e.getKey().getNickName(), Map.Entry::getValue));
-        this.cause = message.getCause();
     }
 
     public Map<String, Integer> getRank() {
         return rank;
-    }
-
-    public EndOfGameCause getCause() {
-        return cause;
     }
 }

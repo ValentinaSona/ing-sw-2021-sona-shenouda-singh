@@ -5,14 +5,11 @@ import it.polimi.ingsw.client.ui.controller.DispatcherController;
 import it.polimi.ingsw.client.ui.controller.UIController;
 import it.polimi.ingsw.client.ui.controller.UiControllerInterface;
 import it.polimi.ingsw.client.ui.gui.JFXControllers.*;
-import it.polimi.ingsw.server.model.Game;
 import it.polimi.ingsw.utils.networking.transmittables.StatusMessage;
 import it.polimi.ingsw.utils.networking.transmittables.resilienza.ServerGameReconnectionMessage;
 import it.polimi.ingsw.utils.networking.transmittables.servermessages.*;
 import javafx.application.Platform;
 import javafx.stage.Stage;
-
-import static it.polimi.ingsw.client.ui.cli.CLIHelper.CHECK_MARK;
 
 public class GUIMessageHandler {
 
