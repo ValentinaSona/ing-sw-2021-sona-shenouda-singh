@@ -156,7 +156,7 @@ public class BoardGUIController extends AbstractGUIController implements GameGUI
 
         Stream.of(prodButtons).forEach(this::disableNode);
 
-        if(playerView.getTempResources() != null && !playerView.getTempResources().isEmpty()) showTemp();
+        //if(playerView.getTempResources() != null && !playerView.getTempResources().isEmpty()) showTemp();
     }
 
     private void showTemp() {

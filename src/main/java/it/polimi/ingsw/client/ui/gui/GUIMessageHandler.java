@@ -225,6 +225,7 @@ public class GUIMessageHandler {
 
     public void handleServerGameReconnectionMessage(ServerGameReconnectionMessage message) {
         GUIHelper.getInstance().restoreNickList(message.getPlayerViews());
+        if (message.isPendingAction()) GUIHelper.getInstance().setChoosingTemp(true);
         for (var p : message.getPlayerViews()) {
             if (p.getNickname().equals(MatchSettings.getInstance().getClientNickname())) {
                 GUIHelper.getInstance().setClientView(p);
