@@ -471,9 +471,13 @@ public class GUIHelper {
     }
 
     public boolean abilityCorresponds(DepotView depot, LeaderCard card) {
-        if (card.getSpecialAbility() instanceof ExtraDepotAbility) {
-            var resource = ((ExtraDepotAbility)card.getSpecialAbility()).getType();
-            return resource == depot.getResource().getResourceType();
+        if (depot != null){
+            if (card.getSpecialAbility() instanceof ExtraDepotAbility) {
+                var resource = ((ExtraDepotAbility)card.getSpecialAbility()).getType();
+                if(depot.getResource() == null) return false;
+                return resource == depot.getResource().getResourceType();
+            }
+            else return false;
         }
         else return false;
     }
