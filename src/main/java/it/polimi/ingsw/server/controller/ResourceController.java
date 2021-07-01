@@ -232,27 +232,33 @@ public class ResourceController{
         if( model.getGameState() != GameState.PLAY ){
             view.handleStatusMessage(StatusMessage.CLIENT_ERROR);
         } else {
+
+
             try {
+
+                Resource fromResource = player.getWarehouse().get(action.getFrom().getValue()).getResource();
+                Resource toResource = player.getWarehouse().get(action.getTo().getValue()).getResource();
+
                 Depot fromDepot = player.getWarehouse().get(action.getFrom().getValue());
                 Depot toDepot = player.getWarehouse().get(action.getTo().getValue());
 
 
-                Resource fromResource = fromDepot.getResource();
-                Resource toResource = toDepot.getResource();
 
                 // If both deposits are empty, there is nothing to do
-                if ((toResource == null || toResource.getQuantity() == 0)&&(fromResource== null || fromResource.getQuantity() == 0)) {
+                if ((toResource == null || toResource.getQuantity() == 0) && (fromResource == null || fromResource.getQuantity() == 0)) {
 
                     view.handleStatusMessage(StatusMessage.CONTINUE);
                     return;
 
-                }  else if (toResource == null || toResource.getQuantity() == 0) {
-                    //if i am trying to move resources to an empty specialDepot or a empty normal depot
+                }  else if (toResource == null) {
+
+                    //if i am trying to move resources from a normal depot to an empty specialDepot or a empty normal depot
                     toDepot.addResource(fromResource);
                     //if no exception is thrown
                     fromDepot.subtractResource(fromResource);
 
-                } else if (fromResource == null || fromResource.getQuantity() == 0) {
+
+                } else if (fromResource == null) {
                     //if i am trying to move resources from an empty specialDepot or a empty normal depot
                     fromDepot.addResource(toResource);
                     //if no exception is thrown
@@ -261,15 +267,44 @@ public class ResourceController{
                 } else {
 
                     if (fromResource.getQuantity() <= toDepot.getCapacity() && toResource.getQuantity() <= fromDepot.getCapacity()) {
-                        //i can switch the content of the depot
-                        toDepot.subtractResource(toResource);
-                        fromDepot.subtractResource(fromResource);
 
-                        toDepot.addResource(fromResource);
-                        fromDepot.addResource(toResource);
+                        if (fromDepot.getId()==Id.S_DEPOT_1|| fromDepot.getId()== Id.S_DEPOT_2) {
+                            // moving from a special depot to a non empty depot. Must check that the resources are the same type.
+                            if (fromResource.getResourceType() != toResource.getResourceType()) {
+                                view.handleStatusMessage(StatusMessage.REQUIREMENTS_ERROR);
+                                return;
+                            } else {
 
+                                toDepot.subtractResource(toResource);
+                                fromDepot.subtractResource(fromResource);
+
+                                toDepot.addResource(fromResource);
+                                fromDepot.addResource(toResource);
+                            }
+                        } else if (toDepot.getId()==Id.S_DEPOT_1|| toDepot.getId()== Id.S_DEPOT_2){
+                            if (fromResource.getResourceType() != toResource.getResourceType()) {
+                                view.handleStatusMessage(StatusMessage.REQUIREMENTS_ERROR);
+                                return;
+                            } else {
+
+                                toDepot.subtractResource(toResource);
+                                fromDepot.subtractResource(fromResource);
+
+                                toDepot.addResource(fromResource);
+                                fromDepot.addResource(toResource);
+                            }
+
+                        }else {
+                            //i can switch the content of the depot
+                            toDepot.subtractResource(toResource);
+                            fromDepot.subtractResource(fromResource);
+
+                            toDepot.addResource(fromResource);
+                            fromDepot.addResource(toResource);
+                        }
                     } else {
                         view.handleStatusMessage(StatusMessage.REQUIREMENTS_ERROR);
+                        return;
                     }
                 }
 

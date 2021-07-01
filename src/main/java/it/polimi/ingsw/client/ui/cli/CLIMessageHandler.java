@@ -404,12 +404,13 @@ public class CLIMessageHandler {
         else {
 
             MenuRunner.getInstance().setState(MenuStates.END);
-            MenuRunner.getInstance().sendResponse(GameActions.MENU, "[X] You have been disconnected. You will be returned to main menu.");
+            MenuRunner.getInstance().sendResponse(GameActions.MENU, "[X] You have been disconnected. The client will be closed.");
 
             synchronized (CLIMessageHandler.getInstance()) {
                 cli.setInterrupted(true);
                 CLIMessageHandler.getInstance().notifyAll();
             }
+            System.exit(0);
         }
     }
 

@@ -8,13 +8,32 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Singleton class that is the view equivalent of the Game class.
+ * Holds the markets' views, the players' views and the value of Lorenzo's black cross.
+ */
 public class GameView implements Serializable {
     private static GameView singleton;
 
+    /**
+     * Market view of the game
+     */
     private MarketView marketInstance;
+    /**
+     * Development cards market of the game.
+     */
     private DevMarketView developmentCardsMarket;
+    /**
+     * Value of Lorenzo's faith track for solo games.
+     */
     private int blackCross;
+    /**
+     * List mapping users to their view.
+     */
     private final Map<User, PlayerView> userPlayerHashMap = new HashMap<>();
+    /**
+     * The view of the player playing their turn.
+     */
     private PlayerView currentPlayer;
 
 
@@ -44,8 +63,7 @@ public class GameView implements Serializable {
     }
 
     /**
-     * This constructor is used when we create a new game
-     *
+     * This constructor is used when we create a new game.
      */
     private GameView(List<User> users){
         for(User user : users){
@@ -57,14 +75,12 @@ public class GameView implements Serializable {
     public int getBlackCross() {
         return blackCross;
     }
-
     public void setBlackCross(int blackCross) {
         this.blackCross = blackCross;
     }
     public void addBlackCross(int blackCross) {
         this.blackCross += blackCross;
     }
-
 
     public MarketView getMarketInstance(){
         return marketInstance;
@@ -82,10 +98,7 @@ public class GameView implements Serializable {
         return userPlayerHashMap.get(user);
     }
 
-    public ArrayList<PlayerView> getPlayers() {
-
-        return new ArrayList<>(userPlayerHashMap.values());
-    }
+    public ArrayList<PlayerView> getPlayers() { return new ArrayList<>(userPlayerHashMap.values()); }
 
     public PlayerView getCurrentPlayer() {
         return currentPlayer;

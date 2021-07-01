@@ -5,9 +5,10 @@ import it.polimi.ingsw.utils.networking.Transmittable;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
-
+/**
+ * Contains all the views related to one player.
+ */
 public class PlayerView implements Transmittable {
     /**
      * The player's nickname, used to identify them in case of reconnection.
@@ -29,6 +30,9 @@ public class PlayerView implements Transmittable {
      */
     private FaithTrackView faithTrackView;
 
+    /**
+     * All leader cards, both active and not.
+     */
     private List<LeaderCard> leaderCards;
 
     /**
@@ -37,17 +41,21 @@ public class PlayerView implements Transmittable {
     private StrongboxView strongboxView;
 
     /**
-     * Special production that turns 2 resources of any kind into one resource of any kind.
+     * List of board production, development card slots and special productions.
      */
     private List<SlotView> slots = new ArrayList<>();
 
+    /**
+     * List of depots and special depots
+     */
     private List<DepotView> warehouse = new ArrayList<>();
 
+    /**
+     * Resources acquired from market and not yet deposited.
+     */
     private List<Resource> tempResources;
 
-    /** TODO: when is the player interaction for the initial resources made? May need to change type to resource
-     ** TODO: likewise, when is the leaderCard interaction made? Doesn't the constructor need to have 2 or 4 as input?
-     ** TODO: does it really need the views? Or are they added manually? Should be an array anyway no?
+    /**
      * Constructor
      */
 
@@ -63,7 +71,7 @@ public class PlayerView implements Transmittable {
         warehouse.add(new DepotView(Id.DEPOT_2, null,2));
         warehouse.add(new DepotView(Id.DEPOT_3, null, 3));
 
-        slots.add(new BoardProductionView(Id.BOARD_PRODUCTION, false));
+        slots.add(new BoardProductionView(Id.BOARD_PRODUCTION));
         slots.add(new DevelopmentCardSlotView(Id.SLOT_1));
         slots.add(new DevelopmentCardSlotView(Id.SLOT_2));
         slots.add(new DevelopmentCardSlotView(Id.SLOT_3));

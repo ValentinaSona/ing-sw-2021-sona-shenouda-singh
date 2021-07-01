@@ -3,17 +3,14 @@ package it.polimi.ingsw.client.modelview;
 import it.polimi.ingsw.server.model.Id;
 import java.io.Serializable;
 
+/**
+ * View equivalent to the slot class.
+ */
 public class SlotView implements Serializable {
     protected final Id id;
-    protected final boolean confirmed;
 
-    public SlotView(Id id, boolean confirmed){
+    public SlotView(Id id){
         this.id = id;
-        this.confirmed = confirmed;
-    }
-
-    public boolean isConfirmed() {
-        return confirmed;
     }
 
 }

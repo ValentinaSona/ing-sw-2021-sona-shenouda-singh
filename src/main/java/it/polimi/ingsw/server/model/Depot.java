@@ -50,29 +50,29 @@ public class Depot {
 
 		if(	other.getResourceType() == JOLLY || other.getResourceType() == FAITH 	){
 
-			//throw new RuntimeException("Invalid resource type for depots");
+			//Invalid resource type for depots
 			throw  new InvalidDepotException();
 
 		} else if (	resource != null &&
 				other.getResourceType() != this.resource.getResourceType() ){
 
-			//throw new RuntimeException("Depot already contains a different type of resource");
+			//Depot already contains a different type of resource
 			throw  new InvalidDepotException();
 		} else if ( (resource != null ? resource.getQuantity() : 0) + other.getQuantity() < 0 ){
 
-			//throw new RuntimeException("Depots may not contain negative resources");
+			//Depots may not contain negative resources
 			throw  new InvalidDepotException();
 
 		} else if ((resource != null ? resource.getQuantity() : 0)  + other.getQuantity() > capacity) {
 
-			//throw new RuntimeException("Resources would exceed depot capacity");
+			//Resources would exceed depot capacity
 			throw  new InvalidDepotException();
 
 		} else {
 			if (resource != null) resource.add(other);
 			else resource = other;
 
-			if (resource!=null && resource.getQuantity() ==0){ resource = null;}
+			if (resource!=null && resource.getQuantity() ==0 && id != Id.S_DEPOT_1 && id != Id.S_DEPOT_2){ resource = null;}
 		}
 
 	}
@@ -97,7 +97,7 @@ public class Depot {
 
 		} else {
 			if (resource != null) resource.sub(other);
-			if (resource!=null && resource.getQuantity() ==0){ resource = null;}
+			if (resource!=null && resource.getQuantity() ==0 && id != Id.S_DEPOT_1 && id != Id.S_DEPOT_2){ resource = null;}
 		}
 
 	}

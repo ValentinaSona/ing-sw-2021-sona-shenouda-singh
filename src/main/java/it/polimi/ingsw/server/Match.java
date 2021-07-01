@@ -19,12 +19,12 @@ import java.util.concurrent.ConcurrentHashMap;
 public class Match implements Runnable{
     private Game model;
     private boolean loadFromFile;
-    private Lobby lobby;
+    private final Lobby lobby;
     private Controller controller;
     private final Map<String, Connection> participantMap;
     private final List<RealRemoteViewHandler> remoteViewList;
     private final Server server;
-    private Object activeLock = new Object();
+    private final Object activeLock = new Object();
     private boolean active;
 
 
@@ -184,9 +184,7 @@ public class Match implements Runnable{
                 setActive(false);
                 lobby.setLobbyState(state);
             }
-            case GAME_SETUP -> {
-                setLobbyState(state);
-            }
+            case GAME_SETUP -> setLobbyState(state);
             case IN_GAME -> {
                 lobby.setActiveMatch(true);
                 lobby.setLobbyState(state);

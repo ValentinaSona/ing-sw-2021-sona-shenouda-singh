@@ -8,6 +8,9 @@ import java.io.Serializable;
 import static it.polimi.ingsw.server.model.ResourceType.*;
 import static it.polimi.ingsw.server.model.ResourceType.SERVANT;
 
+/**
+ * View equivalent to the strongbox class.
+ */
 public class StrongboxView implements Serializable {
 
     private final Resource shield;
@@ -26,6 +29,10 @@ public class StrongboxView implements Serializable {
 
     }
 
+    /**
+     * Constructor used to recreate the view from an existing strongbox.
+     * @param strongbox the Strongbox to be copied.
+     */
     public  StrongboxView(Strongbox strongbox) {
         Resource [] resources = strongbox.getAvailableResources();
         shield = resources[0];

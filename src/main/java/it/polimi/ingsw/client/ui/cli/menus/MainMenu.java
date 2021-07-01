@@ -38,7 +38,6 @@ public class MainMenu {
         returned = false;
     }
 
-
     private void credits() {
     }
 
@@ -112,7 +111,7 @@ public class MainMenu {
     }
 
     private void singleMenu() {
-        String[] options = {"Local game", "Remote game","Back to main menu"};
+        String[] options = {"Local game", "Remote game", "Reconnect", "Resume", "Back to main menu"};
 
         switch (cli.getChoice(options)){
             case 1 -> {
@@ -135,7 +134,48 @@ public class MainMenu {
                     mainMenu();
                 }
             }
-            case 3 -> mainMenu();
+            case 3 -> {
+
+                try {
+                    do {
+                        String nickname = cli.getString("^[a-zA-Z0-9 _.-]{1,20}$", "What was your nickname? (Max 20 characters)");
+                        if (nickname.equals("a nickname")) System.out.println("You're a funny one, aren't you?");
+                        MenuRunner.getInstance().setContextAction(GameActions.MENU);
+                        MenuRunner.getInstance().setCurrentAction(GameActions.WAITING);
+                        synchronized (MenuRunner.getInstance()) {
+                            UIController.getInstance().reconnectToServer(nickname, Constant.hostIp(), Constant.port());
+                            MenuRunner.getInstance().waitResponse();
+                        }
+
+
+                    } while (MenuRunner.getInstance().getCurrentAction() == GameActions.END_TURN);
+                } catch (IOException e) {
+                    cli.printMessage("[X] Unable to connect to server. Returning to main menu.");
+                    mainMenu();
+                }
+            }
+            case 4 -> {
+                try {
+                    do {
+                        String nickname = cli.getString("^[a-zA-Z0-9 _.-]{1,20}$", "Choose a nickname (Max 20 characters)");
+                        if (nickname.equals("a nickname")) System.out.println("You're a funny one, aren't you?");
+                        MenuRunner.getInstance().setContextAction(GameActions.MENU);
+                        MenuRunner.getInstance().setCurrentAction(GameActions.WAITING);
+                        synchronized (MenuRunner.getInstance()) {
+                            UIController.getInstance().sendNickname(nickname, Constant.hostIp(), Constant.port());
+                            MenuRunner.getInstance().waitResponse();
+                        }
+                    } while (MenuRunner.getInstance().getCurrentAction() == GameActions.END_TURN);
+
+                    MenuRunner.getInstance().setState(MenuStates.RESUME);
+                    UIController.getInstance().resumeGameFromFile();
+
+                } catch (IOException e) {
+                    cli.printMessage("[X] Unable to connect to server. Returning to main menu.");
+                    mainMenu();
+                }
+            }
+            case 5 -> mainMenu();
         }
     }
 

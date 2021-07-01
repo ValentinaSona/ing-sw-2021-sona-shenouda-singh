@@ -4,11 +4,23 @@ import it.polimi.ingsw.server.controller.User;
 
 import java.util.List;
 
+/**
+ * Holds various settings related to the client an to the current game.
+ */
 public class MatchSettings {
 
+    /**
+     * Whether the game is singleplayer
+     */
     private boolean solo;
 
+    /**
+     * Total users for this match.
+     */
     private int totalUsers;
+    /**
+     * The local client chosen nickname.
+     */
     private String clientNickname;
     private List<User> joiningPlayers;
 
@@ -50,10 +62,6 @@ public class MatchSettings {
 
     public void setJoiningUsers(List<User> users){
         joiningPlayers = users;
-    }
-
-    public List<User> getJoiningUsers() {
-        return joiningPlayers;
     }
 
     public void setSolo(boolean solo) {

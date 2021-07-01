@@ -2,12 +2,11 @@ package it.polimi.ingsw.client.modelview;
 
 import it.polimi.ingsw.server.model.DevelopmentCard;
 
-
 import java.io.Serializable;
-import java.util.Arrays;
 
-import static it.polimi.ingsw.client.ui.cli.CLIHelper.*;
-
+/**
+ * View equivalent of the development card market.
+ */
 public class DevMarketView implements Serializable {
     final private DevelopmentCard[][] tray;
 
@@ -19,6 +18,10 @@ public class DevMarketView implements Serializable {
         return tray;
     }
 
+    /**
+     * Returns an ANSI colored string
+     * @return the printable market string.
+     */
     @Override
     public String toString() {
 

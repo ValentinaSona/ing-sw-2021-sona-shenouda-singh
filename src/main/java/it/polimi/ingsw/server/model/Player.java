@@ -2,11 +2,13 @@ package it.polimi.ingsw.server.model;
 
 import it.polimi.ingsw.client.modelview.*;
 import it.polimi.ingsw.server.model.action.Action;
+import it.polimi.ingsw.utils.networking.Transmittable;
+import it.polimi.ingsw.utils.observer.LambdaObservable;
+
 import java.util.*;
 import java.util.stream.Collectors;
 
-
-public class Player{
+public class Player extends LambdaObservable<Transmittable> {
 
 	private Optional<Action> gameAction = Optional.empty();
 	/**
@@ -17,7 +19,7 @@ public class Player{
 	/**
 	 * The player's nickname, used to identify them in case of reconnection.
 	 */
-	private String nickname;
+	private final String nickname;
 
 	/**
 	 * True if it's the player's turn, false otherwise.
@@ -51,7 +53,7 @@ public class Player{
 	private List<Resource> tempResources;
 
 	/**
-	 * Constructor
+	 * Constructor that initializes all values to their starting conditions.
 	 */
 
 	public Player(String nickname){
@@ -76,6 +78,11 @@ public class Player{
 		faithTrack = new FaithTrack();
 	}
 
+	/**
+	 * Constructor that recreates a player from a saved player view and slot data.
+	 * @param playerView the view containing the data.
+	 * @param slots the full slot representation.
+	 */
 	public Player(PlayerView playerView, List<Slot> slots) {
 
 		nickname = playerView.getNickname();
@@ -139,6 +146,10 @@ public class Player{
 		return leaderCards;
 	}
 
+	/**
+	 * Adds the two leader cards.
+	 * @param leaderCards array containing the leader cards.
+	 */
 	public void setLeaderCards(LeaderCard[] leaderCards){
 		this.leaderCards.add(leaderCards[0]);
 		this.leaderCards.add(leaderCards[1]);
@@ -189,7 +200,6 @@ public class Player{
 		return true;
 	}
 
-
 	/**
 	 * Getter for the development card developmentCardSlots.
 	 * @return all the development cards on the player's board.
@@ -201,8 +211,6 @@ public class Player{
 		DevelopmentCardSlot slot3 = (DevelopmentCardSlot) slots.get(Id.SLOT_3.getValue());
 
 		return new DevelopmentCardSlot[]{slot1, slot2, slot3};
-
-
 	}
 
 	/**
@@ -211,35 +219,6 @@ public class Player{
 	 */
 	public List<Slot> getSlots() {
 		return slots;
-	}
-
-	/**
-	 * Getter for the visible development cards.
-	 * @return array of the top three development cards, with null value if the stack is empty.
-	 */
-	public DevelopmentCard[] getVisibleCards(){
-		DevelopmentCard[] cards = {null,null,null};
-		DevelopmentCardSlot slot1 = (DevelopmentCardSlot) slots.get(Id.SLOT_1.getValue());
-		DevelopmentCardSlot slot2 = (DevelopmentCardSlot) slots.get(Id.SLOT_2.getValue());
-		DevelopmentCardSlot slot3 = (DevelopmentCardSlot) slots.get(Id.SLOT_3.getValue());
-
-		try {
-			cards[0] = slot1.peek();
-		} catch (EmptyStackException e) {
-			cards[0] = null;
-		}
-		try {
-			cards[1] = slot2.peek();
-		} catch (EmptyStackException e) {
-			cards[1] = null;
-		}
-		try {
-			cards[2] = slot3.peek();
-		} catch (EmptyStackException e) {
-			cards[2] = null;
-		}
-
-		return cards;
 	}
 
 	/**
@@ -257,6 +236,12 @@ public class Player{
 	public List<Depot> getWarehouse() {
 		return warehouse;
 	}
+
+	/**
+	 * Add a special depot to the warehouse when an ability is activated.
+	 * @param capacity the capacity of the special deposit.
+	 * @param type the resource type the depot is constrained to.
+	 */
 
 	public void addSpecialDepot(int capacity, ResourceType type){
 		Id id;
@@ -303,7 +288,6 @@ public class Player{
 				break;
 			}
 		}
-		//	update(TEMP_RESOURCES_UPDATE, null, tempResources);
 	}
 
 	/**
@@ -342,7 +326,10 @@ public class Player{
 		return tempResources;
 	}
 
-
+	/**
+	 * Return the warehouse view.
+	 * @return a list of depot views.
+	 */
 	public ArrayList<DepotView> getVisibleWarehouse() {
 
 		ArrayList<DepotView> list = new ArrayList<>();
@@ -372,12 +359,12 @@ public class Player{
 
 	public ArrayList<SlotView> getVisibleSlots() {
 		ArrayList<SlotView> list = new ArrayList<>();
-		list.add(new BoardProductionView(getBoardProduction().getId(),getBoardProduction().isConfirmed()));
+		list.add(new BoardProductionView(getBoardProduction().getId()));
 		for (Slot slot: slots){
 			if (slot.getId()==Id.SLOT_1||slot.getId()==Id.SLOT_2||slot.getId()==Id.SLOT_3)
 				list.add(new DevelopmentCardSlotView(slot.getId(), ((DevelopmentCardSlot)slot).getSlot()));
 			else if (slot.getId()==Id.S_SLOT_1||slot.getId()==Id.S_SLOT_2)
-				list.add(new SpecialProductionView(slot.getId(), slot.isConfirmed(), ((SpecialProduction)slot).productionCost()[0].getResourceType()));
+				list.add(new SpecialProductionView(slot.getId(), slot.productionCost()[0].getResourceType()));
 		}
 
 		return list;
@@ -385,7 +372,6 @@ public class Player{
 
 
 	public PlayerView getVisible(){
-
 		return new PlayerView(this);
 	}
 	/**
@@ -415,10 +401,7 @@ public class Player{
 		}
 		vp += total/5;
 		return vp;
-
-
 	}
-
 
 	public boolean isDisconnected() {
 		return isDisconnected;
@@ -427,7 +410,6 @@ public class Player{
 	public void setDisconnected(boolean disconnected) {
 		isDisconnected = disconnected;
 	}
-
 
 	public Optional<Action> getGameAction() {
 		return gameAction;

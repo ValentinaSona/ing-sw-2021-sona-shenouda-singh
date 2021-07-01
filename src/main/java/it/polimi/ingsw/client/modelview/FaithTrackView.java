@@ -4,15 +4,16 @@ import it.polimi.ingsw.server.model.FaithTrack;
 import it.polimi.ingsw.server.model.PopeFavorTiles;
 
 import java.io.Serializable;
-import java.util.Arrays;
 
 import static it.polimi.ingsw.client.ui.cli.CLIHelper.*;
 
+/**
+ * View equivalent of the faith track.
+ */
 public class FaithTrackView implements Serializable {
     private final int faithMarker;
     private final PopeFavorTiles[] popeFavorTiles;
 
-    //TODO: if we have this constructor then it should be
     public FaithTrackView(){
         this.popeFavorTiles = new PopeFavorTiles[]{PopeFavorTiles.DOWNWARDS, PopeFavorTiles.DOWNWARDS,PopeFavorTiles.DOWNWARDS};
         this.faithMarker = 0;
@@ -32,9 +33,6 @@ public class FaithTrackView implements Serializable {
         return faithMarker;
     }
 
-    public PopeFavorTiles getPopeFavorTiles(int index) {
-        return popeFavorTiles[index];
-    }
 
     public PopeFavorTiles[] getPopeFavorTiles() {
         return popeFavorTiles;

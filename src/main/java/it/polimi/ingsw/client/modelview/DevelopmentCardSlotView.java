@@ -12,12 +12,12 @@ public class DevelopmentCardSlotView extends SlotView implements Serializable {
     private final Stack<DevelopmentCard> slot;
 
     public DevelopmentCardSlotView(Id slot1) {
-        super(slot1, false);
+        super(slot1);
         slot = new Stack<>();
     }
 
     public DevelopmentCardSlotView(Id slot1, Stack<DevelopmentCard> slot) {
-        super(slot1, false);
+        super(slot1);
         this.slot = slot;
     }
     public DevelopmentCard peek(){

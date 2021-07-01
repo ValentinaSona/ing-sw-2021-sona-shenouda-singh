@@ -7,12 +7,19 @@ import it.polimi.ingsw.server.model.ResourceType;
 
 import java.io.Serializable;
 
-
+/**
+ * View equivalent to special production. Is added to the player slot list.
+ */
 public class SpecialProductionView extends SlotView implements Serializable {
-    private Production specialProduction;
+    private final Production specialProduction;
 
-    public SpecialProductionView(Id id, boolean confirmed, ResourceType costType) {
-        super(id, confirmed);
+    /**
+     * Initializes a special production.
+     * @param id id of the slot.
+     * @param costType the type of resource that the special production requires to be activated. It's used to create the production.
+     */
+    public SpecialProductionView(Id id, ResourceType costType) {
+        super(id);
         Resource[] cost = new Resource[]{new Resource(1, costType)};
         Resource[] out = new Resource[]{new Resource(1, ResourceType.JOLLY), new Resource(1, ResourceType.FAITH)};
         this.specialProduction = new Production(cost, out);

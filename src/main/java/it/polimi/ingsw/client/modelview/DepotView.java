@@ -6,6 +6,9 @@ import it.polimi.ingsw.server.model.Resource;
 
 import java.io.Serializable;
 
+/**
+ * View equivalent of a depot.
+ */
 public class DepotView implements Serializable {
     final private Id id;
     final private Resource resource;
