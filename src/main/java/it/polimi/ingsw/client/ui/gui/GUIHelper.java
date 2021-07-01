@@ -461,7 +461,7 @@ public class GUIHelper {
     public boolean activeSpecialDepot(PlayerView player, int index) {
         var cards = player.getLeaderCards();
         if (cards.size() < index + 1) return  false;
-        return cards.get(index).isActive() && cards.get(index).getSpecialAbility() instanceof ExtraDepotAbility;
+        return cards.get(index) != null && cards.get(index).isActive() && cards.get(index).getSpecialAbility() instanceof ExtraDepotAbility;
     }
 
     public boolean abilityCorresponds(DepotView depot, LeaderCard card) {
