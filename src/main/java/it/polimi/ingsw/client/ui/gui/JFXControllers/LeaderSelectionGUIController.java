@@ -138,7 +138,6 @@ public class LeaderSelectionGUIController extends AbstractGUIController implemen
     }
 
     public void handleSetupUserMessage(ServerSetupUserMessage message) {
-        //se è il messaggio è per me faccioo vedere le carte altrimenti salvo i dati che mi servono e attendo
         Platform.runLater(() -> {
             if(!message.getUser().getNickName().equals(MatchSettings.getInstance().getClientNickname())){
                 choosingLabel.setText(message.getUser().getNickName() + " is currently choosing...");

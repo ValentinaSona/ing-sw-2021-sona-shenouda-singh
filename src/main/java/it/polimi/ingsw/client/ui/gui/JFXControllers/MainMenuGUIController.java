@@ -186,18 +186,19 @@ public class MainMenuGUIController extends AbstractGUIController {
     public void handleStatusMessage(StatusMessage message) {
         Platform.runLater(() -> {
             if(message.equals(StatusMessage.OK_NICK)){
-                //posso validare il nickname
                 if(!GUIHelper.getInstance().isResuming()) handleNicknameConfirmation(true);
                 else UIController.getInstance().resumeGameFromFile();
+
             }else if(message.equals(StatusMessage.SET_COUNT)){
-                //posso settare il numero di player
                 if(!GUIHelper.getInstance().isResuming()) handleJoinLobbyConfirmation(true);
                 else UIController.getInstance().loadGameFromFile();
+
             }else if(message.equals(StatusMessage.JOIN_LOBBY)){
-                //posso settare il numero di player
                 handleJoinLobbyConfirmation(false);
+
             }else if(message.equals(StatusMessage.CLIENT_ERROR)){
                 handleNicknameConfirmation(false);
+
             }else if (message.equals(StatusMessage.OK_COUNT)) {
                 if (GUIHelper.getInstance().isSolo() || GUIHelper.getInstance().isResuming()) change(ScreenName.LOBBY);
                 else chooseNick.setText("An error occurred");

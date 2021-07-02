@@ -268,7 +268,7 @@ public class GUIMessageHandler {
             GUIHelper.getInstance().setScreen(ScreenName.WARNING);
         });
     }
-    // TODO handle classcastexception
+
     public void handleServerDisconnectionMessage() {
         if (GUIHelper.getInstance().getCurrentScreen() == ScreenName.JOIN_GAME || GUIHelper.getInstance().getCurrentScreen() == ScreenName.JOIN_SINGLEPLAYER)
             Platform.runLater(() -> ((MainMenuGUIController)currentController).noGameFound());

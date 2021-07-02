@@ -52,7 +52,6 @@ public class GameCreationGUIController extends AbstractGUIController implements 
         }
 
         else{
-            //chiedo al server di creare una nuova partita
             UIController.getInstance().setCreation(numberOfPlayers);
         }
 
@@ -73,7 +72,6 @@ public class GameCreationGUIController extends AbstractGUIController implements 
 
         Platform.runLater(() -> {
             if(message.equals(StatusMessage.OK_COUNT)){
-                //ho ricevuto l'ok dal server
                 handleSetCountConfirmation(true);
             }
         });
