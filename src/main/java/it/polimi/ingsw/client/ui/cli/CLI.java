@@ -211,7 +211,6 @@ public class CLI implements Ui {
         return new int[]{Integer.parseInt(choice[0])-1,type};
     }
 
-// TODO Test on the four player thingy cuz not working yet
 
     /**
      * Asks the player for a choice amongst the possible option presented to them.
@@ -228,8 +227,9 @@ public class CLI implements Ui {
     public int getChoice(String[] options, boolean enableRefresh, boolean isMenu, boolean interruptible){
         int optNum = 1;
         int choice;
+
+
         output.println("[ ] Choose an option:");
-        // TODO: make this a single print so that messages cannot be printed inside the menu. Or synchronize it.
         for (String option : options){
 
             output.printf("\t%d) %s \n", optNum, option);
@@ -267,7 +267,6 @@ public class CLI implements Ui {
                         // If enableRefresh is true, the method has been interrupted in its last usage and the thread is still running, so we need to avoid spawning another one.
                         if (!enableRefresh) {
                             // Marks the current position on system in.
-                            //TODO: maybe place outside? woudl proably solve problems
                             System.in.mark(500);
                             // This thread will go in the blocking read instead of the main one.
                             Thread t = new Thread(() -> {

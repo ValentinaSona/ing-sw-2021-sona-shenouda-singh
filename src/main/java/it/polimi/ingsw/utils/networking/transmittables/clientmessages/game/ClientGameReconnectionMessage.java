@@ -4,7 +4,6 @@ import it.polimi.ingsw.server.ConnectionSetupHandler;
 import it.polimi.ingsw.server.Lobby;
 import it.polimi.ingsw.utils.networking.Connection;
 import it.polimi.ingsw.utils.networking.ServerHandleable;
-import it.polimi.ingsw.utils.networking.transmittables.StatusMessage;
 import it.polimi.ingsw.utils.networking.transmittables.clientmessages.ClientMessage;
 
 public class ClientGameReconnectionMessage implements ClientMessage, ServerHandleable {

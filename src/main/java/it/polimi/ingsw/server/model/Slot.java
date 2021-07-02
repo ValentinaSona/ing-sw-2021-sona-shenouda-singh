@@ -3,11 +3,8 @@ package it.polimi.ingsw.server.model;
 import it.polimi.ingsw.server.exception.NotSufficientResourceException;
 import it.polimi.ingsw.server.model.Id;
 import it.polimi.ingsw.server.model.Resource;
-import it.polimi.ingsw.utils.networking.Transmittable;
-import it.polimi.ingsw.utils.observer.LambdaObservable;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Map;
 
 public abstract class Slot {

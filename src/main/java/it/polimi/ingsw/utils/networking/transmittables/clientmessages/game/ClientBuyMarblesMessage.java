@@ -8,7 +8,6 @@ import it.polimi.ingsw.server.model.Player;
 import it.polimi.ingsw.server.view.RemoteViewHandler;
 import it.polimi.ingsw.utils.networking.ControllerHandleable;
 import it.polimi.ingsw.utils.networking.transmittables.clientmessages.ClientMessage;
-import it.polimi.ingsw.utils.networking.transmittables.servermessages.ServerFinalScoreMessage;
 import it.polimi.ingsw.utils.networking.transmittables.servermessages.ServerLastTurnsMessage;
 
 import java.util.ArrayList;

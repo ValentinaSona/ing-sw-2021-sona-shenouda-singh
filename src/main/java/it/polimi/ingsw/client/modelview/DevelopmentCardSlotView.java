@@ -8,6 +8,9 @@ import java.util.Stack;
 
 import static it.polimi.ingsw.client.ui.cli.CLIHelper.*;
 
+/**
+ * View equivalent to the development slot class.
+ */
 public class DevelopmentCardSlotView extends SlotView implements Serializable {
     private final Stack<DevelopmentCard> slot;
 
@@ -25,6 +28,10 @@ public class DevelopmentCardSlotView extends SlotView implements Serializable {
         else return null;
     }
 
+    /**
+     * This is needed to give the player info about the cards they cannot see anymore.
+     * @return sum of the victory points of the non visible cards.
+     */
     public int hiddenVP(){
         int vp = 0;
         if (slot == null || slot.isEmpty()) return 0;
@@ -34,9 +41,12 @@ public class DevelopmentCardSlotView extends SlotView implements Serializable {
         return vp;
     }
 
+    /**
+     * This is needed to give the player info about the cards they cannot see anymore.
+     * @return ANSI colored squares representing the colors of the non visible card.
+     */
     public String hiddenColors(){
         StringBuilder colors = new StringBuilder();
-        colors.append("");
         if (slot == null || slot.isEmpty()) return colors.toString();
         for (DevelopmentCard card : slot){
             if (card == slot.peek()) continue;

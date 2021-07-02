@@ -1,7 +1,6 @@
 package it.polimi.ingsw.server.exception;
 
 import it.polimi.ingsw.server.controller.User;
-import it.polimi.ingsw.server.model.Player;
 
 public class EndOfGameException extends Exception {
     private final User user;

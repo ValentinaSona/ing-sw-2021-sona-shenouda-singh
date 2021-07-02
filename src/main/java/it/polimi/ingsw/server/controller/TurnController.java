@@ -84,8 +84,6 @@ public class TurnController{
                 LorenzoAction();
             }
 
-            //TODO metto boolean per dire se è un giocatore
-            //TODO che si è disconnesso e anche quello di riconnessione
             Player startingPlayer = model.getCurrentPlayer();
             startingPlayer.toggleTurn();
             startingPlayer.toggleMainAction();

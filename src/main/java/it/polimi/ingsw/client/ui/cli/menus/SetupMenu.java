@@ -14,7 +14,10 @@ import java.util.Map;
 
 import static it.polimi.ingsw.client.ui.cli.CLIHelper.CHECK_MARK;
 import static it.polimi.ingsw.client.ui.cli.CLIHelper.MARBLE_LEGEND;
-
+/**
+ * Implements the setup menu, the phase in between the main one and the actual game.
+ * Handles the selection of leader cards and starting resources. When all the players are done, the game menu takes over.
+ */
 public class SetupMenu {
 
     private final CLI cli;
@@ -35,13 +38,20 @@ public class SetupMenu {
         this.done = done;
     }
 
+    /**
+     * The main menu.
+     * The setup menu is actually woken up from the menuRunner waitStateChange every time a player starts their setup turn, so it checks that the player has not already had theirs.
+     */
     public void run(){
         this.runner = MenuRunner.getInstance(cli);
         if (!done) setupMenu();
         done = true;
     }
 
-
+    /**
+     * The options a player is given depend on whether or not it's their setup turn and their turn order.
+     * @return The array of textual options.
+     */
     private String[] getSetupOptions(){
 
         // Gets the message from runner. This is updated by the setState called for each player.
@@ -73,6 +83,10 @@ public class SetupMenu {
 
     }
 
+    /**
+     * Switch that calls the various menu functions and handles the refresh.
+     * This in turns calls the two "pick" functions. When they have both been done, the setup exits.
+     */
     public void setupMenu() {
         boolean hasBeenRefreshed = false;
         do {
