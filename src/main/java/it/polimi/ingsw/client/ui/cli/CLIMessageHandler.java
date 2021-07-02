@@ -28,11 +28,10 @@ public class CLIMessageHandler {
         this.cli = cli;
     }
 
-    public static CLIMessageHandler getInstance(CLI cli) {
+    public static void getInstance(CLI cli) {
         if (singleton == null) {
             singleton = new CLIMessageHandler(cli);
         }
-        return singleton;
     }
 
     public static CLIMessageHandler getInstance() {

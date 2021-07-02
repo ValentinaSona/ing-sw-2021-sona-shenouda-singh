@@ -11,7 +11,6 @@ public class CLIHelper {
     public static final String ANSI_YELLOW = "\033[33m";
     public static final String ANSI_BLUE = "\033[34m";
     public static final String ANSI_PURPLE = "\033[35m";
-    public static final String ANSI_CYAN = "\033[36m";
     public static final String ANSI_WHITE = "\033[37m";
     public static final String ANSI_RESET = "\033[0m";
     public static final String CHECK_MARK = "\u2713";
@@ -19,7 +18,6 @@ public class CLIHelper {
     public static final String WHITE_CIRCLE = "\u25CB";
     public static final String SQUARE = "\u25A0";
     public static final String CROSS = "\u2671";
-    public static final String LINE = "\u203E";
 
     public static final String MARBLE_LEGEND =
                 ANSI_BLUE + CIRCLE + ANSI_RESET + " Blue, "+
