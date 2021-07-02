@@ -12,9 +12,9 @@ public interface ControllerHandleable {
     /**
      * Every class that represent a message implements this method calling a different
      * controller method
-     * @param handler
-     * @param view
-     * @param user
+     * @param handler reference to the controller that will handle this message
+     * @param view remote view of the player that sent the message
+     * @param user user that represent the player at network layer
      * @return true if there where no errors while processing this message
      */
     boolean handleMessage(Controller handler, RemoteViewHandler view, User user);

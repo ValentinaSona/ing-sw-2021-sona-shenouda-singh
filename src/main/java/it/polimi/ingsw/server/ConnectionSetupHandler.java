@@ -16,7 +16,9 @@ public class ConnectionSetupHandler implements LambdaObserver {
      */
     private final Connection connection;
 
-    //this value is set when the handler receive a ClientSetNicknameMessage
+    /**
+     * this value is set when the handler receive a ClientSetNicknameMessage
+     */
     private String nickname;
 
     private final Lobby lobby;

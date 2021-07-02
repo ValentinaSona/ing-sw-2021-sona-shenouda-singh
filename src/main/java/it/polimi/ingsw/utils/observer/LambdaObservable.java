@@ -28,11 +28,14 @@ public class LambdaObservable <T>{
         }
     }
 
+    /**
+     *  for every observer i am calling their update method that is
+     *  defined by the associated lambda function
+     * @param message message to send to the observers
+     */
     public void notify(T message){
         synchronized (observerMap){
             for(LambdaObserver observer : observerMap.keySet()){
-                //for every observer i am calling their update method that is
-                //defined by the associated lambda function
                 observerMap.get(observer).accept(observer, message);
             }
         }

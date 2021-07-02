@@ -35,19 +35,38 @@ public enum StatusMessage implements Transmittable {
      */
     OK_NICK,
 
+    /**
+     * Response message sent by the server to the first player if the count has been set successfully
+     */
     OK_COUNT,
     /**
      * Response message if the command could not be executed due to an unexpected server error.
      */
     SERVER_ERROR,
 
+    /**
+     * Response message sent by the server to the first player
+     */
     SET_COUNT,
 
+    /**
+     * Response message sent by the server if the player has joined the lobby
+     */
     JOIN_LOBBY,
 
+    /**
+     * Response message sent by the server if the player reconnected successfully
+     */
     RECONNECTION_OK,
 
+    /**
+     * Response message sent by the server if the player failed to reconnect
+     */
     RECONNECTION_FAILED,
 
+    /**
+     * Response message sent by the server if the request of the first player to load the game from file
+     * has been dealt with success
+     */
     LOAD_GAME_OK;
 }

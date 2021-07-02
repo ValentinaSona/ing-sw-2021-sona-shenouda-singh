@@ -27,42 +27,104 @@ import java.util.logging.Logger;
 public class Lobby {
     private static final Logger LOGGER = Logger.getLogger(Lobby.class.getName());
 
+
     private final static int MIN_PLAYER_PER_GAME = 1;
 
     private final static int MAX_PLAYER_PER_GAME = 4;
 
     private static Lobby singleton;
+    /**
+     * Boolean that represent that maintains the threadLobby running
+     */
     private volatile boolean active;
+    /**
+     * Boolean that is used to instruct the lobby if it has to create a new game or
+     * it has to load it from a file
+     */
     private volatile boolean loadGameFromFile;
+    /**
+     * Lock used ta access safely the content of loadGameFromFile variable
+     */
     private final Object loadGameLock = new Object();
-
-    //connection that have been registered with a valid nickname
+    /**
+     * Map that contains a reference to the connection and the name of the players that have called
+     * and terminated successfully the method handleNicknameRegistration
+     */
     private final Map<Connection, String> registeredNicknamesMap;
 
-    //connection that are in the registeredNicknamesMap but in order of arrive
+    /**
+     * List that contains a reference to the connection who have already been registered in the
+     * registeredNicknamesMap and have called and terminated successfully the handleJoinLobby method
+     */
     private final LinkedList<Connection> lobbyRequestingConnections;
 
+    /**
+     * List that contains the users that are trying to reconnect to a ongoing game
+     */
     private final LinkedBlockingDeque<Connection> disconnectedPlayers;
-    //the first connection to arrive that has the control on the player count
+    /**
+     * First connection takes the value of the first user that after calling handleNicknameRegistration calls also the handleJoinLobby
+     * method
+     */
     private Connection firstConnection;
-    //used when loading a game from a file
+    /**
+     * This list is used when the first player has choose to load the game from a file, and it
+     * contains the nicknames of all the players that were in previous game
+     */
     private List<User> userList;
 
+    /**
+     * A reference to the current server
+     */
     private final Server server;
 
+    /**
+     * A reference to the current match tha is basically a class with a run method
+     * that after doing the setup of the model, controller and view components, waits for new messages
+     * from the remoteViews and makes the controller process them
+     */
     private Match match;
+
+    /**
+     * Used to inform the lobby if a game that was started is now ended for some reason
+     */
     private boolean activeMatch;
+    /**
+     * Lock used to access safely the content of activeMatch
+     */
     private final Object activeMatchLock = new Object();
 
+    /**
+     * Used to control the flow of the lobby and it can been modified both internally and
+     * externally
+     */
     private LobbyState lobbyState;
+
+    /**
+     * Lock used to acess safely the content of lobbyState
+     */
     private final Object stateLock;
 
-    //maximum number of player
+    /**
+     * Current number of player that has been chosen by the fist player
+     */
     private int currentLobbyPlayerCount;
+
+    /**
+     * Lock to access safely the content of currentLobbyPlayerCount
+     */
     private final Object playerCountLock;
 
+    /**
+     * Lock used when loading a game from a file
+     */
     private final Object resumeGameObject = new Object();
 
+    /**
+     * Used by the server to instantiate a lobby
+     * @param server on witch the lobby is running
+     * @return the lobby object
+     */
     public static Lobby getInstance(Server server) {
         if (singleton == null) {
             singleton = new Lobby(server);
@@ -71,6 +133,10 @@ public class Lobby {
         return singleton;
     }
 
+    /**
+     * Constructor tha set the initial value of the attributes and create all the needed objects
+     * @param server
+     */
     private Lobby(Server server) {
         this.server = server;
         this.lobbyRequestingConnections = new LinkedList<>();
@@ -82,6 +148,7 @@ public class Lobby {
         this.lobbyState = LobbyState.LOBBY_SETUP;
         this.loadGameFromFile = false;
     }
+
 
     private void setLoadGameFromFile(boolean load){
         synchronized (loadGameLock){
@@ -135,6 +202,14 @@ public class Lobby {
 
     }
 
+    /**
+     * Called by the users that are trying to connect to the lobby.
+     * Checks that this connection has not already registered with another name and that the chosen nicknames is
+     * not already in use by another player
+     * @param nickname chosen by the user
+     * @param connection connection of the user
+     * @return true if successful, otherwise false
+     */
     public boolean handleNicknameRegistration(String nickname, Connection connection) {
         //while a player is trying to register,  the map can't be modified by other threads
         synchronized (registeredNicknamesMap){
@@ -235,6 +310,12 @@ public class Lobby {
         return true;
     }
 
+    /**
+     * Ths methods handle an explicit disconnection of a player while in the lobby and is called when
+     * the client send a DisconnectionMessage
+     * @param connection requesting disconnection
+     * @return true if successful
+     */
     public boolean handleLobbyDisconnection(Connection connection){
         synchronized (lobbyRequestingConnections){
             //erase itself from records in the server, if it is not the firstConnection
@@ -258,6 +339,9 @@ public class Lobby {
         return true;
     }
 
+    /**
+     * Method called when the lobby is launched on a new thread
+     */
     public void start(){
         while(isActive()){
             firstConnection = null;
@@ -312,6 +396,11 @@ public class Lobby {
 
     }
 
+    /**
+     * This method handles the disconnection of a player when is the lobby or match requesting it
+     * @param connection to disconnect
+     * @return true if successful
+     */
     public boolean handleForceLobbyDisconnection(Connection connection){
         synchronized (lobbyRequestingConnections) {
             registeredNicknamesMap.remove(connection);
@@ -322,6 +411,12 @@ public class Lobby {
         return true;
     }
 
+    /**
+     * This method handle the request of reconnection to an ongoing game
+     * @param nickname of the player trying to reconnect
+     * @param connection of the player tring to reconnect
+     * @return true if successful
+     */
     public boolean handleGameReconnection(String nickname, Connection connection){
 
         boolean status = handleNicknameRegistration(nickname, connection);
@@ -343,6 +438,10 @@ public class Lobby {
         }
     }
 
+    /**
+     * This method is called by the lobby after a game is started/loaded successfully and so no
+     * setup operation are needed
+     */
     private void waitForDisconnectedPlayers(){
         while(isActiveMatch()){
             try{
@@ -372,6 +471,10 @@ public class Lobby {
         }
     }
 
+    /**
+     * This method is called by the lobby and sets the tread on witch the lobby is running in wait
+     * until the first connection is added to lobbyRequestingConnection
+     */
     private void waitForFirstConnection(){
         synchronized (lobbyRequestingConnections){
             //waiting for the first player to call handleLobbyJoiningRequest method to populate map and LinkedList
@@ -407,6 +510,9 @@ public class Lobby {
         }
     }
 
+    /**
+     * Used by the lobby to inform the client about the current number of player inside the lobby
+     */
     private void updateMessage(){
         ArrayList<User> lobbyUsers = new ArrayList<>();
         for(Connection con: registeredNicknamesMap.keySet()){
@@ -418,6 +524,11 @@ public class Lobby {
         }
     }
 
+    /**
+     * Used after the required number of player has joined the lobby and handles the removal of the ConnectionSetupHandler
+     * observer from the connection
+     * @return
+     */
     private Map<Connection, String> getAllParticipants(){
         Map<Connection, String> participants = new ConcurrentHashMap<>();
 

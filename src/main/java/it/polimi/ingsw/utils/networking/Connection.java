@@ -15,14 +15,28 @@ import java.util.logging.Logger;
 
 public class Connection extends LambdaObservable<Transmittable> implements Runnable {
     private final Logger LOGGER = Logger.getLogger(Connection.class.getName());
+    /**
+     * Socket managed by the connection
+     */
     private final Socket socket;
+    /**
+     * InputStream for receiving messages
+     */
     private final ObjectInputStream inputStream;
+    /**
+     * OutputStream for sending messages
+     */
     private final ObjectOutputStream outputStream;
-    private Timer keepAliveTimer;
 
     private boolean active = true;
-    private Object activeLock = new Object();
 
+    private final Object activeLock = new Object();
+
+    /**
+     * Constructor of a connection opens the streams
+     * @param socket socket to be observed
+     * @throws IOException if the opening of the input and output streams fails
+     */
     public Connection(Socket socket) throws IOException {
         this.socket = socket;
         this.outputStream = new ObjectOutputStream(socket.getOutputStream());
@@ -62,6 +76,9 @@ public class Connection extends LambdaObservable<Transmittable> implements Runna
         }
     }
 
+    /**
+     * Close the connection and notifies the observer of the connection
+     */
     private void notifyDisconnection() {
         if (isActive()) {
             setActive(false);
@@ -91,10 +108,12 @@ public class Connection extends LambdaObservable<Transmittable> implements Runna
         }
     }
 
+    /**
+     * Called when a new thread is started, calls scheduleKeepAliveTimer()  and then waits for incoming messages
+     */
     @Override
     public synchronized void run(){
-        //lancio un thread che gestisca i messaggi di ping in modo tale che se succede qualcosa
-        //viene lanciata l'eccezione e noitifico gli observer di tale connesione dell'accaduto.
+
         scheduleKeepAliveTimer();
         while (isActive()){
             try {
@@ -114,8 +133,13 @@ public class Connection extends LambdaObservable<Transmittable> implements Runna
         }
     }
 
+    /**
+     * Called in the run method creates a Timer thread that manages the sending of
+     * keepAlive messages
+     */
     public void scheduleKeepAliveTimer(){
-        keepAliveTimer = new Timer("KeepAliveTimer");
+
+        Timer keepAliveTimer = new Timer("KeepAliveTimer");
         final int INTERVAL_MS = 180_000;
         keepAliveTimer.schedule(new TimerTask() {
             @Override

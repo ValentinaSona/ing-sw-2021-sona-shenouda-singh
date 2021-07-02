@@ -11,17 +11,28 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 public class Server {
-    private final int serverPort;
+    /**
+     * Used to accept new incoming client connections
+     */
     private final ServerSocket serverSocket;
-    //this map contains the connection and the corresponding handler that will interpret the setup messages of the client
+    /**
+     *     this map contains the connection and the corresponding handler
+     *     that will interpret the setup messages of the client
+     */
     private final Map<Connection, ConnectionSetupHandler> handlerMap;
-    //used to give the provide threads for the connections that manage the inbound sockets
+    /**
+     *     used to give the provide threads for the connections that manage the inbound sockets
+     */
     private final ExecutorService executorService;
 
+    /**
+     * Thread used by the lobby
+     */
     private final Thread lobbyThread;
-    private Thread matchThread;
-    private Match match;
 
+    /**
+     * Reference to the current lobby
+     */
     private Lobby lobby;
 
     /**
@@ -30,8 +41,7 @@ public class Server {
      * @throws IOException thrown by the serverSocket if the creation of the object failed
      */
     public Server(int port) throws IOException {
-        this.serverPort = port;
-        this.serverSocket = new ServerSocket(serverPort);
+        this.serverSocket = new ServerSocket(port);
         this.lobby = Lobby.getInstance(this);
         this.executorService = Executors.newCachedThreadPool();
         this.handlerMap = new ConcurrentHashMap<>();
@@ -71,7 +81,7 @@ public class Server {
      */
     public void submitMatch(Match match){
 
-        matchThread = new Thread(match);
+        Thread matchThread = new Thread(match);
         matchThread.start();
         Map<String, Connection> participants = match.getParticipantMap();
         for(Connection connection : participants.values()){
@@ -93,6 +103,10 @@ public class Server {
         }
     }
 
+    /**
+     * Used by the lobby when it has to handle the reconnection of a player to an ongoing match
+     * @param connection Connection from whom the ConnectionSetupHandler has to be removed
+     */
     public void removeHandlerForReconnection(Connection connection){
         synchronized (handlerMap){
             connection.removeObserver(handlerMap.get(connection));

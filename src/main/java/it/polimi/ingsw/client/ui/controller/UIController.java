@@ -82,7 +82,6 @@ public class UIController implements LambdaObserver{
             model.subscribeUser(user);
 
             view = new MockRemoteViewHandler(nickname,
-                    UIController.getInstance(),
                     DispatcherController.getInstance());
 
             model.addObserver(view, (observer, transmittable)->{
