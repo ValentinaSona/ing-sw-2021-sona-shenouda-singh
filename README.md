@@ -16,7 +16,7 @@
 | FA3: Persistenza                    | At any time during their turn, the player can activate the save game function. This ends the game for all players, saving the game on the server. This feature is implemented for multiplayer and remote solo games - local games do not have access to the server and cannot save the game. **Important**: for this feature to work, a folder called `saved_game` has to be present in the folder from which the program is run. Saving again overwrites the previous save. |
 
 
-## Coverage: // TO UPDATE
+## Coverage:
 ![](/Coverage.png?raw=true)
 
 ## Running the program
