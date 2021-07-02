@@ -203,6 +203,7 @@ public class Match implements Runnable{
         lobby.setLobbyState(LobbyState.LOBBY_SETUP);
         remoteViewList.forEach((remoteView)-> remoteView.requestDisconnection());
         remoteViewList.clear();
+        System.exit(0);
     }
 
     /**
