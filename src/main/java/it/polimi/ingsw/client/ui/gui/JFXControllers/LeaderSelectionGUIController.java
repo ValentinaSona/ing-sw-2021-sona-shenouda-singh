@@ -35,6 +35,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Handles the game setup screen
+ */
 public class LeaderSelectionGUIController extends AbstractGUIController implements LeaderCardSelectionController {
 
     private List<LeaderCardSelection> cardList;

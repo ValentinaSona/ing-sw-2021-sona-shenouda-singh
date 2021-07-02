@@ -20,6 +20,9 @@ import javafx.scene.layout.VBox;
 import java.util.Objects;
 import java.util.stream.Stream;
 
+/**
+ * Handles the resource market screen
+ */
 public class MarketGUIController extends AbstractGUIController implements GameGUIControllerInterface {
 
     @FXML

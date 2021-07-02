@@ -11,6 +11,10 @@ import it.polimi.ingsw.utils.networking.transmittables.servermessages.*;
 import javafx.application.Platform;
 import javafx.stage.Stage;
 
+/**
+ * Singleton class containing the GUI-specific methods for handling the server messages.
+ * They are invoked by the DispatcherController after the UI-agnostic handling of the messages.
+ */
 public class GUIMessageHandler {
 
     private static GUIMessageHandler singleton;

@@ -16,9 +16,15 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.Objects;
 
-
+/**
+ * The main class of the GUI
+ */
 public class GUI extends Application implements Ui {
 
+    /**
+     * This methods tells the system to ignore the DPI setting to display the window correctly on a wider range of screens
+     * and launches the JavaFX application.
+     */
     public void start(){
         System.setProperty("prism.allowhidpi", "false");
         launch();

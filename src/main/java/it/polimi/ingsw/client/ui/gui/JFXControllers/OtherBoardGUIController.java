@@ -3,6 +3,9 @@ package it.polimi.ingsw.client.ui.gui.JFXControllers;
 import it.polimi.ingsw.client.ui.gui.GUIHelper;
 import it.polimi.ingsw.client.ui.gui.GUIMessageHandler;
 
+/**
+ * Handles the board of other players
+ */
 public class OtherBoardGUIController extends BoardGUIController {
 
 

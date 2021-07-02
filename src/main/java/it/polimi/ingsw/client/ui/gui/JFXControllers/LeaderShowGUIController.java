@@ -17,6 +17,9 @@ import javafx.scene.layout.*;
 
 import java.util.Objects;
 
+/**
+ * Handles the leader cards screen
+ */
 public class LeaderShowGUIController extends AbstractGUIController implements GameGUIControllerInterface {
 
     @FXML

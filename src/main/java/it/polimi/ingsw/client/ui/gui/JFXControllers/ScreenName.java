@@ -1,5 +1,8 @@
 package it.polimi.ingsw.client.ui.gui.JFXControllers;
 
+/**
+ * Contains every game screen with its corresponding FXML file name and the used CSS stylesheets
+ */
 public enum ScreenName {
     MAIN_MENU("mainScreen.fxml", new String[]{"mainText.css", "standardBackground.css"}),
     OPTIONS("optionsScreen.fxml", new String[]{"standardBackground.css", "buttons.css"}),

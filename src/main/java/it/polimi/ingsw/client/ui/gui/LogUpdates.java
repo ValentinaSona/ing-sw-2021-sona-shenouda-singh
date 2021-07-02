@@ -1,5 +1,8 @@
 package it.polimi.ingsw.client.ui.gui;
 
+/**
+ * Contains updates to trigger specific messages from the GameLog class
+ */
 public enum LogUpdates {
 
     TURN,

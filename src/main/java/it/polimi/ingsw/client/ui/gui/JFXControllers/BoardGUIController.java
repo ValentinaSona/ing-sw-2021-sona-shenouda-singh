@@ -24,6 +24,9 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Stream;
 
+/**
+ * Handles the personal board screen
+ */
 public class BoardGUIController extends AbstractGUIController implements GameGUIControllerInterface {
 
     @FXML

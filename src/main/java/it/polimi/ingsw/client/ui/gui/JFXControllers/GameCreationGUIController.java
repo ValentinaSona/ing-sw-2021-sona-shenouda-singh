@@ -14,6 +14,9 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.StackPane;
 import javafx.util.Duration;
 
+/**
+ * Handles the game creation screen
+ */
 public class GameCreationGUIController extends AbstractGUIController implements UiControllerInterface {
 
     private int numberOfPlayers;

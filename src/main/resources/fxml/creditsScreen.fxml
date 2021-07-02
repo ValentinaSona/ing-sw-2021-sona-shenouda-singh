@@ -30,7 +30,7 @@
                         <Insets bottom="220.0" />
                      </StackPane.margin>
                   </Label>
-                  <Label layoutX="598.0" layoutY="232.0" styleClass="normalLabel" text="Antony Shenouda, Raul Singh, Valentina Sona.">
+                  <Label layoutX="598.0" layoutY="232.0" styleClass="normalLabel" text="Valentina Sona, Antony Shenouda, Raul Singh.">
                      <StackPane.margin>
                         <Insets top="50.0" />
                      </StackPane.margin>

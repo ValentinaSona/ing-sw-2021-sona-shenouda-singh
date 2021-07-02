@@ -5,6 +5,9 @@ import it.polimi.ingsw.client.ui.gui.GUIHelper;
 import it.polimi.ingsw.client.ui.gui.GUIMessageHandler;
 import javafx.scene.Node;
 
+/**
+ * Abstract class of JavaFX controllers
+ */
 public abstract class AbstractGUIController implements UiControllerInterface {
 
     public AbstractGUIController(){

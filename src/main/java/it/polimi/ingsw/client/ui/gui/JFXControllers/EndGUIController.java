@@ -15,6 +15,9 @@ import java.util.Comparator;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+/**
+ * Handles the GUI end screen
+ */
 public class EndGUIController {
 
     @FXML

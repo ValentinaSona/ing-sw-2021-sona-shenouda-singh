@@ -20,6 +20,9 @@ import javafx.stage.Stage;
 
 import java.util.List;
 
+/**
+ * Handles the game lobby screen
+ */
 public class LobbyGUIController extends AbstractGUIController implements UiControllerInterface {
 
     Timeline timeline;

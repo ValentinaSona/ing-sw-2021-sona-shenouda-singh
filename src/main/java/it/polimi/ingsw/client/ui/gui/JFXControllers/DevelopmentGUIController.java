@@ -14,6 +14,9 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.StackPane;
 
+/**
+ * Handles the development market screen
+ */
 public class DevelopmentGUIController extends AbstractGUIController implements GameGUIControllerInterface{
 
     @FXML

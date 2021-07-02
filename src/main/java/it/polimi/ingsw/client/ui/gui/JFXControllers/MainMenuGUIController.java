@@ -22,6 +22,9 @@ import javafx.util.Duration;
 
 import java.io.IOException;
 
+/**
+ * Handles all the screens that come before the the game creation or the lobby
+ */
 public class MainMenuGUIController extends AbstractGUIController {
 
     @FXML

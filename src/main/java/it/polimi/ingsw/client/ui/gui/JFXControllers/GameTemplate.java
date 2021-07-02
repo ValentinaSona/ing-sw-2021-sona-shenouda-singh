@@ -13,13 +13,18 @@ import javafx.scene.layout.VBox;
 
 import java.util.List;
 
+/**
+ * Contains all the tabs that get displayed at the left of the screen during the game
+ */
 public class GameTemplate {
 
     private static GameTemplate singleton;
 
     private final VBox tabsPlayer;
-    private VBox tabsMarket;
 
+    /**
+     * Initializes the template and set the actions for all tabs and their positions
+     */
     private GameTemplate() {
         List<String> players = GUIHelper.getInstance().getOthers();
         tabsPlayer = new VBox(20);
@@ -53,8 +58,6 @@ public class GameTemplate {
         StackPane.setAlignment(tabsPlayer, Pos.TOP_RIGHT);
         StackPane.setMargin(tabsPlayer, new Insets(80, 0, 0, 0));
 
-        //tabsMarket = new VBox(20);
-
         var marketButton = new Button();
         marketButton.setText("Resource Market");
         marketButton.setId("marketButton");
@@ -86,14 +89,13 @@ public class GameTemplate {
         return tabsPlayer;
     }
 
-    public VBox getMarketsTabs() {
-        return tabsMarket;
-    }
-
+    /**
+     * Adjust all the tabs and makes the current screen one longer
+     * @param screen the current screen
+     */
     public void setTabs(ScreenName screen) {
 
         tabsPlayer.getChildren().forEach(e -> ((Button)e).setMaxWidth(380));
-        //tabsMarket.getChildren().forEach(e -> ((Button)e).setMaxWidth(380));
 
         switch(screen){
             case PERSONAL_BOARD -> ((Button) tabsPlayer.getChildren().get(0)).setMaxWidth(420);

@@ -4,6 +4,9 @@ import it.polimi.ingsw.server.model.LeaderCard;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
+/**
+ * This class helps the setup phase of the game in the GUI, by associating the card to its image
+ */
 public class LeaderCardSelection {
     private final LeaderCard card;
     private final ImageView image;

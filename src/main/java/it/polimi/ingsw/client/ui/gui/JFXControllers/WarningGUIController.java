@@ -10,6 +10,9 @@ import javafx.scene.control.Label;
 import javafx.scene.effect.GaussianBlur;
 import javafx.scene.layout.*;
 
+/**
+ * Handles the screen when a player exits the game during setup or when someone saves the game
+ */
 public class WarningGUIController extends AbstractGUIController {
 
     @FXML

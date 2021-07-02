@@ -15,6 +15,9 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.SVGPath;
 
+/**
+ * Handles the interactive part of the market
+ */
 public class MarketTemplate {
 
     private static MarketTemplate singleton;
@@ -128,6 +131,10 @@ public class MarketTemplate {
 
     }
 
+    /**
+     * Updates the market GridPane
+     * @return the updated market
+     */
     public GridPane updateMarket() {
 
         var tray = GameView.getInstance().getMarketInstance().getTray();

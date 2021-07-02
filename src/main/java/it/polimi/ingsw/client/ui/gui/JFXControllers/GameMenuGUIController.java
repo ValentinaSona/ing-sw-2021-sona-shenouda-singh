@@ -11,6 +11,9 @@ import javafx.scene.effect.GaussianBlur;
 import javafx.scene.layout.*;
 import javafx.stage.Stage;
 
+/**
+ * Handles the menu that can be opened during the game
+ */
 public class GameMenuGUIController extends AbstractGUIController implements GameGUIControllerInterface{
 
     @FXML

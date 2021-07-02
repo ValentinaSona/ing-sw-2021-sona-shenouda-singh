@@ -8,6 +8,9 @@ import it.polimi.ingsw.server.model.ProductionAbility;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Handles all the current production states
+ */
 public class SelectedProductions {
 
     private static SelectedProductions singleton;
@@ -39,6 +42,9 @@ public class SelectedProductions {
         if (second != null && second.isActive() && second.getSpecialAbility() instanceof ProductionAbility) productions.add(ProductionState.IDLE);
         else productions.add(ProductionState.EMPTY);    }
 
+    /**
+     * Updates the state of the productions if they have changed
+     */
     public void update() {
         var slots = GUIHelper.getInstance().getClientView().getSlots();
 
@@ -70,6 +76,9 @@ public class SelectedProductions {
         return productions;
     }
 
+    /**
+     * Set all selected productions to the confirm state
+     */
     public void confirm() {
         for (var p : productions) {
             if(p == ProductionState.SELECTED) {
@@ -78,6 +87,9 @@ public class SelectedProductions {
         }
     }
 
+    /**
+     * Brings back all selected productions to idle
+     */
     public void adjust() {
         for (var p : productions) {
             if(p == ProductionState.SELECTED) {
@@ -86,6 +98,9 @@ public class SelectedProductions {
         }
     }
 
+    /**
+     * Reset any production that isn't empty to the idle state
+     */
     public void reset() {
         for (var p : productions) {
             if(p != ProductionState.EMPTY && p != ProductionState.IDLE) {
