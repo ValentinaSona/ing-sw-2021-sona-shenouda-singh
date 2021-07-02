@@ -3,17 +3,14 @@ package it.polimi.ingsw.client.ui.gui.JFXControllers;
 
 import it.polimi.ingsw.client.modelview.MatchSettings;
 import it.polimi.ingsw.client.ui.controller.DispatcherController;
-import it.polimi.ingsw.client.ui.controller.LobbyMenuController;
 import it.polimi.ingsw.client.ui.controller.UiControllerInterface;
 import it.polimi.ingsw.client.ui.gui.GUIHelper;
 import it.polimi.ingsw.client.ui.gui.GUIMessageHandler;
 import it.polimi.ingsw.server.controller.User;
 
 import it.polimi.ingsw.utils.networking.transmittables.StatusMessage;
-import it.polimi.ingsw.utils.networking.transmittables.servermessages.ServerSetupGameMessage;
 import it.polimi.ingsw.utils.networking.transmittables.servermessages.ServerUpdateLobbyMessage;
 import javafx.animation.*;
-import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;

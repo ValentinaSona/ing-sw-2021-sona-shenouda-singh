@@ -7,7 +7,6 @@ import it.polimi.ingsw.client.ui.controller.DispatcherController;
 import it.polimi.ingsw.client.ui.controller.LeaderCardSelectionController;
 import it.polimi.ingsw.client.ui.controller.UIController;
 import it.polimi.ingsw.client.ui.gui.GUIHelper;
-import it.polimi.ingsw.client.ui.gui.GUIMessageHandler;
 import it.polimi.ingsw.client.ui.gui.LeaderCardSelection;
 import it.polimi.ingsw.server.model.Id;
 import it.polimi.ingsw.server.model.LeaderCard;
@@ -116,9 +115,7 @@ public class LeaderSelectionGUIController extends AbstractGUIController implemen
         choiceMap.put(resChoice1, 2);
         choiceMap.put(resChoice2, 4);
 
-        choiceMap.forEach((key, value) -> {
-            disableNode(key);
-        });
+        choiceMap.forEach((key, value) -> disableNode(key));
 
         showChoice1(false);
         showChoice2(false);
@@ -457,9 +454,7 @@ public class LeaderSelectionGUIController extends AbstractGUIController implemen
     }
 
     public void goToGame() {
-        Platform.runLater(() -> {
-            change(ScreenName.PERSONAL_BOARD);
-        });
+        Platform.runLater(() -> change(ScreenName.PERSONAL_BOARD));
     }
 
     private void setSize() {

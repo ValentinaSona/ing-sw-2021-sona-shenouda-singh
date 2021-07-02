@@ -5,6 +5,9 @@ import it.polimi.ingsw.server.exception.EndOfGameException;
 
 import java.util.*;
 
+/**
+ * This class is a decorator of the DevelopmentCardsMarket class, and considers any DiscountAbility if a player has one
+ */
 public class DevelopmentCardsMarketAbility implements DevMarket {
 
     private DevelopmentCardsMarket cardsMarket;

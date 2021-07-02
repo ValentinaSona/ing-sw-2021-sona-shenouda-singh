@@ -5,7 +5,6 @@ import java.util.Arrays;
 import java.util.Objects;
 
 import static it.polimi.ingsw.client.ui.cli.CLIHelper.*;
-import static it.polimi.ingsw.client.ui.cli.CLIHelper.ANSI_RESET;
 
 public class DevelopmentCard implements Serializable {
 
@@ -30,6 +29,10 @@ public class DevelopmentCard implements Serializable {
 		this.production = production;
 	}
 
+	/**
+	 * Creates a copy of a card
+	 * @param card the card to copy
+	 */
 	public DevelopmentCard(DevelopmentCard card){
 		id = card.getId();
 		var cardCost = new Resource[card.getCost().length];

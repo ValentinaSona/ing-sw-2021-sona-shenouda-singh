@@ -18,7 +18,6 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 
 import java.util.Objects;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class MarketGUIController extends AbstractGUIController implements GameGUIControllerInterface {

@@ -1,11 +1,8 @@
 package it.polimi.ingsw.utils.persistence;
 
-import it.polimi.ingsw.client.modelview.MarketView;
 import it.polimi.ingsw.server.model.MarketMarble;
 import it.polimi.ingsw.server.model.Player;
-import javafx.util.Pair;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;

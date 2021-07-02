@@ -17,10 +17,9 @@ public class GUIMessageHandler {
     private UiControllerInterface currentController;
     private GameGUIControllerInterface currentGameController;
 
-    GameLog log;
+    final GameLog log;
 
     public void setCurrentController(UiControllerInterface currentController) {
-        GUIHelper.getInstance().setCurrentController(currentController);
         this.currentController = currentController;
     }
 
@@ -70,9 +69,7 @@ public class GUIMessageHandler {
                 }
             }
         }
-        Platform.runLater(() -> {
-            ((LobbyGUIController)currentController).lobbyUpdate(message);
-        });
+        Platform.runLater(() -> ((LobbyGUIController)currentController).lobbyUpdate(message));
     }
 
     public void handleSetupGameMessage(ServerSetupGameMessage message) {

@@ -9,6 +9,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+/**
+ * This class implements the development cards market
+ */
 public class DevelopmentCardsMarket implements  DevMarket {
 
 	private final DevelopmentCardDeck[][] decks;

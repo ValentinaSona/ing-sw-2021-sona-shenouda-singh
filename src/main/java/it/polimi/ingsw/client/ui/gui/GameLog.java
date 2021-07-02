@@ -14,15 +14,13 @@ import javafx.scene.text.TextFlow;
 import java.util.ArrayList;
 import java.util.List;
 
-import static it.polimi.ingsw.client.ui.cli.CLIHelper.CHECK_MARK;
-
 public class GameLog {
 
-    private static int logLenght = 3;
-    private static String warning = "#ffb545";
+    private static final int logLenght = 3;
+    private static final String warning = "#ffb545";
 
     private static GameLog singleton;
-    private TextFlow log;
+    private final TextFlow log;
 
     public static GameLog getInstance() {
         if (singleton == null) singleton = new GameLog();

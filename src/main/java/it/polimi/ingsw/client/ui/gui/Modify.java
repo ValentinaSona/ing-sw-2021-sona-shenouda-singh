@@ -9,7 +9,6 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 
-import java.util.List;
 import java.util.Map;
 
 public class Modify {
@@ -37,7 +36,7 @@ public class Modify {
             });
         }
 
-        else image.setOnMouseReleased(e -> {image.setOpacity(1);});
+        else image.setOnMouseReleased(e -> image.setOpacity(1));
     }
 
     public static void makeDepotResourcesSelectable(VBox depot, Map<Id, Resource> map, boolean active) {

@@ -4,10 +4,12 @@ import it.polimi.ingsw.client.modelview.MarketView;
 import it.polimi.ingsw.server.exception.NotDecoratedException;
 import it.polimi.ingsw.server.exception.TwoLeaderCardsException;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * This interface helps to implement teh decorator for the resource market
+ */
 public interface Market {
 
     MarketMarble[] getResources (Player player, int rowCol) throws TwoLeaderCardsException;

@@ -19,15 +19,15 @@ public class MarketTemplate {
 
     private static MarketTemplate singleton;
 
-    private MarketView market;
+    private final MarketView market;
 
-    private SVGPath[] rowArrows;
-    private SVGPath[] colArrows;
-    private Pane[][] panes;
+    private final SVGPath[] rowArrows;
+    private final SVGPath[] colArrows;
+    private final Pane[][] panes;
 
-    private GridPane marketGrid;
-    private VBox vHighlight;
-    private HBox hHighlight;
+    private final GridPane marketGrid;
+    private final VBox vHighlight;
+    private final HBox hHighlight;
 
     public static MarketTemplate getInstance() {
         if (singleton == null) singleton = new MarketTemplate();

@@ -1,7 +1,6 @@
 package it.polimi.ingsw.server.model;
 
 import com.google.gson.Gson;
-import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.typeadapters.RuntimeTypeAdapterFactory;
 
@@ -9,13 +8,15 @@ import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.InputStreamReader;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-
+/**
+ * This class handles the leader cards imports and picks
+ */
 public class LeaderCardsKeeper {
 
     final private static String path = "config/leadercards.json";
@@ -23,7 +24,9 @@ public class LeaderCardsKeeper {
 
     List<LeaderCard> leaderCards;
 
-    //TODO reminder to test this class to see if the file was created correctly
+    /**
+     * This constructor imports from file all the leader cards, then stores them in a list and shuffles them
+     */
     public LeaderCardsKeeper() {
 
       RuntimeTypeAdapterFactory<SpecialAbility> shapeAdapterFactory = RuntimeTypeAdapterFactory
@@ -35,7 +38,6 @@ public class LeaderCardsKeeper {
         Gson gson = new GsonBuilder()
                         .registerTypeAdapterFactory(shapeAdapterFactory)
                         .create();
-        //Gson gson = new Gson();
         try {
 
             var file = new FileReader(completePath);
@@ -43,11 +45,10 @@ public class LeaderCardsKeeper {
 
         } catch (FileNotFoundException e) {
 
-            var input = new BufferedReader(new InputStreamReader(LeaderCardsKeeper.class.getClassLoader().getResourceAsStream(path)));
+            var input = new BufferedReader(new InputStreamReader(Objects.requireNonNull(LeaderCardsKeeper.class.getClassLoader().getResourceAsStream(path), "LeaderCardsKeeper file could not be loaded")));
             leaderCards =  Stream.of(gson.fromJson(input, LeaderCard[].class)).collect(Collectors.toList());
 
         }
-            // Json file added, still has to be tested
 
         Collections.shuffle(leaderCards);
     }

@@ -5,6 +5,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * This class follows the factory pattern and creates an instance of the resource market
+ */
 public class MarketBuilder {
 
     private static SecureRandom random = new SecureRandom(); // Initialising random

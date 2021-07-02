@@ -1,7 +1,6 @@
 package it.polimi.ingsw.client.ui.gui;
 
 import it.polimi.ingsw.client.modelview.*;
-import it.polimi.ingsw.client.ui.controller.UiControllerInterface;
 import it.polimi.ingsw.client.ui.gui.JFXControllers.DevelopmentGUIController;
 import it.polimi.ingsw.client.ui.gui.JFXControllers.GameGUIControllerInterface;
 import it.polimi.ingsw.client.ui.gui.JFXControllers.ScreenName;
@@ -30,6 +29,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+/**
+ * Singleton class containing GUI-specific methods and variables.
+ * Its main use is to store variables that many JavaFX controllers need to access and to execute big redundant GUI methods
+ */
+
 public class GUIHelper {
 
     private Rectangle2D bounds;
@@ -46,9 +50,8 @@ public class GUIHelper {
     private int clientIndex;
     private ScreenName currentScreen;
     private PlayerView clientView;
-    private UiControllerInterface currentController;
     private GameGUIControllerInterface currentGameController;
-    private ImageView devVisualizer;
+    private final ImageView devVisualizer;
     private String selectedPlayer;
     private Image screenshot;
 
@@ -195,9 +198,7 @@ public class GUIHelper {
                                 }
                             }
 
-                            Platform.runLater(() -> {
-                                ((DevelopmentGUIController)GUIHelper.getInstance().currentGameController).enableBuy(chosenCard);
-                            });
+                            Platform.runLater(() -> ((DevelopmentGUIController)GUIHelper.getInstance().currentGameController).enableBuy(chosenCard));
                         }
                     });
 
@@ -471,10 +472,6 @@ public class GUIHelper {
 
     public boolean getTurn() {
         return turn;
-    }
-
-    public void setCurrentController(UiControllerInterface currentController) {
-        this.currentController = currentController;
     }
 
     public void setCurrentGameController(GameGUIControllerInterface controller) {

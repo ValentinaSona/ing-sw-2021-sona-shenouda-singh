@@ -14,6 +14,7 @@ import javafx.stage.Stage;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.util.Objects;
 
 
 public class GUI extends Application implements Ui {
@@ -45,7 +46,7 @@ public class GUI extends Application implements Ui {
         primaryStage.getIcons().add(new Image("assets/icon.png"));
 
         primaryStage.setTitle("Client");
-        Scene scene = new Scene(root, 1280, 720);
+        Scene scene = new Scene(Objects.requireNonNull(root), 1280, 720);
 
         primaryStage.setMinHeight(720);
         primaryStage.setMinWidth(1280);

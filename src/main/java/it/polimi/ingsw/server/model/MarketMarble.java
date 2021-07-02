@@ -3,7 +3,6 @@ package it.polimi.ingsw.server.model;
 import java.io.Serializable;
 
 import static it.polimi.ingsw.client.ui.cli.CLIHelper.*;
-import static it.polimi.ingsw.client.ui.cli.CLIHelper.ANSI_RESET;
 
 public enum MarketMarble implements Serializable {
 

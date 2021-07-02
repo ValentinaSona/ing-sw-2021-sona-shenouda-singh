@@ -19,6 +19,6 @@ public enum LogUpdates {
     CHOOSE_WHITE,
     HES_RUNNING_AWAY,
     FAITH_TRACK,
-    END;
+    END
 
 }

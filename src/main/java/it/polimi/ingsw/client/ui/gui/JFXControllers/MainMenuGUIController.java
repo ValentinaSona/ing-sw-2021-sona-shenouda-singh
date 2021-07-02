@@ -144,9 +144,7 @@ public class MainMenuGUIController extends AbstractGUIController {
                     "-fx-alignment: center;");
 
             translate.setByY(-120);
-            translate.setOnFinished(e -> {
-                change(ScreenName.CREATION);
-            });
+            translate.setOnFinished(e -> change(ScreenName.CREATION));
             translate.play();
         }
 
