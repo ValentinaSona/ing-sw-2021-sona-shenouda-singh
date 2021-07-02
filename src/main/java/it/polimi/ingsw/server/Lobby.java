@@ -99,7 +99,7 @@ public class Lobby {
     private LobbyState lobbyState;
 
     /**
-     * Lock used to acess safely the content of lobbyState
+     * Lock used to access safely the content of lobbyState
      */
     private final Object stateLock;
 
@@ -132,8 +132,8 @@ public class Lobby {
     }
 
     /**
-     * Constructor tha set the initial value of the attributes and create all the needed objects
-     * @param server
+     * Constructor that sets the initial value of the attributes and creates all the needed objects
+     * @param server the server object.
      */
     private Lobby(Server server) {
         this.server = server;
@@ -172,7 +172,7 @@ public class Lobby {
         }
 
         synchronized (resumeGameObject){
-            LOGGER.log(Level.INFO, "Il seguente giocatore sta tentando di fare il load da file");
+            LOGGER.log(Level.INFO, "A player is trying to load a game from file:");
             SavedState.load();
             userList = new ArrayList<>();
             Game.getInstance().getPlayers().forEach(player -> userList.add(new User(player.getNickname())));
@@ -412,7 +412,7 @@ public class Lobby {
     /**
      * This method handle the request of reconnection to an ongoing game
      * @param nickname of the player trying to reconnect
-     * @param connection of the player tring to reconnect
+     * @param connection of the player trying to reconnect
      * @return true if successful
      */
     public boolean handleGameReconnection(String nickname, Connection connection){
@@ -426,7 +426,7 @@ public class Lobby {
                     disconnectedPlayers.notifyAll();
                     return true;
                 }else{
-                    //qualcuno sta provando a riconnettersi con lo stesso nickname oppure in una fase in cui non c'è una partita
+                    // Someone is trying to reconnect with an already taken nickname or at a time in which no game is running.
                     return handleForceLobbyDisconnection(connection);
                 }
             } catch (InterruptedException e) {
@@ -448,7 +448,7 @@ public class Lobby {
                 List<User> disconnected = model.getDisconnectedPlayers();
                 ConnectionSetupHandler handler = server.getHandlerMap().get(connection);
                 if(disconnected.contains(new User(handler.getNickname()))){
-                    //devo gestire la riconnessione
+                    //The reconnection is successful
                     connection.send(StatusMessage.RECONNECTION_OK);
 
 
@@ -458,12 +458,12 @@ public class Lobby {
 
                     match.handleReconnection(handler.getNickname(), connection);
                 }else{
-                    //gestisco disconnessione
+                    // Handle disconnection
                     handleForceLobbyDisconnection(connection);
 
                 }
             } catch (InterruptedException e) {
-                //the activeMatchBoolean has been modified
+                // The activeMatchBoolean has been modified
                 Thread.currentThread().setName("Lobby");
             }
         }
@@ -475,7 +475,7 @@ public class Lobby {
      */
     private void waitForFirstConnection(){
         synchronized (lobbyRequestingConnections){
-            //waiting for the first player to call handleLobbyJoiningRequest method to populate map and LinkedList
+            // Waiting for the first player to call handleLobbyJoiningRequest method to populate map and LinkedList
             while (lobbyRequestingConnections.isEmpty()){
                 try{
                     lobbyRequestingConnections.wait();

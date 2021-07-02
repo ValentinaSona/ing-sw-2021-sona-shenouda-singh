@@ -127,7 +127,7 @@ public class Controller implements LambdaObserver {
         for(Player p: players) {
             users.add(model.getUserFromPlayer(p));
         }
-        LOGGER.log(Level.INFO, "Ho mandato il messaggio di setup del game");
+        LOGGER.log(Level.INFO, "Setup game message sent");
         model.notify(new ServerSetupGameMessage(
                 users,
                 model.getMarketInstance().getVisible(),
@@ -302,7 +302,7 @@ public class Controller implements LambdaObserver {
     /**
      * When a game ends this method gets called and the lobby returns in the setup phase
      */
-    private void handleEndOfGame(){
+    public void handleEndOfGame(){
         match.endGame();
     }
 

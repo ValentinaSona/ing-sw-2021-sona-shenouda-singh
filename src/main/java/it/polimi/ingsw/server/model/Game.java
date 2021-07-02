@@ -17,13 +17,12 @@ public class Game extends LambdaObservable<Transmittable> {
     private Market marketInstance;
     private final LeaderCardsKeeper leaderCardsKeeper;
     private DevMarket developmentCardsMarket;
-    //da sostituire al più presto con mappa bidirezionale
     private final Map<User, Player> userPlayerHashMap = new HashMap<>();
     private final Map<Player, User> playerUserHashMap = new HashMap<>();
     private Player currentPlayer;
     private GameState gameState;
     private final boolean solo;
-    private Lorenzo Lorenzo;
+    private final Lorenzo Lorenzo;
 
 
 
@@ -145,7 +144,7 @@ public class Game extends LambdaObservable<Transmittable> {
 
     public void subscribeUser(User user){
         if(userPlayerHashMap.size() == numOfPlayers){
-            throw new RuntimeException("Sto inserendo più player di quelli consentiti");
+            throw new RuntimeException("Adding more players than it is allowed");
         }
         Player player = new Player(user.nickName);
         userPlayerHashMap.put(user, player);

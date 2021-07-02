@@ -103,7 +103,7 @@ public class Connection extends LambdaObservable<Transmittable> implements Runna
                 outputStream.reset();
             }
         }catch (IOException e){
-            //è caduta la connessione da uno dei due lati
+            // The connection has been lost
             notifyDisconnection();
         }
     }

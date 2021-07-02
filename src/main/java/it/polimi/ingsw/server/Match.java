@@ -31,11 +31,11 @@ public class Match implements Runnable{
      */
     private final Lobby lobby;
     /**
-     * Referenece to the current controller
+     * Reference to the current controller
      */
     private Controller controller;
     /**
-     *Map that contains all the connections with the relatives nicknames
+     * Map that contains all the connections with the relatives nicknames
      * */
     private final Map<String, Connection> participantMap;
     /**
@@ -150,7 +150,7 @@ public class Match implements Runnable{
 
     /**
      * Called by the lobby when it has to handle a reconnection to an ongoing game
-     * @param nickname nickname of the playerrequesting the reconnection
+     * @param nickname nickname of the player requesting the reconnection
      * @param connection connection of the reconnecting player
      */
     public void handleReconnection(String nickname, Connection connection){

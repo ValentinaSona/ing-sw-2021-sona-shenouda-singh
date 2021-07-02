@@ -48,7 +48,7 @@ public class MockRemoteViewHandler extends RemoteViewHandler{
      */
     @Override
     public void updateFromGame(Transmittable message) {
-        LOGGER.log(Level.INFO,"Ho ricevuto il messaggio dal controller e lo sto inviando al dispatcher:" + message);
+        LOGGER.log(Level.INFO,"I have received this message and I'm forwarding it to the dispatcher:" + message);
         dispatcherController.update(message);
     }
 

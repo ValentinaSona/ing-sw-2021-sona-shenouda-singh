@@ -19,9 +19,9 @@ public class TurnController{
 
     private boolean endGame;
 
-    /*  Called when a player ends their turn.
-            Modifies currentPlayer and playerList for all controller and resets players' actions as needed.
-        */
+    /**  Called when a player ends their turn.
+      *      Modifies currentPlayer and playerList for all controller and resets players' actions as needed.
+      */
     private TurnController(Game model){
         this.model = model;
         endGame = false;
@@ -157,8 +157,7 @@ public class TurnController{
         startingPlayer.toggleTurn();
         startingPlayer.toggleMainAction();
 
-        //ad ogni player invio le leaderCard da cui deve scegliere e
-        //le risorse iniziali che deve scegliere e di quanto è avanzato sul tracciato fede
+        // Send to every player the leader cards amongst which to choose and the initial resources / faith points
         List<Player> players = model.getPlayers();
         LeaderCardsKeeper keeper = model.getLeaderCardsKeeper();
         int currentPlayerIdx = players.indexOf(startingPlayer);
@@ -313,7 +312,7 @@ public class TurnController{
             scores.remove(highest.getKey());
             rank.put(highest.getKey(),highest.getValue());
         }
-
+        controller.handleEndOfGame();
         model.notify(new ServerFinalScoreMessage(rank));
 
     }

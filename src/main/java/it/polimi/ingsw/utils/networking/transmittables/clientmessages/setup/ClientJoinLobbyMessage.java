@@ -9,7 +9,7 @@ import it.polimi.ingsw.utils.networking.transmittables.clientmessages.ClientMess
 
 /**
  * ClientMessage--> is the source of the message
- * ServerHandlable--> is the end-point that will process this message
+ * ServerHandleable--> is the end-point that will process this message
  */
 public class ClientJoinLobbyMessage implements ClientMessage, ServerHandleable {
 
@@ -33,7 +33,7 @@ public class ClientJoinLobbyMessage implements ClientMessage, ServerHandleable {
         Connection connection = handler.getConnection();
         String nickname = handler.getNickname();
 
-        //now i try to join the lobby with the following nickname and connection
+        // Now i try to join the lobby with the following nickname and connection
         boolean status = lobby.handleLobbyJoiningRequest(this, nickname, connection);
 
         if(!status){
