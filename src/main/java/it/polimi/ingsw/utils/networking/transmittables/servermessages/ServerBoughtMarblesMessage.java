@@ -1,10 +1,8 @@
 package it.polimi.ingsw.utils.networking.transmittables.servermessages;
 
-import it.polimi.ingsw.client.modelview.FaithTrackView;
 import it.polimi.ingsw.client.modelview.MarketView;
 import it.polimi.ingsw.client.ui.controller.DispatcherController;
 import it.polimi.ingsw.server.controller.User;
-import it.polimi.ingsw.server.model.FaithTrack;
 import it.polimi.ingsw.server.model.Resource;
 import it.polimi.ingsw.utils.networking.ClientHandleable;
 

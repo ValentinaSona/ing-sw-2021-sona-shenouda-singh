@@ -2,6 +2,9 @@ package it.polimi.ingsw.server.model;
 
 import java.util.*;
 
+/**
+ * This class implements a deck of development cards
+ */
 public class DevelopmentCardDeck {
 
 	private List<DevelopmentCard> deck;

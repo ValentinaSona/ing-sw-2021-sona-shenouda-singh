@@ -17,6 +17,9 @@ import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+/**
+ * Contains the main logic of the persistence feature and it's the class that should be accessed to save and load games
+ */
 public class SavedState {
     private static boolean flag = false;
     private static final String pathToSavedGame = "./saved_game";
@@ -46,21 +49,19 @@ public class SavedState {
             .setPrettyPrinting()
             .create();
 
-
-
     public SavedState(PlayersOrder order, SavedResourceMarket savedMarket, SavedDevMarket savedDevMarket, List<PlayerView> savedPlayers, Map<String, List<LeaderCard>> savedLeaderCards, Map<String,List<Slot>> savedSlot, Lorenzo lorenzo) {
         this.order = order;
         this.savedMarket = savedMarket;
         this.savedDevMarket = savedDevMarket;
         savedPlayers.forEach(elem -> elem.setLeaderCards(savedLeaderCards.get(elem.getNickname())));
-
         this.savedPlayers = savedPlayers.stream().map(e -> new Player(e, savedSlot.get(e.getNickname()))).collect(Collectors.toList());
-
         this.lorenzo = lorenzo;
     }
 
+    /**
+     * Loads all of the previously saved data and restores the Game singleton at the exactly saved state
+     */
     public static void load() {
-
 
         try {
 
@@ -93,6 +94,10 @@ public class SavedState {
         }
     }
 
+    /**
+     * Saves all the data from the current state of the game, splitting it in different files inside the saved_game directory
+     * @param game the game to be saved
+     */
     public static void save(Game game) {
         flag = true;
         Market market = game.getMarketInstance();
@@ -124,8 +129,6 @@ public class SavedState {
     }
 
     public static void write (Object source, String path) {
-
-
 
         FileWriter writer;
         try {

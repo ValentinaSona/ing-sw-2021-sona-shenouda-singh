@@ -5,7 +5,11 @@ import com.google.gson.Gson;
 import java.io.*;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
+/**
+ * This class follows the factory pattern and builds an instance of the development market
+ */
 public class DevelopmentBuilder {
 
     final private static String path = "config/devcards.json";
@@ -28,7 +32,7 @@ public class DevelopmentBuilder {
 
         } catch (FileNotFoundException e) {
 
-            var input = new BufferedReader(new InputStreamReader(DevelopmentBuilder.class.getClassLoader().getResourceAsStream(path)));
+            var input = new BufferedReader(new InputStreamReader(Objects.requireNonNull(DevelopmentBuilder.class.getClassLoader().getResourceAsStream(path))));
             decks =  gson.fromJson(input, DevelopmentCardDeck[][].class);
 
         }

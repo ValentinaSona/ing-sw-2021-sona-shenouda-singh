@@ -10,23 +10,45 @@ import it.polimi.ingsw.utils.networking.transmittables.servermessages.ServerMess
 import static it.polimi.ingsw.client.ui.cli.CLIHelper.*;
 import static it.polimi.ingsw.client.ui.cli.menus.MenuStates.*;
 
-
+/**
+ * This class handles moving between different menus, and therefore states.
+ * Also contains various non static printing utilities.
+ */
 public class MenuRunner {
 
     private static MenuRunner singleton;
+    /**
+     * The CLI class for the print utilities.
+     */
     private final CLI cli;
 
+    /**
+     * Enumeration used to know which menu must be run/
+     */
     private MenuStates state = MAIN;
-
+    /**
+     * The action that the player is trying to attempt
+     */
     private GameActions contextAction;
+    /**
+     * The actual state of the player's action.
+     */
     private GameActions currentAction;
+
 
     private final GameMenu gameMenu;
     private final MainMenu mainMenu;
     private final SetupMenu setupMenu;
 
     private ServerMessage inMsg;
+
+    /**
+     * If the game is solo
+     */
     private boolean solo;
+    /**
+     * Used to synchronize menus and wait for response messages from the server.
+     */
     private boolean wait = false;
 
 
@@ -77,7 +99,10 @@ public class MenuRunner {
         return inMsg;
     }
 
-
+    /**
+     * Initializes all the menus
+     * @param cli reference to the cli in order to use the I/O functions
+     */
     public MenuRunner(CLI cli) {
         this.cli = cli;
 
@@ -98,6 +123,10 @@ public class MenuRunner {
         return singleton;
     }
 
+    /**
+     * Handles switching between menus.
+     * Usually goes into a wait when a menu exits, expecting the state to change before resuming.
+     */
     public void run(){
 
 
@@ -113,10 +142,12 @@ public class MenuRunner {
 
             // If a menu arrives naturally to its end, wait for a state change to print the next one.
             if (state != END && state != REJOIN) waitStateChange();
+            // If i am rejoining I already know the next menu to run is the game one.
             else if (state == REJOIN) {
                 state = GAME;
                 gameMenu.run();
             }
+            // The end state resets the menuRunner back to its original state, printing the main menu.
             else {
                 state = MAIN;
                 setupMenu.setDone(false);
@@ -126,6 +157,10 @@ public class MenuRunner {
     }
 
 
+    /**
+     * Wait before going to the next menu.
+     * Is woken by the setState()
+     */
     private void waitStateChange(){
         wait = true;
         synchronized (MenuRunner.getInstance()) {
@@ -133,6 +168,7 @@ public class MenuRunner {
                 try {
                     MenuRunner.getInstance().wait();
                 } catch (InterruptedException e) {
+                    e.printStackTrace();
     } } } }
 
     /**
@@ -147,7 +183,7 @@ public class MenuRunner {
                 MenuRunner.getInstance().wait();
                 if (contextAction == currentAction || MenuRunner.getInstance().getState()==END) wait = false;
             } catch (InterruptedException e) {
-
+                e.printStackTrace();
             }
         }
     }
@@ -191,7 +227,6 @@ public class MenuRunner {
     public void printBoard(){
         printBoard(cli.getView());
     }
-
     public void printBoards(){
         for (PlayerView player : GameView.getInstance().getPlayers()){
             if(!player.getNickname().equals(MatchSettings.getInstance().getClientNickname())) {
@@ -215,6 +250,7 @@ public class MenuRunner {
             cli.printMessage(player.getFaithTrackView());
         }
     }
+
     public void printHand(PlayerView view){
         var cards = view.getLeaderCards();
         int i = 0;
@@ -244,11 +280,9 @@ public class MenuRunner {
         if (i == 0) cli.printMessage("[X] You have played no leader cards");
     }
 
-    public void printPlayedLeaders(){printPlayedLeaders(cli.getView());}
-
     public void printDepots(PlayerView view){
         var warehouse = view.getWarehouse();
-        String output = "";
+        StringBuilder output = new StringBuilder();
         String content;
         String padding =  new Resource(1, ResourceType.SERVANT).toString();
         String filler;
@@ -266,31 +300,30 @@ public class MenuRunner {
 
 
             if(depot.getId()== Id.DEPOT_1){
-                output += "\t\t"+ SQUARE+ " " + content+filler + " " + SQUARE + "         Depot 1, capacity: 1\n";
+                output.append("\t\t" + SQUARE + " ").append(content).append(filler).append(" ").append(SQUARE).append("         Depot 1, capacity: 1\n");
             }
 
             if(depot.getId()== Id.DEPOT_2){
-                output += "\t\t" + SQUARE+ " " +content+filler +" " + SQUARE + " " + SQUARE + "       Depot 2, capacity: 2\n";
+                output.append("\t\t" + SQUARE + " ").append(content).append(filler).append(" ").append(SQUARE).append(" ").append(SQUARE).append("       Depot 2, capacity: 2\n");
             }
 
             if(depot.getId()== Id.DEPOT_3){
 
-                output += "\t\t"+ SQUARE+ " "+ content+filler + " " +SQUARE+ " " + SQUARE+ " " + SQUARE+ "     Depot 3, capacity: 3\n";
+                output.append("\t\t" + SQUARE + " ").append(content).append(filler).append(" ").append(SQUARE).append(" ").append(SQUARE).append(" ").append(SQUARE).append("     Depot 3, capacity: 3\n");
             }
 
             if(depot.getId()== Id.S_DEPOT_1){
-                output += "\n\t\t" + SQUARE+ " " +content+filler +" " + SQUARE + " " + SQUARE + "       Special depot 1, capacity: 2, type: " + depot.getResource().getResourceType() +"\n";
+                output.append("\n\t\t" + SQUARE + " ").append(content).append(filler).append(" ").append(SQUARE).append(" ").append(SQUARE).append("       Special depot 1, capacity: 2, type: ").append(depot.getResource().getResourceType()).append("\n");
             }
 
             if(depot.getId()== Id.S_DEPOT_2){
-                output += "\t\t"+ SQUARE+ " " +content+filler +" " + SQUARE + " " + SQUARE + "        Special depot 2, capacity: 2, type: " + depot.getResource().getResourceType() +"\n";
+                output.append("\t\t" + SQUARE + " ").append(content).append(filler).append(" ").append(SQUARE).append(" ").append(SQUARE).append("        Special depot 2, capacity: 2, type: ").append(depot.getResource().getResourceType()).append("\n");
             }
 
         }
-        cli.printMessage(output);
+        cli.printMessage(output.toString());
 
     }
-
     public void printDepots(){printDepots(cli.getView());}
 
     public void printStrongbox(PlayerView view){
@@ -304,36 +337,7 @@ public class MenuRunner {
 
         cli.printMessage(output);
     }
-
     public void printStrongbox(){printStrongbox(cli.getView());}
-
-    public void printSlots(){
-        var slots = cli.getView().getSlots();
-
-        DevelopmentCardSlotView slot = (DevelopmentCardSlotView) slots.get(1);
-        cli.printMessage("Slot 1: ");
-        if (slot.peek() != null)
-            cli.printMessage("\n" + slot.peek().toString() + "Hidden cards value: " + slot.hiddenVP()+" VP.");
-        else
-            cli.printMessage("empty \n");
-
-        slot = (DevelopmentCardSlotView) slots.get(2);
-        cli.printMessage("Slot 2: ");
-        if (slot.peek() != null)
-            cli.printMessage("\n" + slot.peek().toString()+ "Hidden cards value: " + slot.hiddenVP()+" VP.");
-        else
-            cli.printMessage("empty \n");
-
-
-        slot = (DevelopmentCardSlotView) slots.get(3);
-        cli.printMessage("Slot 3: ");
-        if (slot.peek() != null)
-            cli.printMessage("\n" + slot.peek().toString()+ "Hidden cards value: " + slot.hiddenVP()+" VP.");
-
-        else
-            cli.printMessage("empty \n");
-
-    }
 
     public void printProductions(PlayerView view){
 
@@ -376,7 +380,5 @@ public class MenuRunner {
         }
 
     }
-
-    public void printProductions(){printProductions(cli.getView());}
 
 }

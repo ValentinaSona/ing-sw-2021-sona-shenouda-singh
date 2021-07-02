@@ -4,7 +4,6 @@ import it.polimi.ingsw.client.modelview.DevelopmentCardSlotView;
 import it.polimi.ingsw.client.modelview.GameView;
 import it.polimi.ingsw.client.modelview.SpecialProductionView;
 import it.polimi.ingsw.client.ui.cli.CLI;
-import it.polimi.ingsw.client.ui.controller.DispatcherController;
 import it.polimi.ingsw.client.ui.controller.UIController;
 import it.polimi.ingsw.server.model.*;
 import it.polimi.ingsw.utils.GameActions;
@@ -17,6 +16,9 @@ import java.util.stream.Collectors;
 import static it.polimi.ingsw.client.ui.cli.CLIHelper.CHECK_MARK;
 import static it.polimi.ingsw.client.ui.cli.CLIHelper.MARBLE_LEGEND;
 
+/**
+ * Implements the in-game options and most of the game control flow.
+ */
 public class GameMenu {
 
     private final CLI cli;
@@ -37,6 +39,10 @@ public class GameMenu {
         gameMenu();
     }
 
+    /**
+     * The options a player is given depend on whether it is their turn and whether they already have taken their actions.
+     * @return The array of textual options.
+     */
     private String[] getGameOptions() {
         if (cli.getView().isMyTurn()) {
             if (cli.getView().isMainAction()) {
@@ -57,6 +63,10 @@ public class GameMenu {
     }
 
 
+    /**
+     * Switch that calls the various menu functions and handles the refresh.
+     * This in turns calls all the other functions depending on the control flow of the various actions.
+     */
     private void gameMenu() {
         boolean hasBeenRefreshed = false;
 
@@ -113,18 +123,21 @@ public class GameMenu {
     }
 
     private void activateProductions() {
+
         runner.printBoard();
-        // Set the player's choice or return if they can only observe.
+
+        // Ask the player's choice or return if they can only observe.
         if (cli.getView().isMyTurn() && cli.getView().isMainAction()) {
+
             if (!cli.getYesOrNo("Do you wish to activate your productions?")) return;
+
         } else return;
 
-            Id[] slots = new Id[]{Id.BOARD_PRODUCTION, Id.SLOT_1, Id.SLOT_2, Id.SLOT_3, Id.S_SLOT_1, Id.S_SLOT_2};
 
-
+        Id[] slots = new Id[]{Id.BOARD_PRODUCTION, Id.SLOT_1, Id.SLOT_2, Id.SLOT_3, Id.S_SLOT_1, Id.S_SLOT_2};
         String[] options;
-        // TODO better option print? include Prod description?
 
+        // Set the production options based on which ones are available to the player.
         if (cli.getView().getSlots().size() == 4) options = new String[]{"Board production","Slot 1", "Slot 2", "Slot 3", "Activate the selected productions"};
         else if (cli.getView().getSlots().size() == 5) options = new String[]{"Board production","Slot 1", "Slot 2", "Slot 3", "Special production 1", "Activate the selected productions"};
         else options = new String[]{"Board production","Slot 1", "Slot 2", "Slot 3", "Special production 1", "Special production 2", "Activate the selected productions"};
@@ -134,6 +147,7 @@ public class GameMenu {
         int empty = 0;
 
 
+        // Adds empty near the production name and removes it from the slots array if no dev cards are present.
         for (int i = 1; i < 4; i++){
           if(((DevelopmentCardSlotView)cli.getView().getSlots().get(i)).peek() == null){
               options[i] = options [i] + " - Empty";
@@ -147,12 +161,14 @@ public class GameMenu {
         Id prodId;
         Map<Id, Resource> resIdMap = new HashMap<>();
         Resource resource = null;
-        // Loop start
+
+        // Loop start: ask to select a production, handle the resource selection process for that production.
+        // Repeats until all productions are activated or the player ends the selection process
         do {
             cli.printMessage("[ ] Choose the productions you want to activate : ");
              choice = cli.getChoice(options);
 
-            // If the player is done selecting.
+            // If the player is done selecting. (Selects activate productions)
             if (choice == options.length) break;
 
             if(slots[choice-1]==null) {
@@ -162,6 +178,7 @@ public class GameMenu {
 
 
             prodId = null;
+            // Add the production to the already activated ones or block execution if already
             if (!productions.contains(slots[choice-1])){
                 productions.add(slots[choice-1]);
                 prodId = slots[choice-1];
@@ -194,7 +211,6 @@ public class GameMenu {
                 }
 
                 while (costResources > 0 ){
-                    // TODO: total selected  - print map.
                     cli.printMessage("[ ] Select the resources to spend ("+ costResources+" more to select):");
                     Pair<Id, Resource> values = cli.getIdResourcePair(true);
 
@@ -438,6 +454,14 @@ public class GameMenu {
 
     }
 
+    /**
+     * Implements a client side check that the selected resource is contained in the selected deposit, and that they match a list of requested resources.
+     * Updates the cost list and an id -> resource map as side effects if successful, prints an error message if not.
+     * @param idResourcePair selected id and resource
+     * @param map id resource map that is updated with the selected resources.
+     * @param cost list of required resources that the selected resource must appease.
+     * @return whether the operation was successful.
+     */
     private boolean checkSourceContains( Pair<Id, Resource> idResourcePair, Map<Id, Resource> map,ArrayList<Resource> cost){
         Resource resource = null;
         // Gets quantity contained in each source.
@@ -615,7 +639,6 @@ public class GameMenu {
             depositResources();
         }
     }
-
 
     private void twoLeaders() {
 

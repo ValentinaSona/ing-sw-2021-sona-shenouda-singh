@@ -6,7 +6,6 @@ import it.polimi.ingsw.server.LobbyState;
 import it.polimi.ingsw.server.Match;
 import it.polimi.ingsw.server.exception.InvalidDepotException;
 import it.polimi.ingsw.server.model.*;
-import it.polimi.ingsw.server.model.Player;
 import it.polimi.ingsw.server.model.action.Action;
 import it.polimi.ingsw.server.view.RealRemoteViewHandler;
 import it.polimi.ingsw.server.view.RemoteViewHandler;
@@ -220,7 +219,6 @@ public class Controller implements LambdaObserver {
                     player.getWarehouse().get(id.getValue()).addResource(idResourceMap.get(id));
                 } catch (InvalidDepotException e) {
                     //this should never happen in the during the setup
-                    //TODO: not true, the fourth player receives two different resources. But, since
                 }
             }
 

@@ -5,9 +5,12 @@ import it.polimi.ingsw.server.exception.NotDecoratedException;
 
 import java.util.*;
 
+/**
+ * Implementation of the resource market
+ */
 public class MarketTray implements Market {
 
-	private MarketMarble[][] marketMarbles;
+	private final MarketMarble[][] marketMarbles;
 
 	private MarketMarble extra;
 

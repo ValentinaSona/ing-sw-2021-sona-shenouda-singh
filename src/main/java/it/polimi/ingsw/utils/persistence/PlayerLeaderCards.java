@@ -4,6 +4,9 @@ import it.polimi.ingsw.server.model.LeaderCard;
 
 import java.util.List;
 
+/**
+ * Contains an instance of all the leader cards and their corresponding player
+ */
 public class PlayerLeaderCards {
 
     private final String player;

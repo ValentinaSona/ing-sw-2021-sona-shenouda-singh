@@ -22,7 +22,7 @@ public class App
 {
     private static final Logger LOGGER = Logger.getLogger(App.class.getName());
     public static void main( String[] args ) throws IOException {
-        //called to disable all logging messages
+        // Called to disable all logging messages
         LogManager.getLogManager().reset();
         LOGGER.log(Level.INFO, "Logger initialized");
 

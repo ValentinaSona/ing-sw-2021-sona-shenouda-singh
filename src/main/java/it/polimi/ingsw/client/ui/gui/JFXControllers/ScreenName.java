@@ -20,8 +20,8 @@ public enum ScreenName {
     GAME_MENU("gameMenu.fxml", new String[]{"buttons.css"}),
     WARNING("warning.fxml", new String[]{"mainText.css"});
 
-    private String fxml;
-    private String[] css;
+    private final String fxml;
+    private final String[] css;
 
     ScreenName(String fxml, String[] css) {
         this.fxml = fxml;

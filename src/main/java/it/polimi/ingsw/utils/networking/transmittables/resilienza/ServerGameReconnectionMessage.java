@@ -4,7 +4,6 @@ import it.polimi.ingsw.client.modelview.DevMarketView;
 import it.polimi.ingsw.client.modelview.MarketView;
 import it.polimi.ingsw.client.modelview.PlayerView;
 import it.polimi.ingsw.client.ui.controller.DispatcherController;
-import it.polimi.ingsw.server.controller.User;
 import it.polimi.ingsw.utils.networking.ClientHandleable;
 import it.polimi.ingsw.utils.networking.transmittables.servermessages.ServerMessage;
 

@@ -1,6 +1,5 @@
 package it.polimi.ingsw.client.ui.gui.JFXControllers;
 
-import it.polimi.ingsw.client.modelview.GameView;
 import it.polimi.ingsw.client.modelview.MatchSettings;
 import it.polimi.ingsw.client.ui.gui.CurrAction;
 import it.polimi.ingsw.client.ui.gui.GUIHelper;
@@ -18,7 +17,7 @@ public class GameTemplate {
 
     private static GameTemplate singleton;
 
-    private VBox tabsPlayer;
+    private final VBox tabsPlayer;
     private VBox tabsMarket;
 
     private GameTemplate() {

@@ -6,7 +6,6 @@ import it.polimi.ingsw.server.model.Strongbox;
 import java.io.Serializable;
 
 import static it.polimi.ingsw.server.model.ResourceType.*;
-import static it.polimi.ingsw.server.model.ResourceType.SERVANT;
 
 /**
  * View equivalent to the strongbox class.

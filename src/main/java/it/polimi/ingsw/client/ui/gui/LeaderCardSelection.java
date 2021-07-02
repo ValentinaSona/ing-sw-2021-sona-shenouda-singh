@@ -8,7 +8,7 @@ public class LeaderCardSelection {
     private final LeaderCard card;
     private final ImageView image;
     private boolean isSelected;
-    private ImageView selection;
+    private final ImageView selection;
 
     public LeaderCardSelection(LeaderCard card, ImageView image) {
         this.card = card;

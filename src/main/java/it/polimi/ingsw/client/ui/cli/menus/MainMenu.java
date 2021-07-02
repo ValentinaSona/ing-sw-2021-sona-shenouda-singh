@@ -7,6 +7,10 @@ import it.polimi.ingsw.utils.GameActions;
 
 import java.io.IOException;
 
+/**
+ * Implements the client starting menu, letting the player choose which mode they wish to play in.
+ * Handles the first server connection until when the lobby becomes full, the setup menu takes over.
+ */
 public class MainMenu {
 
 
@@ -39,6 +43,9 @@ public class MainMenu {
     }
 
     private void credits() {
+        cli.printMessage("Implementation of the game \"Maestri del Rinascimento\" ");
+        cli.printMessage("By Valentina Sona, Antony Shenouda and Raul Singh");
+        mainMenu();
     }
 
     private void multiMenu() {

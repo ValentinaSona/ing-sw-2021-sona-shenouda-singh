@@ -3,7 +3,6 @@ package it.polimi.ingsw.utils.networking.transmittables.clientmessages.game;
 import it.polimi.ingsw.server.controller.Controller;
 import it.polimi.ingsw.server.controller.User;
 import it.polimi.ingsw.server.exception.EndOfGameCause;
-import it.polimi.ingsw.server.exception.EndOfGameException;
 import it.polimi.ingsw.server.model.Game;
 import it.polimi.ingsw.server.model.Player;
 import it.polimi.ingsw.server.view.RemoteViewHandler;

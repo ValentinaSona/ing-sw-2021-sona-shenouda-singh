@@ -6,7 +6,9 @@ import it.polimi.ingsw.server.exception.TwoLeaderCardsException;
 import java.util.*;
 import java.util.stream.Stream;
 
-
+/**
+ * Decorator of the MarketTray class, keeps in account any activated WhiteMarbleAbility
+ */
 public class MarketTrayAbility implements Market {
 
     Map<Player, List<MarketMarble>> abilityMap;
@@ -69,7 +71,7 @@ public class MarketTrayAbility implements Market {
 
     }
 
-    /** TODO: while technically it shouldn't happen, we should check that no more than 2 abilities are ever active.
+    /**
      * Called when a player activates a new WhiteMarbleAbility. Adds the player and the ability to the map
      * @param marble the activated ability
      * @param player the player who activated the ability

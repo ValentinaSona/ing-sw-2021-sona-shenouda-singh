@@ -5,9 +5,6 @@ import it.polimi.ingsw.server.exception.InvalidDepotException;
 import it.polimi.ingsw.server.model.Id;
 import it.polimi.ingsw.server.model.Resource;
 import it.polimi.ingsw.server.model.ResourceType;
-import it.polimi.ingsw.utils.networking.Transmittable;
-import it.polimi.ingsw.utils.networking.transmittables.StatusMessage;
-import it.polimi.ingsw.utils.observer.LambdaObservable;
 
 import static it.polimi.ingsw.server.model.ResourceType.FAITH;
 import static it.polimi.ingsw.server.model.ResourceType.JOLLY;

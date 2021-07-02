@@ -1,5 +1,8 @@
 package it.polimi.ingsw.client.ui.gui;
 
+/**
+ * Contains all the relevant sizes that need to be accessed from the GUI
+ */
 public class GUISizes {
 
     private static GUISizes singleton;

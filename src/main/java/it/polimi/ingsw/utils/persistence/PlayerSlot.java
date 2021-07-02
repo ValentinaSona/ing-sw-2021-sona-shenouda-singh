@@ -5,6 +5,9 @@ import it.polimi.ingsw.server.model.Slot;
 
 import java.util.List;
 
+/**
+ * Holds an instance of all players' nickname and their respective board slots
+ */
 public class PlayerSlot {
 
     private String nickname;

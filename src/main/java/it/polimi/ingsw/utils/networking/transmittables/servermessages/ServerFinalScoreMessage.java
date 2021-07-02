@@ -20,10 +20,6 @@ public class ServerFinalScoreMessage  implements ServerMessage, ClientHandleable
             handler.handleFinalScore(this);
             return true;
         }
-        //TODO remove this
-        public EndOfGameCause getCause(){
-            return EndOfGameCause.DEBUG;
-        }
 
 
     public Map<User, Integer> getRank() {
