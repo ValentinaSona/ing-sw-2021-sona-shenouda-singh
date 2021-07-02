@@ -8,6 +8,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+/**
+ * Holds all the relevant data of the development market, without unnecessary nesting
+ */
 public class SavedDevMarket {
 
     private final DevelopmentCardDeck[][] savedDecks;

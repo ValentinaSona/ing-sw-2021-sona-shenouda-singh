@@ -1,5 +1,8 @@
 package it.polimi.ingsw.utils;
 
+/**
+ * Contains the main constants used throughout the code
+ */
 public class Constant {
 
     private static int port = 9000;
