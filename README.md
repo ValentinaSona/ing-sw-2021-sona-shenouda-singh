@@ -21,19 +21,20 @@
 
 ## Running the program
 
-The program requires one command line argument amongst `cli`, `gui`, or `server` to run.
+The program requires one command line argument amongst `cli`, `gui` or `server` to run. If no argument is provided, the program launches the GUI.
 
 The CLI uses UTF-8 characters and ANSI color escapes, therefore requiring the terminal emulator to have these features enabled, and a font that contains UTF-8 characters selected.
-For windows, this has been tested with Git-for-Windows' Git Bash terminal emulator.
+For windows, this has been tested with Git-for-Windows' Git Bash terminal emulator. The GUI has a recommended requirement of a 1920x1080 screen for an optimal experience.
 
-The clients can be run from anywhere, while the server requires that it is run in a folder that has `./saved_games` as a sub-folder to support persistence.
+The clients can be run from anywhere, while the server requires that it is run in a folder that has `./saved_games` as a sub-folder to support persistence. The server must be run from the same folder that contains the `./saved_games` directory.
 
+`\path\to\java -jar Masters.jar`
 
 `\path\to\java -jar Masters.jar cli`
 
-`\path\to\java -jar Masters.jar gui`
-
 `\path\to\java -jar Masters.jar server`
+
+![](/Maestri_GUI.png?raw=true)
 
 ## Testing information
 From a cli client and while in the main game menu, selecting `1492` instead of one of the displayed options causes the game to end for all players (gui clients included) as if a victory condition had been met.  

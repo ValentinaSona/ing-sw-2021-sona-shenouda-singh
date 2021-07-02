@@ -31,25 +31,26 @@ public class App
             Constant.setPort(Integer.parseInt(args[2]));
         }
 
+        if (args.length == 0){
+            startGUI();
+        }
 
         switch (args[0]) {
-            case "gui" -> {
-                Client client = new Client(new GUI());
-                //The dispatcher controller
-                //per dire al uiController di processarli
-                DispatcherController.getInstance(true);
-                client.getChosenUi().start();
-            }
+            case "gui" -> startGUI();
             case "server" -> new Server(Constant.port()).start();
             case "cli" -> {
                 Client client = new Client(new CLI());
-                //mi metto semplicemente ad aspettare che vengano messi messaggi nella coda
-                //per dire al uiController di processarli
                 DispatcherController.getInstance(false);
                 client.getChosenUi().start();
             }
-            default -> System.out.println("Input non valido");
+            default -> System.out.println("Invalid input");
         }
 
+    }
+
+    public static void startGUI() {
+        Client client = new Client(new GUI());
+        DispatcherController.getInstance(true);
+        client.getChosenUi().start();
     }
 }
