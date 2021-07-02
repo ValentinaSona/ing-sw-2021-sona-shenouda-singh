@@ -81,12 +81,6 @@ public class GameTemplate {
         tabsPlayer.getChildren().add(marketButton);
         tabsPlayer.getChildren().add(devButton);
 
-        //tabsMarket.getChildren().add(marketButton);
-        //tabsMarket.getChildren().add(devButton);
-
-        //tabsMarket.setAlignment(Pos.TOP_RIGHT);
-        //tabsMarket.setMaxHeight(350);
-        //tackPane.setAlignment(tabsMarket, Pos.BOTTOM_RIGHT);
     }
 
     public VBox getPlayersTabs() {
