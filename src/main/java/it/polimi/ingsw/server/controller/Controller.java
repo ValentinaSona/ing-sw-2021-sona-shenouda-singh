@@ -29,6 +29,9 @@ import java.util.concurrent.LinkedBlockingDeque;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+/**
+ * The main controller. References all the sub controllers and dispatches the messages to them.
+ */
 public class Controller implements LambdaObserver {
     private final Logger LOGGER = Logger.getLogger(Controller.class.getName());
     private static Controller singleton;
@@ -40,6 +43,9 @@ public class Controller implements LambdaObserver {
     private final Game model;
     private final Match match;
     private final boolean local;
+    /**
+     * The message processing queue
+     */
     private final BlockingQueue<ViewClientMessage> actionToProcess = new LinkedBlockingDeque<>();
 
     public static Controller getInstance(Game model,Match matchInstance){
@@ -84,7 +90,6 @@ public class Controller implements LambdaObserver {
     }
     /**
      * This method is called by the views and adds the action to the processing queue
-     *
      */
     public void update(ViewClientMessage action){
         try{

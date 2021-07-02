@@ -20,9 +20,20 @@ import java.util.List;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingDeque;
 
+/**
+ * Single class through which all messages are received.
+ * The messages call the various methods of this class to be handled.
+ * After updating the view with the needed/new data, they are forwarded to CLIMessageHandler or GUIMessageHandler for UI specific handling.
+ */
 public class DispatcherController implements Runnable, LambdaObserver {
     private static DispatcherController singleton;
+    /**
+     * Used by the GUI to reference its various controllers.
+     */
     private UiControllerInterface currentController;
+    /**
+     * Queue containing the server messages to be handled.
+     */
     private final BlockingQueue<Transmittable> serverMessages= new LinkedBlockingDeque<>();
     private final boolean gui;
 
@@ -34,11 +45,16 @@ public class DispatcherController implements Runnable, LambdaObserver {
         return singleton;
     }
 
-    //method to use only when the class has already been created
+    /** Method to use only when the class has already been created
+     * @return the already initialized instance of the class.
+     */
     public static DispatcherController getInstance() {
         return singleton;
     }
 
+    /**
+     * @param gui whether it should forward to gui or cli.
+     */
     private DispatcherController(boolean gui){
         this.gui = gui;
     }
@@ -51,6 +67,10 @@ public class DispatcherController implements Runnable, LambdaObserver {
         return currentController;
     }
 
+    /**
+     * The dispatcher controller observes the connection to retrieve messages.
+     * @param serverMessage the retrieved server message to be added to the queue.
+     */
     public void update(Transmittable serverMessage){
         try{
             this.serverMessages.put(serverMessage);
@@ -67,7 +87,6 @@ public class DispatcherController implements Runnable, LambdaObserver {
                 if(message instanceof StatusMessage){
                     this.handleStatus((StatusMessage)message);
                 }else{
-                    ClientHandleable handleable = (ClientHandleable) message;
                     ((ClientHandleable) message).handleMessage(this);
                 }
             }catch (InterruptedException e){
@@ -308,7 +327,7 @@ public class DispatcherController implements Runnable, LambdaObserver {
         if (!message.getUser().getNickName().equals(MatchSettings.getInstance().getClientNickname())) {
             // Other players only know leader cards once activated.
             if (GameView.getInstance().getPlayerFromUser(message.getUser()).getLeaderCards() == null) {
-                GameView.getInstance().getPlayerFromUser(message.getUser()).setLeaderCards(new ArrayList<LeaderCard>());
+                GameView.getInstance().getPlayerFromUser(message.getUser()).setLeaderCards(new ArrayList<>());
             }
             GameView.getInstance().getPlayerFromUser(message.getUser()).getLeaderCards().add(message.getAbility());
         }
@@ -356,7 +375,7 @@ public class DispatcherController implements Runnable, LambdaObserver {
      * @param message the disconnection message.
      */
     public void handleDisconnection(DisconnectionMessage message){
-        //METODO solo per partita in multiplayer
+
         UIController.getInstance().getClientConnection().closeConnection();
         if(gui){
             GUIMessageHandler.getInstance().handleServerDisconnectionMessage();
@@ -374,8 +393,12 @@ public class DispatcherController implements Runnable, LambdaObserver {
         }
     }
 
-    // messaaggio di disconnessione
-    // durante la fase di setup viene chiusa la partita e bisogna riniziarne un altra
+
+    /**
+     * Disconnection message received during the setup phase.
+     * Differently from the normal one, this signals that the game is being closed and needs to be restarted.
+     * @param message the message object
+     */
     public void handleDisconnectionGameSetup(DisconnectionGameSetupMessage message){
 
         UIController.getInstance().getClientConnection().closeConnection();
@@ -391,7 +414,10 @@ public class DispatcherController implements Runnable, LambdaObserver {
     }
 
 
-    // messaggio che ricevo dopo che mi riconnetto ad una partita contiene info sulla partita e i giocatori
+    /**
+     * Message received when reconnecting to a game. Contains ALL the view information and updates it, setting any parameter that may need to be set.
+     * @param message the message containing all the view data.
+     */
     public void handleGameReconnection(ServerGameReconnectionMessage message){
         List<User> userList = new ArrayList<>();
         message.getPlayerViews().forEach(playerView -> userList.add(new User(playerView.getNickname())));
@@ -428,8 +454,11 @@ public class DispatcherController implements Runnable, LambdaObserver {
     }
 
 
-    // addesso se nella fase di join della lobby mi viene mandato il Set_count posso decidere se caricare una partita da file
-    //mandando il messaggio GameLoadFromFile
+    /**
+     * This is the handler for any and all status messages. They are simple messages that do not contain data, and can be received at multiple stages of the game.
+     * Since they do not contain information beside their meaning, all the handling is delegated to the UI specific handlers.
+     * @param message the status message.
+     */
     public void handleStatus(StatusMessage message){
         if(gui){
             GUIMessageHandler.getInstance().handleStatusMessage(message);

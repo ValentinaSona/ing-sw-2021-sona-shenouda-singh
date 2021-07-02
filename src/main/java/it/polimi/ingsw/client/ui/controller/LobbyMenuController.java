@@ -4,7 +4,9 @@ import it.polimi.ingsw.utils.networking.transmittables.servermessages.ServerSetu
 import it.polimi.ingsw.utils.networking.transmittables.servermessages.ServerUpdateLobbyMessage;
 
 
-
+/**
+ * GUI controller interface.
+ */
 public interface LobbyMenuController extends UiControllerInterface{
     public void handleUpdateLobbyMessage(ServerUpdateLobbyMessage message);
     public void handleSetupGameMessage(ServerSetupGameMessage message);
