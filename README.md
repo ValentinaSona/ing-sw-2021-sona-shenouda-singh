@@ -22,6 +22,7 @@
 ## Running the program
 
 The program requires one command line argument amongst `cli`, `gui`, or `server` to run.
+
 The CLI uses UTF-8 characters and ANSI color escapes, therefore requiring the terminal emulator to have these features enabled, and a font that contains UTF-8 characters selected.
 For windows, this has been tested with Git-for-Windows' Git Bash terminal emulator.
 
