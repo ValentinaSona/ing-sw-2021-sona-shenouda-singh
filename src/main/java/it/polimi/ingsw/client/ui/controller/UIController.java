@@ -1,11 +1,9 @@
 package it.polimi.ingsw.client.ui.controller;
 
 import it.polimi.ingsw.client.modelview.MatchSettings;
-import it.polimi.ingsw.server.controller.Controller;
 import it.polimi.ingsw.server.controller.User;
 import it.polimi.ingsw.server.model.*;
 import it.polimi.ingsw.server.view.MockRemoteViewHandler;
-import it.polimi.ingsw.server.view.RemoteViewHandler;
 import it.polimi.ingsw.utils.networking.Connection;
 import it.polimi.ingsw.utils.networking.Transmittable;
 import it.polimi.ingsw.utils.networking.transmittables.persistenza.ClientLoadGameMessage;
@@ -40,7 +38,7 @@ public class UIController implements LambdaObserver{
      * Connection to the server.
      */
     private Connection clientConnection;
-    private Thread localGame;
+    private LocalThreadGame localGame;
     /**
      * Used in local solo games to maintain the message-like infrastructure.
      */
@@ -72,43 +70,13 @@ public class UIController implements LambdaObserver{
         local = true;
         MatchSettings.getInstance().setSolo(true);
 
-        Runnable runnable = ()-> {
-            Game model = Game.getInstance(1);
-
-            Controller controller = Controller.getInstance(model);
-
-            User user = new User(nickname);
-
-            model.subscribeUser(user);
-
-            view = new MockRemoteViewHandler(nickname,
-                    DispatcherController.getInstance());
-
-            model.addObserver(view, (observer, transmittable)->{
-                if(transmittable instanceof DisconnectionMessage){
-                    ((RemoteViewHandler) observer).requestDisconnection();
-                }else {
-                    ((RemoteViewHandler) observer).updateFromGame(transmittable);
-                }
-            });
+        view = new MockRemoteViewHandler(nickname,
+                DispatcherController.getInstance());
 
 
-            view.addObserver(controller, (observer, viewClientMessage) ->
-                    ((Controller) observer).update(viewClientMessage) );
-
-            controller.setup();
-
-
-
-            while (true){
-                try{
-                    controller.dispatchViewClientMessage();
-                }catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-        };
-        localGame = new Thread(runnable);
+        localGame = new LocalThreadGame();
+        localGame.setView(view);
+        localGame.setActive(true);
         localGame.start();
     }
 

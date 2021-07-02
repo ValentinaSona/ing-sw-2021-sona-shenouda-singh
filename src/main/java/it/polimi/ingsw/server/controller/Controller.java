@@ -296,7 +296,13 @@ public class Controller implements LambdaObserver {
     }
 
     private void handleSetupDisconnection(){
-        match.endGameDuringSetup();
+        if(!local){
+            match.endGameDuringSetup();
+        }else{
+            model.notify(new DisconnectionMessage());
+            Game.destroy();
+            Controller.destroy();
+        }
     }
 
     /**
