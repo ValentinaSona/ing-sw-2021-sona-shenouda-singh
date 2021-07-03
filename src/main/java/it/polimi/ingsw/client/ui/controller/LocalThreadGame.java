@@ -22,8 +22,6 @@ public class LocalThreadGame extends Thread{
 
         model.subscribeUser(user);
 
-        view = new MockRemoteViewHandler(nickname,
-                DispatcherController.getInstance());
 
         model.addObserver(view, (observer, transmittable)->{
             if(transmittable instanceof DisconnectionMessage){

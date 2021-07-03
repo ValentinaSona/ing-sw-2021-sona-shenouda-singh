@@ -312,8 +312,9 @@ public class TurnController{
             scores.remove(highest.getKey());
             rank.put(highest.getKey(),highest.getValue());
         }
-        controller.handleEndOfGame();
+
         model.notify(new ServerFinalScoreMessage(rank));
+        controller.handleEndOfGame();
 
     }
 

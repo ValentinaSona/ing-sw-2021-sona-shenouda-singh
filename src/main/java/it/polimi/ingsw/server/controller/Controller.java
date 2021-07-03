@@ -309,7 +309,13 @@ public class Controller implements LambdaObserver {
      * When a game ends this method gets called and the lobby returns in the setup phase
      */
     public void handleEndOfGame(){
-        match.endGame();
+        if(!local){
+            match.endGame();
+        }else{
+            System.exit(0);
+            Game.destroy();
+            Controller.destroy();
+        }
     }
 
     public void setLobbyState(LobbyState state){
