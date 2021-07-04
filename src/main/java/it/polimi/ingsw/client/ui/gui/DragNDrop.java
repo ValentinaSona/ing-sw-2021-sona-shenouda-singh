@@ -156,18 +156,24 @@ public class DragNDrop {
         target.setOnDragExited(Event::consume);
 
         target.setOnDragDropped(event -> {
+            /*
             int index = 0;
 
             for (int i = 0; i < res.length; i ++) {
                 if (box.getChildren().get(i).equals(target)) break;
                 if (GUIHelper.getInstance().getResFromImage( ( (ImageView) box.getChildren().get(i) ).getImage() ).getResourceType().equals(ResourceType.JOLLY)) index++;
             }
-
+            */
             if (currentDraggedImage != null) {
-                res[index] = GUIHelper.getInstance().getResFromImage(currentDraggedImage);
-                target.setImage(currentDraggedImage);
-                target.setFitWidth(GUISizes.get().chosenMarbles());
-                target.setPreserveRatio(true);
+                for(int i = 0; i < res.length; i++) {
+                    if (res[i] == null) {
+                        res[i] = GUIHelper.getInstance().getResFromImage(currentDraggedImage);
+                        target.setImage(currentDraggedImage);
+                        target.setFitWidth(GUISizes.get().chosenMarbles());
+                        target.setPreserveRatio(true);
+                        break;
+                    }
+                }
             }
         });
     }
@@ -181,7 +187,10 @@ public class DragNDrop {
         if(active) {
             draggableImage(source);
 
-            source.setOnDragDone(e -> Platform.runLater(() -> ((MarketGUIController)GUIHelper.getInstance().getCurrentGameController()).acceptChoice()));
+            source.setOnDragDone(e -> {
+                currentDraggedImage = null;
+                Platform.runLater(() -> ((MarketGUIController)GUIHelper.getInstance().getCurrentGameController()).acceptChoice());
+            });
         }
         else {
             source.setOnDragDetected(event -> {});
