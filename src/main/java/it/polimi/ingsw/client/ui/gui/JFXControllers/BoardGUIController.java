@@ -795,7 +795,7 @@ public class BoardGUIController extends AbstractGUIController implements GameGUI
 
         else if (state == ProductionState.SELECTED) {
             if (selectedBoardRes != null) {
-                UIController.getInstance().depositResourcesIntoSlot(Id.SLOT_2,
+                UIController.getInstance().depositResourcesIntoSlot(Id.S_SLOT_2,
                         resChoiceMap,
                         GUIHelper.getInstance().getResFromImage(selectedBoardRes.getImage()).getResourceType(),
                         false);
