@@ -392,7 +392,7 @@ public class Player extends LambdaObservable<Transmittable> {
 		vp += faithTrack.getVictoryPoints();
 
 		for (LeaderCard card : leaderCards){
-			if (card.isActive()) vp += card.getVictoryPoints();
+			if (card != null && card.isActive()) vp += card.getVictoryPoints();
 		}
 
 		int total = 0;
