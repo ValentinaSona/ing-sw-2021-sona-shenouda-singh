@@ -21,7 +21,7 @@ public enum ScreenName {
     END_OF_GAME("endScreen.fxml", new String[]{"mainText.css", "standardBackground.css"}),
     JOIN_SINGLEPLAYER("joinSinglePlayer.fxml", new String[]{"mainText.css", "standardBackground.css", "buttons.css"}),
     GAME_MENU("gameMenu.fxml", new String[]{"buttons.css"}),
-    WARNING("warning.fxml", new String[]{"mainText.css"});
+    WARNING("Warning.fxml", new String[]{"mainText.css"});
 
     private final String fxml;
     private final String[] css;

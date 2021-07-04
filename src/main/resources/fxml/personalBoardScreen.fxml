@@ -200,7 +200,7 @@
                   <Insets left="33.0" top="700.0" />
                </StackPane.margin>
                <content>
-                  <GridPane fx:id="strongboxGrid" alignment="CENTER" maxHeight="307.0" maxWidth="284.0" prefHeight="237.0" prefWidth="282.0">
+                  <GridPane fx:id="strongboxGrid" alignment="CENTER" maxWidth="284.0" prefHeight="237.0" prefWidth="282.0">
                     <columnConstraints>
                       <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
                       <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />

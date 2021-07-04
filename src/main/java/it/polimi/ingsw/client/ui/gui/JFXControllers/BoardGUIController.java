@@ -164,28 +164,31 @@ public class BoardGUIController extends AbstractGUIController implements GameGUI
 
     private void showTemp() {
 
-        tempBox.getChildren().clear();
+        if (tempBox != null) {
+            tempBox.getChildren().clear();
 
-        tempWindow.setOpacity(1);
-        tempBlock.setOpacity(1);
-        tempBox.setOpacity(1);
-        discard.setOpacity(1);
-        discard.setDisable(false);
+            tempWindow.setOpacity(1);
+            tempBlock.setOpacity(1);
+            tempBox.setOpacity(1);
+            discard.setOpacity(1);
+            discard.setDisable(false);
 
-        tempBox.setOpacity(1);
+            tempBox.setOpacity(1);
 
-        if (GUIHelper.getInstance().getClientView().getTempResources() != null) {
-            for (var r : GUIHelper.getInstance().getClientView().getTempResources()) {
+            if (GUIHelper.getInstance().getClientView().getTempResources() != null) {
+                for (var r : GUIHelper.getInstance().getClientView().getTempResources()) {
 
-                for (int i = 0; i < r.getQuantity(); i++) {
-                    var res = new ImageView(GUIHelper.getInstance().getImage(r.getResourceType(), 120, 120));
-                    tempBox.getChildren().add(res);
-                    DragNDrop.getInstance().setDraggableResource(res, true);
+                    for (int i = 0; i < r.getQuantity(); i++) {
+                        var res = new ImageView(GUIHelper.getInstance().getImage(r.getResourceType(), 120, 120));
+                        tempBox.getChildren().add(res);
+                        DragNDrop.getInstance().setDraggableResource(res, true);
+                    }
+
                 }
-
+                if (GUIHelper.getInstance().getClientView().getTempResources().isEmpty()) update();
             }
-            if (GUIHelper.getInstance().getClientView().getTempResources().isEmpty()) update();
         }
+        else GUIHelper.getInstance().setChoosingTemp(false);
     }
 
     public void setPlayerView(PlayerView playerView) {

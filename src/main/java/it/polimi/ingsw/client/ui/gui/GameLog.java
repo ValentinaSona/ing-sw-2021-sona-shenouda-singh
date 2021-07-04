@@ -114,16 +114,22 @@ public class GameLog {
      */
     public String getResRegister(List<Resource> resources) {
 
-        StringBuilder activity;
-
-        activity = new StringBuilder(transformToString(resources.get(0)));
-
-        for (int i = 1; i < resources.size(); i++){
-            activity.append(", ");
-            activity.append(transformToString(resources.get(i)));
+        if (resources == null || resources.isEmpty()) {
+            return "Error";
         }
 
-        return activity.toString();
+        else {
+            StringBuilder activity;
+
+            activity = new StringBuilder(transformToString(resources.get(0)));
+
+            for (int i = 1; i < resources.size(); i++){
+                activity.append(", ");
+                activity.append(transformToString(resources.get(i)));
+            }
+
+            return activity.toString();
+        }
 
     }
 
